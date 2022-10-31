@@ -41,3 +41,10 @@ Route::get('/bioarchive', function () {
         'title' => 'BioArchive'
     ]);
 });
+
+
+Route::get('/login', function () {
+    return view('login', [
+        'title' => 'Login'
+    ]);
+});

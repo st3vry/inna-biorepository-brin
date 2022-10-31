@@ -38,8 +38,6 @@ Route::get('/biosample', function () {
 
 Route::get('/bioarchive', function () {
     return view('bioarchive', [
-        'title' => 'BioArchive',
-        'name' => 'Sahid Bismantoko',
-        'email' => 'sahid.bismantoko@gmail.com'
+        'title' => 'BioArchive'
     ]);
 });

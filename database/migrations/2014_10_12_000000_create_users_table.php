@@ -20,6 +20,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('is_admin')->default(false);
+            $table->tinyInteger('lab_id')->default(1);
+            $table->string('orcid_id')->default('none');
+            $table->boolean('is_activated')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

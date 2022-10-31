@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('relevance');
             $table->string('data_type_id');
             $table->integer('sample_scope');
-            // $table->integer('organism_id');
             $table->foreignId('organism_id');
             $table->integer('umbproject_id');
             $table->string('title');

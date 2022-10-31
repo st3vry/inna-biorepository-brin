@@ -21,7 +21,7 @@
             </ul>
             <ul class="navbar-nav ms-auto ms-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/register">register</a>

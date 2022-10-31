@@ -29,16 +29,16 @@ Route::get('/bioproject', function () {
     ]);
 });
 
-Route::get('/submission', function () {
-    return view('submission', [
-        'title' => 'Submission',
+Route::get('/biosample', function () {
+    return view('biosample', [
+        'title' => 'BioSample',
     ]);
 });
 
 
-Route::get('/profile', function () {
-    return view('profile', [
-        'title' => 'Profile',
+Route::get('/bioarchive', function () {
+    return view('bioarchive', [
+        'title' => 'BioArchive',
         'name' => 'Sahid Bismantoko',
         'email' => 'sahid.bismantoko@gmail.com'
     ]);

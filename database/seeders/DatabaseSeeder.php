@@ -7,7 +7,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Bioproject;
 use App\Models\User;
 use App\Models\Organism;
-
+use App\Models\Center;
+use App\Models\Lab;
 
 class DatabaseSeeder extends Seeder
 {
@@ -48,6 +49,28 @@ class DatabaseSeeder extends Seeder
             'taxon_id' => '408170',
             'name' => 'Human Gut Metagenome',
         ]);
+
+        Center::create([
+            'name' => 'Badan Riset dan Inovasi Nasional',
+            'address' => 'Gedung BJ Habibie',
+            'website' => 'www.brin.go.id'
+        ]);
+
+        Center::create([
+            'name' => 'Universitas Indonesia',
+            'address' => 'Depok',
+            'website' => 'www.ui.ac.id'
+        ]);
+
+        Lab::create([
+            'name' => 'Laboratorium Jamur',
+            'center_id' => mt_rand(1, 2),
+            'address' => 'Jalan bunga Teratai',
+            'website' => 'www.lab-bunga-teratai.com'
+        ]);
+
+
+
 
         Bioproject::factory(50)->create();
 

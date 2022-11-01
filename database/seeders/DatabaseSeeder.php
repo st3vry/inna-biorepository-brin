@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Organism;
 use App\Models\Center;
 use App\Models\Lab;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'sahidbis',
             'email' => 'sahid.bismantoko@gmail.com',
             'password' => bcrypt('12345'),
+            'remember_token' => Str::random(10)
         ]);
         // User::create([
         //     'name' => 'Ujang Kasep',

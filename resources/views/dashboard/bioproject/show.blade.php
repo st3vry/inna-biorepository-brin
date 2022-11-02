@@ -23,6 +23,22 @@
             <td class="col-sm-1">Description</td>
             <td class="col-sm-7">{{$bioproject->description}}</td>
         </tr>
+        <tr>
+            <td class="col-sm-1">Relevance</td>
+            <td class="col-sm-7">{{$bioproject->relevance}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Sample Scope</td>
+            <td class="col-sm-7">{{$bioproject->samplescope->name}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Center</td>
+            <td class="col-sm-1">{{$bioproject->center->name}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Submitter</td>
+            <td class="col-sm-7">{{$bioproject->user->name}}</td>
+        </tr>
 
     </table>
 </div>

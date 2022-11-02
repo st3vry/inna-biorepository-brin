@@ -30,7 +30,7 @@ class BioprojectFactory extends Factory
             'alias' => 'PRJ' . sprintf('%06d', intval(self::$id)),
             'relevance' => $this->faker->word(),
             'data_type_id' => mt_rand(1, 5),
-            'sample_scope' => mt_rand(1, 3),
+            'samplescope_id' => mt_rand(1, 3),
             'organism_id' => mt_rand(1, 3),
             'umbproject_id' => mt_rand(1, 2),
             'title' => $this->faker->sentence(mt_rand(2, 8)),

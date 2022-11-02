@@ -2,7 +2,11 @@
 
 @section('container')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">My Bioproject</h1>
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">My Bioproject</li>
+    </ol>
 </div>
 <div class="table-responsive col-lg-12">
     <table class="table table-striped table-sm">

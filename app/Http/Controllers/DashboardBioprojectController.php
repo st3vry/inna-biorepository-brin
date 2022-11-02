@@ -51,7 +51,10 @@ class DashboardBioprojectController extends Controller
     public function show(Bioproject $bioproject)
     {
         //
-        return $bioproject;
+        // return $bioproject;
+        return view('dashboard.bioproject.show', [
+            'bioproject' => $bioproject,
+        ]);
     }
 
     /**

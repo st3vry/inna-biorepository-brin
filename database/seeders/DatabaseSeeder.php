@@ -52,6 +52,10 @@ class DatabaseSeeder extends Seeder
             'taxon_id' => '408170',
             'name' => 'Human Gut Metagenome',
         ]);
+        Organism::create([
+            'taxon_id' => '123123',
+            'name' => 'Organism 4',
+        ]);
 
         Center::create([
             'name' => 'Badan Riset dan Inovasi Nasional',

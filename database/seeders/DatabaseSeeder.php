@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Organism;
 use App\Models\Center;
 use App\Models\Lab;
+use App\Models\Samplescope;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -39,6 +40,14 @@ class DatabaseSeeder extends Seeder
         //     'password' => bcrypt('12345')
         // ]);
         User::factory(30)->create();
+
+        Samplescope::create(['name' => 'Monoisolate']);
+        Samplescope::create(['name' => 'Multiisolate']);
+        Samplescope::create(['name' => 'Multi-species']);
+        Samplescope::create(['name' => 'Environtment']);
+        Samplescope::create(['name' => 'Synthetic']);
+        Samplescope::create(['name' => 'Single cell']);
+        Samplescope::create(['name' => 'Other']);
 
         Organism::create([
             'taxon_id' => '9606',

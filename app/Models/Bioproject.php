@@ -16,13 +16,28 @@ class Bioproject extends Model
         return $this->belongsTo(Organism::class);
     }
 
-    public function getRouteKeyName()
+    public function user()
     {
-        return 'alias';
+        return $this->belongsTo(User::class);
+    }
+
+    public function center()
+    {
+        return $this->belongsTo(Center::class);
+    }
+
+    public function samplescope()
+    {
+        return $this->belongsTo(Samplescope::class);
     }
 
     public function publication()
     {
         return $this->belongsToMany(Publication::class);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'alias';
     }
 }

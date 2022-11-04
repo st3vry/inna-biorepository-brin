@@ -17,30 +17,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('frontend.welcome');
 });
 
 Route::get('/', function () {
-    return view('home', [
+    return view('frontend.home', [
         'title' => 'Home',
     ]);
 });
 
 Route::get('/bioproject', function () {
-    return view('bioproject', [
+    return view('frontend.bioproject', [
         'title' => 'Bioproject',
     ]);
 });
 
 Route::get('/biosample', function () {
-    return view('biosample', [
+    return view('frontend.biosample', [
         'title' => 'BioSample',
     ]);
 });
 
 
 Route::get('/bioarchive', function () {
-    return view('bioarchive', [
+    return view('frontend.bioarchive', [
         'title' => 'BioArchive'
     ]);
 });

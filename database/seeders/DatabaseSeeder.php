@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Organism;
 use App\Models\Center;
 use App\Models\Lab;
+use App\Models\Publication;
 use App\Models\Samplescope;
 use Illuminate\Support\Str;
 
@@ -85,10 +86,8 @@ class DatabaseSeeder extends Seeder
             'website' => 'www.lab-bunga-teratai.com'
         ]);
 
-
-
-
         Bioproject::factory(50)->create();
+        Publication::factory(50)->create();
 
         // Bioproject::create([
         //     'alias' => 'PRJ000001',

@@ -17,7 +17,7 @@ class DashboardBioprojectController extends Controller
         //
         // return Bioproject::all();
         return view('dashboard.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism'])->where('user_id', auth()->user()->id)->get(),
+            'bioprojects' => Bioproject::with(['organism'])->where('user_id', auth()->user()->id)->paginate(6),
         ]);
     }
 
@@ -29,6 +29,7 @@ class DashboardBioprojectController extends Controller
     public function create()
     {
         //
+        return view('dashboard.bioproject.create', []);
     }
 
     /**
@@ -52,8 +53,11 @@ class DashboardBioprojectController extends Controller
     {
         //
         // return $bioproject;
+        $pubs = $bioproject->publication()->get();
+        // dd($pubs);
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
+            'pubs' => $pubs
         ]);
     }
 

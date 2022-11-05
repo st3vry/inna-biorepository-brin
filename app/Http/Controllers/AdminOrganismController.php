@@ -97,7 +97,7 @@ class AdminOrganismController extends Controller
         $validatedData = $request->validate($rules);
 
         Organism::where('id', $organism->id)->update($validatedData);
-        return redirect('/dashboard/organisms')->with('success', 'New Organism has been updated!');
+        return redirect('/dashboard/organisms')->with('success', 'Organism has been updated!');
     }
 
     /**

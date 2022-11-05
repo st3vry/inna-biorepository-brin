@@ -11,6 +11,7 @@ use App\Models\Center;
 use App\Models\Lab;
 use App\Models\Publication;
 use App\Models\Samplescope;
+use App\Models\Umbrellaproject;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -88,6 +89,7 @@ class DatabaseSeeder extends Seeder
 
         Bioproject::factory(50)->create();
         Publication::factory(50)->create();
+        Umbrellaproject::factory(3)->create();
 
         // Bioproject::create([
         //     'alias' => 'PRJ000001',

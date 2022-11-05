@@ -22,7 +22,7 @@
                 </a>
             </li>
         </ul>
-        @can('admin')
+        @can('isAdmin')
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
             <span>Administrator</span>
         </h6>

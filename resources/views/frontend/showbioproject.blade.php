@@ -1,0 +1,66 @@
+@extends('layouts.main')
+
+@section('container')
+<div class="container mt-3">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <!-- <h1 class="h2"> Accession : {{$bioproject->alias}}</h1> -->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/bioprojects">Bioproject</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{$bioproject->alias}}</li>
+        </ol>
+    </div>
+    <div class="table-responsive col-lg-8">
+        <table class="table table-striped table-sm">
+            <tr>
+                <td class="col-sm-1">Title</td>
+                <td class="col-sm-7">{{$bioproject->title}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Organism</td>
+                <td class="col-sm-7">{{$bioproject->organism->name}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Description</td>
+                <td class="col-sm-7">{{$bioproject->description}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Relevance</td>
+                <td class="col-sm-7">{{$bioproject->relevance}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Publication</td>
+                <td class="col-sm-7">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm">
+                                @forelse ( $pubs as $pub )
+                                <tr>
+                                    <td class="col-sm-3">{{$pub->article_title}}</td>
+                                    <td class="col-sm-3">{{$pub->doi}}</td>
+                                </tr>
+                                @empty
+                                None
+                                @endforelse
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Sample Scope</td>
+                <td class="col-sm-7">{{$bioproject->samplescope->name}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Center</td>
+                <td class="col-sm-1">{{$bioproject->center->name}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Submitter</td>
+                <td class="col-sm-7">{{$bioproject->user->name}}</td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+@endsection

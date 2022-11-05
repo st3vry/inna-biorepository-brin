@@ -28,6 +28,12 @@
         </h6>
         <ul class="nav flex-column">
             <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/users*') ? 'active' : ''}}" aria-current="page" href="/dashboard/users">
+                    <span data-feather="grid"></span>
+                    User
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {{ Request::is('dashboard/roles*') ? 'active' : ''}}" aria-current="page" href="/dashboard/roles">
                     <span data-feather="grid"></span>
                     Role

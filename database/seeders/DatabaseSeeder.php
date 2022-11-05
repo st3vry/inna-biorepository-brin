@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'sahidbis',
             'email' => 'sahid.bismantoko@gmail.com',
             'password' => bcrypt('12345'),
-            'role' => 0,
+            'role_code' => 0,
             'is_admin' => true,
             'is_activated' => true,
             'remember_token' => Str::random(10)
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'johndoe',
             'email' => 'john.doe@gmail.com',
             'password' => bcrypt('12345'),
-            'role' => 1,
+            'role_code' => 1,
             'is_admin' => true,
             'is_activated' => true,
             'remember_token' => Str::random(10)

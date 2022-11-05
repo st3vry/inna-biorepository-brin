@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Models\Bioproject;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,20 +28,23 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/bioproject', function () {
-    return view('frontend.bioproject', [
-        'title' => 'Bioproject',
-    ]);
-});
+// Route::get('/bioproject', function () {
+//     return view('frontend.bioproject', [
+//         'title' => 'Bioproject',
+//     ]);
+// });
 
-Route::get('/biosample', function () {
+// Route::get('/bioprojects', [BioprojectController::class, 'index'])->name('bioprojectindex');
+// Route::get('/bioprojects/{$bioproject:alias}', [BioprojectController::class, 'show'])->name('bioprojectshow');
+
+Route::get('/biosamples', function () {
     return view('frontend.biosample', [
         'title' => 'BioSample',
     ]);
 });
 
 
-Route::get('/bioarchive', function () {
+Route::get('/bioarchives', function () {
     return view('frontend.bioarchive', [
         'title' => 'BioArchive'
     ]);
@@ -60,3 +65,4 @@ Route::get('/dashboard', function () {
 
 
 Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)->middleware('auth');
+Route::resource('/bioprojects', BioprojectController::class);

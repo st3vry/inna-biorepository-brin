@@ -20,9 +20,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('is_admin')->default(false);
             $table->foreignId('lab_id')->default(1);
             $table->string('orcid_id')->default('none');
+            $table->string('role')->default(2);
+            $table->boolean('is_admin')->default(false);
             $table->boolean('is_activated')->default(false);
             $table->text('publickey')->nullable();
             $table->rememberToken();

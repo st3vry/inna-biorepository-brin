@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\LoginController;
@@ -66,3 +67,4 @@ Route::get('/dashboard', function () {
 
 Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)->middleware('auth');
 Route::resource('/bioprojects', BioprojectController::class);
+Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('is_admin');

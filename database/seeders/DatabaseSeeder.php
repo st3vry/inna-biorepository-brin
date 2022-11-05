@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'sahidbis',
             'email' => 'sahid.bismantoko@gmail.com',
             'password' => bcrypt('12345'),
-            'role_code' => 0,
+            'role_id' => 1,
             'is_activated' => true,
             'remember_token' => Str::random(10)
         ]);
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'johndoe',
             'email' => 'john.doe@gmail.com',
             'password' => bcrypt('12345'),
-            'role_code' => 1,
+            'role_id' => 2,
             'is_activated' => true,
             'remember_token' => Str::random(10)
         ]);
@@ -102,15 +102,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Role::create([
-            'code' => 0,
             'name' => 'administrator'
         ]);
         Role::create([
-            'code' => 1,
             'name' => 'curator'
         ]);
         Role::create([
-            'code' => 2,
             'name' => 'user'
         ]);
 

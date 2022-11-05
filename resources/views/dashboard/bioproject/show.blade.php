@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
         <li class="breadcrumb-item"><a href="/dashboard/bioprojects">Bioproject</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Data</li>
+        <li class="breadcrumb-item active" aria-current="page">{{$bioproject->alias}}</li>
     </ol>
 </div>
 <div class="table-responsive col-lg-8">
@@ -26,6 +26,23 @@
         <tr>
             <td class="col-sm-1">Relevance</td>
             <td class="col-sm-7">{{$bioproject->relevance}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Publication</td>
+            <td class="col-sm-7">
+                <div class="card shadow-sm mb-2">
+                    <div class="card-body">
+                        <table class="table table-striped table-sm">
+                            @foreach ( $pubs as $pub )
+                            <tr>
+                                <td class="col-sm-3">{{$pub->article_title}}</td>
+                                <td class="col-sm-3">{{$pub->doi}}</td>
+                            </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </td>
         </tr>
         <tr>
             <td class="col-sm-1">Sample Scope</td>

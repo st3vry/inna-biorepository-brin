@@ -8,16 +8,17 @@
         <li class="breadcrumb-item active" aria-current="page">My Bioproject</li>
     </ol>
 </div>
+<a href="/dashboard/bioprojects/create" class="btn btn-primary mb-3">Create New Bioproject</a>
 <div class="table-responsive col-lg-12">
     <table class="table table-striped table-sm">
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Alias</th>
+                <th scope="col">Accession</th>
                 <th scope="col">Organism</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
-                <th class="col-sm-1">Action</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -37,5 +38,7 @@
             @endforeach
         </tbody>
     </table>
+    {{$bioprojects->links();}}
 </div>
+
 @endsection

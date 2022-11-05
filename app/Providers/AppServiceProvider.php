@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         //
         Paginator::useBootstrapFive();
         Gate::define('admin', function (User $user) {
-            return $user->email === 'sahid.bismantoko@gmail.com';
+            return $user->is_admin;
         });
     }
 }

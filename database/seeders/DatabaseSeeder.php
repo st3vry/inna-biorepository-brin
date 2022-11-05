@@ -13,6 +13,7 @@ use App\Models\Lab;
 use App\Models\Publication;
 use App\Models\Samplescope;
 use App\Models\Umbrellaproject;
+use App\Models\Role;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -35,6 +36,18 @@ class DatabaseSeeder extends Seeder
             'username' => 'sahidbis',
             'email' => 'sahid.bismantoko@gmail.com',
             'password' => bcrypt('12345'),
+            'role' => 0,
+            'is_admin' => true,
+            'is_activated' => true,
+            'remember_token' => Str::random(10)
+        ]);
+
+        User::create([
+            'name' => 'John Doe',
+            'username' => 'johndoe',
+            'email' => 'john.doe@gmail.com',
+            'password' => bcrypt('12345'),
+            'role' => 1,
             'is_admin' => true,
             'is_activated' => true,
             'remember_token' => Str::random(10)
@@ -88,6 +101,19 @@ class DatabaseSeeder extends Seeder
             'center_id' => mt_rand(1, 2),
             'address' => 'Jalan bunga Teratai',
             'website' => 'www.lab-bunga-teratai.com'
+        ]);
+
+        Role::create([
+            'code' => 0,
+            'name' => 'administrator'
+        ]);
+        Role::create([
+            'code' => 1,
+            'name' => 'curator'
+        ]);
+        Role::create([
+            'code' => 2,
+            'name' => 'user'
         ]);
 
         Bioproject::factory(50)->create();

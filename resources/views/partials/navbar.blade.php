@@ -10,13 +10,13 @@
                     <a class="nav-link {{ ($title === 'Home') ? 'active' : '' }}" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ ($title === 'Bioproject') ? 'active' : '' }}" href="/bioproject">BioProject</a>
+                    <a class="nav-link {{ ($title === 'Bioproject') ? 'active' : '' }}" href="/bioprojects">BioProject</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ ($title === 'BioSample') ? 'active' : '' }}" href="/biosample">BioSample</a>
+                    <a class="nav-link {{ ($title === 'BioSample') ? 'active' : '' }}" href="/biosamples">BioSample</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ ($title === 'BioArchive') ? 'active' : '' }}" href="/bioarchive">BioArchive</a>
+                    <a class="nav-link {{ ($title === 'BioArchive') ? 'active' : '' }}" href="/bioarchives">BioArchive</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto ms-2 mb-lg-0">

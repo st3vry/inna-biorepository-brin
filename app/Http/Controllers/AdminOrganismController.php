@@ -29,6 +29,7 @@ class AdminOrganismController extends Controller
     public function create()
     {
         //
+        return view('dashboard.organism.create', []);
     }
 
     /**

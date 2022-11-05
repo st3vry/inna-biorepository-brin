@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active" aria-current="page">Organism</li>
     </ol>
 </div>
-<a href="/dashboard/bioprojects/create" class="btn btn-primary mb-3">Create Organism</a>
+<a href="/dashboard/organisms/create" class="btn btn-primary mb-3">Create Organism</a>
 <div class="table-responsive col-lg-12">
     <table class="table table-striped table-sm">
         <thead>

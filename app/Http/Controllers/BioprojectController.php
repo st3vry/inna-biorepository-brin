@@ -15,27 +15,12 @@ class BioprojectController extends Controller
     public function index()
     {
         //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('frontend.bioproject', [
+            'title' => 'Bioproject',
+            // 'bioprojects' => Bioproject::with(['organism'])->get(),
+            'bioprojects' => Bioproject::with(['organism'])->paginate(5),
+        ]);
     }
 
     /**
@@ -47,39 +32,11 @@ class BioprojectController extends Controller
     public function show(Bioproject $bioproject)
     {
         //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Bioproject  $bioproject
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Bioproject $bioproject)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Bioproject  $bioproject
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Bioproject $bioproject)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Bioproject  $bioproject
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Bioproject $bioproject)
-    {
-        //
+        $pubs = $bioproject->publication()->get();
+        return view('frontend.showbioproject', [
+            'title' => 'Bioproject',
+            'bioproject' => $bioproject,
+            'pubs' => $pubs
+        ]);
     }
 }

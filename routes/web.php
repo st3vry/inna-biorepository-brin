@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\LoginController;
@@ -70,3 +71,4 @@ Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)-
 Route::resource('/bioprojects', BioprojectController::class);
 Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
 Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
+Route::resource('/dashboard/users', AdminUserController::class)->middleware('can:isAdmin');

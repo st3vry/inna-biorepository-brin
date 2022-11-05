@@ -29,7 +29,7 @@ class AdminOrganismController extends Controller
     public function create()
     {
         //
-        return view('dashboard.organism.create', []);
+        return view('dashboard.organism.create');
     }
 
     /**
@@ -41,6 +41,14 @@ class AdminOrganismController extends Controller
     public function store(Request $request)
     {
         //
+        // return $request;
+        $validatedData = $request->validate([
+            'taxon_id' => 'required|unique:organisms',
+            'name' => 'required'
+        ]);
+
+        Organism::create($validatedData);
+        return redirect('/dashboard/organisms')->with('success', 'New Organism has been added!');
     }
 
     /**
@@ -63,6 +71,9 @@ class AdminOrganismController extends Controller
     public function edit(Organism $organism)
     {
         //
+        return view('dashboard.organism.edit', [
+            'organism' => $organism,
+        ]);
     }
 
     /**
@@ -75,6 +86,18 @@ class AdminOrganismController extends Controller
     public function update(Request $request, Organism $organism)
     {
         //
+        $rules = [
+            'name' => 'required'
+        ];
+
+        if ($request->taxon_id != $organism->taxon_id) {
+            $rules['taxon_id'] = 'required|unique:organism';
+        }
+
+        $validatedData = $request->validate($rules);
+
+        Organism::where('id', $organism->id)->update($validatedData);
+        return redirect('/dashboard/organisms')->with('success', 'New Organism has been updated!');
     }
 
     /**
@@ -86,5 +109,7 @@ class AdminOrganismController extends Controller
     public function destroy(Organism $organism)
     {
         //
+        Organism::destroy($organism->id);
+        return redirect('/dashboard/organisms')->with('success', 'Organism has been deleted!');
     }
 }

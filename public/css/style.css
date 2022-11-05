@@ -2,8 +2,7 @@ body {
     background-color: azure;
 }
 
-
-    .form-signin .form-floating:focus-within {
+  .form-signin .form-floating:focus-within {
     z-index: 2;
   }
   
@@ -22,3 +21,4 @@ body {
   .form-registration input{
     border-radius: 0;
   }
+  

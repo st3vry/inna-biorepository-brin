@@ -68,5 +68,5 @@ Route::get('/dashboard', function () {
 
 Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)->middleware('auth');
 Route::resource('/bioprojects', BioprojectController::class);
-Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('is_admin');
-Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')->middleware('is_admin');
+Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
+Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');

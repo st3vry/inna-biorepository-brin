@@ -8,6 +8,7 @@ use App\Models\Bioproject;
 use App\Models\User;
 use App\Models\Organism;
 use App\Models\Center;
+use App\Models\Fundagency;
 use App\Models\Lab;
 use App\Models\Publication;
 use App\Models\Samplescope;
@@ -90,6 +91,7 @@ class DatabaseSeeder extends Seeder
         Bioproject::factory(50)->create();
         Publication::factory(50)->create();
         Umbrellaproject::factory(3)->create();
+        Fundagency::factory(30)->create();
 
         // Bioproject::create([
         //     'alias' => 'PRJ000001',

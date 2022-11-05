@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->foreignId('lab_id')->default(1);
             $table->string('orcid_id')->default('none');
-            $table->foreignId('role_code')->default(2);
+            $table->foreignId('role_id')->default(3);
             $table->boolean('is_activated')->default(false);
             $table->text('publickey')->nullable();
             $table->rememberToken();

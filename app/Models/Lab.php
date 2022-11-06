@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Lab extends Model
 {
     use HasFactory;
+
+    public function center()
+    {
+        return $this->belongsTo(Center::class);
+    }
 }

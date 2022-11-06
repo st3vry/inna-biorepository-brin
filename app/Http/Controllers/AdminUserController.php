@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
+use App\Models\Lab;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -18,7 +20,7 @@ class AdminUserController extends Controller
         return view('dashboard.user.index', [
 
             // 'bioprojects' => Bioproject::with(['organism'])->get(),
-            'users' => User::with(['role'])->paginate(10),
+            'users' => User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(15),
         ]);
     }
 
@@ -30,6 +32,7 @@ class AdminUserController extends Controller
     public function create()
     {
         //
+        abort(404);
     }
 
     /**
@@ -41,6 +44,7 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         //
+
     }
 
     /**
@@ -63,6 +67,13 @@ class AdminUserController extends Controller
     public function edit(User $user)
     {
         //
+        $roles = Role::all();
+        $labs = Lab::all();
+        return view('dashboard.user.edit', [
+            'user' => $user,
+            'roles' => $roles,
+            'labs' => $labs
+        ]);
     }
 
     /**
@@ -75,6 +86,25 @@ class AdminUserController extends Controller
     public function update(Request $request, User $user)
     {
         //
+        $rules = [
+            'name' => 'required|max:255',
+            'orcid_id' => 'required|max:255',
+            'lab_id' => 'required',
+            'role_id' => 'required',
+        ];
+
+        if ($request->username != $user->username) {
+            $rules['username'] = 'required|max:255|unique:users';
+        }
+        if ($request->email != $user->email) {
+            $rules['email'] = 'required|email|unique:users';
+        }
+
+        $validatedData = $request->validate($rules);
+        $validatedData['is_activated'] = $request->has('activate');
+
+        User::where('id', $user->id)->update($validatedData);
+        return redirect('/dashboard/users')->with('success', 'User has been updated!');
     }
 
     /**
@@ -86,5 +116,7 @@ class AdminUserController extends Controller
     public function destroy(User $user)
     {
         //
+        User::destroy($user->id);
+        return redirect('/dashboard/users')->with('success', 'User has been deleted!');
     }
 }

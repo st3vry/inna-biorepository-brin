@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'ujang.kasep@gmail.com',
         //     'password' => bcrypt('12345')
         // ]);
-        User::factory(30)->create();
+        User::factory(20)->create();
 
         Samplescope::create(['name' => 'Monoisolate']);
         Samplescope::create(['name' => 'Multiisolate']);
@@ -96,9 +96,16 @@ class DatabaseSeeder extends Seeder
 
         Lab::create([
             'name' => 'Laboratorium Jamur',
-            'center_id' => mt_rand(1, 2),
+            'center_id' => 1,
             'address' => 'Jalan bunga Teratai',
             'website' => 'www.lab-bunga-teratai.com'
+        ]);
+
+        Lab::create([
+            'name' => 'Laboratorium Obat',
+            'center_id' => 2,
+            'address' => 'Jalan bunga Melati',
+            'website' => 'www.lab-obat.com'
         ]);
 
         Role::create([

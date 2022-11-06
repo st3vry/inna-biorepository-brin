@@ -29,13 +29,13 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('dashboard/users*') ? 'active' : ''}}" aria-current="page" href="/dashboard/users">
-                    <span data-feather="grid"></span>
+                    <span data-feather="user-plus"></span>
                     User
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('dashboard/roles*') ? 'active' : ''}}" aria-current="page" href="/dashboard/roles">
-                    <span data-feather="grid"></span>
+                    <span data-feather="award"></span>
                     Role
                 </a>
             </li>

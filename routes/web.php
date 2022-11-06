@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Models\Bioproject;
+use App\Models\Organism;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,9 +67,13 @@ Route::get('/dashboard', function () {
     return view('dashboard.index');
 })->middleware('auth');
 
+Route::resource('/bioprojects', BioprojectController::class);
 
 Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)->middleware('auth');
-Route::resource('/bioprojects', BioprojectController::class);
 Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
 Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
-Route::resource('/dashboard/users', AdminUserController::class)->middleware('can:isAdmin');
+Route::resource('/dashboard/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
+
+Route::fallback(function () {
+    return "Hm, why did you land here somehow?";
+});

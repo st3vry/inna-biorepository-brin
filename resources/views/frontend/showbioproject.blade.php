@@ -10,7 +10,7 @@
             <li class="breadcrumb-item active" aria-current="page">{{$bioproject->alias}}</li>
         </ol>
     </div>
-    <div class="table-responsive col-lg-8">
+    <div class="table-responsive col-lg-12">
         <table class="table table-striped table-sm">
             <tr>
                 <td class="col-sm-1">Title</td>
@@ -55,8 +55,8 @@
                             <table class="table table-striped table-sm">
                                 @forelse ( $grants as $grant )
                                 <tr>
-                                    <td class="col-sm-3">{{$grant->title}}</td>
-                                    <td class="col-sm-3">{{$grant->program}}</td>
+                                    <td class="col-sm-3">{{$grant->grant_title}}</td>
+                                    <td class="col-sm-3">{{$grant->grant_program}}</td>
                                     <td class="col-sm-3">{{$grant->fundagency->name}}</td>
                                 </tr>
                                 @empty

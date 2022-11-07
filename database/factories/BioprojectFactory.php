@@ -37,7 +37,6 @@ class BioprojectFactory extends Factory
             'description' => $this->faker->paragraph(mt_rand(5, 10)),
             'center_id' => mt_rand(1, 2),
             'user_id' => mt_rand(1, 5),
-            'published_at' => now()
         ];
     }
 }

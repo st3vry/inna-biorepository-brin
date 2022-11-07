@@ -75,5 +75,6 @@ Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')-
 Route::resource('/dashboard/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
 
 Route::fallback(function () {
-    return "Hm, why did you land here somehow?";
+    // return "Hm, why did you land here somehow?";
+    return view('error.404');
 });

@@ -75,6 +75,7 @@ class DashboardBioprojectController extends Controller
         $data = $request->validate([
             'relevance' => 'required',
             'data_type_id' => 'required',
+            'data_type_id.*' => 'numeric',
             'samplescope_id' => 'required',
             'organism_id' => 'required',
             'title' => 'required',

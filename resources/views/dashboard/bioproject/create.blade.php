@@ -17,25 +17,27 @@
         <div class="mb-3">
             <label for="umbrella" class="form-label">Umbrella Project</label>
             <select class="form-select" name="umbproject_id" id="umbproject_id">
+                <option value="">Umbrella Project</option>
                 @foreach ($umbrellas as $umbrella )
                 <option value="{{$umbrella->id}}">{{$umbrella->title}}</option>
                 @endforeach
             </select>
 
             @error('umbproject_id')
-            <div class="invalid-feedback">{{$message}}</div>
+            <p class="text-danger">{{$message}}</p>
             @enderror
         </div>
         <div class="mb-3">
             <label for="organism" class="form-label">Organism</label>
             <select class="form-select" name="organism_id" id="organism_id">
+                <option value="">Organism</option>
                 @foreach ($organisms as $organism )
                 <option value="{{$organism->id}}">{{$organism->name}}</option>
                 @endforeach
             </select>
 
             @error('organism_id')
-            <div class="invalid-feedback">{{$message}}</div>
+            <p class="text-danger">{{$message}}</p>
             @enderror
         </div>
         <div class="mb-3">
@@ -60,7 +62,7 @@
                 @foreach ( $row as $datatype)
                 <div class="col-sm-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="data_type_id[]" value="{{$datatype->id}}">
+                        <input class="form-check-input" type="checkbox" name="data_type_id[]" value="{{$datatype->id}}" @if(is_array(old('data_type_id')) && in_array($datatype->id, old('data_type_id'))) checked @endif>
                         <label class="form-check-label">{{$datatype->name}}</label>
                     </div>
                 </div>
@@ -69,7 +71,7 @@
             @endforeach
 
             @error('data_type_id')
-            <div class="invalid-feedback">{{$message}}</div>
+            <p class="text-danger">{{$message}}</p>
             @enderror
         </div>
 
@@ -80,7 +82,7 @@
                 @foreach ( $row as $samplescope)
                 <div class="col-sm-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="samplescope_id" value="{{$samplescope->id}}">
+                        <input class="form-check-input" type="radio" name="samplescope_id" value="{{$samplescope->id}}" @if (old('samplescope_id')==$samplescope->id)) checked @endif>
                         <label class="form-check-label">{{$samplescope->name}}</label>
                     </div>
                 </div>
@@ -90,7 +92,7 @@
             @endforeach
 
             @error('samplescope_id')
-            <div class="invalid-feedback">{{$message}}</div>
+            <p class="text-danger">{{$message}}</p>
             @enderror
         </div>
 

@@ -19,8 +19,8 @@ class GrantFactory extends Factory
         return [
             //
             'fundagency_id' => mt_rand(1, 3),
-            'title' => $this->faker->sentence(3),
-            'program' => $this->faker->sentence(3),
+            'grant_title' => $this->faker->sentence(3),
+            'grant_program' => $this->faker->sentence(3),
             'bioproject_id' => mt_rand(1, 15)
         ];
     }

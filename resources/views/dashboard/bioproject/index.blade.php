@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 
 @section('container')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
@@ -9,7 +9,7 @@
     </ol>
 </div>
 <a href="/dashboard/bioprojects/create" class="btn btn-primary mb-3">Create New Bioproject</a>
-<div class="table-responsive col-lg-12">
+<div class="table-responsive col-md-11">
     <table class="table table-striped table-sm">
         <thead>
             <tr>
@@ -18,6 +18,7 @@
                 <th scope="col">Organism</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
+                <th scope="col">Center</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -29,10 +30,15 @@
                 <td>{{ $bioproject->organism->name }}</td>
                 <td>{{ $bioproject->title }}</td>
                 <td>{{ $bioproject->description }}</td>
+                <td>{{ $bioproject->center->name }}</td>
                 <td>
-                    <a href="/dashboard/bioprojects/{{ $bioproject->alias }}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    <a href="" class="badge bg-warning"><span data-feather="edit"></span></a>
-                    <a href="" class="badge bg-danger"><span data-feather="x-circle"></span></a>
+                    @if (!$bioproject->draft)
+                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    @else
+                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-warning"><span data-feather="edit"></span></a>
+                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-danger"><span data-feather="x-circle"></span></a>
+                    @endif
                 </td>
             </tr>
             @endforeach

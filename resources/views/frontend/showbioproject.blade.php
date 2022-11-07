@@ -48,12 +48,36 @@
                 </td>
             </tr>
             <tr>
+                <td class="col-sm-1">Grant</td>
+                <td class="col-sm-7">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm">
+                                @forelse ( $grants as $grant )
+                                <tr>
+                                    <td class="col-sm-3">{{$grant->title}}</td>
+                                    <td class="col-sm-3">{{$grant->program}}</td>
+                                    <td class="col-sm-3">{{$grant->fundagency->name}}</td>
+                                </tr>
+                                @empty
+                                None
+                                @endforelse
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <td class="col-sm-1">Sample Scope</td>
                 <td class="col-sm-7">{{$bioproject->samplescope->name}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Center</td>
                 <td class="col-sm-1">{{$bioproject->center->name}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Lab</td>
+                <td class="col-sm-7">{{$bioproject->user->lab->name}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Submitter</td>

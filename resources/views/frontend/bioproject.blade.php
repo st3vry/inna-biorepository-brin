@@ -18,6 +18,7 @@
                     <th scope="col">Organism</th>
                     <th scope="col">Title</th>
                     <th scope="col">Description</th>
+                    <th scope="col">Center</th>
 
                 </tr>
             </thead>
@@ -29,6 +30,7 @@
                     <td>{{ $bioproject->organism->name }}</td>
                     <td>{{ $bioproject->title }}</td>
                     <td>{{ $bioproject->description }}</td>
+                    <td>{{ $bioproject->center->name }}</td>
                 </tr>
                 @endforeach
             </tbody>

@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('grants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('fundagency_id');
-            $table->string('title');
-            $table->string('program');
+            $table->string('grant_title');
+            $table->string('grant_program');
             $table->foreignId('bioproject_id');
             $table->timestamps();
         });

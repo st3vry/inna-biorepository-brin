@@ -9,32 +9,32 @@
         @csrf
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" required autofocus value="{{old('title')}}">
+            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{old('title')}}">
             @error('title')
             <div class="invalid-feedback">{{$message}}</div>
             @enderror
         </div>
         <div class="mb-3">
             <label for="umbrella" class="form-label">Umbrella Project</label>
-            <select class="form-select" name="umbrella" id="umbrella">
+            <select class="form-select" name="umbproject_id" id="umbproject_id">
                 @foreach ($umbrellas as $umbrella )
                 <option value="{{$umbrella->id}}">{{$umbrella->title}}</option>
                 @endforeach
             </select>
 
-            @error('umbrella')
+            @error('umbproject_id')
             <div class="invalid-feedback">{{$message}}</div>
             @enderror
         </div>
         <div class="mb-3">
             <label for="organism" class="form-label">Organism</label>
-            <select class="form-select" name="organism" id="organism">
+            <select class="form-select" name="organism_id" id="organism_id">
                 @foreach ($organisms as $organism )
                 <option value="{{$organism->id}}">{{$organism->name}}</option>
                 @endforeach
             </select>
 
-            @error('organism')
+            @error('organism_id')
             <div class="invalid-feedback">{{$message}}</div>
             @enderror
         </div>
@@ -47,9 +47,10 @@
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            <textarea class="form-control" id="description" name="description" rows="3">{{old('description')}}</textarea>
+
             @error('description')
-            <div class="invalid-feedback">{{$message}}</div>
+            <p class="text-danger">{{$message}}</p>
             @enderror
         </div>
         <div class="mb-3">
@@ -59,7 +60,7 @@
                 @foreach ( $row as $datatype)
                 <div class="col-sm-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="data_type[]" value="{{$datatype->id}}">
+                        <input class="form-check-input" type="checkbox" name="data_type_id[]" value="{{$datatype->id}}">
                         <label class="form-check-label">{{$datatype->name}}</label>
                     </div>
                 </div>
@@ -67,7 +68,7 @@
             </div>
             @endforeach
 
-            @error('datatype')
+            @error('data_type_id')
             <div class="invalid-feedback">{{$message}}</div>
             @enderror
         </div>
@@ -79,15 +80,16 @@
                 @foreach ( $row as $samplescope)
                 <div class="col-sm-6">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="samplescope" value="{{$samplescope->id}}">
+                        <input class="form-check-input" type="radio" name="samplescope_id" value="{{$samplescope->id}}">
                         <label class="form-check-label">{{$samplescope->name}}</label>
                     </div>
                 </div>
+
                 @endforeach
             </div>
             @endforeach
 
-            @error('datatype')
+            @error('samplescope_id')
             <div class="invalid-feedback">{{$message}}</div>
             @enderror
         </div>
@@ -143,13 +145,13 @@
 @endsection
 @push('js')
 <script>
-    $('#organism').select2({
+    $('#organism_id').select2({
         placeholder: "Organism",
         theme: "bootstrap-5",
         width: '100%'
 
     });
-    $('#umbrella').select2({
+    $('#umbproject_id').select2({
         placeholder: "Umbrella Project",
         theme: "bootstrap-5",
         width: '100%'

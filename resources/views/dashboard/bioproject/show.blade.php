@@ -54,8 +54,8 @@
                         <table class="table table-striped table-sm">
                             @forelse ( $grants as $grant )
                             <tr>
-                                <td class="col-sm-3">{{$grant->title}}</td>
-                                <td class="col-sm-3">{{$grant->program}}</td>
+                                <td class="col-sm-3">{{$grant->grant_title}}</td>
+                                <td class="col-sm-3">{{$grant->grant_program}}</td>
                                 <td class="col-sm-3">{{$grant->fundagency->name}}</td>
                             </tr>
                             @empty

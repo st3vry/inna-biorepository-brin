@@ -54,10 +54,12 @@ class DashboardBioprojectController extends Controller
         //
         // return $bioproject;
         $pubs = $bioproject->publication()->get();
+        $grants = $bioproject->grant()->get();
         // dd($pubs);
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
-            'pubs' => $pubs
+            'pubs' => $pubs,
+            'grants' => $grants
         ]);
     }
 

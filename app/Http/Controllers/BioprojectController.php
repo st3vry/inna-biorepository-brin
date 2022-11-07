@@ -33,10 +33,12 @@ class BioprojectController extends Controller
     {
         //
         $pubs = $bioproject->publication()->get();
+        $grants = $bioproject->grant()->get();
         return view('frontend.showbioproject', [
             'title' => 'Bioproject',
             'bioproject' => $bioproject,
-            'pubs' => $pubs
+            'pubs' => $pubs,
+            'grants' => $grants
         ]);
     }
 }

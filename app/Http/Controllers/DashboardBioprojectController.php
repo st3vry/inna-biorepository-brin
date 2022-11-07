@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bioproject;
+use App\Models\Datatype;
+use App\Models\Fundagency;
+use App\Models\Grant;
+use App\Models\Organism;
+use App\Models\Samplescope;
+use App\Models\Umbrellaproject;
 use Illuminate\Http\Request;
 
 class DashboardBioprojectController extends Controller
@@ -29,7 +35,18 @@ class DashboardBioprojectController extends Controller
     public function create()
     {
         //
-        return view('dashboard.bioproject.create', []);
+        $organisms = Organism::all();
+        $fundagencies = Fundagency::all();
+        $umbrellas = Umbrellaproject::all();
+        $datatypes = Datatype::all();
+        $samplescopes = Samplescope::all();
+        return view('dashboard.bioproject.create', [
+            'organisms' => $organisms,
+            'fundagencies' => $fundagencies,
+            'umbrellas' => $umbrellas,
+            'datatypes' => $datatypes,
+            'samplescopes' => $samplescopes,
+        ]);
     }
 
     /**
@@ -41,6 +58,61 @@ class DashboardBioprojectController extends Controller
     public function store(Request $request)
     {
         //
+
+        // $rules = [
+        //     'relevance' => 'required',
+        //     'data_type_id' => 'required_with',
+        //     'samplescope_id' => 'required',
+        //     'organism_id' => 'required',
+        //     'title' => 'required',
+        //     'description' => 'required|string|min:1|max:400',
+        //     'grant_title' => 'required',
+        //     'grant_program' => 'required',
+        //     'fundagency_id' => 'required'
+        // ];
+        // $data = $request->validate($rules);
+        // $data = $request->all();
+        $data = $request->validate([
+            'relevance' => 'required',
+            'data_type_id' => 'required',
+            'samplescope_id' => 'required',
+            'organism_id' => 'required',
+            'title' => 'required',
+            'umbproject_id' => 'required',
+            'description' => 'required',
+            'grant_title' => 'required',
+            'grant_program' => 'required',
+            'fundagency_id' => 'required'
+        ]);
+        // dd($data);
+        $bioproject = new Bioproject;
+        $bioproject->alias = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->relevance = $data['relevance'];
+        $bioproject->data_type_id = implode(",", $data['data_type_id']);
+        $bioproject->samplescope_id = $data['samplescope_id'];
+        $bioproject->umbproject_id = $data['umbproject_id'];
+        $bioproject->organism_id = $data['organism_id'];
+        $bioproject->title = $data['title'];
+        $bioproject->description = $data['description'];
+        $bioproject->center_id = auth()->user()->lab->center_id;
+        $bioproject->user_id = auth()->user()->id;
+        $bioproject->save();
+
+
+        if (count($data['fundagency_id']) > 0) {
+            foreach ($data['fundagency_id'] as  $item => $value) {
+                $data2 = array(
+                    'bioproject_id' => $bioproject->id,
+                    'fundagency_id' => $data['fundagency_id'][$item],
+                    'grant_title' => $data['grant_title'][$item],
+                    'grant_program' => $data['grant_program'][$item],
+                );
+                Grant::create($data2);
+                // dd($data2);
+            }
+        }
+        // dd($bioproject);
+        return redirect('/dashboard/bioprojects')->with('success', 'New Bioproject has been added!');
     }
 
     /**
@@ -55,11 +127,11 @@ class DashboardBioprojectController extends Controller
         // return $bioproject;
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
-        // dd($pubs);
+
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,
-            'grants' => $grants
+            'grants' => $grants,
         ]);
     }
 
@@ -95,5 +167,11 @@ class DashboardBioprojectController extends Controller
     public function destroy(Bioproject $bioproject)
     {
         //
+    }
+
+    public function fetchfundingagency()
+    {
+        $fundagencies = Fundagency::All();
+        return response()->json($fundagencies);
     }
 }

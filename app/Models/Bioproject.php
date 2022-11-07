@@ -36,6 +36,11 @@ class Bioproject extends Model
         return $this->hasMany(Publication::class);
     }
 
+    public function grant()
+    {
+        return $this->hasMany(Grant::class);
+    }
+
     public function getRouteKeyName()
     {
         return 'alias';

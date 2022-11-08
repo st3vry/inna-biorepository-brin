@@ -67,9 +67,9 @@ class DashboardBioprojectController extends Controller
             'title' => 'required',
             'umbproject_id' => 'required',
             'description' => 'required',
-            'grant_title' => 'required',
-            'grant_program' => 'required',
-            'fundagency_id' => 'required'
+            'grant_title.*' => 'required',
+            'grant_program.*' => 'required',
+            'fundagency_id.*' => 'required'
         ]);
         // dd($data);
         $bioproject = new Bioproject;
@@ -83,7 +83,7 @@ class DashboardBioprojectController extends Controller
         $bioproject->description = $data['description'];
         $bioproject->center_id = auth()->user()->lab->center_id;
         $bioproject->user_id = auth()->user()->id;
-        $bioproject->save();
+        // $bioproject->save();
 
 
         if (count($data['fundagency_id']) > 0) {
@@ -94,8 +94,8 @@ class DashboardBioprojectController extends Controller
                     'grant_title' => $data['grant_title'][$item],
                     'grant_program' => $data['grant_program'][$item],
                 );
-                Grant::create($data2);
-                // dd($data2);
+                // Grant::create($data2);
+                dd($data2);
             }
         }
         // dd($bioproject);
@@ -112,6 +112,7 @@ class DashboardBioprojectController extends Controller
     {
         //
         // return $bioproject;
+
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));

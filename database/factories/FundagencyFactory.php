@@ -18,7 +18,7 @@ class FundagencyFactory extends Factory
     {
         return [
             //
-            'name' => $this->faker->word(1),
+            'name' => $this->faker->sentence(2),
             'address' => $this->faker->sentence(3),
             'website' => $this->faker->domainName()
         ];

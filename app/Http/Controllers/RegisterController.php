@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Lab;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -13,7 +14,8 @@ class RegisterController extends Controller
     {
         return view('register.index', [
             'title' => 'Register',
-            'active' => 'register'
+            'active' => 'register',
+            'labs' => Lab::all()
         ]);
     }
 
@@ -28,11 +30,11 @@ class RegisterController extends Controller
             'orcid_id' => 'required',
             'password' => 'required|confirmed|min:6'
         ]);
-
+        // dd($validatedData);
         // $validatedData['password'] = bcrypt($validatedData['password']);
         $validatedData['password'] = Hash::make($validatedData['password']);
 
-        User::create($validatedData);
+        // User::create($validatedData);
         return redirect('/login')->with('success', 'Registration successful! Please login');
     }
 }

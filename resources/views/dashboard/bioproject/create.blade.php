@@ -19,7 +19,7 @@
             <select class="form-select" name="umbproject_id" id="umbproject_id">
                 <option value="">Umbrella Project</option>
                 @foreach ($umbrellas as $umbrella )
-                <option value="{{$umbrella->id}}">{{$umbrella->title}}</option>
+                <option value="{{$umbrella->id}}" @if (old('umbproject_id')==$umbrella->id) selected @endif>{{$umbrella->title}}</option>
                 @endforeach
             </select>
 
@@ -32,7 +32,7 @@
             <select class="form-select" name="organism_id" id="organism_id">
                 <option value="">Organism</option>
                 @foreach ($organisms as $organism )
-                <option value="{{$organism->id}}">{{$organism->name}}</option>
+                <option value="{{$organism->id}}" @if (old('organism_id')==$organism->id) selected @endif>{{$organism->name}}</option>
                 @endforeach
             </select>
 
@@ -120,9 +120,12 @@
                                 <select class="form-select" name="fundagency_id[]" id="grant_agency">
                                     <option value="">Funding Agency</option>
                                     @foreach ($fundagencies as $fundagency )
-                                    <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
+                                    <option value="{{$fundagency->id}}" @if (old('fundagency_id[]')==$fundagency->id) selected @endif>{{$fundagency->name}}</option>
                                     @endforeach
                                 </select>
+                                @error('fundagency_id')
+                                <p class="text-danger">{{$message}}</p>
+                                @enderror
                             </td>
                             <td>
                                 <input type="text" name="grant_program[]" class="form-control">

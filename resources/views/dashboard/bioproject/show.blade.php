@@ -99,7 +99,7 @@
         </tr>
         <tr>
             <td class="col-sm-1">Published at</td>
-            <td class="col-sm-7">{{$bioproject->published_at->format('d-m-Y')}}</td>
+            <td class="col-sm-7">{{$bioproject->published_at === null ? 'None' : $bioproject->published_at->format('d-m-Y')}}</td>
         </tr>
 
     </table>

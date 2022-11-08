@@ -117,10 +117,10 @@
                         <tr>
                             <td>
                                 <!-- <input type="text" name="grant_agency[]" class="form-control"> -->
-                                <select class="form-select" name="fundagency_id[]" id="grant_agency">
+                                <select class="form-select" name="fundagency_id[0]" id="grant_agency">
                                     <option value="">Funding Agency</option>
                                     @foreach ($fundagencies as $fundagency )
-                                    <option value="{{$fundagency->id}}" @if (old('fundagency_id[]')==$fundagency->id) selected @endif>{{$fundagency->name}}</option>
+                                    <option value="{{$fundagency->id}}" @if (old('fundagency_id[0]')==$fundagency->id) selected @endif>{{$fundagency->name}}</option>
                                     @endforeach
                                 </select>
                                 @error('fundagency_id')
@@ -128,10 +128,10 @@
                                 @enderror
                             </td>
                             <td>
-                                <input type="text" name="grant_program[]" class="form-control">
+                                <input type="text" name="grant_program[0]" class="form-control">
                             </td>
                             <td>
-                                <input type="text" name="grant_title[]" class="form-control">
+                                <input type="text" name="grant_title[0]" class="form-control">
                             </td>
                             <td>
                                 <button class="btn btn-danger delete_row">remove</button>
@@ -170,17 +170,19 @@
     });
 </script>
 <script>
-    var counterFundAgency = 1;
+    var counterFundAgency = 0;
+    var i = 0;
     $(document).ready(function() {
         $('#add_row').click(function() {
             //Add row
             counterFundAgency++;
+            ++i;
             row = '';
             row += '<tr><td>';
-            row += '<select id="id_fundagency' + counterFundAgency + '" name ="grant_agency[]" class="form-control" required>';
+            row += '<select id="id_fundagency' + i + '" name ="fundagency_id[' + i + ']" class="form-control" required>';
             rowsel = getFundAgency();
             row += rowsel
-            row += '</select></td><td><input type="text" name ="grant_program[]" class="form-control" ></td></td><td><input type="text" name ="grant_title[]" class="form-control" ></td>';
+            row += '</select></td><td><input type="text" name ="grant_program[' + i + ']" class="form-control" ></td></td><td><input type="text" name ="grant_title[' + i + ']" class="form-control" ></td>';
             row += '<td><button class="btn btn-danger delete_row">remove</button></td></tr>';
             $("#fundagency").append(row);
             $('#id_fundagency' + counterFundAgency).select2({

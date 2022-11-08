@@ -71,8 +71,19 @@
             <td class="col-sm-7">{{$bioproject->samplescope->name}}</td>
         </tr>
         <tr>
+            <td class="col-sm-1">Data Type</td>
+            <td class="col-sm-7">
+                <ul>
+                    @foreach ( $data_types as $key => $value )
+                    <li>{{$value}}</li>
+                    @endforeach
+                </ul>
+            </td>
+        </tr>
+        <tr>
             <td class="col-sm-1">Center</td>
-            <td class="col-sm-1">{{$bioproject->center->name}}</td>
+            <td class="col-sm-1">{{$bioproject->center->name}}
+            </td>
         </tr>
         <tr>
             <td class="col-sm-1">Lab</td>
@@ -81,6 +92,14 @@
         <tr>
             <td class="col-sm-1">Submitter</td>
             <td class="col-sm-7">{{$bioproject->user->name}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Submitted at</td>
+            <td class="col-sm-7">{{$bioproject->created_at->format('d-m-Y')}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Published at</td>
+            <td class="col-sm-7">{{$bioproject->published_at->format('d-m-Y')}}</td>
         </tr>
 
     </table>

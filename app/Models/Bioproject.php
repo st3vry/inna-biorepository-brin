@@ -10,6 +10,8 @@ class Bioproject extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    protected $dates = ['created_at', 'updated_at', 'published_at'];
+
 
     public function organism()
     {
@@ -39,6 +41,11 @@ class Bioproject extends Model
     public function grant()
     {
         return $this->hasMany(Grant::class);
+    }
+
+    public function datatype()
+    {
+        return $this->hasMany(Datatype::class);
     }
 
     public function getRouteKeyName()

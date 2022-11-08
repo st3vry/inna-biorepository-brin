@@ -58,20 +58,6 @@ class DashboardBioprojectController extends Controller
     public function store(Request $request)
     {
         //
-
-        // $rules = [
-        //     'relevance' => 'required',
-        //     'data_type_id' => 'required_with',
-        //     'samplescope_id' => 'required',
-        //     'organism_id' => 'required',
-        //     'title' => 'required',
-        //     'description' => 'required|string|min:1|max:400',
-        //     'grant_title' => 'required',
-        //     'grant_program' => 'required',
-        //     'fundagency_id' => 'required'
-        // ];
-        // $data = $request->validate($rules);
-        // $data = $request->all();
         $data = $request->validate([
             'relevance' => 'required',
             'data_type_id' => 'required',
@@ -128,11 +114,13 @@ class DashboardBioprojectController extends Controller
         // return $bioproject;
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
-
+        $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
+        $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,
             'grants' => $grants,
+            'data_types' => $data_types
         ]);
     }
 

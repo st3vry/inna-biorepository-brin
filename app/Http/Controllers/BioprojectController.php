@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bioproject;
+use App\Models\Datatype;
 use Illuminate\Http\Request;
 
 class BioprojectController extends Controller
@@ -18,8 +19,7 @@ class BioprojectController extends Controller
 
         return view('frontend.bioproject', [
             'title' => 'Bioproject',
-            // 'bioprojects' => Bioproject::with(['organism'])->get(),
-            'bioprojects' => Bioproject::with(['organism'])->paginate(5),
+            'bioprojects' => Bioproject::with(['organism'])->whereNotNull('published_at')->paginate(5),
         ]);
     }
 
@@ -34,11 +34,14 @@ class BioprojectController extends Controller
         //
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
+        $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
+        $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
         return view('frontend.showbioproject', [
             'title' => 'Bioproject',
             'bioproject' => $bioproject,
             'pubs' => $pubs,
-            'grants' => $grants
+            'grants' => $grants,
+            'data_types' => $data_types
         ]);
     }
 }

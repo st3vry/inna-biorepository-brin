@@ -31,10 +31,16 @@
                     @enderror
                 </div>
                 <div class="form-floating">
-                    <input type="text" name="lab" class="form-control @error('lab') is-invalid @enderror" id="lab" placeholder="Your Lab" required value="{{ old('lab') }}">
-                    <label for="floatingInput">Lab</label>
+                    <label for="floatingInput" class="form-label">Lab</label>
+                    <select class="form-select" name="lab" id="lab">
+                        <option value=""></option>
+                        @foreach ($labs as $lab )
+                        <option value="{{$lab->id}}" @if (old('lab')==$lab->id) selected @endif>{{$lab->name}}</option>
+                        @endforeach
+                    </select>
+
                     @error('lab')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                    <p class="text-danger">{{$message}}</p>
                     @enderror
                 </div>
                 <div class="form-floating">
@@ -66,3 +72,6 @@
 
 
 @endsection
+@push('js')
+
+@endpush

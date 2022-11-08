@@ -47,5 +47,26 @@
             </li>
         </ul>
         @endcan
+        @canany(['isAdmin','isCurator'])
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
+            <span>Curator</span>
+        </h6>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/bioprojects*') ? 'active' : ''}}" href="/dashboard/bioprojects">
+                    <span data-feather="list"></span>
+                    BioProject
+                </a>
+                <a class="nav-link" href="#">
+                    <span data-feather="layers"></span>
+                    BioSample
+                </a>
+                <a class="nav-link" href="#">
+                    <span data-feather="hard-drive"></span>
+                    BioArchive
+                </a>
+            </li>
+        </ul>
+        @endcanany
     </div>
 </nav>

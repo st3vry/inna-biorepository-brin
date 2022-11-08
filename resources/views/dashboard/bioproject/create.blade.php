@@ -123,15 +123,21 @@
                                     <option value="{{$fundagency->id}}" @if (old('fundagency_id[0]')==$fundagency->id) selected @endif>{{$fundagency->name}}</option>
                                     @endforeach
                                 </select>
-                                @error('fundagency_id')
+                                @error('fundagency_id.*')
                                 <p class="text-danger">{{$message}}</p>
                                 @enderror
                             </td>
                             <td>
                                 <input type="text" name="grant_program[0]" class="form-control">
+                                @error('grant_program.*')
+                                <p class="text-danger">{{$message}}</p>
+                                @enderror
                             </td>
                             <td>
                                 <input type="text" name="grant_title[0]" class="form-control">
+                                @error('grant_title.*')
+                                <p class="text-danger">{{$message}}</p>
+                                @enderror
                             </td>
                             <td>
                                 <button class="btn btn-danger delete_row">remove</button>
@@ -179,7 +185,7 @@
             ++i;
             row = '';
             row += '<tr><td>';
-            row += '<select id="id_fundagency' + i + '" name ="fundagency_id[' + i + ']" class="form-control" required>';
+            row += '<select id="id_fundagency' + i + '" name ="fundagency_id[' + i + ']" class="form-control">';
             rowsel = getFundAgency();
             row += rowsel
             row += '</select></td><td><input type="text" name ="grant_program[' + i + ']" class="form-control" ></td></td><td><input type="text" name ="grant_title[' + i + ']" class="form-control" ></td>';

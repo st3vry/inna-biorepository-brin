@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('bioprojects', function (Blueprint $table) {
             $table->id();
-            $table->string('alias')->unique();
+            $table->string('alias')->unique()->nullable();
+            $table->string('submission_id')->unique();
             $table->string('relevance');
             $table->string('data_type_id');
             $table->foreignId('samplescope_id');

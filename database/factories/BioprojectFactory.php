@@ -28,6 +28,7 @@ class BioprojectFactory extends Factory
 
         return [
             'alias' => 'PRJ' . sprintf('%06d', intval(self::$id)),
+            'submission_id' => 'SUBPRJ' . sprintf('%06d', intval(self::$id)),
             'relevance' => $this->faker->word(),
             'data_type_id' => mt_rand(1, 5),
             'samplescope_id' => mt_rand(1, 3),
@@ -37,6 +38,7 @@ class BioprojectFactory extends Factory
             'description' => $this->faker->paragraph(mt_rand(5, 10)),
             'center_id' => mt_rand(1, 2),
             'user_id' => mt_rand(1, 5),
+            'draft' => false,
             'published_at' => now()
         ];
     }

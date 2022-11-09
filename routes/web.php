@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BioprojectController;
+use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -76,6 +77,10 @@ Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)-
 Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
 Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
 Route::resource('/dashboard/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
+
+// Curator
+Route::get('/dashboard/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator']);
+Route::get('/dashboard/curator/bioprojects/{bioproject}', [CuratorBioprojectController::class, 'edit'])->middleware(['can:isCurator']);
 
 Route::fallback(function () {
     // return "Hm, why did you land here somehow?";

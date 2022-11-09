@@ -32,6 +32,9 @@ class BioprojectController extends Controller
     public function show(Bioproject $bioproject)
     {
         //
+        if ($bioproject->published_at == null) {
+            return view('error.404');
+        }
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));

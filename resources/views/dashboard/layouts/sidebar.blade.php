@@ -47,17 +47,17 @@
             </li>
         </ul>
         @endcan
-        @canany(['isAdmin','isCurator'])
+        @can('isCurator')
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
             <span>Curator</span>
         </h6>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('dashboard/bioprojects*') ? 'active' : ''}}" href="/dashboard/bioprojects">
+                <a class="nav-link {{ Request::is('dashboard/curator/bioprojects*') ? 'active' : ''}}" href="/dashboard/curator/bioprojects">
                     <span data-feather="list"></span>
                     BioProject
                 </a>
-                <a class="nav-link" href="#">
+                <a class=" nav-link" href="#">
                     <span data-feather="layers"></span>
                     BioSample
                 </a>
@@ -67,6 +67,6 @@
                 </a>
             </li>
         </ul>
-        @endcanany
+        @endcan
     </div>
 </nav>

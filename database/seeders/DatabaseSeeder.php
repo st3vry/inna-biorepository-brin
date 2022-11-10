@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Bioproject;
+use App\Models\Biosample;
 use App\Models\User;
 use App\Models\Organism;
 use App\Models\Center;
@@ -137,6 +138,7 @@ class DatabaseSeeder extends Seeder
 
         // Factories
         Bioproject::factory(50)->create();
+        Biosample::factory(50)->create();
         Publication::factory(50)->create();
         Umbrellaproject::factory(3)->create();
         Fundagency::factory(30)->create();

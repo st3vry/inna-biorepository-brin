@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('submission_id')->unique();
             $table->string('sample_name');
             $table->string('title');
-            $table->foreignId('sample_type_id');
+            $table->foreignId('sampletype_id');
             $table->foreignId('organism_id');
             $table->text('description');
             $table->integer('center_id');

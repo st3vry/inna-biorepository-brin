@@ -22,7 +22,7 @@ class DashboardBioprojectController extends Controller
     {
         //
         return view('dashboard.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism'])->where('user_id', auth()->user()->id)->paginate(6),
+            'bioprojects' => Bioproject::with(['organism'])->where('user_id', auth()->user()->id)->paginate(5),
         ]);
     }
 
@@ -134,7 +134,8 @@ class DashboardBioprojectController extends Controller
     {
         //
         if (!empty($bioproject->published_at)) {
-            return 'ada published at';
+            // return 'ada published at';
+            return view('error.404');
         }
         return 'tidak ada published at';
         // return (!empty($bioproject->published_at));

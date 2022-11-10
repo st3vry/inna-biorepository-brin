@@ -21,7 +21,6 @@ class DashboardBioprojectController extends Controller
     public function index()
     {
         //
-        // return Bioproject::all();
         return view('dashboard.bioproject.index', [
             'bioprojects' => Bioproject::with(['organism'])->where('user_id', auth()->user()->id)->paginate(6),
         ]);
@@ -134,6 +133,11 @@ class DashboardBioprojectController extends Controller
     public function edit(Bioproject $bioproject)
     {
         //
+        if (!empty($bioproject->published_at)) {
+            return 'ada published at';
+        }
+        return 'tidak ada published at';
+        // return (!empty($bioproject->published_at));
     }
 
     /**
@@ -157,6 +161,8 @@ class DashboardBioprojectController extends Controller
     public function destroy(Bioproject $bioproject)
     {
         //
+        Bioproject::destroy($bioproject->id);
+        return redirect('/dashboard/bioprojects')->with('success', 'Bioproject has been deleted!');
     }
 
     public function fetchfundingagency()

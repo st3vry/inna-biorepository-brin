@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
         <li class="breadcrumb-item"><a href="/dashboard/bioprojects">Bioproject</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{$bioproject->alias}}</li>
+        <li class="breadcrumb-item active" aria-current="page">{{$bioproject->accession}}</li>
     </ol>
 </div>
 <div class="table-responsive col-lg-8">

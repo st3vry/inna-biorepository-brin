@@ -34,5 +34,6 @@
             </tbody>
         </table>
     </div>
+    {{$biosamples->links()}}
 </div>
 @endsection

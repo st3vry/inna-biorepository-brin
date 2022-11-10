@@ -26,7 +26,7 @@
                 @foreach ( $bioprojects as $bioproject )
                 <tr>
                     <td>{{ ($bioprojects->currentPage() - 1) * $bioprojects->perPage() + $loop->iteration }}</td>
-                    <td><a href="bioprojects/{{ $bioproject->alias }}">{{ $bioproject->alias }}</a></td>
+                    <td><a href="bioprojects/{{ $bioproject->accession }}">{{ $bioproject->accession }}</a></td>
                     <td>{{ $bioproject->organism->name }}</td>
                     <td>{{ $bioproject->title }}</td>
                     <td>{{ $bioproject->description }}</td>

@@ -72,7 +72,7 @@ class DashboardBioprojectController extends Controller
             'fundagency_id.*' => 'required'
         ]);
         $bioproject = new Bioproject;
-        $bioproject->alias = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->relevance = $data['relevance'];
         $bioproject->data_type_id = implode(",", $data['data_type_id']);

@@ -26,18 +26,18 @@
             @foreach ( $bioprojects as $bioproject )
             <tr>
                 <td>{{ ($bioprojects->currentPage() - 1) * $bioprojects->perPage() + $loop->iteration }}</td>
-                <td>{{ $bioproject->alias }}</td>
+                <td>{{ $bioproject->accession }}</td>
                 <td>{{ $bioproject->organism->name }}</td>
                 <td>{{ $bioproject->title }}</td>
                 <td>{{ $bioproject->description }}</td>
                 <td>{{ $bioproject->center->name }}</td>
                 <td>
                     @if (!$bioproject->draft)
-                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
-                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-warning"><span data-feather="edit"></span></a>
-                    <a href="/dashboard/bioprojects/{{ $bioproject->alias}}" class="badge bg-danger"><span data-feather="x-circle"></span></a>
+                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-warning"><span data-feather="edit"></span></a>
+                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-danger"><span data-feather="x-circle"></span></a>
                     @endif
                 </td>
             </tr>

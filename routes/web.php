@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\DashboardBioprojectController;
+use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Models\Bioproject;
@@ -74,6 +75,7 @@ Route::get('/dashboard', function () {
 Route::resource('/bioprojects', BioprojectController::class);
 
 Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)->middleware('auth');
+Route::resource('/dashboard/biosamples', DashboardBiosampleController::class)->middleware('auth');
 Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
 Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
 Route::resource('/dashboard/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');

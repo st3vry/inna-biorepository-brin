@@ -4,12 +4,14 @@ use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BioprojectController;
+use App\Http\Controllers\BiosampleController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Models\Bioproject;
+use App\Models\Biosample;
 use App\Models\Fundagency;
 use App\Models\Organism;
 use Illuminate\Support\Facades\Route;
@@ -72,7 +74,11 @@ Route::get('/dashboard', function () {
     return view('dashboard.index');
 })->middleware('auth');
 
-Route::resource('/bioprojects', BioprojectController::class);
+Route::get('/bioprojects', [BioprojectController::class, 'index']);
+Route::get('/bioprojects/{bioproject}', [BioprojectController::class, 'show']);
+Route::get('/biosamples', [BiosampleController::class, 'index']);
+Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
+
 
 Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)->middleware('auth');
 Route::resource('/dashboard/biosamples', DashboardBiosampleController::class)->middleware('auth');

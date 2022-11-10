@@ -17,6 +17,9 @@ use App\Models\Publication;
 use App\Models\Samplescope;
 use App\Models\Umbrellaproject;
 use App\Models\Role;
+use App\Models\Sampletype;
+use App\Models\Attribute;
+use App\Models\Attributesample;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -37,9 +40,9 @@ class DatabaseSeeder extends Seeder
 
         // User
         User::create([
-            'name' => 'Sahid Bismantoko',
-            'username' => 'sahidbis',
-            'email' => 'sahid.bismantoko@gmail.com',
+            'name' => 'Admin Administrator',
+            'username' => 'admin123',
+            'email' => 'admin.administrator@gmail.com',
             'password' => bcrypt('12345'),
             'role_id' => 1,
             'is_activated' => true,
@@ -136,9 +139,33 @@ class DatabaseSeeder extends Seeder
             'name' => 'user'
         ]);
 
+        // Sampletype
+        Sampletype::create([
+            'name' => 'Plant',
+            'attribute_property' => '1,3,4,5',
+
+        ]);
+        Sampletype::create([
+            'name' => 'Microbe',
+            'attribute_property' => '1,3,4,5',
+
+        ]);
+        Sampletype::create([
+            'name' => 'Human',
+            'attribute_property' => '1,3,4,5',
+
+        ]);
+        Sampletype::create([
+            'name' => 'Animal',
+            'attribute_property' => '1,3,4,5',
+
+        ]);
+
         // Factories
         Bioproject::factory(50)->create();
         Biosample::factory(50)->create();
+        Sampletype::factory(10)->create();
+        Attributesample::factory(30)->create();
         Publication::factory(50)->create();
         Umbrellaproject::factory(3)->create();
         Fundagency::factory(30)->create();

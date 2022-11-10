@@ -15,6 +15,10 @@ class Biosample extends Model
     {
         return $this->belongsTo(Organism::class);
     }
+    public function sampletype()
+    {
+        return $this->belongsTo(Sampletype::class);
+    }
     public function center()
     {
         return $this->belongsTo(Center::class);

@@ -20,6 +20,10 @@
             <td class="col-sm-7">{{$biosample->organism->name}}</td>
         </tr>
         <tr>
+            <td class="col-sm-1">Sample Type</td>
+            <td class="col-sm-7">{{$biosample->sampletype->name}}</td>
+        </tr>
+        <tr>
             <td class="col-sm-1">Description</td>
             <td class="col-sm-7">{{$biosample->description}}</td>
         </tr>

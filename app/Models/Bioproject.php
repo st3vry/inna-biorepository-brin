@@ -50,6 +50,6 @@ class Bioproject extends Model
 
     public function getRouteKeyName()
     {
-        return 'alias';
+        return 'accession';
     }
 }

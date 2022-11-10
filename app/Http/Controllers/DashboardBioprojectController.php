@@ -22,7 +22,7 @@ class DashboardBioprojectController extends Controller
     {
         //
         return view('dashboard.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism'])->where('user_id', auth()->user()->id)->paginate(5),
+            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->paginate(5),
         ]);
     }
 

@@ -36,8 +36,12 @@
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-warning"><span data-feather="edit"></span></a>
-                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-danger"><span data-feather="x-circle"></span></a>
+                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                    <form action="/dashboard/bioprojects/{{$bioproject->accession}}" method="post" class="d-inline">
+                        @method('delete')
+                        @csrf
+                        <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
+                    </form>
                     @endif
                 </td>
             </tr>

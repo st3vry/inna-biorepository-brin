@@ -12,7 +12,7 @@
                     <span data-feather="list"></span>
                     My BioProject
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link {{ Request::is('dashboard/biosamples*') ? 'active' : ''}}" href="/dashboard/biosamples">
                     <span data-feather="layers"></span>
                     My BioSample
                 </a>

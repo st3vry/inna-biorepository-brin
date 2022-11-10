@@ -27,7 +27,7 @@ class BioprojectFactory extends Factory
         self::$id++;
 
         return [
-            'alias' => 'PRJ' . sprintf('%06d', intval(self::$id)),
+            'accession' => 'PRJ' . sprintf('%06d', intval(self::$id)),
             'submission_id' => 'SUBPRJ' . sprintf('%06d', intval(self::$id)),
             'relevance' => $this->faker->word(),
             'data_type_id' => mt_rand(1, 5),

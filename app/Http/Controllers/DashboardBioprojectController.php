@@ -66,9 +66,9 @@ class DashboardBioprojectController extends Controller
             'title' => 'required',
             'umbproject_id' => 'required',
             'description' => 'required',
-            'grant_title.*' => 'required',
-            'grant_program.*' => 'required',
-            'fundagency_id.*' => 'required'
+            'grants.*.fundagency_id' => 'required',
+            'grants.*.program' => 'required',
+            'grants.*.title' => 'required',
         ]);
         $bioproject = new Bioproject;
         $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
@@ -82,16 +82,17 @@ class DashboardBioprojectController extends Controller
         $bioproject->description = $data['description'];
         $bioproject->center_id = auth()->user()->lab->center_id;
         $bioproject->user_id = auth()->user()->id;
+        // dd($data);
         $bioproject->save();
 
 
-        if (count($data['fundagency_id']) > 0) {
-            foreach ($data['fundagency_id'] as  $item => $value) {
+        if (count($data['grants']) > 0) {
+            foreach ($data['grants'] as  $item => $value) {
                 $data2 = array(
                     'bioproject_id' => $bioproject->id,
-                    'fundagency_id' => $data['fundagency_id'][$item],
-                    'grant_title' => $data['grant_title'][$item],
-                    'grant_program' => $data['grant_program'][$item],
+                    'fundagency_id' => $data['grants'],
+                    'grant_title' => $data['grants'],
+                    'grant_program' => $data['grants'][$item],
                 );
                 // dd($data2);
                 Grant::create($data2);

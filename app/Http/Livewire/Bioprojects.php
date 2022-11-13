@@ -128,6 +128,6 @@ class Bioprojects extends Component
     public function render()
     {
         info($this->grants);
-        return view('livewire.bioprojects');
+        return view('livewire.bioproject.create');
     }
 }

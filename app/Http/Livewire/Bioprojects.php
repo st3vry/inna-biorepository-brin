@@ -121,7 +121,8 @@ class Bioprojects extends Component
                 Grant::create($data2);
             }
         }
-        return redirect()->to('/dashboard/bioprojects');
+        session()->flash('message', 'Bioproject successfully created.');
+        return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
     }
 
     public function render()

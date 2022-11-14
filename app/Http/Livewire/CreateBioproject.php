@@ -9,13 +9,10 @@ use App\Models\Fundagency;
 use App\Models\Organism;
 use App\Models\Samplescope;
 use App\Models\Umbrellaproject;
-use Illuminate\Http\Request;
 use Livewire\Component;
 
-class Bioprojects extends Component
+class CreateBioproject extends Component
 {
-
-
     public $umbrellas = [];
     public $organisms = [];
     public $datatypes = [];
@@ -47,22 +44,6 @@ class Bioprojects extends Component
         'grants.*.title' => 'required',
     ];
 
-    public function updated($field)
-    {
-        $this->validateOnly($field, [
-            'title' => 'required|min:6',
-            'umbproject_id' => 'required',
-            'organism_id' => 'required',
-            'relevance' => 'required|min:6',
-            'description' => 'required|min:6',
-            'data_type_id' => 'required',
-            'data_type_id.*' => 'numeric',
-            'samplescope_id' => 'required',
-            'grants.*.fundagency_id' => 'required',
-            'grants.*.program' => 'required',
-            'grants.*.title' => 'required',
-        ]);
-    }
     public function mount()
     {
         $this->umbrellas = Umbrellaproject::all();

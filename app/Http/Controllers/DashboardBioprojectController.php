@@ -34,18 +34,7 @@ class DashboardBioprojectController extends Controller
     public function create()
     {
         //
-        $organisms = Organism::all();
-        $fundagencies = Fundagency::all();
-        $umbrellas = Umbrellaproject::all();
-        $datatypes = Datatype::all();
-        $samplescopes = Samplescope::all();
-        return view('dashboard.bioproject.create', [
-            'organisms' => $organisms,
-            'fundagencies' => $fundagencies,
-            'umbrellas' => $umbrellas,
-            'datatypes' => $datatypes,
-            'samplescopes' => $samplescopes,
-        ]);
+        return view('dashboard.bioproject.create');
     }
 
     /**
@@ -138,7 +127,8 @@ class DashboardBioprojectController extends Controller
             // return 'ada published at';
             return view('error.404');
         }
-        return 'tidak ada published at';
+        // dd($bioproject);
+        return view('dashboard.bioproject.edit')->with('bioproject', $bioproject);
         // return (!empty($bioproject->published_at));
     }
 

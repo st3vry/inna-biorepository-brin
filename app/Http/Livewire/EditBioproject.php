@@ -33,6 +33,8 @@ class EditBioproject extends Component
     public $umbproject_id;
     public $description;
 
+    public $editedGrantIndex = null;
+
     public $message;
 
     protected $rules = [
@@ -71,8 +73,8 @@ class EditBioproject extends Component
         $this->selectedSampleScope = $bioproject->samplescope_id;
 
         $this->fundagencies = Fundagency::all();
-        // $this->grants = Grant::select('*')->where('bioproject_id', $bioproject->id)->get();
-        // dd($this->grants['']);
+        $this->grants = Grant::select('id', 'fundagency_id', 'grant_program', 'grant_title')->where('bioproject_id', $bioproject->id)->get()->toArray();
+        // dd($this->grants);
 
         // if ($this->grants) {
         //     dd($this->grants->attributesToArray());
@@ -83,6 +85,15 @@ class EditBioproject extends Component
         //     // }
         // }
     }
+    public function editgrant($grantIndex)
+    {
+        $this->editedGrantIndex = $grantIndex;
+    }
+    public function addGrant()
+    {
+        $this->grants[] = ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1'];
+    }
+
 
     public function render()
     {

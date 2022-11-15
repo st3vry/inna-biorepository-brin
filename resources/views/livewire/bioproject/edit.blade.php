@@ -104,7 +104,35 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    @foreach ($grants as $index => $grant)
+                    <tr>
+                        <td>
+                            <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
+                                <option value="">Funding Agency</option>
+                                @foreach ($fundagencies as $fundagency )
+                                <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('grants.*.fundagency_id')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <input type="text" name="grant[{{$index}}][program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
+                            @error('grants.*.program')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <input type="text" name="grant[{{$index}}][title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
+                            @error('grants.*.title')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <!-- <td>{{$grant['grant_program']}}</td> -->
+                        <!-- <td>{{$grant['grant_title']}}</td> -->
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
             <div class="row">
@@ -116,10 +144,7 @@
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
-    @foreach ($grantDatas as $grantData)
-    {{print_r($grantData)}}
-    {{$grantData['program']}}
-    @endforeach
+
 
     <button type="submit" class="btn btn-primary">Update Bioproject</button>
 </form>

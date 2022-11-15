@@ -117,13 +117,13 @@
                             @enderror
                         </td>
                         <td>
-                            <input type="text" name="grant[{{$index}}][program]" class="form-control" value="{{$grant['program']}}" wire:model="grants.{{$index}}.program">
+                            <input type="text" name="grant[{{$index}}][grant_program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
                             @error('grants.*.program')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
                         </td>
                         <td>
-                            <input type="text" name="grant[{{$index}}][title]" class="form-control" value="{{$grant['title']}}" wire:model="grants.{{$index}}.title">
+                            <input type="text" name="grant[{{$index}}][grant_title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
                             @error('grants.*.title')
                             <p class="text-danger">{{$message}}</p>
                             @enderror

@@ -40,8 +40,8 @@ class CreateBioproject extends Component
         'data_type_id.*' => 'numeric',
         'samplescope_id' => 'required',
         'grants.*.fundagency_id' => 'required',
-        'grants.*.program' => 'required',
-        'grants.*.title' => 'required',
+        'grants.*.grant_program' => 'required',
+        'grants.*.grant_title' => 'required',
     ];
 
     public function mount()
@@ -52,12 +52,12 @@ class CreateBioproject extends Component
         $this->samplescopes = Samplescope::all();
         $this->fundagencies = Fundagency::all();
         $this->grants = [
-            ['fundagency_id' => '', 'program' => '1', 'title' => '1']
+            ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1']
         ];
     }
     public function addGrant()
     {
-        $this->grants[] = ['fundagency_id' => '', 'program' => '1', 'title' => '1'];
+        $this->grants[] = ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1'];
     }
 
     public function removeGrant($index)
@@ -95,8 +95,8 @@ class CreateBioproject extends Component
                 $data2 = array(
                     'bioproject_id' => $bioproject->id,
                     'fundagency_id' => $validatedData['grants'][$item]['fundagency_id'],
-                    'grant_title' => $validatedData['grants'][$item]['title'],
-                    'grant_program' => $validatedData['grants'][$item]['program'],
+                    'grant_title' => $validatedData['grants'][$item]['grant_title'],
+                    'grant_program' => $validatedData['grants'][$item]['grant_program'],
                 );
                 // dd($data2);
                 Grant::create($data2);

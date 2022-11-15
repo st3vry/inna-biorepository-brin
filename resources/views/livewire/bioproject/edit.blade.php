@@ -107,6 +107,9 @@
                     @foreach ($grants as $index => $grant)
                     <tr>
                         <td>
+                            @if ($editedGrantIndex !== $index)
+                            {{$grant['fundagency']['name']}}
+                            @else
                             <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
                                 <option value="">Funding Agency</option>
                                 @foreach ($fundagencies as $fundagency )
@@ -116,18 +119,36 @@
                             @error('grants.*.fundagency_id')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
+                            @endif
+
                         </td>
                         <td>
+                            @if ($editedGrantIndex !== $index)
+                            {{$grant['grant_program']}}
+                            @else
                             <input type="text" name="grant[{{$index}}][program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
                             @error('grants.*.program')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
+                            @endif
+
                         </td>
-                        <td>
+                        <td>@if ($editedGrantIndex !== $index)
+                            {{$grant['grant_title']}}
+                            @else
                             <input type="text" name="grant[{{$index}}][title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
                             @error('grants.*.title')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
+                            @endif
+
+                        </td>
+                        <td>
+                            @if ($editedGrantIndex !== $index)
+                            <button class="btn btn-sm btn-primary" wire:click.prevent="editGrant({{$index}})">Edit</button>
+                            @else
+                            <button class="btn btn-sm btn-danger" wire:click.prevent="saveGrant({{$index}})">Save</button>
+                            @endif
                         </td>
                         <!-- <td>{{$grant['grant_program']}}</td> -->
                         <!-- <td>{{$grant['grant_title']}}</td> -->

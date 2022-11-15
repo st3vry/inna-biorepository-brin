@@ -73,22 +73,27 @@ class EditBioproject extends Component
         $this->selectedSampleScope = $bioproject->samplescope_id;
 
         $this->fundagencies = Fundagency::all();
-        $this->grants = Grant::select('id', 'fundagency_id', 'grant_program', 'grant_title')->where('bioproject_id', $bioproject->id)->get()->toArray();
-        // dd($this->grants);
+        $this->grants = Grant::select('id', 'fundagency_id', 'grant_program', 'grant_title')->with('fundagency')->where('bioproject_id', $bioproject->id)->get()->toArray();
 
-        // if ($this->grants) {
-        //     dd($this->grants->attributesToArray());
-        //     // foreach ($this->grants as $fundagency) {
-        //     //     $this->grantDatas[] = [
-        //     //         'fundagency_id' => $fundagency->id, 'program' => '1', 'title' => '1'
-        //     //     ];
-        //     // }
-        // }
+        // dd($this->grants);
     }
-    public function editgrant($grantIndex)
+    public function editGrant($grantIndex)
     {
         $this->editedGrantIndex = $grantIndex;
     }
+
+    public function saveGrant($grantIndex)
+    {
+        $grant = $this->grants[$grantIndex] ?? NULL;
+        if (!is_null($grant)) {
+            $editedGrant = Grant::find($grant['id']);
+            if ($editedGrant) {
+                $editedGrant->update($grant);
+            }
+        }
+        $this->editedGrantIndex = null;
+    }
+
     public function addGrant()
     {
         $this->grants[] = ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1'];

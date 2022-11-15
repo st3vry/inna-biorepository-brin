@@ -14,11 +14,16 @@ use Livewire\Component;
 class EditBioproject extends Component
 {
     public $umbrellas = [];
+    public $selectedUmbrella;
     public $organisms = [];
+    public $selectedOrganism;
     public $datatypes = [];
+    public $selectedDatatypes = [];
     public $samplescopes = [];
     public $fundagencies = [];
+    public $selectedFundAgency = [];
     public $grants = [];
+    public $grantDatas = [];
     public $relevance;
     public $data_type_id;
     public $selectedDatatype;
@@ -48,13 +53,35 @@ class EditBioproject extends Component
     {
         $this->id = $bioproject->id;
         $this->title = $bioproject->title;
-        $this->umbrellas = $bioproject->umbproject_id;
-        $this->organisms = $bioproject->organism_id;
-        $this->datatypes = $bioproject->data_type_id;
-        $this->samplescopes = $bioproject->samplescope_id;
-        // $this->grants = [
-        //     ['fundagency_id' => '', 'program' => '1', 'title' => '1']
-        // ];
+
+        $this->umbrellas = Umbrellaproject::all();
+        $this->selectedUmbrella = $bioproject->umbproject_id;
+
+        $this->organisms = Organism::all();
+        $this->selectedOrganism = $bioproject->organism_id;
+
+        $this->relevance = $bioproject->relevance;
+        $this->description = $bioproject->description;
+
+        $this->datatypes = Datatype::all();
+        $this->selectedDatatypes = explode(',', $bioproject->data_type_id);
+
+
+        $this->samplescopes = Samplescope::all();
+        $this->selectedSampleScope = $bioproject->samplescope_id;
+
+        $this->fundagencies = Fundagency::all();
+        // $this->grants = Grant::select('*')->where('bioproject_id', $bioproject->id)->get();
+        // dd($this->grants['']);
+
+        // if ($this->grants) {
+        //     dd($this->grants->attributesToArray());
+        //     // foreach ($this->grants as $fundagency) {
+        //     //     $this->grantDatas[] = [
+        //     //         'fundagency_id' => $fundagency->id, 'program' => '1', 'title' => '1'
+        //     //     ];
+        //     // }
+        // }
     }
 
     public function render()

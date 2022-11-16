@@ -157,26 +157,28 @@
                     @endforeach
                     @foreach ($newGrants as $index => $newGrant )
                     <tr>
+
+                        {{print_r($newGrant)}}
                         <td>
-                            <select class="form-select" name="newGrant[{{$index}}][fundagency_id]" wire:model="newGrant.{{$index}}.fundagency_id">
+                            <select class="form-select" name="newGrants[{{$index}}][fundagency_id]" wire:model="newGrants.{{$index}}.fundagency_id">
                                 <option value="">Funding Agency</option>
                                 @foreach ($fundagencies as $fundagency )
                                 <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
                                 @endforeach
                             </select>
-                            @error('grants.*.fundagency_id')
+                            @error('newGrants.*.fundagency_id')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
                         </td>
                         <td>
-                            <input type="text" name="newGrant[{{$index}}][grant_program]" class="form-control" value="{{$newGrant['grant_program']}}" wire:model="newGrant.{{$index}}.grant_program">
+                            <input type="text" name="newGrants[{{$index}}][grant_program]" class="form-control" value="{{$newGrant['grant_program']}}" wire:model="newGrants.{{$index}}.grant_program">
                             @error('newGrants.*.program')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
                         </td>
                         <td>
-                            <input type="text" name="newGrant[{{$index}}][grant_title]" class="form-control" value="{{$newGrant['grant_title']}}" wire:model="newGrant.{{$index}}.grant_title">
-                            @error('grants.*.title')
+                            <input type="text" name="newGrants[{{$index}}][grant_title]" class="form-control" value="{{$newGrant['grant_title']}}" wire:model="newGrants.{{$index}}.grant_title">
+                            @error('newGrants.*.title')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
                         </td>

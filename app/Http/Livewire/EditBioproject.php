@@ -48,9 +48,9 @@ class EditBioproject extends Component
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
         'samplescope_id' => 'required',
-        'grants.*.fundagency_id' => 'required',
-        'grants.*.program' => 'required',
-        'grants.*.title' => 'required',
+        'newGrants.*.fundagency_id' => 'required',
+        'newGrants.*.program' => 'required',
+        'newGrants.*.title' => 'required',
     ];
 
     public function mount($bioproject)
@@ -76,7 +76,9 @@ class EditBioproject extends Component
 
         $this->fundagencies = Fundagency::all();
         $this->grants = Grant::select('id', 'fundagency_id', 'grant_program', 'grant_title')->with('fundagency')->where('bioproject_id', $bioproject->id)->get()->toArray();
-
+        // $this->newGrants = [
+        //     ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1']
+        // ];
         // dd($this->grants);
     }
 
@@ -112,6 +114,46 @@ class EditBioproject extends Component
     {
         unset($this->newGrants[$index]);
         $this->newGrants = array_values($this->newGrants);
+    }
+
+    public function submitForm()
+    {
+
+        $this->message = '';
+
+        $validatedData = $this->validate();
+        $bioproject = new Bioproject();
+        // $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        // $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->relevance = $validatedData['relevance'];
+        $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
+        $bioproject->samplescope_id = $validatedData['samplescope_id'];
+        $bioproject->umbproject_id = $validatedData['umbproject_id'];
+        $bioproject->organism_id = $validatedData['organism_id'];
+        $bioproject->title = $validatedData['title'];
+        $bioproject->description = $validatedData['description'];
+        // $bioproject->center_id = auth()->user()->lab->center_id;
+        // $bioproject->user_id = auth()->user()->id;
+
+        // $bioproject->update();
+        // dd($bioproject);
+        // dd($validatedData);
+        // $bioproject = Bioproject::create($validatedData);
+
+        if (count($validatedData['newGrants']) > 0) {
+            foreach ($validatedData['newGrants'] as  $item => $value) {
+                $data2 = array(
+                    'bioproject_id' => $bioproject->id,
+                    'fundagency_id' => $validatedData['newGrants'][$item]['fundagency_id'],
+                    'grant_title' => $validatedData['newGrants'][$item]['grant_title'],
+                    'grant_program' => $validatedData['newGrants'][$item]['grant_program'],
+                );
+                dd($data2);
+                // Grant::create($data2);
+            }
+        }
+        session()->flash('message', 'Bioproject successfully created.');
+        return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
     }
 
     public function render()

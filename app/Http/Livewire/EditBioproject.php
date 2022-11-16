@@ -122,7 +122,12 @@ class EditBioproject extends Component
         try {
             Bioproject::find($this->bioproject_id)->fill([
                 'title' => $this->title,
-                'description' => $this->description
+                'umbproject_id' =>  $this->selectedUmbrella,
+                'organism_id' => $this->selectedOrganism,
+                'relevance' => $this->relevance,
+                'description' => $this->description,
+                'data_type_id' => $this->selectedDatatypes,
+                'samplescope_id' => $this->selectedSampleScope,
             ])->save();
 
             if (count($validatedData['newGrants']) > 0) {

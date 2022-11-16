@@ -69,7 +69,7 @@ class EditBioproject extends Component
         $this->description = $bioproject->description;
 
         $this->datatypes = Datatype::all();
-        $this->selectedDatatypes = explode(',', $bioproject->data_type_id);
+        $this->selectedDatatypes = array_map('intval', explode(',', $bioproject->data_type_id));
 
         $this->samplescopes = Samplescope::all();
         $this->selectedSampleScope = $bioproject->samplescope_id;
@@ -77,7 +77,6 @@ class EditBioproject extends Component
         $this->fundagencies = Fundagency::all();
         $this->grants = Grant::select('id', 'fundagency_id', 'grant_program', 'grant_title')->with('fundagency')->where('bioproject_id', $bioproject->id)->get()->toArray();
         $this->newGrants = [];
-        // dd($bioproject->id);
     }
 
     public function editGrant($grantIndex)
@@ -118,7 +117,8 @@ class EditBioproject extends Component
     {
         $this->message = '';
         $validatedData = $this->validate();
-
+        // dd($bioproject->data_type_id);
+        // dd(implode(',', $this->selectedDatatypes));
         try {
             Bioproject::find($this->bioproject_id)->fill([
                 'title' => $this->title,
@@ -126,7 +126,7 @@ class EditBioproject extends Component
                 'organism_id' => $this->selectedOrganism,
                 'relevance' => $this->relevance,
                 'description' => $this->description,
-                'data_type_id' => $this->selectedDatatypes,
+                'data_type_id' => implode(',', $this->selectedDatatypes),
                 'samplescope_id' => $this->selectedSampleScope,
             ])->save();
 

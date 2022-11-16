@@ -23,6 +23,7 @@ class EditBioproject extends Component
     public $fundagencies = [];
     public $selectedFundAgency = [];
     public $grants = [];
+    public $newGrants = [];
     public $grantDatas = [];
     public $relevance;
     public $data_type_id;
@@ -34,6 +35,7 @@ class EditBioproject extends Component
     public $description;
 
     public $editedGrantIndex = null;
+    public $addNewGrant = false;
 
     public $message;
 
@@ -77,6 +79,7 @@ class EditBioproject extends Component
 
         // dd($this->grants);
     }
+
     public function editGrant($grantIndex)
     {
         $this->editedGrantIndex = $grantIndex;
@@ -94,11 +97,22 @@ class EditBioproject extends Component
         $this->editedGrantIndex = null;
     }
 
-    public function addGrant()
+    public function deleteGrant($grantIndex)
     {
-        $this->grants[] = ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1'];
+        dd($grantIndex);
     }
 
+    public function newGrant()
+    {
+        $this->addNewGrant = true;
+        $this->newGrants[] = ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1'];
+    }
+
+    public function removeGrant($index)
+    {
+        unset($this->newGrants[$index]);
+        $this->newGrants = array_values($this->newGrants);
+    }
 
     public function render()
     {

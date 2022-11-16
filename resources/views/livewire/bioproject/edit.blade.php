@@ -146,19 +146,51 @@
                         <td>
                             @if ($editedGrantIndex !== $index)
                             <button class="btn btn-sm btn-primary" wire:click.prevent="editGrant({{$index}})">Edit</button>
+                            <button class="btn btn-sm btn-danger" wire:click.prevent="deleteGrant({{$index}})">Delete</button>
                             @else
-                            <button class="btn btn-sm btn-danger" wire:click.prevent="saveGrant({{$index}})">Save</button>
+                            <button class="btn btn-sm btn-warning" wire:click.prevent="saveGrant({{$index}})">Save</button>
                             @endif
                         </td>
                         <!-- <td>{{$grant['grant_program']}}</td> -->
                         <!-- <td>{{$grant['grant_title']}}</td> -->
                     </tr>
                     @endforeach
+                    @foreach ($newGrants as $index => $newGrant )
+                    <tr>
+                        <td>
+                            <select class="form-select" name="newGrant[{{$index}}][fundagency_id]" wire:model="newGrant.{{$index}}.fundagency_id">
+                                <option value="">Funding Agency</option>
+                                @foreach ($fundagencies as $fundagency )
+                                <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('grants.*.fundagency_id')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <input type="text" name="newGrant[{{$index}}][grant_program]" class="form-control" value="{{$newGrant['grant_program']}}" wire:model="newGrant.{{$index}}.grant_program">
+                            @error('newGrants.*.program')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <input type="text" name="newGrant[{{$index}}][grant_title]" class="form-control" value="{{$newGrant['grant_title']}}" wire:model="newGrant.{{$index}}.grant_title">
+                            @error('grants.*.title')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-danger delete_row" wire:click.prevent="removeGrant({{$index}})">remove</button>
+                        </td>
+                    </tr>
+
+                    @endforeach
                 </tbody>
             </table>
             <div class="row">
                 <div class="col-md-12">
-                    <button class="btn btn-sm btn-secondary" wire:click.prevent="addGrant">+ Add Another Grant</button>
+                    <button class="btn btn-sm btn-secondary" wire:click.prevent="newGrant">+ Add Another Grant</button>
                 </div>
             </div>
         </div>

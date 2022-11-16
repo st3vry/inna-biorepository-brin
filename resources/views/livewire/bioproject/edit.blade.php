@@ -1,4 +1,4 @@
-<form wire:submit.prevent="submitForm">
+<form>
     <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control @error('title') is-invalid @enderror" wire:model.lazy="title" id="title" name="title" value="{{old('title')}}">
@@ -110,13 +110,13 @@
                             @if ($editedGrantIndex !== $index)
                             {{$grant['fundagency']['name']}}
                             @else
-                            <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
+                            <select class="form-select" name="newGrants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
                                 <option value="">Funding Agency</option>
                                 @foreach ($fundagencies as $fundagency )
                                 <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
                                 @endforeach
                             </select>
-                            @error('grants.*.fundagency_id')
+                            @error('newGrants.*.fundagency_id')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
                             @endif
@@ -126,8 +126,8 @@
                             @if ($editedGrantIndex !== $index)
                             {{$grant['grant_program']}}
                             @else
-                            <input type="text" name="grant[{{$index}}][program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
-                            @error('grants.*.program')
+                            <input type="text" name="newGrants[{{$index}}][program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
+                            @error('newGrants.*.grant_program')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
                             @endif
@@ -136,8 +136,8 @@
                         <td>@if ($editedGrantIndex !== $index)
                             {{$grant['grant_title']}}
                             @else
-                            <input type="text" name="grant[{{$index}}][title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
-                            @error('grants.*.title')
+                            <input type="text" name="newGrants[{{$index}}][title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
+                            @error('newGrants.*.grant_title')
                             <p class="text-danger">{{$message}}</p>
                             @enderror
                             @endif
@@ -158,7 +158,7 @@
                     @foreach ($newGrants as $index => $newGrant )
                     <tr>
 
-                        {{print_r($newGrant)}}
+                        {{$newGrants[0]['grant_title']}}
                         <td>
                             <select class="form-select" name="newGrants[{{$index}}][fundagency_id]" wire:model="newGrants.{{$index}}.fundagency_id">
                                 <option value="">Funding Agency</option>
@@ -201,5 +201,5 @@
     <!-- /.card -->
 
 
-    <button type="submit" class="btn btn-primary">Update Bioproject</button>
+    <button wire:click.prevent="update()" class="btn btn-primary">Update Bioproject</button>
 </form>

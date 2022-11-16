@@ -13,6 +13,7 @@ use Livewire\Component;
 
 class EditBioproject extends Component
 {
+    public $bioproject_id;
     public $umbrellas = [];
     public $selectedUmbrella;
     public $organisms = [];
@@ -41,21 +42,21 @@ class EditBioproject extends Component
 
     protected $rules = [
         'title' => 'required|min:6',
-        'umbproject_id' => 'required',
-        'organism_id' => 'required',
+        'selectedOrganism' => 'required',
+        'selectedDatatypes' => 'required',
+        'selectedUmbrella' => 'required',
+        'selectedSampleScope' => 'required',
         'relevance' => 'required|min:6',
         'description' => 'required|min:6',
-        'data_type_id' => 'required',
-        'data_type_id.*' => 'numeric',
-        'samplescope_id' => 'required',
         'newGrants.*.fundagency_id' => 'required',
-        'newGrants.*.program' => 'required',
-        'newGrants.*.title' => 'required',
+        'newGrants.*.grant_program' => 'required',
+        'newGrants.*.grant_title' => 'required',
     ];
 
     public function mount($bioproject)
     {
-        $this->id = $bioproject->id;
+        $this->bioproject_id = $bioproject->id;
+        $this->accession = $bioproject->accession;
         $this->title = $bioproject->title;
 
         $this->umbrellas = Umbrellaproject::all();
@@ -70,16 +71,13 @@ class EditBioproject extends Component
         $this->datatypes = Datatype::all();
         $this->selectedDatatypes = explode(',', $bioproject->data_type_id);
 
-
         $this->samplescopes = Samplescope::all();
         $this->selectedSampleScope = $bioproject->samplescope_id;
 
         $this->fundagencies = Fundagency::all();
         $this->grants = Grant::select('id', 'fundagency_id', 'grant_program', 'grant_title')->with('fundagency')->where('bioproject_id', $bioproject->id)->get()->toArray();
-        // $this->newGrants = [
-        //     ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1']
-        // ];
-        // dd($this->grants);
+        $this->newGrants = [];
+        // dd($bioproject->id);
     }
 
     public function editGrant($grantIndex)
@@ -116,44 +114,36 @@ class EditBioproject extends Component
         $this->newGrants = array_values($this->newGrants);
     }
 
-    public function submitForm()
+    public function update()
     {
-
         $this->message = '';
-
         $validatedData = $this->validate();
-        $bioproject = new Bioproject();
-        // $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        // $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        $bioproject->relevance = $validatedData['relevance'];
-        $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
-        $bioproject->samplescope_id = $validatedData['samplescope_id'];
-        $bioproject->umbproject_id = $validatedData['umbproject_id'];
-        $bioproject->organism_id = $validatedData['organism_id'];
-        $bioproject->title = $validatedData['title'];
-        $bioproject->description = $validatedData['description'];
-        // $bioproject->center_id = auth()->user()->lab->center_id;
-        // $bioproject->user_id = auth()->user()->id;
 
-        // $bioproject->update();
-        // dd($bioproject);
-        // dd($validatedData);
-        // $bioproject = Bioproject::create($validatedData);
+        try {
+            Bioproject::find($this->bioproject_id)->fill([
+                'title' => $this->title,
+                'description' => $this->description
+            ])->save();
 
-        if (count($validatedData['newGrants']) > 0) {
-            foreach ($validatedData['newGrants'] as  $item => $value) {
-                $data2 = array(
-                    'bioproject_id' => $bioproject->id,
-                    'fundagency_id' => $validatedData['newGrants'][$item]['fundagency_id'],
-                    'grant_title' => $validatedData['newGrants'][$item]['grant_title'],
-                    'grant_program' => $validatedData['newGrants'][$item]['grant_program'],
-                );
-                dd($data2);
-                // Grant::create($data2);
+            if (count($validatedData['newGrants']) > 0) {
+                foreach ($validatedData['newGrants'] as  $item => $value) {
+                    $data2 = array(
+                        'bioproject_id' => $this->bioproject_id,
+                        'fundagency_id' => $validatedData['newGrants'][$item]['fundagency_id'],
+                        'grant_title' => $validatedData['newGrants'][$item]['grant_title'],
+                        'grant_program' => $validatedData['newGrants'][$item]['grant_program'],
+                    );
+                    // dd($data2);
+                    Grant::create($data2);
+                }
             }
+            $this->message = 'Bioproject Updated Successfully!!';
+            session()->flash('success', $this->message);
+        } catch (\Exception $e) {
+            $this->message = 'Something goes wrong while updating Bioproject!!';
+            session()->flash('error', $this->message);
         }
-        session()->flash('message', 'Bioproject successfully created.');
-        return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
+        return redirect()->to('/dashboard/bioprojects/' . $this->accession);
     }
 
     public function render()

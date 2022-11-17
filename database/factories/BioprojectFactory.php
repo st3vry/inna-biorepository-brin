@@ -29,7 +29,6 @@ class BioprojectFactory extends Factory
         return [
             'accession' => 'PRJ' . sprintf('%06d', intval(self::$id)),
             'submission_id' => 'SUBPRJ' . sprintf('%06d', intval(self::$id)),
-            'relevancebioproject_id' => mt_rand(1, 10),
             'data_type_id' => mt_rand(1, 5),
             'samplescope_id' => mt_rand(1, 3),
             'organism_id' => mt_rand(1, 3),

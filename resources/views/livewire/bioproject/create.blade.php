@@ -28,6 +28,13 @@
             <option value="{{$relevance->id}}" @if (old('relevance_id')==$relevance->id) selected @endif>{{$relevance->name}}</option>
             @endforeach
         </select>
+        @if ($relevance_id==7)
+        <label for="reldesc" class="form-label">Relevance Description</label>
+        <input type="text" class="form-control @error('reldesc') is-invalid @enderror" wire:model="reldesc" id="reldesc" name="reldesc" value="{{old('reldesc')}}">
+        @error('reldesc')
+        <div class="invalid-feedback">{{$message}}</div>
+        @enderror
+        @endif
 
         @error('relevance_id')
         <p class="text-danger">{{$message}}</p>

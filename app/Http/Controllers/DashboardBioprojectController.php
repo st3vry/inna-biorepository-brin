@@ -108,7 +108,6 @@ class DashboardBioprojectController extends Controller
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
-        // dd($relevanceBioproject);
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,

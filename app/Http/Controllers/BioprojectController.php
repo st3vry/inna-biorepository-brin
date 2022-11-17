@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bioproject;
 use App\Models\Datatype;
-use Illuminate\Http\Request;
+use App\Models\RelevanceBioproject;
 
 class BioprojectController extends Controller
 {
@@ -39,12 +39,14 @@ class BioprojectController extends Controller
         $grants = $bioproject->grant()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
+        $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         return view('frontend.showbioproject', [
             'title' => 'Bioproject',
             'bioproject' => $bioproject,
             'pubs' => $pubs,
             'grants' => $grants,
-            'data_types' => $data_types
+            'data_types' => $data_types,
+            'relevance' => $relevanceBioproject
         ]);
     }
 }

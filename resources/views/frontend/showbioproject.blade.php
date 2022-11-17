@@ -26,7 +26,10 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Relevance</td>
-                <td class="col-sm-7">{{$bioproject->relevance}}</td>
+                <td class="col-sm-7">{{$relevance->relevance->name}}
+                    @if ($relevance->relevance->id == 7)
+                    &mdash; {{$relevance->description}}
+                    @endif </td>
             </tr>
             <tr>
                 <td class="col-sm-1">Publication</td>

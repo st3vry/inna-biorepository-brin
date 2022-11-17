@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('data_type_id');
             $table->foreignId('samplescope_id');
             $table->foreignId('organism_id');
-            $table->integer('umbproject_id');
+            $table->integer('umbproject_id')->nullable();
             $table->string('title');
             $table->text('description');
             $table->integer('center_id');

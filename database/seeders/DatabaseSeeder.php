@@ -20,6 +20,7 @@ use App\Models\Role;
 use App\Models\Sampletype;
 use App\Models\Attribute;
 use App\Models\Attributesample;
+use App\Models\Relevance;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -107,6 +108,24 @@ class DatabaseSeeder extends Seeder
         Organism::create([
             'taxon_id' => '123123',
             'name' => 'Organism 4',
+        ]);
+
+
+        //Relevance 
+        Relevance::create([
+            'name' => 'Agricultural'
+        ]);
+        Relevance::create([
+            'name' => 'Agricultural'
+        ]);
+        Relevance::create([
+            'name' => 'Agricultural'
+        ]);
+        Relevance::create([
+            'name' => 'Agricultural'
+        ]);
+        Relevance::create([
+            'name' => 'Other'
         ]);
 
         // Center

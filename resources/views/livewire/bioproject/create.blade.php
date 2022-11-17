@@ -11,7 +11,7 @@
         <select class="form-select" name="umbproject_id" wire:model="umbproject_id" id="umbproject_id">
             <option value="">Umbrella Project</option>
             @foreach ($umbrellas as $umbrella )
-            <option value="{{$umbrella->id}}" @if (old('umbproject_id')==$umbrella->id) selected @endif>{{$umbrella->title}}</option>
+            <option value="{{$umbrella->id}}" @if (old('umbproject_id')==$umbrella->id) selected @endif> {{$umbrella->accession}} &mdash; {{$umbrella->title}}</option>
             @endforeach
         </select>
 
@@ -107,7 +107,7 @@
                     <tr>
                         <td>
                             <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
-                                <option value="">Funding Agency</option>
+                                <option value="0">Funding Agency</option>
                                 @foreach ($fundagencies as $fundagency )
                                 <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
                                 @endforeach

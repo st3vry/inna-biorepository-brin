@@ -32,7 +32,7 @@ class CreateBioproject extends Component
 
     protected $rules = [
         'title' => 'required|min:6',
-        'umbproject_id' => 'required',
+        'umbproject_id' => '',
         'organism_id' => 'required',
         'relevance' => 'required|min:6',
         'description' => 'required|min:6',
@@ -46,7 +46,7 @@ class CreateBioproject extends Component
 
     public function mount()
     {
-        $this->umbrellas = Umbrellaproject::all();
+        $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->organisms = Organism::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

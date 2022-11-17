@@ -8,6 +8,7 @@ use App\Models\Datatype;
 use App\Models\Fundagency;
 use App\Models\Organism;
 use App\Models\Relevance;
+use App\Models\RelevanceBioproject;
 use App\Models\Samplescope;
 use App\Models\Umbrellaproject;
 use Livewire\Component;
@@ -20,7 +21,7 @@ class CreateBioproject extends Component
     public $samplescopes = [];
     public $fundagencies = [];
     public $grants = [];
-    public $relevance = [];
+    public $relevance_id = [];
     public $data_type_id;
     public $selectedDatatype;
     public $samplescope_id;
@@ -35,7 +36,7 @@ class CreateBioproject extends Component
         'title' => 'required|min:6',
         'umbproject_id' => '',
         'organism_id' => 'required',
-        'relevance' => 'required',
+        'relevance_id' => 'required',
         'description' => 'required|min:6',
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
@@ -48,7 +49,7 @@ class CreateBioproject extends Component
     public function mount()
     {
         $this->umbrellas = Bioproject::where('draft', false)->get();
-        $this->relevance = Relevance::all();
+        $this->relevances = Relevance::all();
         $this->organisms = Organism::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();
@@ -77,7 +78,7 @@ class CreateBioproject extends Component
         $bioproject = new Bioproject();
         $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        $bioproject->relevance = $validatedData['relevance'];
+        $bioproject->relevance = $validatedData['relevance_id'];
         $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
         $bioproject->samplescope_id = $validatedData['samplescope_id'];
         $bioproject->umbproject_id = $validatedData['umbproject_id'];

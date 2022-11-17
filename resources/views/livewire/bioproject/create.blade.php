@@ -19,8 +19,23 @@
         <p class="text-danger">{{$message}}</p>
         @enderror
     </div>
+
     <div class="mb-3">
-        <label for="organism" class="form-label">Organism</label>
+        <label for="relevance" class="form-label">Relevance</label>
+        <select class="form-select" name="relevance_id" id="relevance_id" wire:model="relevance_id">
+            <option value="">Relevance</option>
+            @foreach ($relevances as $relevance )
+            <option value="{{$relevance->id}}" @if (old('relevance_id')==$relevance->id) selected @endif>{{$relevance->name}}</option>
+            @endforeach
+        </select>
+
+        @error('relevance_id')
+        <p class="text-danger">{{$message}}</p>
+        @enderror
+    </div>
+
+    <div class="mb-3">
+        <label for="organism_id" class="form-label">Organism</label>
         <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
             <option value="">Organism</option>
             @foreach ($organisms as $organism )
@@ -32,24 +47,7 @@
         <p class="text-danger">{{$message}}</p>
         @enderror
     </div>
-    <div class="mb-3">
-        <label for="relevance" class="form-label">Relevance</label>
-        <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
-            <option value="">Organism</option>
-            @foreach ($organisms as $organism )
-            <option value="{{$organism->id}}" @if (old('organism_id')==$organism->id) selected @endif>{{$organism->name}}</option>
-            @endforeach
-        </select>
 
-        @error('organism_id')
-        <p class="text-danger">{{$message}}</p>
-        @enderror
-        <label for="relevance" class="form-label">Relevance</label>
-        <input type="text" class="form-control @error('relevance') is-invalid @enderror" id="relevance" wire:model="relevance" name="relevance" value="{{old('relevance')}}">
-        @error('relevance')
-        <div class="invalid-feedback">{{$message}}</div>
-        @enderror
-    </div>
     <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea class="form-control" id="description" name="description" wire:model="description" rows="3">{{old('description')}}</textarea>

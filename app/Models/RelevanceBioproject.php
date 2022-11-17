@@ -12,11 +12,11 @@ class RelevanceBioproject extends Model
 
     public function bioproject()
     {
-        return $this->hasMany(Bioproject::class);
+        return $this->belongsTo(Bioproject::class);
     }
 
     public function Relevance()
     {
-        return $this->hasMany(Relevance::class);
+        return $this->belongsTo(Relevance::class);
     }
 }

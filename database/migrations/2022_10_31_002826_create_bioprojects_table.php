@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('accession')->unique()->nullable();
             $table->string('submission_id')->unique();
-            $table->string('relevance');
+            $table->string('relevancebioproject_id')->nullable();
             $table->string('data_type_id');
             $table->foreignId('samplescope_id');
             $table->foreignId('organism_id');

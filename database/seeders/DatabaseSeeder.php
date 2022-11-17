@@ -21,6 +21,7 @@ use App\Models\Sampletype;
 use App\Models\Attribute;
 use App\Models\Attributesample;
 use App\Models\Relevance;
+use App\Models\RelevanceBioproject;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -116,17 +117,30 @@ class DatabaseSeeder extends Seeder
             'name' => 'Agricultural'
         ]);
         Relevance::create([
-            'name' => 'Agricultural'
+            'name' => 'Medical'
         ]);
         Relevance::create([
-            'name' => 'Agricultural'
+            'name' => 'Industrial'
         ]);
         Relevance::create([
-            'name' => 'Agricultural'
+            'name' => 'Environtmental'
+        ]);
+        Relevance::create([
+            'name' => 'Evolution'
+        ]);
+        Relevance::create([
+            'name' => 'Model Organism'
         ]);
         Relevance::create([
             'name' => 'Other'
         ]);
+
+        // Relevance Bioproject
+        $max = 50;
+        for ($c = 1; $c <= $max; $c++) {
+            // \App\Models\RelevanceBioproject::factory()->create();
+            RelevanceBioproject::factory()->create();
+        }
 
         // Center
         Center::create([

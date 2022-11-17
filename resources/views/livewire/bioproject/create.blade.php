@@ -34,6 +34,17 @@
     </div>
     <div class="mb-3">
         <label for="relevance" class="form-label">Relevance</label>
+        <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
+            <option value="">Organism</option>
+            @foreach ($organisms as $organism )
+            <option value="{{$organism->id}}" @if (old('organism_id')==$organism->id) selected @endif>{{$organism->name}}</option>
+            @endforeach
+        </select>
+
+        @error('organism_id')
+        <p class="text-danger">{{$message}}</p>
+        @enderror
+        <label for="relevance" class="form-label">Relevance</label>
         <input type="text" class="form-control @error('relevance') is-invalid @enderror" id="relevance" wire:model="relevance" name="relevance" value="{{old('relevance')}}">
         @error('relevance')
         <div class="invalid-feedback">{{$message}}</div>

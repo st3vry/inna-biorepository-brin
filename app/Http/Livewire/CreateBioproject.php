@@ -7,6 +7,7 @@ use App\Models\Grant;
 use App\Models\Datatype;
 use App\Models\Fundagency;
 use App\Models\Organism;
+use App\Models\Relevance;
 use App\Models\Samplescope;
 use App\Models\Umbrellaproject;
 use Livewire\Component;
@@ -19,7 +20,7 @@ class CreateBioproject extends Component
     public $samplescopes = [];
     public $fundagencies = [];
     public $grants = [];
-    public $relevance;
+    public $relevance = [];
     public $data_type_id;
     public $selectedDatatype;
     public $samplescope_id;
@@ -34,7 +35,7 @@ class CreateBioproject extends Component
         'title' => 'required|min:6',
         'umbproject_id' => '',
         'organism_id' => 'required',
-        'relevance' => 'required|min:6',
+        'relevance' => 'required',
         'description' => 'required|min:6',
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
@@ -47,6 +48,7 @@ class CreateBioproject extends Component
     public function mount()
     {
         $this->umbrellas = Bioproject::where('draft', false)->get();
+        $this->relevance = Relevance::all();
         $this->organisms = Organism::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

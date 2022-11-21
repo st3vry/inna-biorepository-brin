@@ -9,6 +9,7 @@ use App\Models\Grant;
 use App\Models\MaterialBioproject;
 use App\Models\CaptureBioproject;
 use App\Models\RelevanceBioproject;
+use App\Models\MethodologyBioproject;
 use Illuminate\Http\Request;
 
 class DashboardBioprojectController extends Controller
@@ -110,6 +111,7 @@ class DashboardBioprojectController extends Controller
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
+        $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,
@@ -118,6 +120,7 @@ class DashboardBioprojectController extends Controller
             'relevance' => $relevanceBioproject,
             'material' => $materialBioproject,
             'capture' => $captureBioproject,
+            'methodology' => $methodologyBioproject,
             'umbrella' => $umbrella
         ]);
     }

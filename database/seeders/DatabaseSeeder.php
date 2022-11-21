@@ -23,6 +23,7 @@ use App\Models\Attributesample;
 use App\Models\CaptureBioproject;
 use App\Models\Material;
 use App\Models\MaterialBioproject;
+use App\Models\MethodologyBioproject;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
 use Illuminate\Support\Str;
@@ -74,6 +75,11 @@ class DatabaseSeeder extends Seeder
                 'capture_id' => mt_rand(1, 6),
                 'description' => $faker->sentence(3),
             ]);
+            MethodologyBioproject::create([
+                'bioproject_id' => $c,
+                'methodology_id' => mt_rand(1, 4),
+                'description' => $faker->sentence(3),
+            ]);
         }
 
         $this->call([
@@ -87,7 +93,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             SampletypeSeeder::class,
             MaterialSeeder::class,
-            CaptureSeeder::class
+            CaptureSeeder::class,
+            MethodologySeeder::class
         ]);
     }
 }

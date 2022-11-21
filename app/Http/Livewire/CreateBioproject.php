@@ -5,12 +5,14 @@ namespace App\Http\Livewire;
 use App\Models\Bioproject;
 use App\Models\Capture;
 use App\Models\CaptureBioproject;
+use App\Models\Consortium;
 use App\Models\Grant;
 use App\Models\Datatype;
 use App\Models\Fundagency;
 use App\Models\Material;
 use App\Models\MaterialBioproject;
 use App\Models\Methodology;
+use App\Models\MethodologyBioproject;
 use App\Models\Organism;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
@@ -21,6 +23,7 @@ class CreateBioproject extends Component
 {
     public $umbrellas = [];
     public $organisms = [];
+    public $consortia = [];
     public $datatypes = [];
     public $samplescopes = [];
     public $fundagencies = [];
@@ -45,6 +48,7 @@ class CreateBioproject extends Component
     public $selectedDatatype;
     public $samplescope_id;
     public $organism_id;
+    public $consortium_id;
     public $title;
     public $umbproject_id;
     public $description;
@@ -55,6 +59,7 @@ class CreateBioproject extends Component
         'title' => 'required|min:6',
         'umbproject_id' => '',
         'organism_id' => 'required',
+        'consortium_id' => 'required',
         'relevance_id' => 'required',
         'reldesc' => '',
 
@@ -64,7 +69,7 @@ class CreateBioproject extends Component
         'capture_id' => 'required',
         'capdesc' => '',
 
-        'methodology' => 'required',
+        'methodology_id' => 'required',
         'metdesc' => '',
 
         'description' => 'required|min:6',
@@ -83,6 +88,7 @@ class CreateBioproject extends Component
         $this->materials = Material::all();
         $this->captures = Capture::all();
         $this->methodologies = Methodology::all();
+        $this->consortia = Consortium::all();
         $this->organisms = Organism::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();
@@ -119,6 +125,7 @@ class CreateBioproject extends Component
         $bioproject->samplescope_id = $validatedData['samplescope_id'];
         $bioproject->umbproject_id = $validatedData['umbproject_id'];
         $bioproject->organism_id = $validatedData['organism_id'];
+        $bioproject->consortium_id = $validatedData['consortium_id'];
         $bioproject->title = $validatedData['title'];
         $bioproject->description = $validatedData['description'];
         $bioproject->center_id = auth()->user()->lab->center_id;
@@ -146,6 +153,14 @@ class CreateBioproject extends Component
         ];
 
         CaptureBioproject::create($captureData);
+
+        $methodologyData = [
+            'bioproject_id' => $bioproject->id,
+            'methodology_id' => $validatedData['methodology_id'],
+            'description' => $validatedData['metdesc']
+        ];
+
+        MethodologyBioproject::create($methodologyData);
 
         if (count($validatedData['grants']) > 0) {
             foreach ($validatedData['grants'] as  $item => $value) {

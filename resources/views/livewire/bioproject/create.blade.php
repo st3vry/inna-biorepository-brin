@@ -21,6 +21,20 @@
     </div>
 
     <div class="mb-3">
+        <label for="consortium_id" class="form-label">Consortium</label>
+        <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
+            <option value="">Consortium</option>
+            @foreach ($consortia as $consortium )
+            <option value="{{$consortium->id}}" @if (old('consortium_id')==$consortium->id) selected @endif>{{$consortium->name}}</option>
+            @endforeach
+        </select>
+
+        @error('consortium_id')
+        <p class="text-danger">{{$message}}</p>
+        @enderror
+    </div>
+
+    <div class="mb-3">
         <label for="relevance" class="form-label">Relevance</label>
         <select class="form-select" name="relevance_id" id="relevance_id" wire:model="relevance_id">
             <option value="">Relevance</option>
@@ -79,6 +93,27 @@
         @endif
 
         @error('capture_id')
+        <p class="text-danger">{{$message}}</p>
+        @enderror
+    </div>
+
+    <div class="mb-3">
+        <label for="methodology" class="form-label">Methodology</label>
+        <select class="form-select" name="methodology_id" id="methodology_id" wire:model="methodology_id">
+            <option value="">Methodology</option>
+            @foreach ($methodologies as $methodology )
+            <option value="{{$methodology->id}}" @if (old('methodology_id')==$methodology->id) selected @endif>{{$methodology->name}}</option>
+            @endforeach
+        </select>
+        @if ($methodology_id==4)
+        <label for="metdesc" class="form-label">Methodology Description</label>
+        <input type="text" class="form-control @error('metdesc') is-invalid @enderror" wire:model="metdesc" id="metdesc" name="metdesc" value="{{old('reldesc')}}">
+        @error('metdesc')
+        <div class="invalid-feedback">{{$message}}</div>
+        @enderror
+        @endif
+
+        @error('methodology_id')
         <p class="text-danger">{{$message}}</p>
         @enderror
     </div>

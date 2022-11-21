@@ -21,6 +21,7 @@ use App\Models\Sampletype;
 use App\Models\Attribute;
 use App\Models\Attributesample;
 use App\Models\CaptureBioproject;
+use App\Models\Consortium;
 use App\Models\Material;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
@@ -94,7 +95,8 @@ class DatabaseSeeder extends Seeder
             SampletypeSeeder::class,
             MaterialSeeder::class,
             CaptureSeeder::class,
-            MethodologySeeder::class
+            MethodologySeeder::class,
+            ConsortiumSeeder::class
         ]);
     }
 }

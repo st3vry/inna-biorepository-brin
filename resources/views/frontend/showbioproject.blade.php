@@ -21,6 +21,10 @@
                 <td class="col-sm-7"><a href="{{ $umbrella->accession }}">{{ $umbrella->accession }}</a> &mdash; {{$umbrella->title}}</td>
             </tr>
             <tr>
+                <td class="col-sm-1">Consortium</td>
+                <td class="col-sm-7">{{$bioproject->consortium->name}}</td>
+            </tr>
+            <tr>
                 <td class="col-sm-1">Organism</td>
                 <td class="col-sm-7">{{$bioproject->organism->name}}</td>
             </tr>

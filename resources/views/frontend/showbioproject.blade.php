@@ -50,6 +50,13 @@
                     @endif </td>
             </tr>
             <tr>
+                <td class="col-sm-1">Methodology</td>
+                <td class="col-sm-7">{{$methodology->methodology->name}}
+                    @if ($methodology->methodology->id == 4)
+                    &mdash; {{$methodology->description}}
+                    @endif </td>
+            </tr>
+            <tr>
                 <td class="col-sm-1">Publication</td>
                 <td class="col-sm-7">
                     <div class="card shadow-sm mb-2">

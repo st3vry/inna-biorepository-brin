@@ -44,20 +44,41 @@
     <div class="mb-3">
         <label for="material" class="form-label">Material</label>
         <select class="form-select" name="material_id" id="material_id" wire:model="material_id">
-            <option value="">Relevance</option>
+            <option value="">Material</option>
             @foreach ($materials as $material )
             <option value="{{$material->id}}" @if (old('material_id')==$material->id) selected @endif>{{$material->name}}</option>
             @endforeach
         </select>
         @if ($material_id==7)
         <label for="matdesc" class="form-label">Material Description</label>
-        <input type="text" class="form-control @error('reldesc') is-invalid @enderror" wire:model="matdesc" id="matdesc" name="matdesc" value="{{old('reldesc')}}">
+        <input type="text" class="form-control @error('matdesc') is-invalid @enderror" wire:model="matdesc" id="matdesc" name="matdesc" value="{{old('reldesc')}}">
         @error('matdesc')
         <div class="invalid-feedback">{{$message}}</div>
         @enderror
         @endif
 
-        @error('relevance_id')
+        @error('material_id')
+        <p class="text-danger">{{$message}}</p>
+        @enderror
+    </div>
+
+    <div class="mb-3">
+        <label for="capture" class="form-label">Capture</label>
+        <select class="form-select" name="capture_id" id="capture_id" wire:model="capture_id">
+            <option value="">Capture</option>
+            @foreach ($captures as $capture )
+            <option value="{{$capture->id}}" @if (old('capture_id')==$capture->id) selected @endif>{{$capture->name}}</option>
+            @endforeach
+        </select>
+        @if ($capture_id==6)
+        <label for="capdesc" class="form-label">Capture Description</label>
+        <input type="text" class="form-control @error('capdesc') is-invalid @enderror" wire:model="capdesc" id="capdesc" name="capdesc" value="{{old('reldesc')}}">
+        @error('capdesc')
+        <div class="invalid-feedback">{{$message}}</div>
+        @enderror
+        @endif
+
+        @error('capture_id')
         <p class="text-danger">{{$message}}</p>
         @enderror
     </div>

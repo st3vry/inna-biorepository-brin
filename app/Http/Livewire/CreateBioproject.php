@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Models\Bioproject;
+use App\Models\Capture;
+use App\Models\CaptureBioproject;
 use App\Models\Grant;
 use App\Models\Datatype;
 use App\Models\Fundagency;
@@ -30,6 +32,10 @@ class CreateBioproject extends Component
     public $material_id;
     public $matdesc;
 
+    public $captures = [];
+    public $capture_id;
+    public $capdesc;
+
     public $data_type_id;
     public $selectedDatatype;
     public $samplescope_id;
@@ -50,6 +56,9 @@ class CreateBioproject extends Component
         'material_id' => 'required',
         'matdesc' => '',
 
+        'capture_id' => 'required',
+        'capdesc' => '',
+
         'description' => 'required|min:6',
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
@@ -64,6 +73,7 @@ class CreateBioproject extends Component
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();
         $this->materials = Material::all();
+        $this->captures = Capture::all();
         $this->organisms = Organism::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();
@@ -119,6 +129,14 @@ class CreateBioproject extends Component
             'description' => $validatedData['matdesc']
         ];
         MaterialBioproject::create($materialData);
+
+        $captureData = [
+            'bioproject_id' => $bioproject->id,
+            'capture_id' => $validatedData['capture_id'],
+            'description' => $validatedData['capdesc']
+        ];
+
+        CaptureBioproject::create($captureData);
 
         if (count($validatedData['grants']) > 0) {
             foreach ($validatedData['grants'] as  $item => $value) {

@@ -10,6 +10,7 @@ use App\Models\Datatype;
 use App\Models\Fundagency;
 use App\Models\Material;
 use App\Models\MaterialBioproject;
+use App\Models\Methodology;
 use App\Models\Organism;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
@@ -36,6 +37,10 @@ class CreateBioproject extends Component
     public $capture_id;
     public $capdesc;
 
+    public $methodologies = [];
+    public $methodology_id;
+    public $metdesc;
+
     public $data_type_id;
     public $selectedDatatype;
     public $samplescope_id;
@@ -59,6 +64,9 @@ class CreateBioproject extends Component
         'capture_id' => 'required',
         'capdesc' => '',
 
+        'methodology' => 'required',
+        'metdesc' => '',
+
         'description' => 'required|min:6',
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
@@ -74,6 +82,7 @@ class CreateBioproject extends Component
         $this->relevances = Relevance::all();
         $this->materials = Material::all();
         $this->captures = Capture::all();
+        $this->methodologies = Methodology::all();
         $this->organisms = Organism::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

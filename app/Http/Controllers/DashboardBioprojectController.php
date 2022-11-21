@@ -7,10 +7,8 @@ use App\Models\Datatype;
 use App\Models\Fundagency;
 use App\Models\Grant;
 use App\Models\MaterialBioproject;
-use App\Models\Organism;
+use App\Models\CaptureBioproject;
 use App\Models\RelevanceBioproject;
-use App\Models\Samplescope;
-use App\Models\Umbrellaproject;
 use Illuminate\Http\Request;
 
 class DashboardBioprojectController extends Controller
@@ -111,6 +109,7 @@ class DashboardBioprojectController extends Controller
         $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
+        $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,
@@ -118,6 +117,7 @@ class DashboardBioprojectController extends Controller
             'data_types' => $data_types,
             'relevance' => $relevanceBioproject,
             'material' => $materialBioproject,
+            'capture' => $captureBioproject,
             'umbrella' => $umbrella
         ]);
     }

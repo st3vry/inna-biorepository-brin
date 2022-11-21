@@ -81,6 +81,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             SampletypeSeeder::class,
             MaterialSeeder::class,
+            CaptureSeeder::class
         ]);
     }
 }

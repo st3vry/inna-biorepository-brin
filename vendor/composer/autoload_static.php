@@ -545,6 +545,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'App\\Models\\Attributesample' => __DIR__ . '/../..' . '/app/Models/Attributesample.php',
         'App\\Models\\Bioproject' => __DIR__ . '/../..' . '/app/Models/Bioproject.php',
         'App\\Models\\Biosample' => __DIR__ . '/../..' . '/app/Models/Biosample.php',
+        'App\\Models\\Capture' => __DIR__ . '/../..' . '/app/Models/Capture.php',
         'App\\Models\\Center' => __DIR__ . '/../..' . '/app/Models/Center.php',
         'App\\Models\\Datatype' => __DIR__ . '/../..' . '/app/Models/Datatype.php',
         'App\\Models\\Fundagency' => __DIR__ . '/../..' . '/app/Models/Fundagency.php',

@@ -35,6 +35,7 @@ return array(
     'App\\Models\\Attributesample' => $baseDir . '/app/Models/Attributesample.php',
     'App\\Models\\Bioproject' => $baseDir . '/app/Models/Bioproject.php',
     'App\\Models\\Biosample' => $baseDir . '/app/Models/Biosample.php',
+    'App\\Models\\Capture' => $baseDir . '/app/Models/Capture.php',
     'App\\Models\\Center' => $baseDir . '/app/Models/Center.php',
     'App\\Models\\Datatype' => $baseDir . '/app/Models/Datatype.php',
     'App\\Models\\Fundagency' => $baseDir . '/app/Models/Fundagency.php',

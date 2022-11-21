@@ -108,6 +108,7 @@ class DashboardBioprojectController extends Controller
         $grants = $bioproject->grant()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
+        $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         return view('dashboard.bioproject.show', [
@@ -117,6 +118,7 @@ class DashboardBioprojectController extends Controller
             'data_types' => $data_types,
             'relevance' => $relevanceBioproject,
             'material' => $materialBioproject,
+            'umbrella' => $umbrella
         ]);
     }
 

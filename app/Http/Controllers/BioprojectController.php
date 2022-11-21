@@ -40,6 +40,7 @@ class BioprojectController extends Controller
         $grants = $bioproject->grant()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
+        $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         return view('frontend.showbioproject', [
@@ -49,7 +50,8 @@ class BioprojectController extends Controller
             'grants' => $grants,
             'data_types' => $data_types,
             'relevance' => $relevanceBioproject,
-            'material' => $materialBioproject
+            'material' => $materialBioproject,
+            'umbrella' => $umbrella
         ]);
     }
 }

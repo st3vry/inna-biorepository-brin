@@ -20,6 +20,7 @@ use App\Models\Role;
 use App\Models\Sampletype;
 use App\Models\Attribute;
 use App\Models\Attributesample;
+use App\Models\Material;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
 use Illuminate\Support\Str;
@@ -65,6 +66,7 @@ class DatabaseSeeder extends Seeder
             LabSeeder::class,
             RoleSeeder::class,
             SampletypeSeeder::class,
+            MaterialSeeder::class,
 
         ]);
     }

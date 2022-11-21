@@ -20,6 +20,7 @@ use App\Models\Role;
 use App\Models\Sampletype;
 use App\Models\Attribute;
 use App\Models\Attributesample;
+use App\Models\CaptureBioproject;
 use App\Models\Material;
 use App\Models\MaterialBioproject;
 use App\Models\Relevance;
@@ -66,6 +67,11 @@ class DatabaseSeeder extends Seeder
             MaterialBioproject::create([
                 'bioproject_id' => $c,
                 'material_id' => mt_rand(1, 7),
+                'description' => $faker->sentence(3),
+            ]);
+            CaptureBioproject::create([
+                'bioproject_id' => $c,
+                'capture_id' => mt_rand(1, 6),
                 'description' => $faker->sentence(3),
             ]);
         }

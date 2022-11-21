@@ -22,7 +22,7 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Consortium</td>
-                <td class="col-sm-7">{{$bioproject->consortium->name}}</td>
+                <td class="col-sm-7">{{$bioproject->consortium->name}} &mdash; <a href="https://www.{{ $umbrella->consortium->url }}">{{ $umbrella->consortium->url }}</a></td>
             </tr>
             <tr>
                 <td class="col-sm-1">Organism</td>

@@ -43,6 +43,13 @@
                     @endif </td>
             </tr>
             <tr>
+                <td class="col-sm-1">Capture</td>
+                <td class="col-sm-7">{{$capture->capture->name}}
+                    @if ($capture->capture->id == 6)
+                    &mdash; {{$capture->description}}
+                    @endif </td>
+            </tr>
+            <tr>
                 <td class="col-sm-1">Publication</td>
                 <td class="col-sm-7">
                     <div class="card shadow-sm mb-2">

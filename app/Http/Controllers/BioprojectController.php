@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bioproject;
+use App\Models\CaptureBioproject;
 use App\Models\Datatype;
 use App\Models\MaterialBioproject;
 use App\Models\RelevanceBioproject;
@@ -43,6 +44,7 @@ class BioprojectController extends Controller
         $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
+        $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         return view('frontend.showbioproject', [
             'title' => 'Bioproject',
             'bioproject' => $bioproject,
@@ -51,6 +53,7 @@ class BioprojectController extends Controller
             'data_types' => $data_types,
             'relevance' => $relevanceBioproject,
             'material' => $materialBioproject,
+            'capture' => $captureBioproject,
             'umbrella' => $umbrella
         ]);
     }

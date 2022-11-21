@@ -18,7 +18,7 @@ class ConsortiumFactory extends Factory
     {
         return [
             //
-            'name' => $this->faker->sentence(1),
+            'name' => $this->faker->sentence(2),
             'url' => $this->faker->domainName(),
         ];
     }

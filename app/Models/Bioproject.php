@@ -48,6 +48,11 @@ class Bioproject extends Model
         return $this->hasMany(Datatype::class);
     }
 
+    public function consortium()
+    {
+        return $this->belongsTo(Consortium::class);
+    }
+
     public function getRouteKeyName()
     {
         return 'accession';

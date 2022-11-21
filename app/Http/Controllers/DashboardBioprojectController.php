@@ -6,6 +6,7 @@ use App\Models\Bioproject;
 use App\Models\Datatype;
 use App\Models\Fundagency;
 use App\Models\Grant;
+use App\Models\MaterialBioproject;
 use App\Models\Organism;
 use App\Models\RelevanceBioproject;
 use App\Models\Samplescope;
@@ -108,12 +109,14 @@ class DashboardBioprojectController extends Controller
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
+        $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,
             'grants' => $grants,
             'data_types' => $data_types,
-            'relevance' => $relevanceBioproject
+            'relevance' => $relevanceBioproject,
+            'material' => $materialBioproject,
         ]);
     }
 

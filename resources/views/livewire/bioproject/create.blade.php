@@ -42,6 +42,27 @@
     </div>
 
     <div class="mb-3">
+        <label for="material" class="form-label">Material</label>
+        <select class="form-select" name="material_id" id="material_id" wire:model="material_id">
+            <option value="">Relevance</option>
+            @foreach ($materials as $material )
+            <option value="{{$material->id}}" @if (old('material_id')==$material->id) selected @endif>{{$material->name}}</option>
+            @endforeach
+        </select>
+        @if ($material_id==7)
+        <label for="matdesc" class="form-label">Material Description</label>
+        <input type="text" class="form-control @error('reldesc') is-invalid @enderror" wire:model="matdesc" id="matdesc" name="matdesc" value="{{old('reldesc')}}">
+        @error('matdesc')
+        <div class="invalid-feedback">{{$message}}</div>
+        @enderror
+        @endif
+
+        @error('relevance_id')
+        <p class="text-danger">{{$message}}</p>
+        @enderror
+    </div>
+
+    <div class="mb-3">
         <label for="organism_id" class="form-label">Organism</label>
         <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
             <option value="">Organism</option>

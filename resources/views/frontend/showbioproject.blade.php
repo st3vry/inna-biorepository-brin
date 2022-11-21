@@ -32,6 +32,13 @@
                     @endif </td>
             </tr>
             <tr>
+                <td class="col-sm-1">Material</td>
+                <td class="col-sm-7">{{$material->material->name}}
+                    @if ($material->material->id == 7)
+                    &mdash; {{$material->description}}
+                    @endif </td>
+            </tr>
+            <tr>
                 <td class="col-sm-1">Publication</td>
                 <td class="col-sm-7">
                     <div class="card shadow-sm mb-2">

@@ -15,7 +15,7 @@ class RelevanceBioproject extends Model
         return $this->belongsTo(Bioproject::class);
     }
 
-    public function Relevance()
+    public function relevance()
     {
         return $this->belongsTo(Relevance::class);
     }

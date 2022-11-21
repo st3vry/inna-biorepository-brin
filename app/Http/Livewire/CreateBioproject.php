@@ -6,6 +6,8 @@ use App\Models\Bioproject;
 use App\Models\Grant;
 use App\Models\Datatype;
 use App\Models\Fundagency;
+use App\Models\Material;
+use App\Models\MaterialBioproject;
 use App\Models\Organism;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
@@ -23,6 +25,11 @@ class CreateBioproject extends Component
     public $relevances = [];
     public $relevance_id;
     public $reldesc;
+
+    public $materials = [];
+    public $material_id;
+    public $matdesc;
+
     public $data_type_id;
     public $selectedDatatype;
     public $samplescope_id;
@@ -39,6 +46,10 @@ class CreateBioproject extends Component
         'organism_id' => 'required',
         'relevance_id' => 'required',
         'reldesc' => '',
+
+        'material_id' => 'required',
+        'matdesc' => '',
+
         'description' => 'required|min:6',
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
@@ -52,6 +63,7 @@ class CreateBioproject extends Component
     {
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();
+        $this->materials = Material::all();
         $this->organisms = Organism::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();
@@ -100,6 +112,13 @@ class CreateBioproject extends Component
             'description' => $validatedData['reldesc']
         ];
         RelevanceBioproject::create($relevanceData);
+
+        $materialData = [
+            'bioproject_id' => $bioproject->id,
+            'material_id' => $validatedData['material_id'],
+            'description' => $validatedData['matdesc']
+        ];
+        MaterialBioproject::create($materialData);
 
         if (count($validatedData['grants']) > 0) {
             foreach ($validatedData['grants'] as  $item => $value) {

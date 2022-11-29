@@ -28,7 +28,6 @@ class CreateBioproject extends Component
     public $samplescopes = [];
     public $fundagencies = [];
     public $grants = [];
-    public $publications = [];
     public $relevances = [];
     public $relevance_id;
     public $reldesc;
@@ -80,8 +79,6 @@ class CreateBioproject extends Component
         'grants.*.fundagency_id' => 'required',
         'grants.*.grant_program' => 'required',
         'grants.*.grant_title' => 'required',
-
-        'publications.*.'
     ];
 
     public function mount()

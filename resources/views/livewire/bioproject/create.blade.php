@@ -238,5 +238,62 @@
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
+
+    <div class="card card-outline card-info collapsed-card mb-3">
+        <div class="card-header">
+            <h6 class="card-title">Publications</h6>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body mb-3">
+            <table id="add_table" class="table" data-toggle="table" data-mobile-responsive="true">
+                <thead>
+                    <tr>
+                        <th scope="col">DOI / Pubmed</th>
+                        <th scope="col">Publication ID</th>
+                        <th scope="col">Title</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($publications as $index => $publication)
+                    <tr>
+                        <td>
+                            <select class="form-select" name="publications[{{$index}}][pub_identifier_id]" wire:model="publications.{{$index}}.pub_identifier_id">
+                                <option value="0">PubMed / DOI</option>
+                                @foreach ($pub_identifiers as $pub_identifier )
+                                <option value="{{$pub_identifier->id}}">{{$pub_identifier->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('publications.*.pub_identifier_id')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <input type="text" name="publication[{{$index}}][pub_id]" class="form-control" value="{{$publication['pub_id']}}" wire:model="publications.{{$index}}.pub_id">
+                            @error('publications.*.pub_id')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <input type="text" name="publication[{{$index}}][article_title]" class="form-control" value="{{$publication['article_title']}}" wire:model="publications.{{$index}}.article_title">
+                            @error('grants.*.article_title')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </td>
+                        <td>
+                            <button class="btn btn-danger delete_row" wire:click.prevent="removePublication({{$index}})">remove</button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-sm btn-secondary" wire:click.prevent="addPublication">+ Add Another Publication</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
     <button type="submit" class="btn btn-primary">Create Bioproject</button>
 </form>

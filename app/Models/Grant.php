@@ -13,4 +13,9 @@ class Grant extends Model
     {
         return $this->belongsTo(Fundagency::class);
     }
+
+    public function bioproject()
+    {
+        return $this->BelongsTo(Bioproject::class);
+    }
 }

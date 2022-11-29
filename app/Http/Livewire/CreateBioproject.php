@@ -14,6 +14,8 @@ use App\Models\MaterialBioproject;
 use App\Models\Methodology;
 use App\Models\MethodologyBioproject;
 use App\Models\Organism;
+use App\Models\PubIdentifier;
+use App\Models\Publication;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
 use App\Models\Samplescope;
@@ -28,6 +30,7 @@ class CreateBioproject extends Component
     public $samplescopes = [];
     public $fundagencies = [];
     public $grants = [];
+    public $publications = [];
     public $relevances = [];
     public $relevance_id;
     public $reldesc;
@@ -79,6 +82,10 @@ class CreateBioproject extends Component
         'grants.*.fundagency_id' => 'required',
         'grants.*.grant_program' => 'required',
         'grants.*.grant_title' => 'required',
+
+        'publications.*.pub_identifier_id' => 'required',
+        'publications.*.pub_id' => 'required',
+        'publications.*.article_title' => 'required',
     ];
 
     public function mount()
@@ -90,11 +97,15 @@ class CreateBioproject extends Component
         $this->methodologies = Methodology::all();
         $this->consortia = Consortium::all();
         $this->organisms = Organism::all();
+        $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();
         $this->fundagencies = Fundagency::all();
         $this->grants = [
             ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1']
+        ];
+        $this->publications = [
+            ['pub_identifier_id' => '', 'pub_id' => '1', 'article_title' => '1']
         ];
     }
     public function addGrant()
@@ -107,6 +118,18 @@ class CreateBioproject extends Component
         unset($this->grants[$index]);
         $this->grants = array_values($this->grants);
     }
+
+    public function addPublication()
+    {
+        $this->publications[] = ['pub_identifier_id' => '', 'pub_id' => '1', 'article_title' => '1'];
+    }
+
+    public function removePublication($index)
+    {
+        unset($this->publications[$index]);
+        $this->publications = array_values($this->publications);
+    }
+
 
     public function updatedRelevanceOther()
     {
@@ -173,13 +196,26 @@ class CreateBioproject extends Component
                 Grant::create($data2);
             }
         }
+        if (count($validatedData['publications']) > 0) {
+            foreach ($validatedData['publications'] as  $item => $value) {
+                $data3 = array(
+                    'bioproject_id' => $bioproject->id,
+                    'pub_identifier_id' => $validatedData['publications'][$item]['pub_identifier_id'],
+                    'pub_id' => $validatedData['publications'][$item]['pub_id'],
+                    'article_title' => $validatedData['publications'][$item]['article_title'],
+                );
+                Publication::create($data3);
+            }
+        }
+
+
         session()->flash('message', 'Bioproject successfully created.');
         return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
     }
 
     public function render()
     {
-        info($this->grants);
+        // info($this->grants);
         return view('livewire.bioproject.create');
     }
 }

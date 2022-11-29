@@ -9,9 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Publication extends Model
 {
     use HasFactory;
-
+    protected $guarded = ['id'];
     public function bioproject()
     {
         return $this->BelongsTo(Bioproject::class);
+    }
+
+    public function pubIdentifier()
+    {
+        return $this->belongsTo(PubIdentifier::class);
     }
 }

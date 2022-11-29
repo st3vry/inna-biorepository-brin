@@ -276,6 +276,7 @@ return array(
     'Database\\Seeders\\MaterialSeeder' => $baseDir . '/database/seeders/MaterialSeeder.php',
     'Database\\Seeders\\MethodologySeeder' => $baseDir . '/database/seeders/MethodologySeeder.php',
     'Database\\Seeders\\OrganismSeeder' => $baseDir . '/database/seeders/OrganismSeeder.php',
+    'Database\\Seeders\\PubIdentifierSeeder' => $baseDir . '/database/seeders/PubIdentifierSeeder.php',
     'Database\\Seeders\\RelevanceSeeder' => $baseDir . '/database/seeders/RelevanceSeeder.php',
     'Database\\Seeders\\RoleSeeder' => $baseDir . '/database/seeders/RoleSeeder.php',
     'Database\\Seeders\\SamplescopeSeeder' => $baseDir . '/database/seeders/SamplescopeSeeder.php',

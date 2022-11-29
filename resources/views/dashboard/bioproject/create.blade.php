@@ -5,5 +5,6 @@
 </div>
 <div class="col-lg-10">
     @livewire('create-bioproject')
+
 </div>
 @endsection

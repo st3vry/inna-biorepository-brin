@@ -786,6 +786,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'Database\\Seeders\\MaterialSeeder' => __DIR__ . '/../..' . '/database/seeders/MaterialSeeder.php',
         'Database\\Seeders\\MethodologySeeder' => __DIR__ . '/../..' . '/database/seeders/MethodologySeeder.php',
         'Database\\Seeders\\OrganismSeeder' => __DIR__ . '/../..' . '/database/seeders/OrganismSeeder.php',
+        'Database\\Seeders\\PubIdentifierSeeder' => __DIR__ . '/../..' . '/database/seeders/PubIdentifierSeeder.php',
         'Database\\Seeders\\RelevanceSeeder' => __DIR__ . '/../..' . '/database/seeders/RelevanceSeeder.php',
         'Database\\Seeders\\RoleSeeder' => __DIR__ . '/../..' . '/database/seeders/RoleSeeder.php',
         'Database\\Seeders\\SamplescopeSeeder' => __DIR__ . '/../..' . '/database/seeders/SamplescopeSeeder.php',

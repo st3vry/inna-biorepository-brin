@@ -18,16 +18,16 @@ class PublicationFactory extends Factory
     {
         return [
             //
-            'pubmed_id' => $this->faker->text(),
-            'doi' => $this->faker->text(),
-            'journal_name' => $this->faker->sentence(2),
+            'pub_identifier_id' => mt_rand(1, 2),
+            'pub_id' => $this->faker->text(),
+            // 'journal_name' => $this->faker->sentence(2),
             'article_title' => $this->faker->sentence(3),
-            'year' => $this->faker->year(),
-            'volume' => mt_rand(1, 10),
-            'issue' => $this->faker->date(),
-            'pagefrom' => mt_rand(1, 50),
-            'pageto' => mt_rand(1, 50),
-            'author_list' => mt_rand(1, 3),
+            // 'year' => $this->faker->year(),
+            // 'volume' => mt_rand(1, 10),
+            // 'issue' => $this->faker->date(),
+            // 'pagefrom' => mt_rand(1, 50),
+            // 'pageto' => mt_rand(1, 50),
+            // 'author_list' => mt_rand(1, 3),
             'bioproject_id' => mt_rand(1, 15),
         ];
     }

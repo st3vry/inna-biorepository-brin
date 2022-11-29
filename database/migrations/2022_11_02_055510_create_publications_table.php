@@ -15,16 +15,16 @@ return new class extends Migration
     {
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
-            $table->string('pubmed_id');
-            $table->string('doi');
-            $table->string('journal_name');
+            $table->foreignId('pub_identifier_id');
+            $table->string('pub_id');
+            // $table->string('journal_name');
             $table->string('article_title');
-            $table->year('year');
-            $table->tinyText('volume');
-            $table->tinyText('issue');
-            $table->tinyInteger('pagefrom');
-            $table->tinyInteger('pageto');
-            $table->string('author_list');
+            // $table->year('year');
+            // $table->tinyText('volume');
+            // $table->tinyText('issue');
+            // $table->tinyInteger('pagefrom');
+            // $table->tinyInteger('pageto');
+            // $table->string('author_list');
             $table->foreignId('bioproject_id');
             $table->timestamps();
         });

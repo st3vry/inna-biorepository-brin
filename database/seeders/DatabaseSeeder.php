@@ -6,28 +6,15 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Bioproject;
 use App\Models\Biosample;
-use App\Models\User;
-use App\Models\Organism;
-use App\Models\Center;
-use App\Models\Datatype;
 use App\Models\Fundagency;
 use App\Models\Grant;
-use App\Models\Lab;
 use App\Models\Publication;
-use App\Models\Samplescope;
 use App\Models\Umbrellaproject;
-use App\Models\Role;
-use App\Models\Sampletype;
-use App\Models\Attribute;
 use App\Models\Attributesample;
 use App\Models\CaptureBioproject;
-use App\Models\Consortium;
-use App\Models\Material;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
-use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
-use Illuminate\Support\Str;
 use Faker\Generator;
 
 class DatabaseSeeder extends Seeder

@@ -8,6 +8,7 @@ use App\Http\Controllers\BiosampleController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Models\Bioproject;
@@ -31,18 +32,18 @@ use Illuminate\Support\Facades\Route;
 //     return view('frontend.welcome');
 // });
 
-Route::get('/', function () {
-    return view('frontend.home', [
-        'title' => 'Home',
-    ]);
-});
+// Route::get('/', function () {
+//     return view('frontend.home', [
+//         'title' => 'Home',
+//     ]);
+// });
 
 // Route::get('/bioproject', function () {
 //     return view('frontend.bioproject', [
 //         'title' => 'Bioproject',
 //     ]);
 // });
-
+Route::get('/', [HomeController::class, 'index'])->name('home');
 // Route::get('/bioprojects', [BioprojectController::class, 'index'])->name('bioprojectindex');
 // Route::get('/bioprojects/{$bioproject:alias}', [BioprojectController::class, 'show'])->name('bioprojectshow');
 

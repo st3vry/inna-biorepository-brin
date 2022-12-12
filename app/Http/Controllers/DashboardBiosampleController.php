@@ -28,6 +28,7 @@ class DashboardBiosampleController extends Controller
     public function create()
     {
         //
+        return view('dashboard.biosample.create');
     }
 
     /**

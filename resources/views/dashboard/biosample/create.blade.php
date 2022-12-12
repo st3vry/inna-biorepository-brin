@@ -4,7 +4,7 @@
     <h1>Input Biosample Data</h1>
 </div>
 <div class="col-lg-10">
-    @livewire('create-bioproject')
+    @livewire('create-biosample')
 
 </div>
 @endsection

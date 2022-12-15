@@ -19,19 +19,10 @@ use App\Models\Publication;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
 use App\Models\Samplescope;
-use App\Models\User;
 use Livewire\Component;
 
 class CreateBioproject extends Component
 {
-    public $currentStep = 1;
-    public $successMsg = '';
-
-    public $submitter_name;
-    public $submitter_email;
-    public $submitter_lab;
-
-
     public $umbrellas = [];
     public $organisms = [];
     public $consortia = [];
@@ -96,60 +87,12 @@ class CreateBioproject extends Component
         'publications.*.pub_id' => 'required',
         'publications.*.article_title' => 'required',
     ];
-    public function firstStepSubmit()
-    {
-        // $validatedData = $this->validate([
-        //     'title' => 'required',
-        // ]);
 
-        $this->currentStep = 2;
-    }
-    public function secondStepSubmit()
-    {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
 
-        $this->currentStep = 3;
-    }
-    public function thirdStepSubmit()
-    {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
 
-        $this->currentStep = 4;
-    }
-    public function fourthStepSubmit()
-    {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
-
-        $this->currentStep = 5;
-    }
-    public function fifthStepSubmit()
-    {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
-
-        $this->currentStep = 6;
-    }
-
-    public function back($step)
-    {
-        $this->currentStep = $step;
-    }
 
     public function mount()
     {
-
-        $this->submitter_name = auth()->user()->name;
-        $this->submitter_email = auth()->user()->email;
-        $this->submitter_lab = auth()->user()->lab->name;
-
-
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();
         $this->materials = Material::all();

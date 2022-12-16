@@ -5,7 +5,7 @@
             {{ $successMsg }}
         </div>
         @endif
-        <div class="stepwizard">
+        <div class="stepwizard mb-3">
             <div class="stepwizard-row setup-panel">
                 <div class="multi-wizard-step">
                     <a href="#step-1" type="button" class="btn {{ $currentStep != 1 ? 'btn-default' : 'btn-primary' }}">1</a>
@@ -36,162 +36,231 @@
     </div>
     <div class="row setup-content {{ $currentStep != 1 ? 'display-none' : '' }}" id="step-1">
         <div class="col-md-12">
-            <h3>Submitter</h3>
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control @error('submitter_name') is-invalid @enderror" wire:model="submitter_name" id="submitter_name" name="submitter_name" value="{{old('submitter_name')}}" disabled>
-                @error('submitter_name')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control @error('submitter_email') is-invalid @enderror" wire:model="submitter_email" id="submitter_email" name="submitter_email" value="{{old('submitter_email')}}" disabled>
-                @error('submitter_email')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-            </div>
+            <h4>Submitter Info</h4>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Submitter</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control @error('submitter_name') is-invalid @enderror" wire:model="submitter_name" id="submitter_name" name="submitter_name" value="{{old('submitter_name')}}" disabled>
+                        @error('submitter_name')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" class="form-control @error('submitter_email') is-invalid @enderror" wire:model="submitter_email" id="submitter_email" name="submitter_email" value="{{old('submitter_email')}}" disabled>
+                        @error('submitter_email')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
 
-            <div class="mb-3">
-                <label for="lab" class="form-label">Lab</label>
-                <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" disabled>
-                @error('submitter_lab')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-            </div>
+                    <div class="mb-3">
+                        <label for="lab" class="form-label">Lab</label>
+                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" disabled>
+                        @error('submitter_lab')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
 
+                    <div class="mb-3">
+                        <label for="center" class="form-label">Center</label>
+                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" disabled>
+                        @error('submitter_center')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Data Release</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="hold_release" class="form-label">-</label>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="true" @if (old('hold_release')==true) ) checked @endif>
+                                    <label class="form-check-label">Hold Release</label>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="false" @if (old('hold_release')==false) ) checked @endif>
+                                    <label class="form-check-label">Release immediately</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        @error('hold_release')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
             <button class="btn btn-primary " wire:click="firstStepSubmit" type="button">Next</button>
         </div>
     </div>
     <div class="row setup-content {{ $currentStep != 2 ? 'display-none' : '' }}" id="step-2">
         <div class="col-md-12">
-
-            <h3>General Info</h3>
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control @error('title') is-invalid @enderror" wire:model="title" id="title" name="title" value="{{old('title')}}">
-                @error('title')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-            </div>
-
-            <div class="mb-3">
-                <label for="umbrella" class="form-label">Umbrella Project</label>
-                <select class="form-select" name="umbproject_id" wire:model="umbproject_id" id="umbproject_id">
-                    <option value="">Umbrella Project</option>
-                    @foreach ($umbrellas as $umbrella )
-                    <option value="{{$umbrella->id}}" @if (old('umbproject_id')==$umbrella->id) selected @endif> {{$umbrella->accession}} &mdash; {{$umbrella->title}}</option>
-                    @endforeach
-                </select>
-
-                @error('umbproject_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div>
-
-            <div class="mb-3">
-                <label for="consortium_id" class="form-label">Consortium</label>
-                <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
-                    <option value="">Consortium</option>
-                    @foreach ($consortia as $consortium )
-                    <option value="{{$consortium->id}}" @if (old('consortium_id')==$consortium->id) selected @endif>{{$consortium->name}}</option>
-                    @endforeach
-                </select>
-
-                @error('consortium_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div>
-
-            <div class="mb-3">
-                <label for="relevance" class="form-label">Relevance</label>
-                <select class="form-select" name="relevance_id" id="relevance_id" wire:model="relevance_id">
-                    <option value="">Relevance</option>
-                    @foreach ($relevances as $relevance )
-                    <option value="{{$relevance->id}}" @if (old('relevance_id')==$relevance->id) selected @endif>{{$relevance->name}}</option>
-                    @endforeach
-                </select>
-                @if ($relevance_id==7)
-                <label for="reldesc" class="form-label">Relevance Description</label>
-                <input type="text" class="form-control @error('reldesc') is-invalid @enderror" wire:model="reldesc" id="reldesc" name="reldesc" value="{{old('reldesc')}}">
-                @error('reldesc')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-                @endif
-
-                @error('relevance_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div>
-
-
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" wire:model="description" rows="3">{{old('description')}}</textarea>
-
-                @error('description')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div>
-
-
-            <div class="card card-outline card-info collapsed-card mb-3">
+            <h4>General Info</h4>
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h6 class="card-title">Grants</h6>
+                    <h5>Project Description</h5>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body mb-3">
-                    <table id="add_table" class="table" data-toggle="table" data-mobile-responsive="true">
-                        <thead>
-                            <tr>
-                                <th scope="col">Agency</th>
-                                <th scope="col">Program</th>
-                                <th scope="col">Grant Title</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($grants as $index => $grant)
-                            <tr>
-                                <td>
-                                    <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
-                                        <option value="0">Funding Agency</option>
-                                        @foreach ($fundagencies as $fundagency )
-                                        <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('grants.*.fundagency_id')
-                                    <p class="text-danger">{{$message}}</p>
-                                    @enderror
-                                </td>
-                                <td>
-                                    <input type="text" name="grant[{{$index}}][grant_program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
-                                    @error('grants.*.program')
-                                    <p class="text-danger">{{$message}}</p>
-                                    @enderror
-                                </td>
-                                <td>
-                                    <input type="text" name="grant[{{$index}}][grant_title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
-                                    @error('grants.*.title')
-                                    <p class="text-danger">{{$message}}</p>
-                                    @enderror
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger delete_row" wire:click.prevent="removeGrant({{$index}})">remove</button>
-                                </td>
-                            </tr>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" wire:model="title" id="title" name="title" value="{{old('title')}}">
+                        @error('title')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" wire:model="description" rows="3">{{old('description')}}</textarea>
+
+                        @error('description')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="relevance" class="form-label">Relevance</label>
+                        <select class="form-select" name="relevance_id" id="relevance_id" wire:model="relevance_id">
+                            <option value="">Relevance</option>
+                            @foreach ($relevances as $relevance )
+                            <option value="{{$relevance->id}}" @if (old('relevance_id')==$relevance->id) selected @endif>{{$relevance->name}}</option>
                             @endforeach
-                        </tbody>
-                    </table>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-sm btn-secondary" wire:click.prevent="addGrant">+ Add Another Grant</button>
-                        </div>
+                        </select>
+                        @if ($relevance_id==7)
+                        <label for="reldesc" class="form-label">Relevance Description</label>
+                        <input type="text" class="form-control @error('reldesc') is-invalid @enderror" wire:model="reldesc" id="reldesc" name="reldesc" value="{{old('reldesc')}}">
+                        @error('reldesc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                        @endif
+
+                        @error('relevance_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Umbrella Bioproject</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="umbrella" class="form-label">Umbrella Project</label>
+                        <select class="form-select" name="umbproject_id" wire:model="umbproject_id" id="umbproject_id">
+                            <option value="">Umbrella Project</option>
+                            @foreach ($umbrellas as $umbrella )
+                            <option value="{{$umbrella->id}}" @if (old('umbproject_id')==$umbrella->id) selected @endif> {{$umbrella->accession}} &mdash; {{$umbrella->title}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('umbproject_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
                     </div>
                 </div>
-                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>External Links</h5>
+                </div>
+                <div class="card-body"></div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Grants</h5>
+                </div>
+                <div class="card-body">
+                    <div class="card card-outline card-info collapsed-card mb-3">
+                        <div class="card-header">
+                            <h6 class="card-title">Grants</h6>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body mb-3">
+                            <table id="add_table" class="table" data-toggle="table" data-mobile-responsive="true">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Agency</th>
+                                        <th scope="col">Program</th>
+                                        <th scope="col">Grant Title</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($grants as $index => $grant)
+                                    <tr>
+                                        <td>
+                                            <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
+                                                <option value="0">Funding Agency</option>
+                                                @foreach ($fundagencies as $fundagency )
+                                                <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('grants.*.fundagency_id')
+                                            <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        </td>
+                                        <td>
+                                            <input type="text" name="grant[{{$index}}][grant_program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
+                                            @error('grants.*.program')
+                                            <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        </td>
+                                        <td>
+                                            <input type="text" name="grant[{{$index}}][grant_title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
+                                            @error('grants.*.title')
+                                            <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger delete_row" wire:click.prevent="removeGrant({{$index}})">remove</button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-sm btn-secondary" wire:click.prevent="addGrant">+ Add Another Grant</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Consortium</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="consortium_id" class="form-label">Consortium</label>
+                        <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
+                            <option value="">Consortium</option>
+                            @foreach ($consortia as $consortium )
+                            <option value="{{$consortium->id}}" @if (old('consortium_id')==$consortium->id) selected @endif>{{$consortium->name}}</option>
+                            @endforeach
+                        </select>
 
+                        @error('consortium_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(1)">Back</button>
             <button class="btn btn-primary pull-right" type="button" wire:click="secondStepSubmit">Next</button>
 

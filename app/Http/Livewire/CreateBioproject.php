@@ -30,7 +30,9 @@ class CreateBioproject extends Component
     public $submitter_name;
     public $submitter_email;
     public $submitter_lab;
+    public $submitter_center;
 
+    public $hold_release;
 
     public $umbrellas = [];
     public $organisms = [];
@@ -98,9 +100,9 @@ class CreateBioproject extends Component
     ];
     public function firstStepSubmit()
     {
-        // $validatedData = $this->validate([
-        //     'title' => 'required',
-        // ]);
+        $validatedData = $this->validate([
+            'hold_release' => 'required',
+        ]);
 
         $this->currentStep = 2;
     }
@@ -148,6 +150,7 @@ class CreateBioproject extends Component
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
         $this->submitter_lab = auth()->user()->lab->name;
+        $this->submitter_center = auth()->user()->lab->center->name;
 
 
         $this->umbrellas = Bioproject::where('draft', false)->get();

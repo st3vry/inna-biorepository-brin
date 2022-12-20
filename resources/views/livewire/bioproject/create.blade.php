@@ -332,6 +332,13 @@
                     @endforeach
                 </div>
                 @endforeach
+                @if ($samplescope_id==7)
+                <label for="samplescopedesc" class="form-label">Other sample scope description</label>
+                <input type="text" class="form-control @error('samplescopedesc') is-invalid @enderror" wire:model="samplescopedesc" id="samplescopedesc" name="samplescopedesc" value="{{old('samplescopedesc')}}">
+                @error('samplescopedesc')
+                <div class="invalid-feedback">{{$message}}</div>
+                @enderror
+                @endif
 
                 @error('samplescope_id')
                 <p class="text-danger">{{$message}}</p>

@@ -283,7 +283,14 @@
                     @endforeach
                 </div>
                 @endforeach
-
+                @if(is_array($data_type_id) && in_array(10,$data_type_id))
+                <!-- {{print_r($data_type_id)}} -->
+                <label for="datatypedesc" class="form-label">Data type Description</label>
+                <input type="text" class="form-control @error('datatypedesc') is-invalid @enderror" wire:model="datatypedesc" id="datatypedesc" name="datatypedesc" value="{{old('datatypedesc')}}">
+                @error('datatypedesc')
+                <div class="invalid-feedback">{{$message}}</div>
+                @enderror
+                @endif
                 @error('data_type_id')
                 <p class="text-danger">{{$message}}</p>
                 @enderror
@@ -299,7 +306,7 @@
                 </select>
                 @if ($material_id==7)
                 <label for="matdesc" class="form-label">Material Description</label>
-                <input type="text" class="form-control @error('matdesc') is-invalid @enderror" wire:model="matdesc" id="matdesc" name="matdesc" value="{{old('reldesc')}}">
+                <input type="text" class="form-control @error('matdesc') is-invalid @enderror" wire:model="matdesc" id="matdesc" name="matdesc" value="{{old('matdesc')}}">
                 @error('matdesc')
                 <div class="invalid-feedback">{{$message}}</div>
                 @enderror
@@ -342,7 +349,7 @@
                 </select>
                 @if ($capture_id==6)
                 <label for="capdesc" class="form-label">Capture Description</label>
-                <input type="text" class="form-control @error('capdesc') is-invalid @enderror" wire:model="capdesc" id="capdesc" name="capdesc" value="{{old('reldesc')}}">
+                <input type="text" class="form-control @error('capdesc') is-invalid @enderror" wire:model="capdesc" id="capdesc" name="capdesc" value="{{old('capdesc')}}">
                 @error('capdesc')
                 <div class="invalid-feedback">{{$message}}</div>
                 @enderror
@@ -363,7 +370,7 @@
                 </select>
                 @if ($methodology_id==4)
                 <label for="metdesc" class="form-label">Methodology Description</label>
-                <input type="text" class="form-control @error('metdesc') is-invalid @enderror" wire:model="metdesc" id="metdesc" name="metdesc" value="{{old('reldesc')}}">
+                <input type="text" class="form-control @error('metdesc') is-invalid @enderror" wire:model="metdesc" id="metdesc" name="metdesc" value="{{old('metdesc')}}">
                 @error('metdesc')
                 <div class="invalid-feedback">{{$message}}</div>
                 @enderror

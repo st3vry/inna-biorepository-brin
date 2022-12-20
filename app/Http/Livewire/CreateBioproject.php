@@ -8,6 +8,7 @@ use App\Models\CaptureBioproject;
 use App\Models\Consortium;
 use App\Models\Grant;
 use App\Models\Datatype;
+use App\Models\DatatypeBioproject;
 use App\Models\Fundagency;
 use App\Models\Material;
 use App\Models\MaterialBioproject;
@@ -218,6 +219,7 @@ class CreateBioproject extends Component
         $bioproject->user_id = auth()->user()->id;
 
         $bioproject->save();
+
         $relevanceData = [
             'bioproject_id' => $bioproject->id,
             'relevance_id' => $validatedData['relevance_id'],
@@ -237,7 +239,6 @@ class CreateBioproject extends Component
             'capture_id' => $validatedData['capture_id'],
             'description' => $validatedData['capdesc']
         ];
-
         CaptureBioproject::create($captureData);
 
         $methodologyData = [
@@ -271,7 +272,15 @@ class CreateBioproject extends Component
             }
         }
 
-
+        if (count($validatedData['data_type_id']) > 0) {
+            foreach ($validatedData['data_type_id'] as $item => $value) {
+                $data4 = array(
+                    'bioproject_id' => $bioproject->id,
+                    'datatype_id' => $validatedData['data_type_id'][$item],
+                );
+                DatatypeBioproject::create($data4);
+            }
+        }
 
         session()->flash('message', 'Bioproject successfully created.');
         return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);

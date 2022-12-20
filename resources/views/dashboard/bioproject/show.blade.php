@@ -17,11 +17,17 @@
         </tr>
         <tr>
             <td class="col-sm-1">Umbrella Projects</td>
+            @isset($umbrella)
             <td class="col-sm-7"><a href="{{ $umbrella->accession }}">{{ $umbrella->accession }}</a> &mdash; {{$umbrella->title}}</td>
+            @endisset
+            <td class="col-sm-7">Not Assigned</td>
         </tr>
         <tr>
             <td class="col-sm-1">Consortium</td>
+            @isset($umbrella)
             <td class="col-sm-7">{{$bioproject->consortium->name}} &mdash; <a href="https://www.{{ $umbrella->consortium->url }}">{{ $umbrella->consortium->url }}</a></td>
+            @endisset
+            <td class="col-sm-7">Not Assigned</td>
         </tr>
         <tr>
             <td class="col-sm-1">Organism</td>

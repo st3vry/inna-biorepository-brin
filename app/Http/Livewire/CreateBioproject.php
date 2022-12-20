@@ -39,6 +39,8 @@ class CreateBioproject extends Component
     public $organisms = [];
     public $consortia = [];
     public $datatypes = [];
+    public $datatypedesc;
+
     public $samplescopes = [];
     public $fundagencies = [];
     public $grants = [];
@@ -90,6 +92,8 @@ class CreateBioproject extends Component
         'description' => 'required|min:6',
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
+        'datatypedesc' => '',
+
         'samplescope_id' => 'required',
         'grants.*.fundagency_id' => 'required',
         'grants.*.grant_program' => 'required',

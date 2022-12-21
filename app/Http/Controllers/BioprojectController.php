@@ -40,6 +40,7 @@ class BioprojectController extends Controller
         }
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
+        $externallinks = $bioproject->bp_externalLinks()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
         $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
@@ -57,7 +58,8 @@ class BioprojectController extends Controller
             'material' => $materialBioproject,
             'capture' => $captureBioproject,
             'methodology' => $methodologyBioproject,
-            'umbrella' => $umbrella
+            'umbrella' => $umbrella,
+            'externallinks' => $externallinks
         ]);
     }
 }

@@ -11,6 +11,7 @@ use App\Models\Grant;
 use App\Models\Publication;
 use App\Models\Umbrellaproject;
 use App\Models\Attributesample;
+use App\Models\BioProjectExternalLink;
 use App\Models\CaptureBioproject;
 use App\Models\DatatypeBioproject;
 use App\Models\MaterialBioproject;
@@ -45,6 +46,7 @@ class DatabaseSeeder extends Seeder
         Umbrellaproject::factory(3)->create();
         Fundagency::factory(30)->create();
         Grant::factory(50)->create();
+        BioProjectExternalLink::factory(50)->create();
 
         // Relevance, Material Bioproject
         $max = 50;

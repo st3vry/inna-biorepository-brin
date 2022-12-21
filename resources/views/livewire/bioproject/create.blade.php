@@ -176,7 +176,42 @@
                 <div class="card-header">
                     <h5>External Links</h5>
                 </div>
-                <div class="card-body"></div>
+                <div class="card-body mb-3">
+                            <table id="add_table_externallink" class="table" data-toggle="table" data-mobile-responsive="true">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Link Description</th>
+                                        <th scope="col">Link URL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($externallinks as $index => $externallink)
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="externallinks[{{$index}}][link_description]" class="form-control" value="{{$externallink['link_description']}}" wire:model="externallinks.{{$index}}.link_description">
+                                            @error('grants.*.program')
+                                            <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        </td>
+                                        <td>
+                                            <input type="text" name="externallinks[{{$index}}][link_url]" class="form-control" value="{{$externallink['link_url']}}" wire:model="externallinks.{{$index}}.link_url">
+                                            @error('grants.*.title')
+                                            <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger delete_row" wire:click.prevent="removeExternalLink({{$index}})">remove</button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-sm btn-secondary" wire:click.prevent="addExternalLink">+ Add Another Link</button>
+                                </div>
+                            </div>
+                        </div>
             </div>
             <div class="card mb-4">
                 <div class="card-header">

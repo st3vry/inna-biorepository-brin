@@ -26,5 +26,6 @@ class DatatypeSeeder extends Seeder
         Datatype::create(['name' => 'Phenotype or Genotype']);
         Datatype::create(['name' => 'Random survey']);
         Datatype::create(['name' => 'Transcriptome or Gene expression']);
+        Datatype::create(['name' => 'Other']);
     }
 }

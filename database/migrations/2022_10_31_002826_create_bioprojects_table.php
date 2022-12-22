@@ -26,6 +26,7 @@ return new class extends Migration
             $table->text('description');
             $table->integer('center_id');
             $table->foreignId('user_id');
+            $table->boolean('hold_release')->default(false);
             $table->boolean('draft')->default(true);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();

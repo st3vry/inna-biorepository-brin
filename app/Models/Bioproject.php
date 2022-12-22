@@ -53,8 +53,14 @@ class Bioproject extends Model
         return $this->belongsTo(Consortium::class);
     }
 
+    public function externallink()
+    {
+        return $this->hasMany(BioProjectExternalLink::class);
+    }
+
     public function getRouteKeyName()
     {
         return 'accession';
     }
+    
 }

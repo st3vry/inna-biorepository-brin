@@ -7,7 +7,9 @@ use App\Models\Capture;
 use App\Models\CaptureBioproject;
 use App\Models\Consortium;
 use App\Models\Grant;
+use App\Models\BioProjectExternalLink;
 use App\Models\Datatype;
+use App\Models\DatatypeBioproject;
 use App\Models\Fundagency;
 use App\Models\Material;
 use App\Models\MaterialBioproject;
@@ -38,9 +40,15 @@ class CreateBioproject extends Component
     public $organisms = [];
     public $consortia = [];
     public $datatypes = [];
+    public $datatypedesc;
+
     public $samplescopes = [];
+    public $samplescope_id;
+    public $samplescopedesc;
+
     public $fundagencies = [];
     public $grants = [];
+    public $externallinks = [];
     public $publications = [];
     public $relevances = [];
     public $relevance_id;
@@ -60,7 +68,7 @@ class CreateBioproject extends Component
 
     public $data_type_id;
     public $selectedDatatype;
-    public $samplescope_id;
+
     public $organism_id;
     public $consortium_id;
     public $title;
@@ -89,10 +97,17 @@ class CreateBioproject extends Component
         'description' => 'required|min:6',
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
+        'datatypedesc' => '',
+
         'samplescope_id' => 'required',
+        'samplescopedesc' => '',
+
         'grants.*.fundagency_id' => 'required',
         'grants.*.grant_program' => 'required',
         'grants.*.grant_title' => 'required',
+
+        'externallinks.*.link_description' => 'required',
+        'externallinks.*.link_url' => 'required',
 
         'publications.*.pub_identifier_id' => 'required',
         'publications.*.pub_id' => 'required',
@@ -170,6 +185,9 @@ class CreateBioproject extends Component
         $this->publications = [
             ['pub_identifier_id' => '', 'pub_id' => '1', 'article_title' => '1']
         ];
+        $this->externallinks = [
+            ['link_description' => '', 'link_url' => '']
+        ];
     }
     public function addGrant()
     {
@@ -191,6 +209,17 @@ class CreateBioproject extends Component
     {
         unset($this->publications[$index]);
         $this->publications = array_values($this->publications);
+    }
+
+    public function addExternalLink()
+    {
+        $this->externallinks[] = ['link_description' => '', 'link_url' => ''];
+    }
+
+    public function removeExternalLink($index)
+    {
+        unset($this->externallinks[$index]);
+        $this->externallinks = array_values($this->externallinks);
     }
 
 
@@ -218,6 +247,7 @@ class CreateBioproject extends Component
         $bioproject->user_id = auth()->user()->id;
 
         $bioproject->save();
+
         $relevanceData = [
             'bioproject_id' => $bioproject->id,
             'relevance_id' => $validatedData['relevance_id'],
@@ -237,7 +267,6 @@ class CreateBioproject extends Component
             'capture_id' => $validatedData['capture_id'],
             'description' => $validatedData['capdesc']
         ];
-
         CaptureBioproject::create($captureData);
 
         $methodologyData = [
@@ -271,6 +300,25 @@ class CreateBioproject extends Component
             }
         }
 
+        if (count($validatedData['data_type_id']) > 0) {
+            foreach ($validatedData['data_type_id'] as $item => $value) {
+                $data4 = array(
+                    'bioproject_id' => $bioproject->id,
+                    'datatype_id' => $validatedData['data_type_id'][$item],
+                );
+                DatatypeBioproject::create($data4);
+            }
+        }
+        if (count($validatedData['externallinks']) > 0) {
+            foreach ($validatedData['externallinks'] as  $item => $value) {
+                $data5 = array(
+                    'bioproject_id' => $bioproject->id,
+                    'link_description' => $validatedData['externallinks'][$item]['link_description'],
+                    'link_url' => $validatedData['externallinks'][$item]['link_url'],
+                );
+                BioProjectExternalLink::create($data5);
+            }
+        }
 
 
         session()->flash('message', 'Bioproject successfully created.');

@@ -123,9 +123,10 @@ class CreateBioproject extends Component
     }
     public function secondStepSubmit()
     {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
+        $validatedData = $this->validate([
+            'title' => 'required|min:6',
+            'description' => 'required|min:6',
+        ]);
 
         $this->currentStep = 3;
     }

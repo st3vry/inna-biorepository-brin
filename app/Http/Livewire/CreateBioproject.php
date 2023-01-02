@@ -81,9 +81,7 @@ class CreateBioproject extends Component
         'title' => 'required|min:6',
         'umbproject_id' => '',
         'organism_id' => 'required',
-        'consortium_id' => 'required',
-        'relevance_id' => 'required',
-        'reldesc' => '',
+        // 'consortium_id' => 'required',
 
         'material_id' => 'required',
         'matdesc' => '',
@@ -102,13 +100,6 @@ class CreateBioproject extends Component
         'samplescope_id' => 'required',
         'samplescopedesc' => '',
 
-        'grants.*.fundagency_id' => 'required',
-        'grants.*.grant_program' => 'required',
-        'grants.*.grant_title' => 'required',
-
-        'externallinks.*.link_description' => 'required',
-        'externallinks.*.link_url' => 'required',
-
         'publications.*.pub_identifier_id' => 'required',
         'publications.*.pub_id' => 'required',
         'publications.*.article_title' => 'required',
@@ -123,9 +114,21 @@ class CreateBioproject extends Component
     }
     public function secondStepSubmit()
     {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
+        $validatedData = $this->validate([
+            'title' => 'required|min:6',
+            'description' => 'required|min:6',
+            'relevance_id' => 'required',
+            'reldesc' => '',
+
+            'grants.*.fundagency_id' => 'required',
+            'grants.*.grant_program' => 'required',
+            'grants.*.grant_title' => 'required',
+
+            'externallinks.*.link_description' => 'required',
+            'externallinks.*.link_url' => 'required',
+
+            
+        ]);
 
         $this->currentStep = 3;
     }
@@ -179,19 +182,19 @@ class CreateBioproject extends Component
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();
         $this->fundagencies = Fundagency::all();
-        $this->grants = [
-            ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1']
-        ];
-        $this->publications = [
-            ['pub_identifier_id' => '', 'pub_id' => '1', 'article_title' => '1']
-        ];
-        $this->externallinks = [
-            ['link_description' => '', 'link_url' => '']
-        ];
+        // $this->grants = [
+        //     ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1']
+        // ];
+        // $this->publications = [
+        //     ['pub_identifier_id' => '', 'pub_id' => '1', 'article_title' => '1']
+        // ];
+        // $this->externallinks = [
+        //     ['link_description' => '', 'link_url' => '']
+        // ];
     }
     public function addGrant()
     {
-        $this->grants[] = ['fundagency_id' => '', 'grant_program' => '1', 'grant_title' => '1'];
+        $this->grants[] = ['fundagency_id' => '', 'grant_program' => '', 'grant_title' => ''];
     }
 
     public function removeGrant($index)

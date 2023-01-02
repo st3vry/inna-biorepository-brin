@@ -95,6 +95,7 @@ class DatabaseSeeder extends Seeder
             MethodologySeeder::class,
             ConsortiumSeeder::class,
             PubIdentifierSeeder::class,
+            ObjectiveSeeder::class,
         ]);
     }
 }

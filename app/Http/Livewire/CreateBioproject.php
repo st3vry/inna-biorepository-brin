@@ -50,6 +50,7 @@ class CreateBioproject extends Component
     public $grants = [];
     public $externallinks = [];
     public $publications = [];
+    public $pub_identifiers;
     public $relevances = [];
     public $relevance_id;
     public $reldesc;

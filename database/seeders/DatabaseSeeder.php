@@ -96,6 +96,9 @@ class DatabaseSeeder extends Seeder
             ConsortiumSeeder::class,
             PubIdentifierSeeder::class,
             ObjectiveSeeder::class,
+            CelularitySeeder::class,
+            ReproductionSeeder::class,
+            PloidySeeder::class,
         ]);
     }
 }

@@ -16,6 +16,9 @@ use App\Models\MaterialBioproject;
 use App\Models\Methodology;
 use App\Models\MethodologyBioproject;
 use App\Models\Organism;
+use App\Models\Celularity;
+use App\Models\Reproduction;
+use App\Models\Ploidy;
 use App\Models\PubIdentifier;
 use App\Models\Publication;
 use App\Models\Relevance;
@@ -37,7 +40,6 @@ class CreateBioproject extends Component
     public $hold_release;
 
     public $umbrellas = [];
-    public $organisms = [];
     public $consortia = [];
     public $datatypes = [];
     public $datatypedesc;
@@ -70,13 +72,27 @@ class CreateBioproject extends Component
     public $data_type_id;
     public $selectedDatatype;
 
-    public $organism_id;
     public $consortium_id;
     public $title;
     public $umbproject_id;
     public $description;
 
     public $message;
+
+    // TARGET TAB
+    public $organisms = [];
+    public $organism_id;
+    public $novel_org;
+    public $novel_desc;
+    public $sbc;
+    public $isolate;
+    public $org_desc;
+    public $celularities = [];
+    public $celularity_id;
+    public $reproductions = [];
+    public $reproduction_id;
+    public $ploidies = [];
+    public $ploidy_id;
 
     protected $rules = [
         'title' => 'required|min:6',
@@ -127,8 +143,6 @@ class CreateBioproject extends Component
 
             'externallinks.*.link_description' => 'required',
             'externallinks.*.link_url' => 'required',
-
-            
         ]);
 
         $this->currentStep = 3;
@@ -143,9 +157,12 @@ class CreateBioproject extends Component
     }
     public function fourthStepSubmit()
     {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
+        $validatedData = $this->validate([
+            'organism_id' => 'required',
+            'sbc' => 'required',
+            'isolate' => 'required',
+            'org_desc' => 'required',
+        ]);
 
         $this->currentStep = 5;
     }
@@ -171,7 +188,6 @@ class CreateBioproject extends Component
         $this->submitter_lab = auth()->user()->lab->name;
         $this->submitter_center = auth()->user()->lab->center->name;
 
-
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();
         $this->materials = Material::all();
@@ -179,6 +195,9 @@ class CreateBioproject extends Component
         $this->methodologies = Methodology::all();
         $this->consortia = Consortium::all();
         $this->organisms = Organism::all();
+        $this->celularities = Celularity::all();
+        $this->reproductions = Reproduction::all();
+        $this->ploidies = Ploidy::all();
         $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

@@ -72,10 +72,21 @@
                 <div class="card shadow-sm mb-2">
                     <div class="card-body">
                         <table class="table table-striped table-sm">
+                            <thead>
+                                <th>Title</th>
+                                <th>PubMed/DOI</th>
+                            </thead>
                             @forelse ( $pubs as $pub )
                             <tr>
                                 <td class="col-sm-3">{{$pub->article_title}}</td>
-                                <td class="col-sm-3">{{$pub->doi}}</td>
+                                <td class="col-sm-3">
+                                    @if($pub->pub_identifier_id == 1)
+                                        <a href="https://www.doi.org/{{$pub->pub_id}}" target="_blank">{{$pub->pub_id}} </a> 
+                                    @else
+                                        <a href="https://pubmed.ncbi.nlm.nih.gov/{{$pub->pub_id}}" target="_blank">{{$pub->pub_id}} </a> 
+                                    @endif
+                                    
+                                </td>
                             </tr>
                             @empty
                             None
@@ -85,12 +96,18 @@
                 </div>
             </td>
         </tr>
+        
         <tr>
             <td class="col-sm-1">Grant</td>
             <td class="col-sm-7">
                 <div class="card shadow-sm mb-2">
                     <div class="card-body">
                         <table class="table table-striped table-sm">
+                            <thead>
+                                <th>Grant Title</th>
+                                <th>Grant Program</th>
+                                <th>Funding Agency</th>
+                            </thead>
                             @forelse ( $grants as $grant )
                             <tr>
                                 <td class="col-sm-3">{{$grant->grant_title}}</td>
@@ -105,6 +122,31 @@
                 </div>
             </td>
         </tr>
+
+        <tr>
+            <td class="col-sm-1">External Link</td>
+            <td class="col-sm-7">
+                <div class="card shadow-sm mb-2">
+                    <div class="card-body">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <th>Link</th>
+                                <th>Description</th>
+                            </thead>
+                            @forelse ( $externallinks as $externallink )
+                            <tr>
+                                <td class="col-sm-3"><a href="{{$externallink->link_url}}" target=_blank>{{$externallink->link_url}}</td>
+                                <td class="col-sm-3">{{$externallink->link_description}}</td>
+                            </tr>
+                            @empty
+                            None
+                            @endforelse
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
         <tr>
             <td class="col-sm-1">Sample Scope</td>
             <td class="col-sm-7">{{$bioproject->samplescope->name}}</td>

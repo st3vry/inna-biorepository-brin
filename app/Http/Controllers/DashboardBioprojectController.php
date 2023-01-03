@@ -103,8 +103,10 @@ class DashboardBioprojectController extends Controller
         //
         // return $bioproject;
 
+        //get dari model
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
+        $externallinks = $bioproject->externallink()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
         $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
@@ -112,6 +114,8 @@ class DashboardBioprojectController extends Controller
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
+
+        //kirim data ke view
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,
@@ -121,7 +125,8 @@ class DashboardBioprojectController extends Controller
             'material' => $materialBioproject,
             'capture' => $captureBioproject,
             'methodology' => $methodologyBioproject,
-            'umbrella' => $umbrella
+            'umbrella' => $umbrella,
+            'externallinks' => $externallinks
         ]);
     }
 

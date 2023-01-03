@@ -43,14 +43,14 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name <font color="red">*</font></label>
                         <input type="text" class="form-control @error('submitter_name') is-invalid @enderror" wire:model="submitter_name" id="submitter_name" name="submitter_name" value="{{old('submitter_name')}}" disabled>
                         @error('submitter_name')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email <font color="red">*</font></label>
                         <input type="text" class="form-control @error('submitter_email') is-invalid @enderror" wire:model="submitter_email" id="submitter_email" name="submitter_email" value="{{old('submitter_email')}}" disabled>
                         @error('submitter_email')
                         <div class="invalid-feedback">{{$message}}</div>
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="lab" class="form-label">Lab</label>
+                        <label for="lab" class="form-label">Lab <font color="red">*</font></label>
                         <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" disabled>
                         @error('submitter_lab')
                         <div class="invalid-feedback">{{$message}}</div>
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="center" class="form-label">Center</label>
+                        <label for="center" class="form-label">Center <font color="red">*</font></label>
                         <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" disabled>
                         @error('submitter_center')
                         <div class="invalid-feedback">{{$message}}</div>
@@ -76,27 +76,24 @@
             </div>
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5>Data Release</h5>
+                    <h5>Data Release <font color="red">*</font>
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="hold_release" class="form-label">-</label>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="true" @if (old('hold_release')==true) ) checked @endif>
-                                    <label class="form-check-label">Hold Release</label>
-                                </div>
-
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="false" @if (old('hold_release')==false) ) checked @endif>
-                                    <label class="form-check-label">Release immediately</label>
-                                </div>
-                            </div>
-
+                        <!-- <label for="hold_release" class="form-label">-</label> -->
+                        <!-- <div class="row"> -->
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="true" @if (old('hold_release')==true) ) checked @endif>
+                            <label class="form-check-label">Hold (not viewable until the release of linked data)</label>
                         </div>
+
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="false" @if (old('hold_release')==false) ) checked @endif>
+                            <label class="form-check-label">Release immediately (After the approval is passed, release immediately following curation) </label>
+                        </div>
+                        <!-- </div> -->
                         @error('hold_release')
                         <p class="text-danger">{{$message}}</p>
                         @enderror
@@ -115,14 +112,14 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
+                        <label for="title" class="form-label">Title <font color="red">*</font></label>
                         <input type="text" class="form-control @error('title') is-invalid @enderror" wire:model="title" id="title" name="title" value="{{old('title')}}">
                         @error('title')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
+                        <label for="description" class="form-label">Description <font color="red">*</font></label>
                         <textarea class="form-control" id="description" name="description" wire:model="description" rows="3">{{old('description')}}</textarea>
 
                         @error('description')
@@ -130,7 +127,7 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="relevance" class="form-label">Relevance</label>
+                        <label for="relevance" class="form-label">Relevance <font color="red">*</font></label>
                         <select class="form-select" name="relevance_id" id="relevance_id" wire:model="relevance_id">
                             <option value="">Relevance</option>
                             @foreach ($relevances as $relevance )
@@ -138,7 +135,7 @@
                             @endforeach
                         </select>
                         @if ($relevance_id==7)
-                        <label for="reldesc" class="form-label">Relevance Description</label>
+                        <label for="reldesc" class="form-label">Relevance Description <font color="red">*</font></label>
                         <input type="text" class="form-control @error('reldesc') is-invalid @enderror" wire:model="reldesc" id="reldesc" name="reldesc" value="{{old('reldesc')}}">
                         @error('reldesc')
                         <div class="invalid-feedback">{{$message}}</div>
@@ -177,102 +174,101 @@
                     <h5>External Links</h5>
                 </div>
                 <div class="card-body mb-3">
-                            <table id="add_table_externallink" class="table" data-toggle="table" data-mobile-responsive="true">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Link Description</th>
-                                        <th scope="col">Link URL</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($externallinks as $index => $externallink)
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="externallinks[{{$index}}][link_description]" class="form-control" value="{{$externallink['link_description']}}" wire:model="externallinks.{{$index}}.link_description">
-                                            @error('grants.*.program')
-                                            <p class="text-danger">{{$message}}</p>
-                                            @enderror
-                                        </td>
-                                        <td>
-                                            <input type="text" name="externallinks[{{$index}}][link_url]" class="form-control" value="{{$externallink['link_url']}}" wire:model="externallinks.{{$index}}.link_url">
-                                            @error('grants.*.title')
-                                            <p class="text-danger">{{$message}}</p>
-                                            @enderror
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-danger delete_row" wire:click.prevent="removeExternalLink({{$index}})">remove</button>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button class="btn btn-sm btn-secondary" wire:click.prevent="addExternalLink">+ Add Another Link</button>
-                                </div>
-                            </div>
+                    <table id="add_table_externallink" class="table" data-toggle="table" data-mobile-responsive="true">
+                        <thead>
+                            <tr>
+                                <th scope="col">Link Description</th>
+                                <th scope="col">Link URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($externallinks as $index => $externallink)
+                            <tr>
+                                <td>
+                                    <input type="text" name="externallinks[{{$index}}][link_description]" class="form-control" value="{{$externallink['link_description']}}" wire:model="externallinks.{{$index}}.link_description">
+                                    @error('externallinks.*.link_description')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <input type="text" name="externallinks[{{$index}}][link_url]" class="form-control" value="{{$externallink['link_url']}}" wire:model="externallinks.{{$index}}.link_url">
+                                    @error('externallinks.*.link_url')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger delete_row" wire:click.prevent="removeExternalLink({{$index}})">remove</button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-sm btn-secondary" wire:click.prevent="addExternalLink">+ Add Another Link</button>
                         </div>
+                    </div>
+                </div>
             </div>
             <div class="card mb-4">
                 <div class="card-header">
                     <h5>Grants</h5>
                 </div>
                 <div class="card-body">
-                    <div class="card card-outline card-info collapsed-card mb-3">
-                        <div class="card-header">
+                    <!-- <div class="card card-outline card-info collapsed-card mb-3"> -->
+                    <!-- <div class="card-header">
                             <h6 class="card-title">Grants</h6>
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body mb-3">
-                            <table id="add_table" class="table" data-toggle="table" data-mobile-responsive="true">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Agency</th>
-                                        <th scope="col">Program</th>
-                                        <th scope="col">Grant Title</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($grants as $index => $grant)
-                                    <tr>
-                                        <td>
-                                            <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
-                                                <option value="0">Funding Agency</option>
-                                                @foreach ($fundagencies as $fundagency )
-                                                <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('grants.*.fundagency_id')
-                                            <p class="text-danger">{{$message}}</p>
-                                            @enderror
-                                        </td>
-                                        <td>
-                                            <input type="text" name="grant[{{$index}}][grant_program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
-                                            @error('grants.*.program')
-                                            <p class="text-danger">{{$message}}</p>
-                                            @enderror
-                                        </td>
-                                        <td>
-                                            <input type="text" name="grant[{{$index}}][grant_title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
-                                            @error('grants.*.title')
-                                            <p class="text-danger">{{$message}}</p>
-                                            @enderror
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-danger delete_row" wire:click.prevent="removeGrant({{$index}})">remove</button>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button class="btn btn-sm btn-secondary" wire:click.prevent="addGrant">+ Add Another Grant</button>
-                                </div>
-                            </div>
+                        <div class="card-body mb-3"> -->
+                    <table id="add_table" class="table" data-toggle="table" data-mobile-responsive="true">
+                        <thead>
+                            <tr>
+                                <th scope="col">Agency</th>
+                                <th scope="col">Program</th>
+                                <th scope="col">Grant Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($grants as $index => $grant)
+                            <tr>
+                                <td>
+                                    <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
+                                        <option value="0">Funding Agency</option>
+                                        @foreach ($fundagencies as $fundagency )
+                                        <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('grants.*.fundagency_id')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <input type="text" name="grant[{{$index}}][grant_program]" class="form-control" value="{{$grant['grant_program']}}" wire:model="grants.{{$index}}.grant_program">
+                                    @error('grants.*.grant_program')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <input type="text" name="grant[{{$index}}][grant_title]" class="form-control" value="{{$grant['grant_title']}}" wire:model="grants.{{$index}}.grant_title">
+                                    @error('grants.*.grant_title')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger delete_row" wire:click.prevent="removeGrant({{$index}})">remove</button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-sm btn-secondary" wire:click.prevent="addGrant">+ Add Another Grant</button>
                         </div>
-                        <!-- /.card-body -->
                     </div>
+                    <!-- </div> -->
+                    <!-- /.card-body -->
+                    <!-- </div> -->
                     <!-- /.card -->
                 </div>
             </div>
@@ -303,55 +299,176 @@
     </div>
     <div class="row setup-content {{ $currentStep != 3 ? 'display-none' : '' }}" id="step-3">
         <div class="col-md-12">
-            <h3> Project Type</h3>
-            <div class="mb-3">
-                <label class="mb-3">Data Type</label>
-                @foreach ($datatypes->chunk(6) as $row)
-                <div class="row">
-                    @foreach ( $row as $datatype)
-                    <div class="col-sm-6">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="data_type_id[]" wire:model="data_type_id.{{ $datatype->id }}" value="{{$datatype->id}}" @if(is_array(old('data_type _id')) && in_array($datatype->id, old('data_type_id'))) checked @endif>
-                            <label class="form-check-label">{{$datatype->name}}</label>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Project Data Type</h5>
+                </div>
+                <div class="card-body">
+                    @foreach ($datatypes->chunk(6) as $row)
+                    <div class="row">
+                        @foreach ( $row as $datatype)
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="data_type_id[]" wire:model="data_type_id.{{ $datatype->id }}" value="{{$datatype->id}}" @if(is_array(old('data_type _id')) && in_array($datatype->id, old('data_type_id'))) checked @endif>
+                                <label class="form-check-label">{{$datatype->name}}</label>
+                            </div>
                         </div>
+                        @endforeach
                     </div>
                     @endforeach
+                    @if(is_array($data_type_id) && in_array(10,$data_type_id))
+                    <!-- {{print_r($data_type_id)}} -->
+                    <label for="datatypedesc" class="form-label">Other data type description</label>
+                    <input type="text" class="form-control @error('datatypedesc') is-invalid @enderror" wire:model="datatypedesc" id="datatypedesc" name="datatypedesc" value="{{old('datatypedesc')}}">
+                    @error('datatypedesc')
+                    <div class="invalid-feedback">{{$message}}</div>
+                    @enderror
+                    @endif
+                    @error('data_type_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
-                @endforeach
-                @if(is_array($data_type_id) && in_array(10,$data_type_id))
-                <!-- {{print_r($data_type_id)}} -->
-                <label for="datatypedesc" class="form-label">Other data type description</label>
-                <input type="text" class="form-control @error('datatypedesc') is-invalid @enderror" wire:model="datatypedesc" id="datatypedesc" name="datatypedesc" value="{{old('datatypedesc')}}">
-                @error('datatypedesc')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-                @endif
-                @error('data_type_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="material" class="form-label">Material</label>
-                <select class="form-select" name="material_id" id="material_id" wire:model="material_id">
-                    <option value="">Material</option>
-                    @foreach ($materials as $material )
-                    <option value="{{$material->id}}" @if (old('material_id')==$material->id) selected @endif>{{$material->name}}</option>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Sample scope/Material/Capture/Methodology</h5>
+                </div>
+                <div class="card-body">
+
+                    <!-- sample scope -->
+                    <div class="mb-3">
+                        <label for="samplescope" class="form-label">Sample scope</label>
+                        <select class="form-select" name="samplescope_id" id="samplescope_id" wire:model="samplescope_id">
+                            <option value="">Sample scope</option>
+                            @foreach ($samplescopes as $samplescope )
+                            <option value="{{$samplescope->id}}" @if (old('samplescope_id')==$samplescope->id) selected @endif>{{$samplescope->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @if ($samplescope_id==7)
+                        <label for="samplescopedesc" class="form-label">Other sample scope description</label>
+                        <input type="text" class="form-control @error('matdesc') is-invalid @enderror" wire:model="samplescopedesc" id="samplescopedesc" name="samplescopedesc" value="{{old('samplescopedesc')}}">
+                        @error('samplescopedesc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                        @endif
+
+                        @error('samplescope_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+
+
+                    <!-- material -->
+                    <div class="mb-3">
+                        <label for="material" class="form-label">Material</label>
+                        <select class="form-select" name="material_id" id="material_id" wire:model="material_id">
+                            <option value="">Material</option>
+                            @foreach ($materials as $material )
+                            <option value="{{$material->id}}" @if (old('material_id')==$material->id) selected @endif>{{$material->name}}</option>
+                            @endforeach
+                        </select>
+                        @if ($material_id==7)
+                        <label for="matdesc" class="form-label">Other material description</label>
+                        <input type="text" class="form-control @error('matdesc') is-invalid @enderror" wire:model="matdesc" id="matdesc" name="matdesc" value="{{old('matdesc')}}">
+                        @error('matdesc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                        @endif
+
+                        @error('material_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+
+                    <!-- capture -->
+                    <div class="mb-3">
+                        <label for="capture" class="form-label">Capture</label>
+                        <select class="form-select" name="capture_id" id="capture_id" wire:model="capture_id">
+                            <option value="">Capture</option>
+                            @foreach ($captures as $capture )
+                            <option value="{{$capture->id}}" @if (old('capture_id')==$capture->id) selected @endif>{{$capture->name}}</option>
+                            @endforeach
+                        </select>
+                        @if ($capture_id==6)
+                        <label for="capdesc" class="form-label">Other capture description</label>
+                        <input type="text" class="form-control @error('capdesc') is-invalid @enderror" wire:model="capdesc" id="capdesc" name="capdesc" value="{{old('capdesc')}}">
+                        @error('capdesc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                        @endif
+
+                        @error('capture_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+
+                    <!-- methodology -->
+                    <div class="mb-3">
+                        <label for="methodology" class="form-label">Methodology</label>
+                        <select class="form-select" name="methodology_id" id="methodology_id" wire:model="methodology_id">
+                            <option value="">Methodology</option>
+                            @foreach ($methodologies as $methodology )
+                            <option value="{{$methodology->id}}" @if (old('methodology_id')==$methodology->id) selected @endif>{{$methodology->name}}</option>
+                            @endforeach
+                        </select>
+                        @if ($methodology_id==4)
+                        <label for="metdesc" class="form-label">Other methodology description</label>
+                        <input type="text" class="form-control @error('metdesc') is-invalid @enderror" wire:model="metdesc" id="metdesc" name="metdesc" value="{{old('metdesc')}}">
+                        @error('metdesc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                        @endif
+
+                        @error('methodology_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Objectives</h5>
+                </div>
+                <div class="card-body">
+                    @foreach ($datatypes->chunk(6) as $row)
+                    <div class="row">
+                        @foreach ( $row as $datatype)
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="data_type_id[]" wire:model="data_type_id.{{ $datatype->id }}" value="{{$datatype->id}}" @if(is_array(old('data_type _id')) && in_array($datatype->id, old('data_type_id'))) checked @endif>
+                                <label class="form-check-label">{{$datatype->name}}</label>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                     @endforeach
-                </select>
-                @if ($material_id==7)
-                <label for="matdesc" class="form-label">Other material description</label>
-                <input type="text" class="form-control @error('matdesc') is-invalid @enderror" wire:model="matdesc" id="matdesc" name="matdesc" value="{{old('matdesc')}}">
-                @error('matdesc')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-                @endif
-
-                @error('material_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
+                    @if(is_array($data_type_id) && in_array(10,$data_type_id))
+                    <!-- {{print_r($data_type_id)}} -->
+                    <label for="datatypedesc" class="form-label">Other data type description</label>
+                    <input type="text" class="form-control @error('datatypedesc') is-invalid @enderror" wire:model="datatypedesc" id="datatypedesc" name="datatypedesc" value="{{old('datatypedesc')}}">
+                    @error('datatypedesc')
+                    <div class="invalid-feedback">{{$message}}</div>
+                    @enderror
+                    @endif
+                    @error('data_type_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
+                </div>
             </div>
+
+
+            <!-- <h3> Project Type</h3>
             <div class="mb-3">
+                <label class="mb-3">Data Type</label>
+                
+               
+            </div> -->
+
+
+            <!-- <div class="mb-3">
                 <label class="mb-3">Sample Scope</label>
                 @foreach ($samplescopes->chunk(6) as $row)
                 <div class="row">
@@ -378,52 +495,9 @@
                 @error('samplescope_id')
                 <p class="text-danger">{{$message}}</p>
                 @enderror
-            </div>
+            </div> -->
 
-
-            <div class="mb-3">
-                <label for="capture" class="form-label">Capture</label>
-                <select class="form-select" name="capture_id" id="capture_id" wire:model="capture_id">
-                    <option value="">Capture</option>
-                    @foreach ($captures as $capture )
-                    <option value="{{$capture->id}}" @if (old('capture_id')==$capture->id) selected @endif>{{$capture->name}}</option>
-                    @endforeach
-                </select>
-                @if ($capture_id==6)
-                <label for="capdesc" class="form-label">Other capture description</label>
-                <input type="text" class="form-control @error('capdesc') is-invalid @enderror" wire:model="capdesc" id="capdesc" name="capdesc" value="{{old('capdesc')}}">
-                @error('capdesc')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-                @endif
-
-                @error('capture_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div>
-
-            <div class="mb-3">
-                <label for="methodology" class="form-label">Methodology</label>
-                <select class="form-select" name="methodology_id" id="methodology_id" wire:model="methodology_id">
-                    <option value="">Methodology</option>
-                    @foreach ($methodologies as $methodology )
-                    <option value="{{$methodology->id}}" @if (old('methodology_id')==$methodology->id) selected @endif>{{$methodology->name}}</option>
-                    @endforeach
-                </select>
-                @if ($methodology_id==4)
-                <label for="metdesc" class="form-label">Other methodology description</label>
-                <input type="text" class="form-control @error('metdesc') is-invalid @enderror" wire:model="metdesc" id="metdesc" name="metdesc" value="{{old('metdesc')}}">
-                @error('metdesc')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-                @endif
-
-                @error('methodology_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div>
-
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="organism_id" class="form-label">Organism</label>
                 <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
                     <option value="">Organism</option>
@@ -435,7 +509,7 @@
                 @error('organism_id')
                 <p class="text-danger">{{$message}}</p>
                 @enderror
-            </div>
+            </div> -->
 
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(2)">Back</button>
@@ -444,7 +518,129 @@
     </div>
     <div class="row setup-content {{ $currentStep != 4 ? 'display-none' : '' }}" id="step-4">
         <div class="col-md-12">
-            <h3> Target</h3>
+            <h4>Target</h4>
+            <div class="card card-outline card-info collapsed-card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title">Organism Information</h6>
+                </div>
+                <div class="card-body mb-3">
+                    <div class="mb-3">
+                        <label for="organism_id" class="form-label">Organism</label>
+                        <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
+                            <option value="">Organism</option>
+                            @foreach ($organisms as $organism )
+                            <option value="{{$organism->id}}" @if (old('organism_id')==$organism->id) selected @endif>{{$organism->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('organism_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-check-input" type="checkbox" name="novel_org" wire:model="novel_org" value="novel_org">
+                        <label class="form-check-label">Novel</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="novel_desc" class="form-label">Novel Description <font color="red">*</font></label>
+                        <textarea class="form-control" id="novel_desc" name="novel_desc" wire:model="novel_desc" rows="3" @if ($novel_org==false) disabled @endif>{{old('novel_desc')}}</textarea>
+
+                        @error('novel_desc')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="sbc" class="form-label">Strain, Breed, Cultivar <font color="red">*</font></label>
+                        <input type="text" class="form-control @error('sbc') is-invalid @enderror" wire:model="sbc" id="sbc" name="sbc" value="{{old('sbc')}}">
+                        @error('sbc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="isolate" class="form-label">Isolate name or label <font color="red">*</font></label>
+                        <input type="text" class="form-control @error('isolate') is-invalid @enderror" wire:model="isolate" id="isolate" name="isolate" value="{{old('isolate')}}">
+                        @error('isolate')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="org_desc" class="form-label">Organism Description <font color="red">*</font></label>
+                        <textarea class="form-control" id="org_desc" name="org_desc" wire:model="org_desc" rows="3">{{old('org_desc')}}</textarea>
+
+                        @error('org_desc')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="card card-outline card-info collapsed-card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title">General Properties</h6>
+                </div>
+                <div class="card-body mb-3">
+                    <div class="mb-3">
+                        <label for="celularity_id" class="form-label">Celularity</label>
+                        <select class="form-select" name="celularity_id" id="celularity_id" wire:model="celularity_id">
+                            <option value="">Celularity</option>
+                            @foreach ($celularities as $celularity )
+                            <option value="{{$celularity->id}}" @if (old('celularity_id')==$celularity->id) selected @endif>{{$celularity->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('celularity_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="reproduction_id" class="form-label">Reproduction</label>
+                        <select class="form-select" name="reproduction_id" id="reproduction_id" wire:model="reproduction_id">
+                            <option value="">Reproduction</option>
+                            @foreach ($reproductions as $reproduction )
+                            <option value="{{$reproduction->id}}" @if (old('reproduction_id')==$reproduction->id) selected @endif>{{$reproduction->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('reproduction_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="ploidy_id" class="form-label">Ploidy</label>
+                        <select class="form-select" name="ploidy_id" id="ploidy_id" wire:model="ploidy_id">
+                            <option value="">Ploidy</option>
+                            @foreach ($ploidies as $ploidy )
+                            <option value="{{$ploidy->id}}" @if (old('ploidy_id')==$ploidy->id) selected @endif>{{$ploidy->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('ploidy_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                </div>                
+            </div>
+            <div class="card card-outline card-info collapsed-card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title">Phenotypes</h6>
+                </div>
+                <div class="card-body mb-3">
+                </div>
+            </div>
+            <div class="card card-outline card-info collapsed-card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title">Prokaryote morphology</h6>
+                </div>
+                <div class="card-body mb-3">
+                </div>
+            </div>
+            <div class="card card-outline card-info collapsed-card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title">Ecological environment</h6>
+                </div>
+                <div class="card-body mb-3">
+                </div>
+            </div>
+
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>
             <button class="btn btn-primary pull-right" type="button" wire:click="fourthStepSubmit">Next</button>

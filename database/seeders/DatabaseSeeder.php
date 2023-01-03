@@ -17,6 +17,7 @@ use App\Models\DatatypeBioproject;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
 use App\Models\RelevanceBioproject;
+use App\Models\TrophicLevel;
 use Faker\Generator;
 
 class DatabaseSeeder extends Seeder
@@ -99,6 +100,9 @@ class DatabaseSeeder extends Seeder
             CelularitySeeder::class,
             ReproductionSeeder::class,
             PloidySeeder::class,
+            GenomeSizeSeeder::class,
+            BioticRelationshipSeeder::class,
+            TrophicLevelSeeder::class,
         ]);
     }
 }

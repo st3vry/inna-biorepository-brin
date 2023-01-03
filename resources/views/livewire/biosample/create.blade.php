@@ -20,7 +20,11 @@
                     <!--<p>Sample Information</p>-->
                 </div>
                 <div class="multi-wizard-step">
-                    <a href="#step-4" type="button" class="btn {{ $currentStep != 4 ? 'btn-default' : 'btn-primary' }}" disabled="disabled">Preview</a>
+                    <a href="#step-4" type="button" class="btn {{ $currentStep != 4 ? 'btn-default' : 'btn-primary' }}" disabled="disabled">Sample Attributes</a>
+                    <!--<p>Sample Information</p>-->
+                </div>
+                <div class="multi-wizard-step">
+                    <a href="#step-5" type="button" class="btn {{ $currentStep != 5 ? 'btn-default' : 'btn-primary' }}" disabled="disabled">Preview</a>
                     <!--<p>Sample Information</p>-->
                 </div>
             </div>
@@ -172,63 +176,21 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
+                        @foreach ($sampletypes->chunk(6) as $row)
+                            <div class="row">
+                                @foreach ( $row as $sampletype)
+                                <div class="col-sm-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sampletype_id" wire:model="sampletype_id" value="{{$sampletype->id}}" @if (old('sampletype_id')==$sampletype->id)
+                            ) checked @endif>
+                                        <label class="form-check-label">{{$sampletype->name}}</label>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endforeach
+                            <label>{{$sampletype_id}}</label>
                             
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sample_type" wire:model="sample_type" value="clinical" checked>
-                                        <label class="form-check-label">Clinical or host-associated pathogen</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sample_type" wire:model="sample_type" value="environmental">
-                                        <label class="form-check-label">Environmental, food or other pathogen</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sample_type" wire:model="sample_type" value="microbe">
-                                        <label class="form-check-label">Microbe</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sample_type" wire:model="sample_type" value="model">
-                                        <label class="form-check-label">Model organism or animal sample</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sample_type" wire:model="sample_type" value="human">
-                                        <label class="form-check-label">Human</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sample_type" wire:model="sample_type" value="plant">
-                                        <label class="form-check-label">Plant</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sample_type" wire:model="sample_type" value="Virus">
-                                        <label class="form-check-label">Virus</label>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,7 +200,7 @@
         </div>
         <div class="row setup-content {{ $currentStep != 4 ? 'display-none' : '' }}" id="step-4">
             <div class="col-md-12">
-                <h3>Preview</h3>
+                <h3>Sample Attributes</h3>
                 <table class="table">
                     <tr>
                         <td>Team Name:</td>
@@ -259,6 +221,121 @@
                 </table>
 
                 <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>
+                <button class="btn btn-primary nextBtn  pull-right" type="button" wire:click="fourthStepSubmit">Next</button>
+            </div>
+        </div>
+        <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
+            <div class="col-md-12">
+                <h3>Preview</h3>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Submitter</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                
+                            <table class="table">
+                                <tr>
+                                    <td>Name:</td>
+                                    <td><label>{{$submitter_name}}</label></td>
+                                </tr>
+                                <tr>
+                                    <td>Email:</td>
+                                    <td><label>{{$submitter_email}}</label></td>
+                                </tr>
+                                <tr>
+                                    <td>Lab:</td>
+                                    <td><label>{{$submitter_lab}}</label></td>
+                                </tr>
+                                <tr>
+                                    <td>Organization:</td>
+                                    <td><label>{{$submitter_center}}</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Release Date</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <table class="table">
+                                <tr>
+                                    <td>Release Date:</td>
+                                    <td><label>{{$hold_release}}</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>External Links</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <table class="table">
+                                <tr>
+                                    <td>Link Description:</td>
+                                    <td>Link URL:</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Comments</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <table class="table">
+                                <tr>
+                                    <td>Comments:</td>
+                                    <td><label>{{$comments}}</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Sample Type</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <table class="table">
+                                <tr>
+                                    <td>Sample type:</td>
+                                    <td><label>{{$sampletype_id}}</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Sample Attributes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <table class="table">
+                                <tr>
+                                    <td>...</td>
+                                    <td><label>...</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(4)">Back</button>
                 <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
             </div>
         </div>

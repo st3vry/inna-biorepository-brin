@@ -19,7 +19,12 @@ class SampletypeSeeder extends Seeder
 
         // Sampletype
         Sampletype::create([
-            'name' => 'Plant',
+            'name' => 'Clinical or host-associated pathogen',
+            'attribute_property' => '1,3,4,5',
+
+        ]);
+        Sampletype::create([
+            'name' => 'Environmental, food, or other pathogen',
             'attribute_property' => '1,3,4,5',
 
         ]);
@@ -29,16 +34,29 @@ class SampletypeSeeder extends Seeder
 
         ]);
         Sampletype::create([
+            'name' => 'Model organism or animal sample',
+            'attribute_property' => '1,3,4,5',
+
+        ]);
+
+        Sampletype::create([
             'name' => 'Human',
             'attribute_property' => '1,3,4,5',
 
         ]);
+
         Sampletype::create([
-            'name' => 'Animal',
+            'name' => 'Plant',
             'attribute_property' => '1,3,4,5',
 
         ]);
 
-        Sampletype::factory(10)->create();
+        Sampletype::create([
+            'name' => 'Virus',
+            'attribute_property' => '1,3,4,5',
+
+        ]);
+
+        // Sampletype::factory(10)->create();
     }
 }

@@ -617,7 +617,7 @@
                         <p class="text-danger">{{$message}}</p>
                         @enderror
                     </div>
-                    <div class= "mb-3">
+                    <div class="mb-3">
                         <div class="row g-3">
                             <label for="haploid_size" class="form-label">Haploid Genome Size</label>
                             <div class="col-md-10">
@@ -636,14 +636,48 @@
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">
                 <div class="card-header">
                     <h6 class="card-title">Phenotypes</h6>
                 </div>
                 <div class="card-body mb-3">
+                    <div class="mb-3">
+                        <label for="disease" class="form-label">Disease</label>
+                        <input type="text" class="form-control @error('disease') is-invalid @enderror" wire:model="disease" id="disease" name="disease" value="{{old('disease')}}">
+                        @error('disease')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio_rel_id" class="form-label">Biotic Relationship</label>
+                        <select class="form-select" name="bio_rel_id" id="bio_rel_id" wire:model="bio_rel_id">
+                            <option value="">Biotic Relationship</option>
+                            @foreach ($bio_rels as $bio_rel )
+                            <option value="{{$bio_rel->id}}" @if (old('bio_rel_id')==$bio_rel->id) selected @endif>{{$bio_rel->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('bio_rel_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="trop_level_id" class="form-label">Trophic Level</label>
+                        <select class="form-select" name="trop_level_id" id="trop_level_id" wire:model="trop_level_id">
+                            <option value="">Trophic Level</option>
+                            @foreach ($trop_levels as $trop_level )
+                            <option value="{{$trop_level->id}}" @if (old('trop_level_id')==$trop_level->id) selected @endif>{{$trop_level->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('trop_level_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
                 </div>
+
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">
                 <div class="card-header">

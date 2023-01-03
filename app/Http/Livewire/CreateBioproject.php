@@ -19,6 +19,7 @@ use App\Models\Organism;
 use App\Models\Celularity;
 use App\Models\Reproduction;
 use App\Models\Ploidy;
+use App\Models\GenomeSize;
 use App\Models\PubIdentifier;
 use App\Models\Publication;
 use App\Models\Relevance;
@@ -93,6 +94,9 @@ class CreateBioproject extends Component
     public $reproduction_id;
     public $ploidies = [];
     public $ploidy_id;
+    public $haploid_size;
+    public $genome_sizes = [];
+    public $genome_size_id;
 
     protected $rules = [
         'title' => 'required|min:6',
@@ -198,6 +202,7 @@ class CreateBioproject extends Component
         $this->celularities = Celularity::all();
         $this->reproductions = Reproduction::all();
         $this->ploidies = Ploidy::all();
+        $this->genome_sizes = GenomeSize::all();
         $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

@@ -617,6 +617,25 @@
                         <p class="text-danger">{{$message}}</p>
                         @enderror
                     </div>
+                    <div class= "mb-3">
+                        <div class="row g-3">
+                            <label for="haploid_size" class="form-label">Haploid Genome Size</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control @error('haploid_size') is-invalid @enderror" wire:model="haploid_size" id="haploid_size" name="haploid_size" value="{{old('haploid_size')}}">
+                                @error('haploid_size')
+                                <div class="invalid-feedback">{{$message}}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="genome_size_id" id="genome_size_id" wire:model="genome_size_id">
+                                    <option value="">Genome Sizes</option>
+                                    @foreach ($genome_sizes as $genome_size )
+                                    <option value="{{$genome_size->id}}" @if (old('genome_size_id')==$genome_size->id) selected @endif>{{$genome_size->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>                
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">

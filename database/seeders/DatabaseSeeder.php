@@ -99,6 +99,7 @@ class DatabaseSeeder extends Seeder
             CelularitySeeder::class,
             ReproductionSeeder::class,
             PloidySeeder::class,
+            GenomeSizeSeeder::class,
         ]);
     }
 }

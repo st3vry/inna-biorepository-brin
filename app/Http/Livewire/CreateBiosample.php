@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Biosample;
 use App\Models\User;
 use App\Models\Sampletype;
+use App\Models\Attributesample;
 use Livewire\Component;
 
 class CreateBiosample extends Component
@@ -16,15 +17,18 @@ class CreateBiosample extends Component
     public $submitter_email;
     public $submitter_lab;
     public $hold_release;
+    public $biosample_links = [];
     public $comments;
 
     public $sampletypes = [];
     public $sampletype_id;
+    public $sampletype_attributes = [];
+    public $attributes = [];
+    public $attribute_id;
 
 
 
     protected $rules = [
-        'title' => 'required|min:6',
         'sampletype_id' => 'required',
     ];
 
@@ -49,6 +53,13 @@ class CreateBiosample extends Component
         $validatedData = $this->validate([
             'sampletype_id' => 'required',
         ]);
+        $sampleFind = Sampletype::find((int)$validatedData['sampletype_id']);
+        $this->sampletype_attributes = explode(',', $sampleFind->attribute_property);
+        $this->attributes = [];
+        foreach($this->sampletype_attributes as $attr){
+            $atFind = Attributesample::find((int)$attr);
+            array_push($this->attributes, $atFind->attr_name);
+        }
         $this->currentStep = 4;
     }
 
@@ -69,11 +80,12 @@ class CreateBiosample extends Component
         $this->submitter_lab = auth()->user()->lab->name;
         $this->submitter_center = auth()->user()->lab->center->name;
 
-        $this->biosample_links = [
-            ['biosamplelink_id' => '', 'biosample_link_description' => 'desc', 'biosample_link_url' => 'url']
-        ];
+        //$this->biosample_links = [
+        //    ['biosamplelink_id' => '', 'biosample_link_description' => 'desc', 'biosample_link_url' => 'url']
+        //];
 
         $this->sampletypes = Sampletype::all();
+
     }
 
     public function addLink()

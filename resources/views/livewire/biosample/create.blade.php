@@ -129,13 +129,13 @@
                                 <tr>
                                     <td>
                                         <input type="text" name="biosample_link[{{$index}}][biosample_link_description]" class="form-control" value="{{$biosample_link['biosample_link_description']}}" wire:model="biosample_links.{{$index}}.biosample_link_description">
-                                        @error('biosample_links.*.description')
+                                        @error('biosample_links.*.link_description')
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
                                     </td>
                                     <td>
                                         <input type="text" name="biosample_link[{{$index}}][biosample_link_url]" class="form-control" value="{{$biosample_link['biosample_link_url']}}" wire:model="biosample_links.{{$index}}.biosample_link_url">
-                                        @error('biosample_links.*.url')
+                                        @error('biosample_links.*.link_url')
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
                                     </td>
@@ -201,28 +201,25 @@
         <div class="row setup-content {{ $currentStep != 4 ? 'display-none' : '' }}" id="step-4">
             <div class="col-md-12">
                 <h3>Sample Attributes</h3>
-                <table class="table">
-                    <tr>
-                        <td>Team Name:</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Team Price:</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Team status:</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Team Detail:</td>
-                        <td></td>
-                    </tr>
-                </table>
-
-                <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>
-                <button class="btn btn-primary nextBtn  pull-right" type="button" wire:click="fourthStepSubmit">Next</button>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Attributes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                        @foreach ($attributes as $attr)
+                            <div class="row">
+                                <label for="{{$attr}}" class="form-label">{{$attr}}</label>
+                                <input type="text" class="form-control @error('{{$attr}}}') is-invalid @enderror" wire:model="{{$attr}}" id="{{$attr}}" name="{{$attr}}" value="" >
+                            </div>
+                        @endforeach
+                    </div>
+                
+                </div>
             </div>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>
+            <button class="btn btn-primary nextBtn  pull-right" type="button" wire:click="fourthStepSubmit">Next</button>
+        
         </div>
         <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
             <div class="col-md-12">

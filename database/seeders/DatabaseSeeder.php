@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         // Factories
         Bioproject::factory(50)->create();
         Biosample::factory(50)->create();
-        Attributesample::factory(30)->create();
+        //Attributesample::factory(30)->create();
         Publication::factory(50)->create();
         Umbrellaproject::factory(3)->create();
         Fundagency::factory(30)->create();
@@ -99,6 +99,7 @@ class DatabaseSeeder extends Seeder
             CelularitySeeder::class,
             ReproductionSeeder::class,
             PloidySeeder::class,
+            AttributeSampleSeeder::class,
         ]);
     }
 }

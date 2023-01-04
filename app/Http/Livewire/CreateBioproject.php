@@ -28,6 +28,8 @@ use App\Models\PubIdentifier;
 use App\Models\Publication;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
+use App\Models\ReplLocation;
+use App\Models\ReplType;
 use App\Models\Salinity;
 use App\Models\Samplescope;
 use App\Models\TempRange;
@@ -130,6 +132,18 @@ class CreateBioproject extends Component
     public $temp_ranges = [];
     public $temp_range_id;
     public $optimum_temp;
+
+    // ORGANISM REPLICON
+    public $repl_types = [];
+    public $repl_type_id;
+    public $repls = [];
+    public $repl_name;
+    public $repl_locs = [];
+    public $repl_loc_id;
+    public $repl_size;
+    public $genome_sizes2 = [];
+    public $genome_size2_id;
+
 
     protected $rules = [
         'title' => 'required|min:6',
@@ -238,11 +252,14 @@ class CreateBioproject extends Component
         $this->bio_rels = BioticRelationship::all();
         $this->trop_levels = TrophicLevel::all();
         $this->genome_sizes = GenomeSize::all();
+        $this->genome_sizes2 = GenomeSize::all();
         $this->shapes = ProMorphShape::all();
         $this->habitats = Habitat::all();
         $this->salinities = Salinity::all();
         $this->oxygens = OxygenReq::all();
         $this->temp_ranges = TempRange::all();
+        $this->repl_types = ReplType::all();
+        $this->repl_locs = ReplLocation::all();
         $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();
@@ -261,11 +278,20 @@ class CreateBioproject extends Component
     {
         $this->grants[] = ['fundagency_id' => '', 'grant_program' => '', 'grant_title' => ''];
     }
-
     public function removeGrant($index)
     {
         unset($this->grants[$index]);
         $this->grants = array_values($this->grants);
+    }
+    public function addRepl()
+    {
+        $this->repls[] = ['repl_name' => '', 'repl_type_id' => '', 'repl_loc' => '', 'repl_size' => '', 'genome_size2_id' => ''];
+    }
+
+    public function removeRepl($index)
+    {
+        unset($this->repls[$index]);
+        $this->repls = array_values($this->repls);
     }
 
     public function addPublication()

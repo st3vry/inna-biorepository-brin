@@ -643,7 +643,77 @@
                     <h6 class="card-title">Organism Replicons</h6>
                 </div>
                 <div class="card-body mb-3">
-
+                    <table id="add_table" class="table" data-toggle="table" data-mobile-responsive="true">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Size</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($repls as $index => $repl)
+                            <tr>
+                                <td>
+                                    <input type="text" name="repl[{{$index}}][repl_name]" class="form-control" value="{{$repl['repl_name']}}" wire:model="repls.{{$index}}.repl_name">
+                                    @error('repls.*.repl_name')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <select class="form-select" name="repls[{{$index}}][repl_type_id]" wire:model="repls.{{$index}}.repl_type_id">
+                                        <option value="0">Replicon Type</option>
+                                        @foreach ($repl_types as $repl_type )
+                                        <option value="{{$repl_type->id}}">{{$repl_type->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('repls.*.repl_type_id')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <select class="form-select" name="repls[{{$index}}][repl_loc_id]" wire:model="repls.{{$index}}.repl_loc_id">
+                                        <option value="0">Replicon Location</option>
+                                        @foreach ($repl_locs as $repl_loc )
+                                        <option value="{{$repl_loc->id}}">{{$repl_loc->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('repls.*.repl_loc_id')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="text" name="repl[{{$index}}][repl_size]" class="form-control" value="{{$repl['repl_size']}}" wire:model="repls.{{$index}}.repl_size">
+                                            @error('repls.*.repl_size')
+                                            <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-select" name="genome_size2_id" id="genome2_size_id" wire:model="genome2_size_id">
+                                                <option value="">Genome Sizes</option>
+                                                @foreach ($genome_sizes2 as $genome_size )
+                                                <option value="{{$genome_size->id}}" @if (old('genome2_size_id')==$genome_size->id) selected @endif>{{$genome_size->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger delete_row" wire:click.prevent="removeRepl({{$index}})">remove</button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-sm btn-secondary" wire:click.prevent="addRepl">+ Add Another Replicon</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">

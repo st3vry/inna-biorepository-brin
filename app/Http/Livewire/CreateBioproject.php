@@ -21,6 +21,7 @@ use App\Models\Celularity;
 use App\Models\Reproduction;
 use App\Models\Ploidy;
 use App\Models\GenomeSize;
+use App\Models\ProMorphShape;
 use App\Models\PubIdentifier;
 use App\Models\Publication;
 use App\Models\Relevance;
@@ -106,6 +107,11 @@ class CreateBioproject extends Component
     public $bio_rel_id;
     public $trop_levels = [];
     public $trop_level_id;
+
+    // PROKARYOTE
+    public $shapes = [];
+    public $shape_id;
+    public $gram;
 
     protected $rules = [
         'title' => 'required|min:6',
@@ -214,6 +220,7 @@ class CreateBioproject extends Component
         $this->bio_rels = BioticRelationship::all();
         $this->trop_levels = TrophicLevel::all();
         $this->genome_sizes = GenomeSize::all();
+        $this->shapes = ProMorphShape::all();
         $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

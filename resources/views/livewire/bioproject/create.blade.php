@@ -676,6 +676,7 @@
                         <p class="text-danger">{{$message}}</p>
                         @enderror
                     </div>
+
                 </div>
 
             </div>
@@ -684,6 +685,79 @@
                     <h6 class="card-title">Prokaryote morphology</h6>
                 </div>
                 <div class="card-body mb-3">
+                    <div class="mb-3">
+                        <label for="trop_level_id" class="form-label">Shape</label>
+                        @foreach ($shapes->chunk(6) as $row)
+                        <div class="row">
+                            @foreach ( $row as $shape)
+                            <div class="col-sm-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="shape_id[]" wire:model="shape_id.{{ $shape->id }}" value="{{$shape->id}}" @if(is_array(old('shape_id')) && in_array($shape->id, old('shape_id'))) checked @endif>
+                                    <label class="form-check-label">{{$shape->name}}</label>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="row g-3">
+                            <div class="col-md-1">
+                                <label for="gram" class="form-label">Gram</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="gram" id="gram" wire:model="gram">
+                                    <option value="">--Gram--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Positive</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>Negative</option>
+                                </select>
+                            </div>
+                            @error('gram')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                            <div class="col-md-1">
+                                <label for="motility" class="form-label">Motility</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="motility" id="motility" wire:model="motility">
+                                    <option value="">--Motility--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                </select>
+                            </div>
+                            @error('motility')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                            <div class="col-md-1">
+                                <label for="enveloped" class="form-label">Enveloped</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="enveloped" id="enveloped" wire:model="enveloped">
+                                    <option value="">--Enveloped--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                </select>
+                            </div>
+                            @error('enveloped')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                            <div class="col-md-1">
+                                <label for="endospores" class="form-label">Endospores</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="endospores" id="endospores" wire:model="endospores">
+                                    <option value="">--Endospores--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                </select>
+                            </div>
+                            @error('endospores')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">

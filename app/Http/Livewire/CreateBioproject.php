@@ -21,12 +21,16 @@ use App\Models\Celularity;
 use App\Models\Reproduction;
 use App\Models\Ploidy;
 use App\Models\GenomeSize;
+use App\Models\Habitat;
+use App\Models\OxygenReq;
 use App\Models\ProMorphShape;
 use App\Models\PubIdentifier;
 use App\Models\Publication;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
+use App\Models\Salinity;
 use App\Models\Samplescope;
+use App\Models\TempRange;
 use App\Models\TrophicLevel;
 use App\Models\User;
 use Livewire\Component;
@@ -112,6 +116,20 @@ class CreateBioproject extends Component
     public $shapes = [];
     public $shape_id;
     public $gram;
+    public $enveloped;
+    public $motility;
+    public $endospores;
+
+    //ECOLOGICAL ENV
+    public $habitats = [];
+    public $habitat_id;
+    public $salinities = [];
+    public $salinity_id;
+    public $oxygens = [];
+    public $oxygen_id;
+    public $temp_ranges = [];
+    public $temp_range_id;
+    public $optimum_temp;
 
     protected $rules = [
         'title' => 'required|min:6',
@@ -221,6 +239,10 @@ class CreateBioproject extends Component
         $this->trop_levels = TrophicLevel::all();
         $this->genome_sizes = GenomeSize::all();
         $this->shapes = ProMorphShape::all();
+        $this->habitats = Habitat::all();
+        $this->salinities = Salinity::all();
+        $this->oxygens = OxygenReq::all();
+        $this->temp_ranges = TempRange::all();
         $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

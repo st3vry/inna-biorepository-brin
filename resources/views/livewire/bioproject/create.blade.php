@@ -640,6 +640,14 @@
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">
                 <div class="card-header">
+                    <h6 class="card-title">Organism Replicons</h6>
+                </div>
+                <div class="card-body mb-3">
+
+                </div>
+            </div>
+            <div class="card card-outline card-info collapsed-card mb-3">
+                <div class="card-header">
                     <h6 class="card-title">Phenotypes</h6>
                 </div>
                 <div class="card-body mb-3">
@@ -702,7 +710,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <div class="row g-3">
+                        <div class="row g-2">
                             <div class="col-md-1">
                                 <label for="gram" class="form-label">Gram</label>
                             </div>
@@ -757,7 +765,6 @@
                             @enderror
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">
@@ -765,6 +772,72 @@
                     <h6 class="card-title">Ecological environment</h6>
                 </div>
                 <div class="card-body mb-3">
+                    <div class="mb-3">
+                        <label for="habitat_id" class="form-label">Habitat</label>
+                        <select class="form-select" name="habitat_id" id="habitat_id" wire:model="habitat_id">
+                            <option value="">--Habitat--</option>
+                            @foreach ($habitats as $habitat )
+                            <option value="{{$habitat->id}}" @if (old('habitat_id')==$habitat->id) selected @endif>{{$habitat->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('habitat_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="salinity_id" class="form-label">Salinity</label>
+                        <select class="form-select" name="salinity_id" id="salinity_id" wire:model="salinity_id">
+                            <option value="">--Salinity--</option>
+                            @foreach ($salinities as $salinity )
+                            <option value="{{$salinity->id}}" @if (old('salinity_id')==$salinity->id) selected @endif>{{$salinity->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('salinity_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="oxygen_id" class="form-label">Oxygen Requirement</label>
+                        <select class="form-select" name="oxygen_id" id="oxygen_id" wire:model="oxygen_id">
+                            <option value="">--Oxygen Requirement--</option>
+                            @foreach ($oxygens as $oxygen )
+                            <option value="{{$oxygen->id}}" @if (old('oxygen_id')==$oxygen->id) selected @endif>{{$oxygen->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('oxygen_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="temp_range_id" class="form-label">Temperature Range</label>
+                        <select class="form-select" name="temp_range_id" id="temp_range_id" wire:model="temp_range_id">
+                            <option value="">--Temperature Range--</option>
+                            @foreach ($temp_ranges as $temp_range )
+                            <option value="{{$temp_range->id}}" @if (old('temp_range_id')==$temp_range->id) selected @endif>{{$temp_range->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('temp_range_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="optimum_temp" class="form-label">Optimum Temperature</label>
+                        <div class="row g-2">
+                            <div class="col-md-11">
+                                <input type="text" class="form-control @error('optimum_temp') is-invalid @enderror" wire:model="optimum_temp" id="optimum_temp" name="optimum_temp" value="{{old('optimum_temp')}}">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="">Celcius</label>
+                            </div>
+                        </div>
+                        @error('optimum_temp')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

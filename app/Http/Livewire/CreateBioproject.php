@@ -414,6 +414,7 @@ class CreateBioproject extends Component
             }
         }
 
+
         session()->flash('message', 'Bioproject successfully created.');
         return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
     }

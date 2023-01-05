@@ -27,6 +27,10 @@ class Biosample extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function externallink()
+    {
+        return $this->hasMany(BioSampleExternalLink::class);
+    }
 
     public function getRouteKeyName()
     {

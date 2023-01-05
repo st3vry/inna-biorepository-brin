@@ -41,7 +41,7 @@ class BioprojectController extends Controller
         }
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
-        $externallinks = $bioproject->bp_externalLinks()->get();
+        $externallinks = $bioproject->externallink()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $id_objective = explode(',', $bioproject->getAttribute('objective_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');

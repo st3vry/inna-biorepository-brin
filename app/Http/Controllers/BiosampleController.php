@@ -25,7 +25,7 @@ class BiosampleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Bioproject  $bioproject
+     * @param  \App\Models\Biosample  $biosample
      * @return \Illuminate\Http\Response
      */
     public function show(Biosample $biosample)
@@ -35,9 +35,12 @@ class BiosampleController extends Controller
             return view('error.404');
         }
 
+        $biosample_links = $biosample->externallink()->get();
+
         return view('frontend.showbiosample', [
             'title' => 'Biosample',
             'biosample' => $biosample,
+            'biosample_links' => $biosample_links
         ]);
     }
 }

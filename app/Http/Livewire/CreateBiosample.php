@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\Biosample;
 use App\Models\User;
+use App\Models\Sampletype;
+use App\Models\Attributesample;
 use Livewire\Component;
 
 class CreateBiosample extends Component
@@ -15,10 +17,19 @@ class CreateBiosample extends Component
     public $submitter_email;
     public $submitter_lab;
     public $hold_release;
+    public $biosample_links = [];
+    public $comments;
+
+    public $sampletypes = [];
+    public $sampletype_id;
+    public $sampletype_attributes = [];
+    public $attributes = [];
+    public $attribute_id;
+
 
 
     protected $rules = [
-        'title' => 'required|min:6',
+        'sampletype_id' => 'required',
     ];
 
     public function firstStepSubmit()
@@ -39,8 +50,24 @@ class CreateBiosample extends Component
 
     public function thirdStepSubmit()
     {
+        $validatedData = $this->validate([
+            'sampletype_id' => 'required',
+        ]);
+        $sampleFind = Sampletype::find((int)$validatedData['sampletype_id']);
+        $this->sampletype_attributes = explode(',', $sampleFind->attribute_property);
+        $this->attributes = [];
+        foreach($this->sampletype_attributes as $attr){
+            $atFind = Attributesample::find((int)$attr);
+            array_push($this->attributes, $atFind->attr_name);
+        }
         $this->currentStep = 4;
     }
+
+    public function fourthStepSubmit()
+    {
+        $this->currentStep = 5;
+    }
+
     public function back($step)
     {
         $this->currentStep = $step;
@@ -53,9 +80,12 @@ class CreateBiosample extends Component
         $this->submitter_lab = auth()->user()->lab->name;
         $this->submitter_center = auth()->user()->lab->center->name;
 
-        $this->biosample_links = [
-            ['biosamplelink_id' => '', 'biosample_link_description' => 'desc', 'biosample_link_url' => 'url']
-        ];
+        //$this->biosample_links = [
+        //    ['biosamplelink_id' => '', 'biosample_link_description' => 'desc', 'biosample_link_url' => 'url']
+        //];
+
+        $this->sampletypes = Sampletype::all();
+
     }
 
     public function addLink()
@@ -74,11 +104,25 @@ class CreateBiosample extends Component
 
         $validatedData = $this->validate();
         $biosample = new Biosample();
+        $biosample->accession = 'SAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
+        $biosample->submission_id = 'SUBSAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
+        $biosample->sampletype_id = $validatedData['sampletype_id'];
 
-        $biosample->title = $validatedData['title'];
+        $biosample->center_id = auth()->user()->lab->center_id;
+        $biosample->user_id = auth()->user()->id;
 
         $biosample->save();
 
+        if (count($validatedData['biosample_link']) > 0) {
+            foreach ($validatedData['biosample_link'] as  $item => $value) {
+                $data1 = array(
+                    'biosample_id' => $biosample->id,
+                    'link_description' => $validatedData['biosample_link'][$item]['biosample_link_description'],
+                    'link_url' => $validatedData['biosample_link'][$item]['biosample_link_url'],
+                );
+                BioSampleExternalLink::create($data1);
+            }
+        }
 
         session()->flash('message', 'Biosample successfully created.');
         return redirect()->to('/dashboard/biosamples/' . $biosample->accession);

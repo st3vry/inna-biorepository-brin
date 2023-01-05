@@ -8,6 +8,7 @@ use App\Models\CaptureBioproject;
 use App\Models\Consortium;
 use App\Models\Grant;
 use App\Models\BioProjectExternalLink;
+use App\Models\BioticRelationship;
 use App\Models\Datatype;
 use App\Models\DatatypeBioproject;
 use App\Models\Fundagency;
@@ -19,11 +20,13 @@ use App\Models\Organism;
 use App\Models\Celularity;
 use App\Models\Reproduction;
 use App\Models\Ploidy;
+use App\Models\GenomeSize;
 use App\Models\PubIdentifier;
 use App\Models\Publication;
 use App\Models\Relevance;
 use App\Models\RelevanceBioproject;
 use App\Models\Samplescope;
+use App\Models\TrophicLevel;
 use App\Models\User;
 use Livewire\Component;
 
@@ -93,6 +96,16 @@ class CreateBioproject extends Component
     public $reproduction_id;
     public $ploidies = [];
     public $ploidy_id;
+    public $haploid_size;
+    public $genome_sizes = [];
+    public $genome_size_id;
+
+    // PHENOTYPE
+    public $disease;
+    public $bio_rels = [];
+    public $bio_rel_id;
+    public $trop_levels = [];
+    public $trop_level_id;
 
     protected $rules = [
         'title' => 'required|min:6',
@@ -198,6 +211,9 @@ class CreateBioproject extends Component
         $this->celularities = Celularity::all();
         $this->reproductions = Reproduction::all();
         $this->ploidies = Ploidy::all();
+        $this->bio_rels = BioticRelationship::all();
+        $this->trop_levels = TrophicLevel::all();
+        $this->genome_sizes = GenomeSize::all();
         $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
         $this->samplescopes = Samplescope::all();

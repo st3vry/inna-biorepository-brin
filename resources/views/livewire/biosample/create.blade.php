@@ -189,7 +189,6 @@
                                 @endforeach
                             </div>
                             @endforeach
-                            <label>{{$sampletype_id}}</label>
                             
                         </div>
                     </div>
@@ -213,13 +212,14 @@
                                 <input type="text" class="form-control @error('{{$attr}}}') is-invalid @enderror" wire:model="{{$attr}}" id="{{$attr}}" name="{{$attr}}" value="" >
                             </div>
                         @endforeach
+                        </div>
                     </div>
                 
                 </div>
-            </div>
+            
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>
             <button class="btn btn-primary nextBtn  pull-right" type="button" wire:click="fourthStepSubmit">Next</button>
-        
+            </div>
         </div>
         <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
             <div class="col-md-12">

@@ -108,7 +108,6 @@ class CreateBiosample extends Component
         $biosample->submission_id = 'SUBSAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
         $biosample->sampletype_id = $validatedData['sampletype_id'];
 
-        $biosample->title = $validatedData['title'];
         $biosample->center_id = auth()->user()->lab->center_id;
         $biosample->user_id = auth()->user()->id;
 

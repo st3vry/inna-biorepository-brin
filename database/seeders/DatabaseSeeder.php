@@ -14,6 +14,7 @@ use App\Models\Attributesample;
 use App\Models\BioProjectExternalLink;
 use App\Models\CaptureBioproject;
 use App\Models\DatatypeBioproject;
+use App\Models\ObjectiveBioproject;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
 use App\Models\RelevanceBioproject;
@@ -76,6 +77,12 @@ class DatabaseSeeder extends Seeder
             DatatypeBioproject::create([
                 'bioproject_id' => $c,
                 'datatype_id' => mt_rand(1, 10),
+                'description' => $faker->sentence(3),
+            ]);
+
+            ObjectiveBioproject::create([
+                'bioproject_id' => $c,
+                'objective_id' => mt_rand(1, 11),
                 'description' => $faker->sentence(3),
             ]);
         }

@@ -34,6 +34,7 @@ use App\Models\Salinity;
 use App\Models\Samplescope;
 use App\Models\TempRange;
 use App\Models\TrophicLevel;
+use App\Models\Objective;
 use App\Models\User;
 use Livewire\Component;
 
@@ -53,6 +54,7 @@ class CreateBioproject extends Component
     public $consortia = [];
     public $datatypes = [];
     public $datatypedesc;
+    public $objectives = [];
 
     public $samplescopes = [];
     public $samplescope_id;
@@ -81,6 +83,9 @@ class CreateBioproject extends Component
 
     public $data_type_id;
     public $selectedDatatype;
+    public $objective_id;
+    public $selectedObjective;
+
 
     public $consortium_id;
     public $title;
@@ -164,6 +169,10 @@ class CreateBioproject extends Component
         'data_type_id' => 'required',
         'data_type_id.*' => 'numeric',
         'datatypedesc' => '',
+
+        'objective_id' => 'required',
+        'objective_id.*' => 'numeric',
+        'objectivedesc' => '',
 
         'samplescope_id' => 'required',
         'samplescopedesc' => '',
@@ -262,6 +271,7 @@ class CreateBioproject extends Component
         $this->repl_locs = ReplLocation::all();
         $this->pub_identifiers = PubIdentifier::all();
         $this->datatypes = Datatype::all();
+        $this->objectives = Objective::all();
         $this->samplescopes = Samplescope::all();
         $this->fundagencies = Fundagency::all();
         // $this->grants = [
@@ -331,6 +341,7 @@ class CreateBioproject extends Component
         $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
+        $bioproject->objective_id = implode(",", $validatedData['objective_id']);
         $bioproject->samplescope_id = $validatedData['samplescope_id'];
         $bioproject->umbproject_id = $validatedData['umbproject_id'];
         $bioproject->organism_id = $validatedData['organism_id'];
@@ -403,6 +414,7 @@ class CreateBioproject extends Component
                 DatatypeBioproject::create($data4);
             }
         }
+        
         if (count($validatedData['externallinks']) > 0) {
             foreach ($validatedData['externallinks'] as  $item => $value) {
                 $data5 = array(
@@ -414,6 +426,18 @@ class CreateBioproject extends Component
             }
         }
 
+<<<<<<< HEAD
+        if (count($validatedData['objective_id']) > 0) {
+            foreach ($validatedData['objective_id'] as $item => $value) {
+                $data6 = array(
+                    'bioproject_id' => $bioproject->id,
+                    'objective_id' => $validatedData['objective_id'][$item],
+                );
+                Objective::create($data6);
+            }
+        }
+=======
+>>>>>>> 2b207ed77a21ee2c7da3794e7a7f6de24cd4ddfe
 
         session()->flash('message', 'Bioproject successfully created.');
         return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);

@@ -640,6 +640,84 @@
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">
                 <div class="card-header">
+                    <h6 class="card-title">Organism Replicons</h6>
+                </div>
+                <div class="card-body mb-3">
+                    <table id="add_table" class="table" data-toggle="table" data-mobile-responsive="true">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Size</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($repls as $index => $repl)
+                            <tr>
+                                <td>
+                                    <input type="text" name="repl[{{$index}}][repl_name]" class="form-control" value="{{$repl['repl_name']}}" wire:model="repls.{{$index}}.repl_name">
+                                    @error('repls.*.repl_name')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <select class="form-select" name="repls[{{$index}}][repl_type_id]" wire:model="repls.{{$index}}.repl_type_id">
+                                        <option value="0">Replicon Type</option>
+                                        @foreach ($repl_types as $repl_type )
+                                        <option value="{{$repl_type->id}}">{{$repl_type->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('repls.*.repl_type_id')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <select class="form-select" name="repls[{{$index}}][repl_loc_id]" wire:model="repls.{{$index}}.repl_loc_id">
+                                        <option value="0">Replicon Location</option>
+                                        @foreach ($repl_locs as $repl_loc )
+                                        <option value="{{$repl_loc->id}}">{{$repl_loc->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('repls.*.repl_loc_id')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="text" name="repl[{{$index}}][repl_size]" class="form-control" value="{{$repl['repl_size']}}" wire:model="repls.{{$index}}.repl_size">
+                                            @error('repls.*.repl_size')
+                                            <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-select" name="genome_size2_id" id="genome2_size_id" wire:model="genome2_size_id">
+                                                <option value="">Genome Sizes</option>
+                                                @foreach ($genome_sizes2 as $genome_size )
+                                                <option value="{{$genome_size->id}}" @if (old('genome2_size_id')==$genome_size->id) selected @endif>{{$genome_size->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger delete_row" wire:click.prevent="removeRepl({{$index}})">remove</button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-sm btn-secondary" wire:click.prevent="addRepl">+ Add Another Replicon</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-outline card-info collapsed-card mb-3">
+                <div class="card-header">
                     <h6 class="card-title">Phenotypes</h6>
                 </div>
                 <div class="card-body mb-3">
@@ -676,6 +754,7 @@
                         <p class="text-danger">{{$message}}</p>
                         @enderror
                     </div>
+
                 </div>
 
             </div>
@@ -684,6 +763,78 @@
                     <h6 class="card-title">Prokaryote morphology</h6>
                 </div>
                 <div class="card-body mb-3">
+                    <div class="mb-3">
+                        <label for="trop_level_id" class="form-label">Shape</label>
+                        @foreach ($shapes->chunk(6) as $row)
+                        <div class="row">
+                            @foreach ( $row as $shape)
+                            <div class="col-sm-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="shape_id[]" wire:model="shape_id.{{ $shape->id }}" value="{{$shape->id}}" @if(is_array(old('shape_id')) && in_array($shape->id, old('shape_id'))) checked @endif>
+                                    <label class="form-check-label">{{$shape->name}}</label>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="row g-2">
+                            <div class="col-md-1">
+                                <label for="gram" class="form-label">Gram</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="gram" id="gram" wire:model="gram">
+                                    <option value="">--Gram--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Positive</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>Negative</option>
+                                </select>
+                            </div>
+                            @error('gram')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                            <div class="col-md-1">
+                                <label for="motility" class="form-label">Motility</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="motility" id="motility" wire:model="motility">
+                                    <option value="">--Motility--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                </select>
+                            </div>
+                            @error('motility')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                            <div class="col-md-1">
+                                <label for="enveloped" class="form-label">Enveloped</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="enveloped" id="enveloped" wire:model="enveloped">
+                                    <option value="">--Enveloped--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                </select>
+                            </div>
+                            @error('enveloped')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                            <div class="col-md-1">
+                                <label for="endospores" class="form-label">Endospores</label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" name="endospores" id="endospores" wire:model="endospores">
+                                    <option value="">--Endospores--</option>
+                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                </select>
+                            </div>
+                            @error('endospores')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card card-outline card-info collapsed-card mb-3">
@@ -691,6 +842,72 @@
                     <h6 class="card-title">Ecological environment</h6>
                 </div>
                 <div class="card-body mb-3">
+                    <div class="mb-3">
+                        <label for="habitat_id" class="form-label">Habitat</label>
+                        <select class="form-select" name="habitat_id" id="habitat_id" wire:model="habitat_id">
+                            <option value="">--Habitat--</option>
+                            @foreach ($habitats as $habitat )
+                            <option value="{{$habitat->id}}" @if (old('habitat_id')==$habitat->id) selected @endif>{{$habitat->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('habitat_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="salinity_id" class="form-label">Salinity</label>
+                        <select class="form-select" name="salinity_id" id="salinity_id" wire:model="salinity_id">
+                            <option value="">--Salinity--</option>
+                            @foreach ($salinities as $salinity )
+                            <option value="{{$salinity->id}}" @if (old('salinity_id')==$salinity->id) selected @endif>{{$salinity->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('salinity_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="oxygen_id" class="form-label">Oxygen Requirement</label>
+                        <select class="form-select" name="oxygen_id" id="oxygen_id" wire:model="oxygen_id">
+                            <option value="">--Oxygen Requirement--</option>
+                            @foreach ($oxygens as $oxygen )
+                            <option value="{{$oxygen->id}}" @if (old('oxygen_id')==$oxygen->id) selected @endif>{{$oxygen->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('oxygen_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="temp_range_id" class="form-label">Temperature Range</label>
+                        <select class="form-select" name="temp_range_id" id="temp_range_id" wire:model="temp_range_id">
+                            <option value="">--Temperature Range--</option>
+                            @foreach ($temp_ranges as $temp_range )
+                            <option value="{{$temp_range->id}}" @if (old('temp_range_id')==$temp_range->id) selected @endif>{{$temp_range->name}}</option>
+                            @endforeach
+                        </select>
+
+                        @error('temp_range_id')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="optimum_temp" class="form-label">Optimum Temperature</label>
+                        <div class="row g-2">
+                            <div class="col-md-11">
+                                <input type="text" class="form-control @error('optimum_temp') is-invalid @enderror" wire:model="optimum_temp" id="optimum_temp" name="optimum_temp" value="{{old('optimum_temp')}}">
+                            </div>
+                            <div class="col-md-1">
+                                <label for="">Celcius</label>
+                            </div>
+                        </div>
+                        @error('optimum_temp')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

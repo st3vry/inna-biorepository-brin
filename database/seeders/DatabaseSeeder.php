@@ -17,6 +17,7 @@ use App\Models\DatatypeBioproject;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
 use App\Models\RelevanceBioproject;
+use App\Models\ReplType;
 use App\Models\TrophicLevel;
 use Faker\Generator;
 
@@ -79,8 +80,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-
-
         $this->call([
             UserSeeder::class,
             SamplescopeSeeder::class,
@@ -104,6 +103,13 @@ class DatabaseSeeder extends Seeder
             BioticRelationshipSeeder::class,
             TrophicLevelSeeder::class,
             AttributeSampleSeeder::class,
+            ProMorphShapeSeeder::class,
+            HabitatSeeder::class,
+            SalinitySeeder::class,
+            OxygenReqSeeder::class,
+            TempRangeSeeder::class,
+            ReplTypeSeeder::class,
+            ReplLocationSeeder::class,
         ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\CaptureBioproject;
 use App\Models\Datatype;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
+use App\Models\Objective;
 use App\Models\RelevanceBioproject;
 
 class BioprojectController extends Controller
@@ -42,7 +43,9 @@ class BioprojectController extends Controller
         $grants = $bioproject->grant()->get();
         $externallinks = $bioproject->bp_externalLinks()->get();
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
+        $id_objective = explode(',', $bioproject->getAttribute('objective_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
+        $objectives = Objective::whereIn('id', $id_objective)->pluck('name');
         $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
@@ -54,6 +57,7 @@ class BioprojectController extends Controller
             'pubs' => $pubs,
             'grants' => $grants,
             'data_types' => $data_types,
+            'objectives' => $objectives,
             'relevance' => $relevanceBioproject,
             'material' => $materialBioproject,
             'capture' => $captureBioproject,

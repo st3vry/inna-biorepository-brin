@@ -433,27 +433,27 @@
                     <h5>Objectives</h5>
                 </div>
                 <div class="card-body">
-                    @foreach ($datatypes->chunk(6) as $row)
+                    @foreach ($objectives->chunk(6) as $row)
                     <div class="row">
-                        @foreach ( $row as $datatype)
+                        @foreach ( $row as $objective)
                         <div class="col-sm-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="data_type_id[]" wire:model="data_type_id.{{ $datatype->id }}" value="{{$datatype->id}}" @if(is_array(old('data_type _id')) && in_array($datatype->id, old('data_type_id'))) checked @endif>
-                                <label class="form-check-label">{{$datatype->name}}</label>
+                                <input class="form-check-input" type="checkbox" name="objective_id[]" wire:model="objective_id.{{ $objective->id }}" value="{{$objective->id}}" @if(is_array(old('objective_id')) && in_array($objective->id, old('objective_id'))) checked @endif>
+                                <label class="form-check-label">{{$objective->name}}</label>
                             </div>
                         </div>
                         @endforeach
                     </div>
                     @endforeach
-                    @if(is_array($data_type_id) && in_array(10,$data_type_id))
-                    <!-- {{print_r($data_type_id)}} -->
-                    <label for="datatypedesc" class="form-label">Other data type description</label>
-                    <input type="text" class="form-control @error('datatypedesc') is-invalid @enderror" wire:model="datatypedesc" id="datatypedesc" name="datatypedesc" value="{{old('datatypedesc')}}">
+                    @if(is_array($objective_id) && in_array(10,$objective_id))
+                    <!-- {{print_r($objective_id)}} -->
+                    <label for="objectivedesc" class="form-label">Other data type description</label>
+                    <input type="text" class="form-control @error('objectivedesc') is-invalid @enderror" wire:model="objectivedesc" id="objectivedesc" name="objectivedesc" value="{{old('objectivedesc')}}">
                     @error('datatypedesc')
                     <div class="invalid-feedback">{{$message}}</div>
                     @enderror
                     @endif
-                    @error('data_type_id')
+                    @error('objective_id')
                     <p class="text-danger">{{$message}}</p>
                     @enderror
                 </div>

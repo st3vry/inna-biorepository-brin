@@ -65,6 +65,7 @@ class DashboardBioprojectController extends Controller
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->relevance = $data['relevance'];
         $bioproject->data_type_id = implode(",", $data['data_type_id']);
+        $bioproject->objective_id = implode(",", $data['objective_id']);
         $bioproject->samplescope_id = $data['samplescope_id'];
         $bioproject->umbproject_id = $data['umbproject_id'];
         $bioproject->organism_id = $data['organism_id'];

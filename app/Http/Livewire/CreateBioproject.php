@@ -426,7 +426,6 @@ class CreateBioproject extends Component
             }
         }
 
-<<<<<<< HEAD
         if (count($validatedData['objective_id']) > 0) {
             foreach ($validatedData['objective_id'] as $item => $value) {
                 $data6 = array(
@@ -436,8 +435,6 @@ class CreateBioproject extends Component
                 Objective::create($data6);
             }
         }
-=======
->>>>>>> 2b207ed77a21ee2c7da3794e7a7f6de24cd4ddfe
 
         session()->flash('message', 'Bioproject successfully created.');
         return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);

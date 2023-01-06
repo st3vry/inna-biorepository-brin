@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('accession')->unique()->nullable();
             $table->string('submission_id')->unique();
-            $table->string('sample_name');
+            //$table->string('sample_name');
             $table->string('title');
+            $table->boolean('hold_release')->default(false);
+            $table->text('comments');
             $table->foreignId('sampletype_id');
             $table->foreignId('organism_id');
             $table->text('description');

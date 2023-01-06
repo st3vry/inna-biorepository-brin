@@ -16,11 +16,11 @@
                     <!--<p>General Information</p>-->
                 </div>
                 <div class="multi-wizard-step">
-                    <a href="#step-3" type="button" class="btn {{ $currentStep != 3 ? 'btn-default' : 'btn-primary' }}" disabled="disabled">Sample Information</a>
+                    <a href="#step-3" type="button" class="btn {{ $currentStep != 3 ? 'btn-default' : 'btn-primary' }}">Sample Information</a>
                     <!--<p>Sample Information</p>-->
                 </div>
                 <div class="multi-wizard-step">
-                    <a href="#step-4" type="button" class="btn {{ $currentStep != 4 ? 'btn-default' : 'btn-primary' }}" disabled="disabled">Sample Attributes</a>
+                    <a href="#step-4" type="button" class="btn {{ $currentStep != 4 ? 'btn-default' : 'btn-primary' }}">Sample Attributes</a>
                     <!--<p>Sample Information</p>-->
                 </div>
                 <div class="multi-wizard-step">
@@ -83,7 +83,29 @@
             <h3>General Information</h3>
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5>Release Date</h5>
+                        <h5>Description</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title <font color="red">*</font></label>
+                            <input type="text" class="form-control @error('title') is-invalid @enderror" wire:model="title" id="title" name="title" value="{{old('title')}}">
+                            @error('title')
+                            <div class="invalid-feedback">{{$message}}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description <font color="red">*</font></label>
+                            <textarea class="form-control" id="description" name="description" wire:model="description" rows="3">{{old('description')}}</textarea>
+
+                            @error('description')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Release Date<font color="red">*</font></h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
@@ -188,8 +210,10 @@
                                 </div>
                                 @endforeach
                             </div>
-                            @endforeach
-                            
+                        @endforeach
+                        @error('sampletype_id')
+                            <p class="text-danger">{{$message}}</p>
+                        @enderror    
                         </div>
                     </div>
                 </div>
@@ -202,16 +226,37 @@
                 <h3>Sample Attributes</h3>
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5>Attributes</h5>
+                        <h5>@if (!is_null($sample_find)) {{$sample_find->name}} @endif Attributes</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                        @foreach ($attributes as $attr)
-                            <div class="row">
-                                <label for="{{$attr}}" class="form-label">{{$attr}}</label>
-                                <input type="text" class="form-control @error('{{$attr}}}') is-invalid @enderror" wire:model="{{$attr}}" id="{{$attr}}" name="{{$attr}}" value="" >
-                            </div>
-                        @endforeach
+                            @if (!empty($attributes) )
+                            @foreach ($attributes->chunk(4) as $row)
+                                <div class="row g-2">
+                                    @foreach ($row as $attr)
+                                    <div class="col-md-1">
+                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @if ($attr->input_type_id == 1)
+                                        <input type="text" class="form-control @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
+                                        @elseif ($attr->input_type_id == 2)
+                                        <input type="textarea" class="form-control @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
+                                        @elseif ($attr->input_type_id == 3)
+                                        <select class="form-select" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" >
+                                            <option value="">--{{$attr->attr_text}}--</option>
+                                            <option value="1">1</option>
+                                            <option value="0">2</option>
+                                        </select>
+                                        @elseif ($attr->input_type_id == 4)
+                                        <input type="date" name="{{$attr->attr_name}}" id="{{$attr->attr_name}}" class="form-control  @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" style="width: 100%; display: inline;" >
+                                        @endif
+
+                                    </div>
+                                    @endforeach
+                                </div>
+                            @endforeach
+                            @endif
                         </div>
                     </div>
                 

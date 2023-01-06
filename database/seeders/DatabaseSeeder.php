@@ -12,6 +12,7 @@ use App\Models\Publication;
 use App\Models\Umbrellaproject;
 use App\Models\Attributesample;
 use App\Models\BioProjectExternalLink;
+use App\Models\BioSampleExternalLink;
 use App\Models\CaptureBioproject;
 use App\Models\DatatypeBioproject;
 use App\Models\ObjectiveBioProject;
@@ -50,6 +51,7 @@ class DatabaseSeeder extends Seeder
         Fundagency::factory(30)->create();
         Grant::factory(50)->create();
         BioProjectExternalLink::factory(50)->create();
+        BioSampleExternalLink::factory(50)->create();
 
         // Relevance, Material Bioproject
         $max = 50;
@@ -117,6 +119,7 @@ class DatabaseSeeder extends Seeder
             TempRangeSeeder::class,
             ReplTypeSeeder::class,
             ReplLocationSeeder::class,
+            InputFormTypeSeeder::class,
         ]);
     }
 }

@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
                 'description' => $faker->sentence(3),
             ]);
 
-            ObjectiveBioproject::create([
+            ObjectiveBioProject::create([
                 'bioproject_id' => $c,
                 'objective_id' => mt_rand(1, 11),
                 'description' => $faker->sentence(3),

@@ -154,7 +154,7 @@ class CreateBioproject extends Component
         'title' => 'required|min:6',
         'umbproject_id' => '',
         'organism_id' => 'required',
-        // 'consortium_id' => 'required',
+        'consortium_id' => 'required',
 
         'material_id' => 'required',
         'matdesc' => '',
@@ -414,7 +414,7 @@ class CreateBioproject extends Component
                 DatatypeBioproject::create($data4);
             }
         }
-        
+
         if (count($validatedData['externallinks']) > 0) {
             foreach ($validatedData['externallinks'] as  $item => $value) {
                 $data5 = array(

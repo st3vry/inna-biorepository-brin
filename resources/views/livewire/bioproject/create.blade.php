@@ -433,85 +433,31 @@
                     <h5>Objectives</h5>
                 </div>
                 <div class="card-body">
-                    @foreach ($datatypes->chunk(6) as $row)
+                    @foreach ($objectives->chunk(6) as $row)
                     <div class="row">
-                        @foreach ( $row as $datatype)
+                        @foreach ( $row as $objective)
                         <div class="col-sm-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="data_type_id[]" wire:model="data_type_id.{{ $datatype->id }}" value="{{$datatype->id}}" @if(is_array(old('data_type _id')) && in_array($datatype->id, old('data_type_id'))) checked @endif>
-                                <label class="form-check-label">{{$datatype->name}}</label>
+                                <input class="form-check-input" type="checkbox" name="objective_id[]" wire:model="objective_id.{{ $objective->id }}" value="{{$objective->id}}" @if(is_array(old('objective_id')) && in_array($objective->id, old('objective_id'))) checked @endif>
+                                <label class="form-check-label">{{$objective->name}}</label>
                             </div>
                         </div>
                         @endforeach
                     </div>
                     @endforeach
-                    @if(is_array($data_type_id) && in_array(10,$data_type_id))
-                    <!-- {{print_r($data_type_id)}} -->
-                    <label for="datatypedesc" class="form-label">Other data type description</label>
-                    <input type="text" class="form-control @error('datatypedesc') is-invalid @enderror" wire:model="datatypedesc" id="datatypedesc" name="datatypedesc" value="{{old('datatypedesc')}}">
+                    @if(is_array($objective_id) && in_array(10,$objective_id))
+                    <!-- {{print_r($objective_id)}} -->
+                    <label for="objectivedesc" class="form-label">Other data type description</label>
+                    <input type="text" class="form-control @error('objectivedesc') is-invalid @enderror" wire:model="objectivedesc" id="objectivedesc" name="objectivedesc" value="{{old('objectivedesc')}}">
                     @error('datatypedesc')
                     <div class="invalid-feedback">{{$message}}</div>
                     @enderror
                     @endif
-                    @error('data_type_id')
+                    @error('objective_id')
                     <p class="text-danger">{{$message}}</p>
                     @enderror
                 </div>
             </div>
-
-
-            <!-- <h3> Project Type</h3>
-            <div class="mb-3">
-                <label class="mb-3">Data Type</label>
-                
-               
-            </div> -->
-
-
-            <!-- <div class="mb-3">
-                <label class="mb-3">Sample Scope</label>
-                @foreach ($samplescopes->chunk(6) as $row)
-                <div class="row">
-                    @foreach ( $row as $samplescope)
-                    <div class="col-sm-6">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="samplescope_id" wire:model="samplescope_id" value="{{$samplescope->id}}" @if (old('samplescope_id')==$samplescope->id)
-                            ) checked @endif>
-                            <label class="form-check-label">{{$samplescope->name}}</label>
-                        </div>
-                    </div>
-
-                    @endforeach
-                </div>
-                @endforeach
-                @if ($samplescope_id==7)
-                <label for="samplescopedesc" class="form-label">Other sample scope description</label>
-                <input type="text" class="form-control @error('samplescopedesc') is-invalid @enderror" wire:model="samplescopedesc" id="samplescopedesc" name="samplescopedesc" value="{{old('samplescopedesc')}}">
-                @error('samplescopedesc')
-                <div class="invalid-feedback">{{$message}}</div>
-                @enderror
-                @endif
-
-                @error('samplescope_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div> -->
-
-            <!-- <div class="mb-3">
-                <label for="organism_id" class="form-label">Organism</label>
-                <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
-                    <option value="">Organism</option>
-                    @foreach ($organisms as $organism )
-                    <option value="{{$organism->id}}" @if (old('organism_id')==$organism->id) selected @endif>{{$organism->name}}</option>
-                    @endforeach
-                </select>
-
-                @error('organism_id')
-                <p class="text-danger">{{$message}}</p>
-                @enderror
-            </div> -->
-
-
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(2)">Back</button>
             <button class="btn btn-primary pull-right" type="button" wire:click="thirdStepSubmit">Next</button>
         </div>
@@ -612,6 +558,21 @@
                             <option value="{{$ploidy->id}}" @if (old('ploidy_id')==$ploidy->id) selected @endif>{{$ploidy->name}}</option>
                             @endforeach
                         </select>
+                        @if ($ploidy_id==3)
+                        <label for="plodesc" class="form-label">Polyploid description</label>
+                        <input type="text" class="form-control @error('plodesc') is-invalid @enderror" wire:model="plodesc" id="plodesc" name="plodesc" value="{{old('plodesc')}}">
+                        @error('plodesc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                        @endif
+
+                        @if ($ploidy_id==4)
+                        <label for="plodesc" class="form-label">Allopolyploid description</label>
+                        <input type="text" class="form-control @error('plodesc') is-invalid @enderror" wire:model="plodesc" id="plodesc" name="plodesc" value="{{old('plodesc')}}">
+                        @error('plodesc')
+                        <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
+                        @endif
 
                         @error('ploidy_id')
                         <p class="text-danger">{{$message}}</p>

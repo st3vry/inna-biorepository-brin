@@ -14,7 +14,7 @@ use App\Models\Attributesample;
 use App\Models\BioProjectExternalLink;
 use App\Models\CaptureBioproject;
 use App\Models\DatatypeBioproject;
-use App\Models\ObjectiveBioproject;
+use App\Models\ObjectiveBioProject;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
 use App\Models\RelevanceBioproject;

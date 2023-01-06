@@ -111,6 +111,7 @@ class CreateBioproject extends Component
     public $haploid_size;
     public $genome_sizes = [];
     public $genome_size_id;
+    public $plodesc;
 
     // PHENOTYPE
     public $disease;

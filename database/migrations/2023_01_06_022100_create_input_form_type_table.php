@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attributesamples', function (Blueprint $table) {
+        Schema::create('input_form_types', function (Blueprint $table) {
             $table->id();
-            $table->string('attr_name');
-            $table->string('attr_text');
-            $table->foreignId('input_type_id');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attributesamples');
+        Schema::dropIfExists('input_form_types');
     }
 };

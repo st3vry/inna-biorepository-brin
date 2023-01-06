@@ -29,8 +29,10 @@ class BiosampleFactory extends Factory
             //
             'accession' => 'SAM' . sprintf('%06d', intval(self::$id)),
             'submission_id' => 'SUBSAM' . sprintf('%06d', intval(self::$id)),
-            'sample_name' => $this->faker->sentence(3),
+            //'sample_name' => $this->faker->sentence(3),
             'title' => $this->faker->sentence(3),
+            'hold_release' => false,
+            'comments' => $this->faker->paragraph(mt_rand(5, 10)),
             'sampletype_id' => mt_rand(1, 3),
             'organism_id' => mt_rand(1, 4),
             'description' => $this->faker->paragraph(mt_rand(5, 10)),

@@ -150,13 +150,13 @@
                                 @foreach ($biosample_links as $index => $biosample_link)
                                 <tr>
                                     <td>
-                                        <input type="text" name="biosample_link[{{$index}}][biosample_link_description]" class="form-control" value="{{$biosample_link['biosample_link_description']}}" wire:model="biosample_links.{{$index}}.biosample_link_description">
+                                        <input type="text" name="biosample_links[{{$index}}][link_description]" class="form-control" value="{{$biosample_link['link_description']}}" wire:model="biosample_links.{{$index}}.link_description">
                                         @error('biosample_links.*.link_description')
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
                                     </td>
                                     <td>
-                                        <input type="text" name="biosample_link[{{$index}}][biosample_link_url]" class="form-control" value="{{$biosample_link['biosample_link_url']}}" wire:model="biosample_links.{{$index}}.biosample_link_url">
+                                        <input type="text" name="biosample_links[{{$index}}][link_url]" class="form-control" value="{{$biosample_link['link_url']}}" wire:model="biosample_links.{{$index}}.link_url">
                                         @error('biosample_links.*.link_url')
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -200,7 +200,7 @@
                         <div class="mb-3">
                         @foreach ($sampletypes->chunk(6) as $row)
                             <div class="row">
-                                @foreach ( $row as $sampletype)
+                                @foreach ($row as $sampletype)
                                 <div class="col-sm-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="sampletype_id" wire:model="sampletype_id" value="{{$sampletype->id}}" @if (old('sampletype_id')==$sampletype->id)
@@ -231,7 +231,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             @if (!empty($attributes) )
-                            @foreach ($attributes->chunk(4) as $row)
+                                @foreach ($attributes->chunk(4) as $row)
                                 <div class="row g-2">
                                     @foreach ($row as $attr)
                                     <div class="col-md-1">
@@ -243,11 +243,12 @@
                                         @elseif ($attr->input_type_id == 2)
                                         <input type="textarea" class="form-control @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
                                         @elseif ($attr->input_type_id == 3)
-                                        <select class="form-select" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" >
-                                            <option value="">--{{$attr->attr_text}}--</option>
-                                            <option value="1">1</option>
-                                            <option value="0">2</option>
-                                        </select>
+                                            <select class="form-select" wire:model="{{$attr->attr_name}}_id" id="{{$attr->attr_name}}_id" name="{{$attr->attr_name}}_id" >
+                                                <option value="">--{{$attr->attr_name}}--</option>
+                                                @foreach(${$attr->attr_name} as $atname)
+                                                    <option value="{{$atname->id}}">{{$atname->name}}</option>
+                                                @endforeach
+                                            </select>
                                         @elseif ($attr->input_type_id == 4)
                                         <input type="date" name="{{$attr->attr_name}}" id="{{$attr->attr_name}}" class="form-control  @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" style="width: 100%; display: inline;" >
                                         @endif
@@ -255,7 +256,7 @@
                                     </div>
                                     @endforeach
                                 </div>
-                            @endforeach
+                                @endforeach
                             @endif
                         </div>
                     </div>
@@ -355,7 +356,7 @@
                             <table class="table">
                                 <tr>
                                     <td>Sample type:</td>
-                                    <td><label>{{$sampletype_id}}</label></td>
+                                    <td><label>@if (!is_null($sample_find)) {{$sample_find->name}} @endif</label></td>
                                 </tr>
                             </table>
                         </div>
@@ -367,12 +368,26 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <table class="table">
-                                <tr>
-                                    <td>...</td>
-                                    <td><label>...</label></td>
-                                </tr>
-                            </table>
+                            @if (!empty($attributes) )
+                                @foreach ($attributes->chunk(4) as $row)
+                                <div class="row g-2">
+                                    @foreach ($row as $attr)
+                                    <div class="col-md-1">
+                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @if ($attr->input_type_id == 3)
+                                            @if ((${($attr->attr_name.'_id')})!='')
+                                            <label>: {{(${$attr->attr_name})[(${($attr->attr_name.'_id')})-1]->name}}</label>
+                                            @endif
+                                        @else
+                                        <label>: {{(${$attr->attr_name})}}</label>
+                                        @endif
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,11 @@ use App\Models\Biosample;
 use App\Models\User;
 use App\Models\Sampletype;
 use App\Models\Attributesample;
+use App\Models\Organism;
+use App\Models\BioSampleExternalLink;
+use App\Models\Sex;
+use App\Models\Tissue;
+use App\Models\Disease;
 use Livewire\Component;
 
 class CreateBiosample extends Component
@@ -31,9 +36,10 @@ class CreateBiosample extends Component
     public $attributes = [];
     public $attribute_id;
 
-    //variables for attributes
+    // -- variables for attributes --
     public $sample_name;
-    public $organism;
+    public $organism_id;
+    public $organism = [];
     public $isolate;
     public $strain;
     public $isolation_source;
@@ -48,16 +54,20 @@ class CreateBiosample extends Component
     public $specimen_voucher;
     public $subgroup;
     public $subtype;
-    public $host;
-    public $host_disease;
+    public $host = [];
+    public $host_id;
+    public $host_disease = [];
+    public $host_disease_id;
     public $host_age;
     public $host_description;
     public $host_disease_outcome;
     public $host_disease_stage;
     public $host_health_outcome;
-    public $host_sex;
+    public $host_sex = [];
+    public $host_sex_id;
     public $host_subject_id;
-    public $host_tissue_sampled;
+    public $host_tissue_sampled = [];
+    public $host_tissue_sampled_id;
     public $pathotype;
     public $serotype;
     public $altitude;
@@ -68,10 +78,12 @@ class CreateBiosample extends Component
     public $identified_by;
     public $sample_size;
     public $temperature;
-    public $disease;
+    public $disease = [];
+    public $disease_id;
     public $mating_type;
     public $age;
-    public $sex;
+    public $sex = [];
+    public $sex_id;
     public $tissue;
     public $cell_line;
     public $cell_type;
@@ -105,6 +117,9 @@ class CreateBiosample extends Component
         'hold_release' => 'required',
         'sampletype_id' => 'required',
         'comments' => '',
+        'organism_id' => 'required',
+        'biosample_links.*.link_description' => '',
+        'biosample_links.*.link_url' => '',
     ];
 
     public function firstStepSubmit()
@@ -122,8 +137,7 @@ class CreateBiosample extends Component
             'description' => 'required|min:6',
             'hold_release' => 'required',
 
-            //'biosample_links.*.link_description' => 'required',
-            //'biosample_links.*.link_url' => 'required',
+            
         ]);
         $this->currentStep = 3;
     }
@@ -160,16 +174,24 @@ class CreateBiosample extends Component
         $this->submitter_center = auth()->user()->lab->center->name;
 
         //$this->biosample_links = [
-        //    ['biosamplelink_id' => '', 'biosample_link_description' => 'desc', 'biosample_link_url' => 'url']
+        //    ['biosamplelink_id' => '', 'link_description' => '', 'link_url' => '']
         //];
 
         $this->sampletypes = Sampletype::all();
+
+        $this->organism = Organism::all();
+        $this->host = Organism::all();
+        $this->sex = Sex::all();
+        $this->host_sex = Sex::all();
+        $this->disease = Disease::all();
+        $this->host_disease = Disease::all();
+        $this->host_tissue_sampled = Tissue::all();
 
     }
 
     public function addLink()
     {
-        $this->biosample_links[] = ['biosample_link_description' => '', 'biosample_link_url' => ''];
+        $this->biosample_links[] = ['link_description' => '', 'link_url' => ''];
     }
 
     public function removeLink($index)
@@ -194,14 +216,16 @@ class CreateBiosample extends Component
         $biosample->center_id = auth()->user()->lab->center_id;
         $biosample->user_id = auth()->user()->id;
 
+        $biosample->organism_id = $validatedData['organism_id'];
+
         $biosample->save();
 
-        if (count($validatedData['biosample_link']) > 0) {
-            foreach ($validatedData['biosample_link'] as  $item => $value) {
+        if (count($validatedData['biosample_links']) > 0) {
+            foreach ($validatedData['biosample_links'] as  $item => $value) {
                 $data1 = array(
                     'biosample_id' => $biosample->id,
-                    'link_description' => $validatedData['biosample_link'][$item]['biosample_link_description'],
-                    'link_url' => $validatedData['biosample_link'][$item]['biosample_link_url'],
+                    'link_description' => $validatedData['biosample_links'][$item]['link_description'],
+                    'link_url' => $validatedData['biosample_links'][$item]['link_url'],
                 );
                 BioSampleExternalLink::create($data1);
             }

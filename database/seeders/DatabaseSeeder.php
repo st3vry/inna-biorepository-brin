@@ -21,6 +21,9 @@ use App\Models\MethodologyBioproject;
 use App\Models\RelevanceBioproject;
 use App\Models\ReplType;
 use App\Models\TrophicLevel;
+use App\Models\Sex;
+use App\Models\Disease;
+use App\Models\Tissue;
 use Faker\Generator;
 
 class DatabaseSeeder extends Seeder
@@ -120,6 +123,9 @@ class DatabaseSeeder extends Seeder
             ReplTypeSeeder::class,
             ReplLocationSeeder::class,
             InputFormTypeSeeder::class,
+            SexSeeder::class,
+            DiseaseSeeder::class,
+            TissueSeeder::class,
         ]);
     }
 }

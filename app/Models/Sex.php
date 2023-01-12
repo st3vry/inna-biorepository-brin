@@ -5,13 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sampletype extends Model
+class Sex extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-
-    public function biosample()
-    {
-        return $this->BelongsTo(Biosample::class);
-    }
 }

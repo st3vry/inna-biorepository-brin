@@ -20,7 +20,7 @@ return new class extends Migration
             //$table->string('sample_name');
             $table->string('title');
             $table->boolean('hold_release')->default(false);
-            $table->text('comments');
+            $table->text('comments')->nullable();
             $table->foreignId('sampletype_id');
             $table->foreignId('organism_id');
             $table->text('description');

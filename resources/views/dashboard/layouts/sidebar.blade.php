@@ -16,7 +16,7 @@
                     <span data-feather="layers"></span>
                     My BioSample
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link  {{ Request::is('dashboard/bioarchives*') ? 'active' : ''}}" href="/dashboard/bioarchives">
                     <span data-feather="hard-drive"></span>
                     My BioArchive
                 </a>

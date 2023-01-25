@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Bioproject;
+use App\Models\Biosample;
 
 class CreateBioarchive extends Component
 {
@@ -12,6 +13,8 @@ class CreateBioarchive extends Component
     public $hold_release;
     // bioproject
     public $bioprojects;
+    // biosample
+    public $biosamples;
 
 
     public function mount()
@@ -23,6 +26,8 @@ class CreateBioarchive extends Component
         $this->submitter_center = auth()->user()->lab->center->name;
         // bioproject
         $this->bioprojects = Bioproject::where('draft', false)->get();
+        // biosample
+        $this->biosamples = Biosample::where('draft', false)->get();
     }
     public function submitForm()
     {

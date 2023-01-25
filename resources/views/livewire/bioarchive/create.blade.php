@@ -115,6 +115,12 @@
                         <table class="m-auto table table-striped table-hover table-responsive ">
                             <thead>
                                 <tr>
+                                    <td></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                </tr>
+                                <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Bioproject Accession</th>
                                     <th scope="col">Bioproject Submission ID</th>
@@ -122,42 +128,14 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($bioprojects as $bioproject )
                                 <tr>
                                     <th scope="row"><input type="radio" name="bioproject_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
+                                    <td>{{$bioproject->accession}}</td>
+                                    <td>{{$bioproject->submission_id}}</td>
+                                    <td>{{$bioproject->title}}</td>
                                 </tr>
-                                <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -179,6 +157,12 @@
                         <table class="m-auto table table-striped table-hover table-responsive ">
                             <thead>
                                 <tr>
+                                    <td></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                </tr>
+                                <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Biosample Accession</th>
                                     <th scope="col">Biosample Submission ID</th>
@@ -186,48 +170,21 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($biosamples as $biosample )
                                 <tr>
-                                    <th scope="row"><input type="checkbox" name="biosample_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
+                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
+                                    <td>{{$biosample->accession}}</td>
+                                    <td>{{$biosample->submission_id}}</td>
+                                    <td>{{$biosample->title}}</td>
                                 </tr>
-                                <tr>
-                                    <th scope="row"><input type="checkbox" name="biosample_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="checkbox" name="biosample_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="checkbox" name="biosample_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="checkbox" name="biosample_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"><input type="checkbox" name="biosample_id"></th>
-                                    <td>Row 01 - Col 01</td>
-                                    <td>Row 01 - Col 02</td>
-                                    <td>Row 01 - Col 03</td>
-                                </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(1)">Back</button>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(2)">Back</button>
             <button class="btn btn-primary pull-right" type="button" wire:click="secondStepSubmit">Next</button>
         </div>
     </div>

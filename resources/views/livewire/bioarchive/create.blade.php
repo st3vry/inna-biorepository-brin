@@ -183,7 +183,37 @@
                 </div>
             </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(2)">Back</button>
-            <button class="btn btn-primary pull-right" type="button" wire:click="secondStepSubmit">Next</button>
+            <button class="btn btn-primary pull-right" type="button" wire:click="thirdStepSubmit">Next</button>
+        </div>
+    </div>
+    <div class="row setup-content {{ $currentStep != 4 ? 'display-none' : '' }}" id="step-4">
+        <div class="col-md-12">
+            <!-- <h4>Bioproject</h4> -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Experiment</h5>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>
+            <button class="btn btn-primary pull-right" type="button" wire:click="fourthStepSubmit">Next</button>
+        </div>
+    </div>
+    <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
+        <div class="col-md-12">
+            <!-- <h4>Bioproject</h4> -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Run</h5>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(4)">Back</button>
+            <button class="btn btn-primary pull-right" type="button" wire:click="fifthStepSubmit">Next</button>
         </div>
     </div>
 </form>

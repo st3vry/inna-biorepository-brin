@@ -111,15 +111,14 @@
                     <h5>Bioproject Selection</h5>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                        </div>
+                    </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
                         <table class="m-auto table table-striped table-hover table-responsive ">
-                            <thead>
-                                <tr>
-                                    <td></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                </tr>
+                            <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Bioproject Accession</th>
@@ -153,15 +152,14 @@
                     <h5>Biosample Selection</h5>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                        </div>
+                    </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
                         <table class="m-auto table table-striped table-hover table-responsive ">
-                            <thead>
-                                <tr>
-                                    <td></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                </tr>
+                            <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Biosample Accession</th>
@@ -172,7 +170,7 @@
                             <tbody>
                                 @foreach ($biosamples as $biosample )
                                 <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
+                                    <th scope="row"><input type="checkbox" name="bioproject_id"></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
                                     <td>{{$biosample->title}}</td>

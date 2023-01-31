@@ -567,6 +567,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'App\\Models\\Habitat' => __DIR__ . '/../..' . '/app/Models/Habitat.php',
         'App\\Models\\InputFormType' => __DIR__ . '/../..' . '/app/Models/InputFormType.php',
         'App\\Models\\Lab' => __DIR__ . '/../..' . '/app/Models/Lab.php',
+        'App\\Models\\LibrarySource' => __DIR__ . '/../..' . '/app/Models/LibrarySource.php',
         'App\\Models\\Material' => __DIR__ . '/../..' . '/app/Models/Material.php',
         'App\\Models\\MaterialBioproject' => __DIR__ . '/../..' . '/app/Models/MaterialBioproject.php',
         'App\\Models\\Methodology' => __DIR__ . '/../..' . '/app/Models/Methodology.php',

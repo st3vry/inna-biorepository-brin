@@ -18,8 +18,10 @@ class CreateBioarchive extends Component
     public $hold_release;
     // bioproject
     public $bioprojects;
+    public $bioproject_id;
     // biosample
     public $biosamples;
+    public $biosample_id = [];
 
 
 

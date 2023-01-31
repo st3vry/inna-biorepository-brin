@@ -132,6 +132,7 @@ class DatabaseSeeder extends Seeder
             SexSeeder::class,
             DiseaseSeeder::class,
             TissueSeeder::class,
+            LibrarySourceSeeder::class,
         ]);
     }
 }

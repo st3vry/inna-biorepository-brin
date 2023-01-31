@@ -129,7 +129,7 @@
                             <tbody>
                                 @foreach ($bioprojects as $bioproject )
                                 <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
+                                    <th scope="row"><input type="radio" name="bioproject_id" wire:model="bioproject_id" value="{{$bioproject->id}}" @if (old('bioproject_id')==$bioproject->id) ) checked @endif></th>
                                     <td>{{$bioproject->accession}}</td>
                                     <td>{{$bioproject->submission_id}}</td>
                                     <td>{{$bioproject->title}}</td>
@@ -170,7 +170,7 @@
                             <tbody>
                                 @foreach ($biosamples as $biosample )
                                 <tr>
-                                    <th scope="row"><input type="checkbox" name="bioproject_id"></th>
+                                    <th scope="row"><input type="checkbox" name="biosample_id[]" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
                                     <td>{{$biosample->title}}</td>
@@ -194,6 +194,11 @@
                     <h5>Experiment</h5>
                 </div>
                 <div class="card-body">
+                    {{$bioproject_id}}
+                    <!-- {{implode(',',$biosample_id)}} -->
+                    @foreach ($biosample_id as $id )
+                    {{$id}}
+                    @endforeach
 
                 </div>
             </div>

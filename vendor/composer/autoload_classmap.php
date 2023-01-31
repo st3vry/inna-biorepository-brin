@@ -57,6 +57,7 @@ return array(
     'App\\Models\\Habitat' => $baseDir . '/app/Models/Habitat.php',
     'App\\Models\\InputFormType' => $baseDir . '/app/Models/InputFormType.php',
     'App\\Models\\Lab' => $baseDir . '/app/Models/Lab.php',
+    'App\\Models\\LibrarySource' => $baseDir . '/app/Models/LibrarySource.php',
     'App\\Models\\Material' => $baseDir . '/app/Models/Material.php',
     'App\\Models\\MaterialBioproject' => $baseDir . '/app/Models/MaterialBioproject.php',
     'App\\Models\\Methodology' => $baseDir . '/app/Models/Methodology.php',

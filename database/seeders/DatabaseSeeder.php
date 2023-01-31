@@ -140,6 +140,7 @@ class DatabaseSeeder extends Seeder
             InstrumentSeeder::class,
             LibraryLayoutSeeder::class,
             SampletypePackageSeeder::class,
+            FileTypeSeeder::class,
         ]);
     }
 }

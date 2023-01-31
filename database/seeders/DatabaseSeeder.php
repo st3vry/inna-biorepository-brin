@@ -135,6 +135,7 @@ class DatabaseSeeder extends Seeder
             TissueSeeder::class,
             LibrarySourceSeeder::class,
             LibrarySelectionSeeder::class,
+            LibraryStrategySeeder::class,
         ]);
     }
 }

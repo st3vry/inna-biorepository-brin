@@ -35,6 +35,7 @@ use App\Models\Samplescope;
 use App\Models\TempRange;
 use App\Models\TrophicLevel;
 use App\Models\Objective;
+use App\Models\SampleBioproject;
 use App\Models\User;
 use Livewire\Component;
 
@@ -181,6 +182,8 @@ class CreateBioproject extends Component
         'publications.*.pub_identifier_id' => 'required',
         'publications.*.pub_id' => 'required',
         'publications.*.article_title' => 'required',
+
+        'hold_release' => 'required',
     ];
     public function firstStepSubmit()
     {
@@ -204,6 +207,8 @@ class CreateBioproject extends Component
 
             'externallinks.*.link_description' => 'required',
             'externallinks.*.link_url' => 'required',
+
+            'consortium_id' => 'required',
         ]);
 
         $this->currentStep = 3;
@@ -343,12 +348,15 @@ class CreateBioproject extends Component
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
         $bioproject->objective_id = implode(",", $validatedData['objective_id']);
-        $bioproject->samplescope_id = $validatedData['samplescope_id'];
+        // $bioproject->samplescope_id = $validatedData['samplescope_id'];
+        // sample scope
+
         $bioproject->umbproject_id = $validatedData['umbproject_id'];
         $bioproject->organism_id = $validatedData['organism_id'];
         $bioproject->consortium_id = $validatedData['consortium_id'];
         $bioproject->title = $validatedData['title'];
         $bioproject->description = $validatedData['description'];
+        $bioproject->hold_release = $validatedData['hold_release'];
         $bioproject->center_id = auth()->user()->lab->center_id;
         $bioproject->user_id = auth()->user()->id;
 
@@ -380,8 +388,15 @@ class CreateBioproject extends Component
             'methodology_id' => $validatedData['methodology_id'],
             'description' => $validatedData['metdesc']
         ];
-
         MethodologyBioproject::create($methodologyData);
+
+        $samplescopeData = [
+            'bioproject_id' => $bioproject->id,
+            'samplescope_id' => $validatedData['samplescope_id'],
+            'description' => $validatedData['samplescopedesc']
+        ];
+        SampleBioproject::create($samplescopeData);
+
 
         if (count($validatedData['grants']) > 0) {
             foreach ($validatedData['grants'] as  $item => $value) {

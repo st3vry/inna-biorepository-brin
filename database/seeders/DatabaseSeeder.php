@@ -20,6 +20,7 @@ use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
 use App\Models\RelevanceBioproject;
 use App\Models\ReplType;
+use App\Models\SampleBioproject;
 use App\Models\TrophicLevel;
 use App\Models\Sex;
 use App\Models\Disease;
@@ -83,6 +84,11 @@ class DatabaseSeeder extends Seeder
             DatatypeBioproject::create([
                 'bioproject_id' => $c,
                 'datatype_id' => mt_rand(1, 10),
+                'description' => $faker->sentence(3),
+            ]);
+            SampleBioproject::create([
+                'bioproject_id' => $c,
+                'samplescope_id' => mt_rand(1, 10),
                 'description' => $faker->sentence(3),
             ]);
 

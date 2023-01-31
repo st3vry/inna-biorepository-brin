@@ -26,6 +26,7 @@ use App\Models\Sex;
 use App\Models\Disease;
 use App\Models\LibrarySelection;
 use App\Models\Tissue;
+use App\Models\SampletypePackage;
 use Faker\Generator;
 
 class DatabaseSeeder extends Seeder
@@ -138,6 +139,7 @@ class DatabaseSeeder extends Seeder
             LibraryStrategySeeder::class,
             InstrumentSeeder::class,
             LibraryLayoutSeeder::class,
+            SampletypePackageSeeder::class,
         ]);
     }
 }

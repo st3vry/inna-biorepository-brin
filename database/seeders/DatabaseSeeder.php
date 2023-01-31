@@ -134,7 +134,7 @@ class DatabaseSeeder extends Seeder
             DiseaseSeeder::class,
             TissueSeeder::class,
             LibrarySourceSeeder::class,
-            LibrarySelection::class,
+            LibrarySelectionSeeder::class,
         ]);
     }
 }

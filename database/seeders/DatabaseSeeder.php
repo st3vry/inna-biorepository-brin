@@ -136,6 +136,7 @@ class DatabaseSeeder extends Seeder
             LibrarySourceSeeder::class,
             LibrarySelectionSeeder::class,
             LibraryStrategySeeder::class,
+            InstrumentSeeder::class,
         ]);
     }
 }

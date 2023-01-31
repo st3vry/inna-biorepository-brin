@@ -111,15 +111,14 @@
                     <h5>Bioproject Selection</h5>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                        </div>
+                    </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
                         <table class="m-auto table table-striped table-hover table-responsive ">
-                            <thead>
-                                <tr>
-                                    <td></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                </tr>
+                            <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Bioproject Accession</th>
@@ -130,7 +129,7 @@
                             <tbody>
                                 @foreach ($bioprojects as $bioproject )
                                 <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
+                                    <th scope="row"><input type="radio" name="bioproject_id" wire:model="bioproject_id" value="{{$bioproject->id}}" @if (old('bioproject_id')==$bioproject->id) ) checked @endif></th>
                                     <td>{{$bioproject->accession}}</td>
                                     <td>{{$bioproject->submission_id}}</td>
                                     <td>{{$bioproject->title}}</td>
@@ -153,15 +152,14 @@
                     <h5>Biosample Selection</h5>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                        </div>
+                    </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
                         <table class="m-auto table table-striped table-hover table-responsive ">
-                            <thead>
-                                <tr>
-                                    <td></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                    <td><input type="text"></td>
-                                </tr>
+                            <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Biosample Accession</th>
@@ -172,7 +170,7 @@
                             <tbody>
                                 @foreach ($biosamples as $biosample )
                                 <tr>
-                                    <th scope="row"><input type="radio" name="bioproject_id"></th>
+                                    <th scope="row"><input type="checkbox" name="biosample_id[]" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
                                     <td>{{$biosample->title}}</td>
@@ -185,7 +183,42 @@
                 </div>
             </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(2)">Back</button>
-            <button class="btn btn-primary pull-right" type="button" wire:click="secondStepSubmit">Next</button>
+            <button class="btn btn-primary pull-right" type="button" wire:click="thirdStepSubmit">Next</button>
+        </div>
+    </div>
+    <div class="row setup-content {{ $currentStep != 4 ? 'display-none' : '' }}" id="step-4">
+        <div class="col-md-12">
+            <!-- <h4>Bioproject</h4> -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Experiment</h5>
+                </div>
+                <div class="card-body">
+                    {{$bioproject_id}}
+                    <!-- {{implode(',',$biosample_id)}} -->
+                    @foreach ($biosample_id as $id )
+                    {{$id}}
+                    @endforeach
+
+                </div>
+            </div>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>
+            <button class="btn btn-primary pull-right" type="button" wire:click="fourthStepSubmit">Next</button>
+        </div>
+    </div>
+    <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
+        <div class="col-md-12">
+            <!-- <h4>Bioproject</h4> -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Run</h5>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(4)">Back</button>
+            <button class="btn btn-primary pull-right" type="button" wire:click="fifthStepSubmit">Next</button>
         </div>
     </div>
 </form>

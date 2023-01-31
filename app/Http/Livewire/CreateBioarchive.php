@@ -3,18 +3,26 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Bioproject;
 use App\Models\Biosample;
+use App\Models\Bioarchive;
+use App\Models\Bioproject;
+use Livewire\WithPagination;
 
 class CreateBioarchive extends Component
 {
+
     public $currentStep = 1;
+    // Filter table
+    public $search = '';
     // submitter
     public $hold_release;
     // bioproject
     public $bioprojects;
+    public $bioproject_id;
     // biosample
     public $biosamples;
+    public $biosample_id = [];
+
 
 
     public function mount()
@@ -25,12 +33,9 @@ class CreateBioarchive extends Component
         $this->submitter_lab = auth()->user()->lab->name;
         $this->submitter_center = auth()->user()->lab->center->name;
         // bioproject
-        $this->bioprojects = Bioproject::where('draft', false)->get();
+        $this->bioprojects = Bioproject::search($this->search)->get();
         // biosample
         $this->biosamples = Biosample::where('draft', false)->get();
-    }
-    public function submitForm()
-    {
     }
     // Submitter form
     public function firstStepSubmit()
@@ -60,6 +65,13 @@ class CreateBioarchive extends Component
     public function back($step)
     {
         $this->currentStep = $step;
+    }
+    public function submitForm()
+    {
+        $bioarchive = new Bioarchive();
+
+        $bioarchive->accession = 'INA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+        $bioarchive->submission_id = 'SUBINA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
     }
     public function render()
     {

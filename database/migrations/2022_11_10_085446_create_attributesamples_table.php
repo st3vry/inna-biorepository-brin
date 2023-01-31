@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('attr_name');
             $table->string('attr_text');
+            $table->text('description');
             $table->foreignId('input_type_id');
+            $table->text('list_value')->nullable();
             $table->timestamps();
         });
     }

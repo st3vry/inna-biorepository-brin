@@ -23,7 +23,28 @@ class SexSeeder extends Seeder
             'name'=>'female'
         ]);
         Sex::create([
-            'name'=>'unknown'
+            'name'=>'pooled male and female'
+        ]);
+        Sex::create([
+            'name'=>'neuter'
+        ]);
+        Sex::create([
+            'name'=>'hermaphrodite'
+        ]);
+        Sex::create([
+            'name'=>'intersex'
+        ]);
+        Sex::create([
+            'name'=>'note determined'
+        ]); 
+        Sex::create([
+            'name'=>'missing'
+        ]);
+        Sex::create([
+            'name'=>'not applicable'
+        ]);
+        Sex::create([
+            'name'=>'not collected'
         ]);
     }
 }

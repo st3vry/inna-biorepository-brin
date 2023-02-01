@@ -6,6 +6,11 @@ use Livewire\Component;
 use App\Models\Biosample;
 use App\Models\Bioarchive;
 use App\Models\Bioproject;
+use App\Models\Instrument;
+use App\Models\LibraryLayout;
+use App\Models\LibrarySelection;
+use App\Models\LibrarySource;
+use App\Models\LibraryStrategy;
 use Livewire\WithPagination;
 
 class CreateBioarchive extends Component
@@ -22,7 +27,16 @@ class CreateBioarchive extends Component
     // biosample
     public $biosamples;
     public $biosample_id = [];
-
+    // Lib Source
+    public $libsources;
+    // Lib Selection
+    public $libselections;
+    // Lib Strategy
+    public $libstrategies;
+    // Instrument
+    public $instruments;
+    // Layout
+    public $layouts;
 
 
     public function mount()
@@ -36,6 +50,16 @@ class CreateBioarchive extends Component
         $this->bioprojects = Bioproject::search($this->search)->get();
         // biosample
         $this->biosamples = Biosample::where('draft', false)->get();
+        // lib source 
+        $this->libsources = LibrarySource::all();
+        // lib selection
+        $this->libselections = LibrarySelection::all();
+        // lib strategies
+        $this->libstrategies = LibraryStrategy::all();
+        // Instrument
+        $this->instruments = Instrument::all();
+        // lib layouts
+        $this->liblayouts = LibraryLayout::all();
     }
     // Submitter form
     public function firstStepSubmit()

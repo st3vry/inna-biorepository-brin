@@ -194,6 +194,87 @@
                     <h5>Experiment</h5>
                 </div>
                 <div class="card-body">
+                    <div class="overflow-scroll p-3 bg-light" style="width:100%;max-width: 100%; height: 500px; overflow-x:scroll;">
+                        <table class="m-auto table table-striped table-hover table-responsive ">
+                            <thead style="position: sticky;top: 0" class="table-secondary">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Alias</th>
+                                    <th scope="col">Biosample Submission ID</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Library Name</th>
+                                    <th scope="col">Library Source</th>
+                                    <th scope="col">Library Selection</th>
+                                    <th scope="col">Library Strategy</th>
+                                    <th scope="col">Library Construction Protocol</th>
+                                    <th scope="col">Instrument</th>
+                                    <th scope="col">Library Layout</th>
+                                    <th scope="col">Insert Size</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $no = 1; ?>
+                                @foreach ($biosample_id as $id => $experiment)
+                                <tr>
+                                    <!-- {{$id}} -->
+                                    <td>{{$no}}</td>
+                                    <td><input type="text" name="alias"></td>
+                                    <td>{{$id}}</td>
+                                    <td><input type="text" name="title"></td>
+                                    <td><input type="text" name="libname"></td>
+                                    <td>
+                                        <select name="libsource_id" id="">
+                                            <option value="">Select Lib Source</option>
+                                            @foreach ( $libsources as $libsource )
+                                            <option value="{{$libsource->id}}" @if (old('libsource_id')==$libsource->id) selected @endif>{{$libsource->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="libselection_id" id="">
+                                            <option value="">Select Lib Selection</option>
+                                            @foreach ( $libselections as $libselection )
+                                            <option value="{{$libselection->id}}" @if (old('libselection_id')==$libselection->id) selected @endif>{{$libselection->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="libstrategy_id" id="">
+                                            <option value="">Select Lib Strategy</option>
+                                            @foreach ( $libstrategies as $libstrategy )
+                                            <option value="{{$libstrategy->id}}" @if (old('libstrategy_id')==$libstrategy->id) selected @endif>{{$libstrategy->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="libconsprot"></td>
+                                    <td>
+                                        <select name="instrument_id" id="">
+                                            <option value="">Select Instrument</option>
+                                            @foreach ( $instruments as $instrument )
+                                            <option value="{{$instrument->id}}" @if (old('instrument_id')==$instrument->id) selected @endif>{{$instrument->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="liblayout_id" id="">
+                                            <option value="">Select Instrument</option>
+                                            @foreach ( $liblayouts as $liblayout )
+                                            <option value="{{$liblayout->id}}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{$liblayout->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="inp_size"></td>
+                                    <td>
+                                        <button class="btn btn-danger delete_row" wire:click.prevent="removesample({{$id}})"><i class="bi bi-trash3-fill"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php $no++; ?>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     {{$bioproject_id}}
                     <!-- {{implode(',',$biosample_id)}} -->
                     @foreach ($biosample_id as $id )

@@ -38,7 +38,6 @@ class CreateBioarchive extends Component
     // Layout
     public $layouts;
 
-
     public function mount()
     {
         // submitter 
@@ -96,6 +95,26 @@ class CreateBioarchive extends Component
 
         $bioarchive->accession = 'INA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
         $bioarchive->submission_id = 'SUBINA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+    }
+
+    public function biosampleName($id)
+    {
+        return Biosample::select('title')->where('id', $id)->pluck('title')->first();
+    }
+
+    public function biosampleAccession($id)
+    {
+        return Biosample::select('accession')->where('id', $id)->pluck('accession')->first();
+    }
+
+    public function removeBiosample($biosample_id)
+    {
+        // dd($this->biosample_id);
+        if (in_array($biosample_id, $this->biosample_id)) {
+            $this->biosample_id = array_diff($this->biosample_id, array($biosample_id));
+        } else {
+            $this->types[] = $biosample_id;
+        }
     }
     public function render()
     {

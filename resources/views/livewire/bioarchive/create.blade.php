@@ -200,7 +200,8 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Alias</th>
-                                    <th scope="col">Biosample Submission ID</th>
+                                    <th scope="col">Biosample Accession</th>
+                                    <th scope="col">Biosample Title</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">Library Name</th>
                                     <th scope="col">Library Source</th>
@@ -220,7 +221,8 @@
                                     <!-- {{$id}} -->
                                     <td>{{$no}}</td>
                                     <td><input type="text" name="alias"></td>
-                                    <td>{{$id}}</td>
+                                    <td>{{$this->biosampleAccession($id)}}</td>
+                                    <td>{{$this->biosampleName($id)}}</td>
                                     <td><input type="text" name="title"></td>
                                     <td><input type="text" name="libname"></td>
                                     <td>
@@ -266,7 +268,7 @@
                                     </td>
                                     <td><input type="text" name="inp_size"></td>
                                     <td>
-                                        <button class="btn btn-danger delete_row" wire:click.prevent="removesample({{$id}})"><i class="bi bi-trash3-fill"></i>
+                                        <button class="btn btn-danger delete_row" wire:click.prevent="removeBiosample({{$id}})"><i class="bi bi-trash3-fill"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -275,12 +277,6 @@
                             </tbody>
                         </table>
                     </div>
-                    {{$bioproject_id}}
-                    <!-- {{implode(',',$biosample_id)}} -->
-                    @foreach ($biosample_id as $id )
-                    {{$id}}
-                    @endforeach
-
                 </div>
             </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(3)">Back</button>

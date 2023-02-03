@@ -27,6 +27,9 @@ class CreateBioarchive extends Component
     // biosample
     public $biosamples;
     public $biosample_id = [];
+
+    // bioexperiment
+    // public $alias_exp = [];
     // Lib Source
     public $libsources;
     // Lib Selection
@@ -74,11 +77,13 @@ class CreateBioarchive extends Component
     public function thirdStepSubmit()
     {
         $this->currentStep = 4;
+        // dd($this->biosample_id);
     }
     // Run form
     public function fourthStepSubmit()
     {
         $this->currentStep = 5;
+        // dd($this->biosample_id);
     }
     // preview
     public function fifthStepSubmit()
@@ -102,19 +107,14 @@ class CreateBioarchive extends Component
         return Biosample::select('title')->where('id', $id)->pluck('title')->first();
     }
 
-    public function biosampleAccession($id)
+    public function biosampleSubmission($id)
     {
-        return Biosample::select('accession')->where('id', $id)->pluck('accession')->first();
+        return Biosample::select('submission_id')->where('id', $id)->pluck('submission_id')->first();
     }
 
-    public function removeBiosample($biosample_id)
+    public function removeBiosample($index)
     {
-        // dd($this->biosample_id);
-        if (in_array($biosample_id, $this->biosample_id)) {
-            $this->biosample_id = array_diff($this->biosample_id, array($biosample_id));
-        } else {
-            $this->types[] = $biosample_id;
-        }
+        unset($this->biosample_id[$index]);
     }
     public function render()
     {

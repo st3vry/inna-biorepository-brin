@@ -195,7 +195,7 @@
                 </div>
                 <div class="card-body">
                     <div class="overflow-scroll p-3 bg-light" style="width:100%;max-width: 100%; height: 500px; overflow-x:scroll;">
-                        <table class="m-auto table table-striped table-hover table-responsive ">
+                        <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                             <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
                                     <th scope="col">#</th>
@@ -260,7 +260,7 @@
                                     </td>
                                     <td>
                                         <select name="liblayout_id" id="">
-                                            <option value="">Select Instrument</option>
+                                            <option value="">Select Lib Layout</option>
                                             @foreach ( $liblayouts as $liblayout )
                                             <option value="{{$liblayout->id}}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{$liblayout->name}}</option>
                                             @endforeach

@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Biosample;
 use App\Models\Bioarchive;
 use App\Models\Bioproject;
+use App\Models\FileType;
 use App\Models\Instrument;
 use App\Models\LibraryLayout;
 use App\Models\LibrarySelection;
@@ -29,7 +30,12 @@ class CreateBioarchive extends Component
     public $biosample_id = [];
 
     // bioexperiment
-    // public $alias_exp = [];
+    public $experiments = [];
+    public $bioexperiment_id = [];
+
+    // biorun
+    public $biorun_id = [];
+
     // Lib Source
     public $libsources;
     // Lib Selection
@@ -38,8 +44,10 @@ class CreateBioarchive extends Component
     public $libstrategies;
     // Instrument
     public $instruments;
-    // Layout
-    public $layouts;
+    // Lib Layout
+    public $liblayouts;
+    // Filetype
+    public $filetypes;
 
     public function mount()
     {
@@ -62,6 +70,8 @@ class CreateBioarchive extends Component
         $this->instruments = Instrument::all();
         // lib layouts
         $this->liblayouts = LibraryLayout::all();
+        // file type
+        $this->filetypes = FileType::all();
     }
     // Submitter form
     public function firstStepSubmit()
@@ -83,6 +93,7 @@ class CreateBioarchive extends Component
     public function fourthStepSubmit()
     {
         $this->currentStep = 5;
+        // dd($this->bioexperiment_id);
         // dd($this->biosample_id);
     }
     // preview
@@ -115,6 +126,7 @@ class CreateBioarchive extends Component
     public function removeBiosample($index)
     {
         unset($this->biosample_id[$index]);
+        unset($this->bioexperiment_id[$index]);
     }
     public function render()
     {

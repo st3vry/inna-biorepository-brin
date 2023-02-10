@@ -916,7 +916,7 @@
                                 </td>
                                 <td>
                                     <input type="text" name="publication[{{$index}}][article_title]" class="form-control" value="{{$publication['article_title']}}" wire:model="publications.{{$index}}.article_title">
-                                    @error('grants.*.article_title')
+                                    @error('publications.*.article_title')
                                     <p class="text-danger">{{$message}}</p>
                                     @enderror
                                 </td>

@@ -24,7 +24,9 @@ use App\Models\SampleBioproject;
 use App\Models\TrophicLevel;
 use App\Models\Sex;
 use App\Models\Disease;
+use App\Models\LibrarySelection;
 use App\Models\Tissue;
+use App\Models\SampletypePackage;
 use Faker\Generator;
 
 class DatabaseSeeder extends Seeder
@@ -132,6 +134,13 @@ class DatabaseSeeder extends Seeder
             SexSeeder::class,
             DiseaseSeeder::class,
             TissueSeeder::class,
+            LibrarySourceSeeder::class,
+            LibrarySelectionSeeder::class,
+            LibraryStrategySeeder::class,
+            InstrumentSeeder::class,
+            LibraryLayoutSeeder::class,
+            SampletypePackageSeeder::class,
+            FileTypeSeeder::class,
         ]);
     }
 }

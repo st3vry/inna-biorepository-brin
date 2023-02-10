@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sampletypes', function (Blueprint $table) {
+        Schema::create('bioarchives', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('sampletype_package_id');
-            $table->text('description');
-            $table->text('attribute_property');
-            $table->string('attribute_M');
-            $table->string('attribute_E')->nullable();
+            $table->string('accession')->unique()->nullable();
+            $table->string('submission_id')->unique();
+            $table->foreignId('bioproject_id');
+            $table->string('biosample_id');
+            $table->string('title');
+            $table->string('file_location');
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sampletypes');
+        Schema::dropIfExists('bioarchives');
     }
 };

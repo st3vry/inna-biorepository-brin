@@ -3,19 +3,51 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Bioproject;
 use App\Models\Biosample;
+use App\Models\Bioarchive;
+use App\Models\Bioproject;
+use App\Models\FileType;
+use App\Models\Instrument;
+use App\Models\LibraryLayout;
+use App\Models\LibrarySelection;
+use App\Models\LibrarySource;
+use App\Models\LibraryStrategy;
+use Livewire\WithPagination;
 
 class CreateBioarchive extends Component
 {
+
     public $currentStep = 1;
+    // Filter table
+    public $search = '';
     // submitter
     public $hold_release;
     // bioproject
     public $bioprojects;
+    public $bioproject_id;
     // biosample
     public $biosamples;
+    public $biosample_id = [];
 
+    // bioexperiment
+    public $experiments = [];
+    public $bioexperiment_id = [];
+
+    // biorun
+    public $biorun_id = [];
+
+    // Lib Source
+    public $libsources;
+    // Lib Selection
+    public $libselections;
+    // Lib Strategy
+    public $libstrategies;
+    // Instrument
+    public $instruments;
+    // Lib Layout
+    public $liblayouts;
+    // Filetype
+    public $filetypes;
 
     public function mount()
     {
@@ -25,12 +57,21 @@ class CreateBioarchive extends Component
         $this->submitter_lab = auth()->user()->lab->name;
         $this->submitter_center = auth()->user()->lab->center->name;
         // bioproject
-        $this->bioprojects = Bioproject::where('draft', false)->get();
+        $this->bioprojects = Bioproject::search($this->search)->get();
         // biosample
         $this->biosamples = Biosample::where('draft', false)->get();
-    }
-    public function submitForm()
-    {
+        // lib source 
+        $this->libsources = LibrarySource::all();
+        // lib selection
+        $this->libselections = LibrarySelection::all();
+        // lib strategies
+        $this->libstrategies = LibraryStrategy::all();
+        // Instrument
+        $this->instruments = Instrument::all();
+        // lib layouts
+        $this->liblayouts = LibraryLayout::all();
+        // file type
+        $this->filetypes = FileType::all();
     }
     // Submitter form
     public function firstStepSubmit()
@@ -46,11 +87,14 @@ class CreateBioarchive extends Component
     public function thirdStepSubmit()
     {
         $this->currentStep = 4;
+        // dd($this->biosample_id);
     }
     // Run form
     public function fourthStepSubmit()
     {
         $this->currentStep = 5;
+        // dd($this->bioexperiment_id);
+        // dd($this->biosample_id);
     }
     // preview
     public function fifthStepSubmit()
@@ -60,6 +104,29 @@ class CreateBioarchive extends Component
     public function back($step)
     {
         $this->currentStep = $step;
+    }
+    public function submitForm()
+    {
+        $bioarchive = new Bioarchive();
+
+        $bioarchive->accession = 'INA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+        $bioarchive->submission_id = 'SUBINA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+    }
+
+    public function biosampleName($id)
+    {
+        return Biosample::select('title')->where('id', $id)->pluck('title')->first();
+    }
+
+    public function biosampleSubmission($id)
+    {
+        return Biosample::select('submission_id')->where('id', $id)->pluck('submission_id')->first();
+    }
+
+    public function removeBiosample($index)
+    {
+        unset($this->biosample_id[$index]);
+        unset($this->bioexperiment_id[$index]);
     }
     public function render()
     {

@@ -13,14 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sampletypes', function (Blueprint $table) {
+        Schema::create('library_layouts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('sampletype_package_id');
-            $table->text('description');
-            $table->text('attribute_property');
-            $table->string('attribute_M');
-            $table->string('attribute_E')->nullable();
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sampletypes');
+        Schema::dropIfExists('library_layouts');
     }
 };

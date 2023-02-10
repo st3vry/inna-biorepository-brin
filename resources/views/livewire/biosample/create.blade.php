@@ -77,7 +77,7 @@
         <div class="row setup-content {{ $currentStep != 2 ? 'display-none' : '' }}" id="step-2">
             <div class="col-md-12">
             <h3>General Information</h3>
-                <div class="card mb-4">
+                <!--div class="card mb-4">
                     <div class="card-header">
                         <h5>Description</h5>
                     </div>
@@ -98,7 +98,7 @@
                             @enderror
                         </div>
                     </div>
-                </div>
+                </div-->
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5>Release Date<font color="red">*</font></h5>
@@ -194,19 +194,33 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                        @foreach ($sampletypes->chunk(6) as $row)
-                            <div class="row">
-                                @foreach ($row as $sampletype)
-                                <div class="col-sm-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sampletype_id" wire:model="sampletype_id" value="{{$sampletype->id}}" @if (old('sampletype_id')==$sampletype->id)
-                            ) checked @endif>
-                                        <label class="form-check-label">{{$sampletype->name}}</label>
+                        @foreach ($packages as $index => $package)
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="package_id" wire:click="resetSampletype" wire:model="package_id" value="{{$package->id}}" @if (old('package_id')==$package->id)
+                        ) checked @endif>
+                                    <label class="form-check-label">{{$package->name}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        @if ($index+1 == $package_id)
+                            @foreach ($sampletypes as $sampletype )
+                                @if ($package_id == $sampletype->sampletype_package_id)
+                                <div class="row">&nbsp&nbsp&nbsp&nbsp&nbsp
+                                    <div class="col-sm-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sampletype_id" wire:model="sampletype_id" value="{{$sampletype->id}}" >
+                                            <label class="form-check-label">{{$sampletype->name}}</label>
+                                        </div>
                                     </div>
                                 </div>
-                                @endforeach
-                            </div>
+                                @endif
+                            @endforeach
+                        @endif
                         @endforeach
+                        
+                        
                         @error('sampletype_id')
                             <p class="text-danger">{{$message}}</p>
                         @enderror    
@@ -239,10 +253,10 @@
                                         @elseif ($attr->input_type_id == 2)
                                         <input type="textarea" class="form-control @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
                                         @elseif ($attr->input_type_id == 3)
-                                            <select class="form-select" wire:model="{{$attr->attr_name}}_id" id="{{$attr->attr_name}}_id" name="{{$attr->attr_name}}_id" >
+                                            <select class="form-select" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" >
                                                 <option value="">--{{$attr->attr_name}}--</option>
-                                                @foreach(${$attr->attr_name} as $atname)
-                                                    <option value="{{$atname->id}}">{{$atname->name}}</option>
+                                                @foreach(explode(',',$attr->list_value) as $atname)
+                                                    <option value="{{$atname}}">{{$atname}}</option>
                                                 @endforeach
                                             </select>
                                         @elseif ($attr->input_type_id == 4)
@@ -303,7 +317,11 @@
                             <table class="table">
                                 <tr>
                                     <td>Release Date:</td>
-                                    <td><label>{{$hold_release}}</label></td>
+                                    @if ($hold_release == true)
+                                    <td><label>Hold (not viewable until the release of linked data)</label></td>
+                                    @else
+                                    <td><label>After the approval is passed, release immediately following curation</label></td>
+                                    @endif
                                 </tr>
                             </table>
                         </div>
@@ -320,10 +338,12 @@
                                     <td>Link Description:</td>
                                     <td>Link URL:</td>
                                 </tr>
+                                @foreach ($biosample_links as $index => $biosample_link)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{$biosample_link['link_description']}}</td>
+                                    <td>{{$biosample_link['link_url']}}</td>
                                 </tr>
+                                @endforeach
                             </table>
                         </div>
                     </div>
@@ -372,13 +392,8 @@
                                         <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}</label>
                                     </div>
                                     <div class="col-md-2">
-                                        @if ($attr->input_type_id == 3)
-                                            @if ((${($attr->attr_name.'_id')})!='')
-                                            <label>: {{(${$attr->attr_name})[(${($attr->attr_name.'_id')})-1]->name}}</label>
-                                            @endif
-                                        @else
+                                       
                                         <label>: {{(${$attr->attr_name})}}</label>
-                                        @endif
                                     </div>
                                     @endforeach
                                 </div>

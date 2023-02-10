@@ -5,13 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sampletype extends Model
+class LibraryLayout extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-
-    public function sampletype_package()
-    {
-        return $this->belongsTo(SampletypePackage::class);
-    }
 }

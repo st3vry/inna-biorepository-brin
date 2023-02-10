@@ -18,13 +18,20 @@ class RoleSeeder extends Seeder
         //
         // Role
         Role::create([
-            'name' => 'administrator'
+            'name' => 'superadmin',
+            'description' => 'Super Admin'
         ]);
         Role::create([
-            'name' => 'curator'
+            'name' => 'administrator',
+            'description' => 'Centers admin'
         ]);
         Role::create([
-            'name' => 'user'
+            'name' => 'curator',
+            'description' => 'Centers curator'
+        ]);
+        Role::create([
+            'name' => 'user',
+            'description' => 'Centers member '
         ]);
     }
 }

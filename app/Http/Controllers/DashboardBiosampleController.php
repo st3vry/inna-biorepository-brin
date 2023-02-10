@@ -91,4 +91,12 @@ class DashboardBiosampleController extends Controller
         Biosample::destroy($biosample->id);
         return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
     }
+
+    public function curation()
+    {
+        //
+        return view('dashboard.curation.biosample.index', [
+            'biosamples' => Biosample::with(['organism', 'center'])->where('published_at', null)->where('draft',false)->paginate(5),
+        ]);
+    }
 }

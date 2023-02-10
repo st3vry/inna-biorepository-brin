@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\Lab;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdminUserController extends Controller
 {
@@ -20,7 +21,7 @@ class AdminUserController extends Controller
         return view('dashboard.user.index', [
 
             // 'bioprojects' => Bioproject::with(['organism'])->get(),
-            'users' => User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(15),
+            'users' => User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(10),
         ]);
     }
 
@@ -118,5 +119,44 @@ class AdminUserController extends Controller
         //
         User::destroy($user->id);
         return redirect('/dashboard/users')->with('success', 'User has been deleted!');
+    }
+    
+    public function filter(Request $request)
+    {   
+        $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(10);
+        if ($request->filled('search')) {
+            $search = $request->search;
+            if ($request->entries > 0) {
+                $data = User::with('role', 'lab', 'lab.center')
+                    ->where('is_activated',false)
+                    ->where(function($query) use ($search){
+                        $query->orWhere('name', 'ilike' ,'%'.$search.'%')
+                            ->orWhere('username',  'ilike' ,'%'.$search.'%')
+                            ->orWhere('email',  'ilike' ,'%'.$search.'%');
+                    })
+                    ->orWhereRelation('role', 'name', 'ilike' ,'%'.$search.'%')
+                    ->orWhereRelation('lab', 'name', 'ilike' ,'%'.$search.'%')
+                    ->paginate($request->entries);
+            } else {
+                $data = User::with('role', 'lab', 'lab.center')
+                    ->where('is_activated',false)
+                    ->where(function($query) use ($search){
+                        $query->orWhere('name', 'ilike' ,'%'.$search.'%')
+                            ->orWhere('username',  'ilike' ,'%'.$search.'%')
+                            ->orWhere('email',  'ilike' ,'%'.$search.'%');
+                    })->get();
+            }
+        } else {
+            if ($request->entries > 0) {
+                $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate($request->entries);
+            } else {
+                $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->get();
+            }
+        }
+
+
+        return view('dashboard.user.table', [
+            'users' => $data,
+        ])->render();
     }
 }

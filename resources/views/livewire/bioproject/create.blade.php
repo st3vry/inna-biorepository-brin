@@ -123,7 +123,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="relevance" class="form-label">Relevance <font color="red">*</font></label>
-                        <select class="form-select" name="relevance_id" id="relevance_id" wire:model="relevance_id">
+                        <select class="form-select select2" name="relevance_id" id="relevance_id" wire:model="relevance_id">
                             <option value="">Relevance</option>
                             @foreach ($relevances as $relevance )
                             <option value="{{$relevance->id}}" @if (old('relevance_id')==$relevance->id) selected @endif>{{$relevance->name}}</option>
@@ -227,7 +227,7 @@
                             @foreach ($grants as $index => $grant)
                             <tr>
                                 <td>
-                                    <select class="form-select" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
+                                    <select class="form-select select2" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
                                         <option value="0">Funding Agency</option>
                                         @foreach ($fundagencies as $fundagency )
                                         <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>

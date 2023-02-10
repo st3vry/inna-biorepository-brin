@@ -28,6 +28,34 @@
         </h6>
         <ul class="nav flex-column">
             <li class="nav-item">
+                <a class="nav-link collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                    <span data-feather="list"></span>
+                    Curation
+                </a>
+                <div class="collapse  {{ Request::is('dashboard/curation*') ? 'show' : ''}}"  id="home-collapse">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal nav px-3 flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('dashboard/curation/bioprojects*') ? 'active' : ''}}" aria-current="page" href="/dashboard/curation/bioprojects">
+                                <span data-feather="list"></span>
+                                BioProject
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('dashboard/curation/biosamples*') ? 'active' : ''}}" aria-current="page" href="/dashboard/curation/biosamples">
+                                <span data-feather="layers"></span>
+                                BioSample
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('dashboard/curation/bioarchives*') ? 'active' : ''}}" aria-current="page" href="/dashboard/curation/bioarchives">
+                                <span data-feather="hard-drive"></span>
+                                BioArchive
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {{ Request::is('dashboard/users*') ? 'active' : ''}}" aria-current="page" href="/dashboard/users">
                     <span data-feather="user-plus"></span>
                     User

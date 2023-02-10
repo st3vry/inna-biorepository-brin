@@ -191,7 +191,7 @@
             document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
         })
         document.addEventListener('livewire:update', function () {
-            $('.form-select').each(function(){
+            $('.form-select.select2').each(function(){
                 $(this).select2({
                     theme: 'bootstrap-5',
                     width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',

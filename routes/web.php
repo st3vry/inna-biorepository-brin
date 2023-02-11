@@ -54,44 +54,49 @@ Route::get('/biosamples', function () {
     ]);
 });
 
-
 Route::get('/bioarchives', function () {
     return view('frontend.bioarchive', [
         'title' => 'BioArchive'
     ]);
 });
 
-
+// Account Routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
-
-
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store']);
 
-Route::get('/dashboard/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('auth');
-
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->middleware('auth');
 
 Route::get('/bioprojects', [BioprojectController::class, 'index']);
 Route::get('/bioprojects/{bioproject}', [BioprojectController::class, 'show']);
 Route::get('/biosamples', [BiosampleController::class, 'index']);
 Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
 
+Route::prefix('dashboard')->group(function(){
+    Route::get('/', function () {
+        return view('dashboard.index');
+    })->middleware('auth');
+    
+    Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('auth');
 
-Route::resource('/dashboard/bioprojects', DashboardBioprojectController::class)->middleware('auth');
-Route::resource('/dashboard/biosamples', DashboardBiosampleController::class)->middleware('auth');
-Route::resource('/dashboard/bioarchives', DashboardBioarchiveController::class)->middleware('auth');
-Route::resource('/dashboard/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
-Route::resource('/dashboard/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
-Route::resource('/dashboard/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
+    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('auth');
+    Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('auth');
+    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('auth');
 
-// Curator
-Route::get('/dashboard/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator']);
-Route::get('/dashboard/curator/bioprojects/{bioproject}', [CuratorBioprojectController::class, 'edit'])->middleware(['can:isCurator']);
+    // Admin
+    Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
+    Route::resource('/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
+    Route::resource('/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
+    Route::post('/users', [AdminUserController::class,'filter'])->name('users.filter')->middleware('can:isAdmin');
+    Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
+    Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');
+
+    // Curator
+    Route::get('/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator']);
+    Route::get('/curator/bioprojects/{bioproject}', [CuratorBioprojectController::class, 'edit'])->middleware(['can:isCurator']);
+
+});
 
 Route::fallback(function () {
     // return "Hm, why did you land here somehow?";

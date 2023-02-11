@@ -5,33 +5,28 @@
             {{ $successMsg }}
         </div>
         @endif
-        <div class="stepwizard mb-3">
-            <div class="stepwizard-row setup-panel">
-                <div class="multi-wizard-step">
-                    <a href="#step-1" type="button" class="btn {{ $currentStep != 1 ? 'btn-default' : 'btn-primary' }}">Submitter</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-2" type="button" class="btn {{ $currentStep != 2 ? 'btn-default' : 'btn-primary' }}">Bioproject</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-3" type="button" class="btn {{ $currentStep != 3 ? 'btn-default' : 'btn-primary' }}">Biosample</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-4" type="button" class="btn {{ $currentStep != 4? 'btn-default' : 'btn-primary' }}">Experiment</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-5" type="button" class="btn {{ $currentStep != 5 ? 'btn-default' : 'btn-primary' }}">Run</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-6" type="button" class="btn {{ $currentStep != 6 ? 'btn-default' : 'btn-primary' }}" disabled="disabled">Preview</a>
-
-                </div>
-            </div>
+        <ul id="nav-steps" class="nav nav-pills mb-2 nav-justified">
+            <li class="nav-item">
+                <a href="#step-1" wire:click="back(1)" class="nav-link {{ $currentStep == 1 ? 'active' : '' }}  {{ $currentStep < 1 ? 'disabled' : '' }}">Submitter</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-2" wire:click="back(2)" class="nav-link {{ $currentStep == 2 ? 'active' : ''  }} {{ $currentStep < 2 ? 'disabled' : '' }}">Bioproject</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-3" wire:click="back(3)" class="nav-link {{ $currentStep == 3 ? 'active' : ''  }} {{ $currentStep < 3 ? 'disabled' : '' }}">Biosample</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-4" wire:click="back(4)" class="nav-link {{ $currentStep == 4 ? 'active' : '' }} {{ $currentStep < 4 ? 'disabled' : '' }}">Experiment</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-5" wire:click="back(5)" class="nav-link {{ $currentStep == 5 ? 'active' : '' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Run</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-6" class="nav-link {{ $currentStep == 6 ? 'active' : 'disabled' }} {{ $currentStep < 6 ? 'disabled' : '' }}">Preview</a>
+            </li>
+        </ul>
+        <div class="progress mb-2"  style="height: 4px;">
+            <div id="wizard-progress"  class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
     <div class="row setup-content {{ $currentStep != 1 ? 'display-none' : '' }}" id="step-1">
@@ -368,3 +363,25 @@
         </div>
     </div>
 </form>
+@push('js')
+    <script>
+        document.addEventListener('livewire:load', function () {
+            const steps = document.querySelectorAll('#nav-steps .nav-item').length;
+            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
+        })
+        document.addEventListener('livewire:update', function () {
+            $('.form-select.select2').each(function(){
+                $(this).select2({
+                    theme: 'bootstrap-5',
+                    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+                    placeholder: 'Select an option'
+                })
+                $(this).on('change', function (e) {
+                    @this.set($(this).attr("wire:model"), $(this).select2("val"));
+                });
+            });
+            const steps = document.querySelectorAll('#nav-steps .nav-item').length;
+            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
+        })
+    </script>
+@endpush

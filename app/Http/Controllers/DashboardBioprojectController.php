@@ -23,7 +23,7 @@ class DashboardBioprojectController extends Controller
     {
         //
         return view('dashboard.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->paginate(5),
+            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->orderBy('published_at','desc')->orderBy('draft','desc')->paginate(5),
         ]);
     }
 
@@ -178,13 +178,5 @@ class DashboardBioprojectController extends Controller
     {
         $fundagencies = Fundagency::All();
         return response()->json($fundagencies);
-    }
-
-    public function curation()
-    {
-        //
-        return view('dashboard.curation.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('published_at', null)->where('draft',false)->paginate(5),
-        ]);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Biosample;
+use App\Models\ActionLog;
 use Illuminate\Http\Request;
 
-class DashboardBiosampleController extends Controller
+class ActionLogController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,6 @@ class DashboardBiosampleController extends Controller
     public function index()
     {
         //
-        return view('dashboard.biosample.index', [
-            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('published_at','desc')->orderBy('draft','desc')->paginate(5),
-        ]);
     }
 
     /**
@@ -25,10 +22,16 @@ class DashboardBiosampleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($action, $type, $item_id, $user_target, $created_by, $desc=null)
     {
-        //
-        return view('dashboard.biosample.create');
+        return ActionLog::create([
+            'action' => $action,
+            'type' => $type,
+            'item_id' => $item_id,
+            'user_target'=> $user_target,
+            'created_by' =>$created_by,
+            'desc' => $desc
+        ]);
     }
 
     /**
@@ -45,24 +48,21 @@ class DashboardBiosampleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Biosample  $biosample
+     * @param  \App\Models\ActionLog  $actionLog
      * @return \Illuminate\Http\Response
      */
-    public function show(Biosample $biosample)
+    public function show(ActionLog $actionLog)
     {
         //
-        return view('dashboard.biosample.show', [
-            'biosample' => $biosample,
-        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Biosample  $biosample
+     * @param  \App\Models\ActionLog  $actionLog
      * @return \Illuminate\Http\Response
      */
-    public function edit(Biosample $biosample)
+    public function edit(ActionLog $actionLog)
     {
         //
     }
@@ -71,10 +71,10 @@ class DashboardBiosampleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Biosample  $biosample
+     * @param  \App\Models\ActionLog  $actionLog
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Biosample $biosample)
+    public function update(Request $request, ActionLog $actionLog)
     {
         //
     }
@@ -82,13 +82,11 @@ class DashboardBiosampleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Biosample  $biosample
+     * @param  \App\Models\ActionLog  $actionLog
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Biosample $biosample)
+    public function destroy(ActionLog $actionLog)
     {
         //
-        Biosample::destroy($biosample->id);
-        return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
     }
 }

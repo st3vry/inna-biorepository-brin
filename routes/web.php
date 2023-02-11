@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\BiosampleController;
 use App\Http\Controllers\CuratorBioprojectController;
+use App\Http\Controllers\CuratorBioSampleController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\DashboardBioarchiveController;
@@ -73,6 +74,7 @@ Route::get('/bioprojects/{bioproject}', [BioprojectController::class, 'show']);
 Route::get('/biosamples', [BiosampleController::class, 'index']);
 Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
 
+//rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function(){
     Route::get('/', function () {
         return view('dashboard.index');
@@ -93,8 +95,12 @@ Route::prefix('dashboard')->group(function(){
     Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');
 
     // Curator
-    Route::get('/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator']);
-    Route::get('/curator/bioprojects/{bioproject}', [CuratorBioprojectController::class, 'edit'])->middleware(['can:isCurator']);
+    // Route::get('/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator',]);
+    // Route::get('/curator/bioprojects/{bioproject}', [CuratorBioprojectController::class, 'edit'])->middleware(['can:isCurator']);
+
+    Route::resource('/curator/biosamples', CuratorBioSampleController::class)->middleware(['is_admin']);
+    Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
+    // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
 
 });
 

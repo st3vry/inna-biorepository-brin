@@ -179,12 +179,4 @@ class DashboardBioprojectController extends Controller
         $fundagencies = Fundagency::All();
         return response()->json($fundagencies);
     }
-
-    public function curation()
-    {
-        //
-        return view('dashboard.curation.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('published_at', null)->where('draft',false)->paginate(5),
-        ]);
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLog;
 use App\Models\Role;
 use App\Models\Lab;
 use App\Models\User;
@@ -15,13 +16,13 @@ class AdminUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         return view('dashboard.user.index', [
 
             // 'bioprojects' => Bioproject::with(['organism'])->get(),
-            'users' => User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(10),
+            'users' => User::with('role', 'lab', 'lab.center')->where('role_id', '<>',0)->paginate(10),
         ]);
     }
 
@@ -87,6 +88,7 @@ class AdminUserController extends Controller
     public function update(Request $request, User $user)
     {
         //
+        $action = false;
         $rules = [
             'name' => 'required|max:255',
             'orcid_id' => 'required|max:255',
@@ -104,7 +106,16 @@ class AdminUserController extends Controller
         $validatedData = $request->validate($rules);
         $validatedData['is_activated'] = $request->has('activate');
 
-        User::where('id', $user->id)->update($validatedData);
+        $action = User::where('id', $user->id)->update($validatedData);
+        if ($action) {
+            ActionLog::create([
+                'action' => 'updateUserDetail',
+                'type' => 'User',
+                'item_id' => $user->id,
+                'created_by' =>auth()->id(),
+                'desc' => !isset($request->comment) ? null : $request->comment
+            ]);
+        }
         return redirect('/dashboard/users')->with('success', 'User has been updated!');
     }
 

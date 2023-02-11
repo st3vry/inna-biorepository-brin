@@ -2,6 +2,7 @@
 
 @push('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css">
 @endpush
 
 @section('container')
@@ -44,7 +45,9 @@
 
 @endsection
 @push('js')
-    <!-- <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script> -->
+
+    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap5.min.js"></script>
     <script>
         const entries = document.getElementById('entries')
         const search = document.getElementById('search')
@@ -52,7 +55,7 @@
         const userTable =  document.getElementById('user-table')
         function filter() {
             fetch('{{route('users.filter')}}', {
-                method: 'POST',
+                method: 'post',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -61,8 +64,9 @@
             })
             .then(response => response.text())
             .then(response => userTable.innerHTML = response)
+            // .then(feather.replace())
         }
-        search.onkeyup = function () {
+        search.oninput = function () {
             if (this.value.length !== 1) {
                 filter()
             }

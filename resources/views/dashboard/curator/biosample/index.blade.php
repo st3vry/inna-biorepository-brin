@@ -5,7 +5,7 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">My Biosamples</li>
+        <li class="breadcrumb-item active" aria-current="page">Curator Biosamples</li>
     </ol>
 </div>
 <div class="table-responsive col-md-11">
@@ -18,6 +18,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
                 <th scope="col">Center</th>
+                <th scope="col">Status</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -32,12 +33,31 @@
                 <td>{{ $biosample->description }}</td>
                 <td>{{ $biosample->center->name }}</td>
                 <td>
-                    @if (!$biosample->draft)
-                    <a href="/dashboard/biosamples/{{ $biosample->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    @if(isset($biosample->published_at))
+                        <span class="badge bg-success">Published</span>
                     @else
-                    <a href="/dashboard/biosamples/{{ $biosample->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    <a href="/dashboard/biosamples/{{ $biosample->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                    <form action="/dashboard/biosamples/{{$biosample->accession}}" method="post" class="d-inline">
+                        @if($biosample->draft)
+                            @if (isset($biosample->curator_id))
+                                <span class="badge bg-warning">Returned to submitter</span>
+                            @else   
+                                <span class="badge bg-warning">Draft</span>                 
+                            @endif
+                        @else
+                            @if (isset($biosample->curator_id))
+                                <span class="badge bg-info">On review</span>
+                            @else   
+                                <span class="badge bg-danger">Unassigned</span>          
+                            @endif
+                        @endif
+                    @endif
+                </td>
+                <td>
+                    @if (!$biosample->draft)
+                    <a href="/dashboard/curator/biosamples/{{ $biosample->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    @else
+                    <a href="/dashboard/curator/biosamples/{{ $biosample->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    <a href="/dashboard/curator/biosamples/{{ $biosample->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                    <form action="/dashboard/curator/biosamples/{{$biosample->accession}}" method="post" class="d-inline">
                         @method('delete')
                         @csrf
                         <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>

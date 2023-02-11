@@ -1,7 +1,3 @@
-@push('css')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-@endpush
-
 <table class="table table-striped table-sm">
         <thead>
             <tr>
@@ -29,11 +25,11 @@
                 <td>{{ $user->role->name }}</td>
                 <td>@if ($user->is_activated) Active @else Inactive @endif</td>
                 <td>
-                    <a href="/dashboard/users/{{$user->id}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                    <a href="/dashboard/users/{{$user->id}}/edit" class="badge bg-warning"><i class="bi bi-pencil-square"></i></span></a>
                     <form action="/dashboard/users/{{$user->id}}" method="post" class="d-inline">
                         @method('delete')
                         @csrf
-                        <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
+                        <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><i class="bi bi-x-circle"></i></span></button>
                     </form>
                 </td>
             </tr>
@@ -41,7 +37,3 @@
         </tbody>
     </table>
 {{$users->links()}}
-
-@push('js')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-@endpush

@@ -5,10 +5,9 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">My Bioproject</li>
+        <li class="breadcrumb-item active" aria-current="page">Curator Bioprojects</li>
     </ol>
 </div>
-<a href="/dashboard/bioprojects/create" class="btn btn-primary mb-3">Create New Bioproject</a>
 <div class="table-responsive col-md-11">
     <table class="table table-striped table-sm">
         <thead>
@@ -53,15 +52,15 @@
                 </td>
                 <td>
                     @if (!$bioproject->draft)
-                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                        <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
-                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                    <form action="/dashboard/bioprojects/{{$bioproject->accession}}" method="post" class="d-inline">
-                        @method('delete')
-                        @csrf
-                        <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
-                    </form>
+                        <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                        <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                        <form action="/dashboard/curator/bioprojects/{{$bioproject->accession}}" method="post" class="d-inline">
+                            @method('delete')
+                            @csrf
+                            <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
+                        </form>
                     @endif
                 </td>
             </tr>

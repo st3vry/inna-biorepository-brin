@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('action_log', function (Blueprint $table) {
+        Schema::create('action_logs', function (Blueprint $table) {
             $table->id();
             $table->string('action'); // create, edit, delete, assign, request, published
             $table->string('type'); // project, sample, archive
             $table->string('desc')->nullable(); // keterangan might be usefull for later
-            $table->integer('item_id'); // id dari project, sample, archive
+            $table->string('item_id'); // id dari project, sample, archive
             $table->boolean('seen')->default(false); // untuk keperluan notifikasi
             $table->integer('user_target')->nullable(); // untuk keperluan target notifikasi
             $table->integer('created_by'); // id user yang melakukan action

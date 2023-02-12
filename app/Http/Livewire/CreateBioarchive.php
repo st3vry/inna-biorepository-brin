@@ -46,6 +46,7 @@ class CreateBioarchive extends Component
     public $instruments;
     // Lib Layout
     public $liblayouts;
+
     // Filetype
     public $filetypes;
 
@@ -76,29 +77,46 @@ class CreateBioarchive extends Component
     // Submitter form
     public function firstStepSubmit()
     {
+        $validatedData = $this->validate([
+            'hold_release' => 'required',
+        ]);
+
         $this->currentStep = 2;
     }
     // Bioproject form
     public function secondStepSubmit()
     {
+        $validatedData = $this->validate([
+            'bioproject_id' => 'required',
+        ]);
         $this->currentStep = 3;
     }
     // Biosample form
     public function thirdStepSubmit()
     {
+        $validatedData = $this->validate([
+            'biosample_id' => 'required',
+        ]);
+
         $this->currentStep = 4;
-        // dd($this->biosample_id);
     }
     // Run form
     public function fourthStepSubmit()
     {
+        $validatedData = $this->validate([
+            'bioexperiment_id.*.alias_exp' => 'required',
+            'bioexperiment_id.*.liblayout_id' => 'required',
+        ]);
+        foreach ($this->bioexperiment_id as $key => $value) {
+            $this->biorun_id[] = $value;
+        }
+        dd($this->biorun_id);
         $this->currentStep = 5;
-        // dd($this->bioexperiment_id);
-        // dd($this->biosample_id);
     }
     // preview
     public function fifthStepSubmit()
     {
+        dd($this->biorun_id);
         $this->currentStep = 6;
     }
     public function back($step)

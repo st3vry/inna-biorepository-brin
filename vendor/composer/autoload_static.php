@@ -561,10 +561,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'App\\Models\\Datatype' => __DIR__ . '/../..' . '/app/Models/Datatype.php',
         'App\\Models\\DatatypeBioproject' => __DIR__ . '/../..' . '/app/Models/DatatypeBioproject.php',
         'App\\Models\\Disease' => __DIR__ . '/../..' . '/app/Models/Disease.php',
-<<<<<<< HEAD
-=======
         'App\\Models\\FileType' => __DIR__ . '/../..' . '/app/Models/FileType.php',
->>>>>>> 1645cd4c29739fcf89f8f995d4cb5c74478d3838
         'App\\Models\\Fundagency' => __DIR__ . '/../..' . '/app/Models/Fundagency.php',
         'App\\Models\\GenomeSize' => __DIR__ . '/../..' . '/app/Models/GenomeSize.php',
         'App\\Models\\Grant' => __DIR__ . '/../..' . '/app/Models/Grant.php',
@@ -598,10 +595,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'App\\Models\\SampleBioproject' => __DIR__ . '/../..' . '/app/Models/SampleBioproject.php',
         'App\\Models\\Samplescope' => __DIR__ . '/../..' . '/app/Models/Samplescope.php',
         'App\\Models\\Sampletype' => __DIR__ . '/../..' . '/app/Models/Sampletype.php',
-<<<<<<< HEAD
-=======
         'App\\Models\\SampletypePackage' => __DIR__ . '/../..' . '/app/Models/SampletypePackage.php',
->>>>>>> 1645cd4c29739fcf89f8f995d4cb5c74478d3838
         'App\\Models\\Sex' => __DIR__ . '/../..' . '/app/Models/Sex.php',
         'App\\Models\\TempRange' => __DIR__ . '/../..' . '/app/Models/TempRange.php',
         'App\\Models\\Tissue' => __DIR__ . '/../..' . '/app/Models/Tissue.php',
@@ -836,10 +830,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
         'Database\\Seeders\\DatatypeSeeder' => __DIR__ . '/../..' . '/database/seeders/DatatypeSeeder.php',
         'Database\\Seeders\\DiseaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DiseaseSeeder.php',
-<<<<<<< HEAD
-=======
         'Database\\Seeders\\FileTypeSeeder' => __DIR__ . '/../..' . '/database/seeders/FileTypeSeeder.php',
->>>>>>> 1645cd4c29739fcf89f8f995d4cb5c74478d3838
         'Database\\Seeders\\GenomeSizeSeeder' => __DIR__ . '/../..' . '/database/seeders/GenomeSizeSeeder.php',
         'Database\\Seeders\\HabitatSeeder' => __DIR__ . '/../..' . '/database/seeders/HabitatSeeder.php',
         'Database\\Seeders\\InputFormTypeSeeder' => __DIR__ . '/../..' . '/database/seeders/InputFormTypeSeeder.php',

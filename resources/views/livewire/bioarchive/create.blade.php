@@ -5,33 +5,28 @@
             {{ $successMsg }}
         </div>
         @endif
-        <div class="stepwizard mb-3">
-            <div class="stepwizard-row setup-panel">
-                <div class="multi-wizard-step">
-                    <a href="#step-1" type="button" class="btn {{ $currentStep != 1 ? 'btn-default' : 'btn-primary' }}">Submitter</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-2" type="button" class="btn {{ $currentStep != 2 ? 'btn-default' : 'btn-primary' }}">Bioproject</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-3" type="button" class="btn {{ $currentStep != 3 ? 'btn-default' : 'btn-primary' }}">Biosample</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-4" type="button" class="btn {{ $currentStep != 4? 'btn-default' : 'btn-primary' }}">Experiment</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-5" type="button" class="btn {{ $currentStep != 5 ? 'btn-default' : 'btn-primary' }}">Run</a>
-
-                </div>
-                <div class="multi-wizard-step">
-                    <a href="#step-6" type="button" class="btn {{ $currentStep != 6 ? 'btn-default' : 'btn-primary' }}" disabled="disabled">Preview</a>
-
-                </div>
-            </div>
+        <ul id="nav-steps" class="nav nav-pills mb-2 nav-justified">
+            <li class="nav-item">
+                <a href="#step-1" wire:click="back(1)" class="nav-link {{ $currentStep == 1 ? 'active' : '' }}  {{ $currentStep < 1 ? 'disabled' : '' }}">Submitter</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-2" wire:click="back(2)" class="nav-link {{ $currentStep == 2 ? 'active' : ''  }} {{ $currentStep < 2 ? 'disabled' : '' }}">Bioproject</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-3" wire:click="back(3)" class="nav-link {{ $currentStep == 3 ? 'active' : ''  }} {{ $currentStep < 3 ? 'disabled' : '' }}">Biosample</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-4" wire:click="back(4)" class="nav-link {{ $currentStep == 4 ? 'active' : '' }} {{ $currentStep < 4 ? 'disabled' : '' }}">Experiment</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-5" wire:click="back(5)" class="nav-link {{ $currentStep == 5 ? 'active' : '' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Run</a>
+            </li>
+            <li class="nav-item">
+                <a href="#step-6" class="nav-link {{ $currentStep == 6 ? 'active' : 'disabled' }} {{ $currentStep < 6 ? 'disabled' : '' }}">Preview</a>
+            </li>
+        </ul>
+        <div class="progress mb-2"  style="height: 4px;">
+            <div id="wizard-progress"  class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
     <div class="row setup-content {{ $currentStep != 1 ? 'display-none' : '' }}" id="step-1">
@@ -169,7 +164,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($biosamples as $biosample )
-                                <tr>
+                                <tr title="{{$biosample->title}}">
                                     <th scope="row"><input type="checkbox" name="biosample_id[]" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
@@ -195,13 +190,12 @@
                 </div>
                 <div class="card-body">
                     <div class="overflow-scroll p-3 bg-light" style="width:100%;max-width: 100%; height: 500px; overflow-x:scroll;">
-                        <table class="m-auto table table-striped table-hover table-responsive ">
+                        <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                             <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Alias</th>
-                                    <th scope="col">Biosample Accession</th>
-                                    <th scope="col">Biosample Title</th>
+                                    <th scope="col">Biosample Used</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">Library Name</th>
                                     <th scope="col">Library Source</th>
@@ -220,13 +214,12 @@
                                 <tr>
                                     <!-- {{$id}} -->
                                     <td>{{$no}}</td>
-                                    <td><input type="text" name="alias"></td>
-                                    <td>{{$this->biosampleAccession($id)}}</td>
-                                    <td>{{$this->biosampleName($id)}}</td>
-                                    <td><input type="text" name="title"></td>
-                                    <td><input type="text" name="libname"></td>
+                                    <td><input type="text" name="experiment[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp"></td>
+                                    <td>{{$this->biosampleSubmission($id)}} : {{$this->biosampleName($id)}}</td>
+                                    <td><input type="text" name="experiment[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title"></td>
+                                    <td><input type="text" name="experiment[{{$id}}][libname]" wire:model="bioexperiment_id.{{$id}}.libname"></td>
                                     <td>
-                                        <select name="libsource_id" id="">
+                                        <select name="experiment[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
                                             <option value="">Select Lib Source</option>
                                             @foreach ( $libsources as $libsource )
                                             <option value="{{$libsource->id}}" @if (old('libsource_id')==$libsource->id) selected @endif>{{$libsource->name}}</option>
@@ -234,7 +227,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="libselection_id" id="">
+                                        <select name="experiment[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
                                             <option value="">Select Lib Selection</option>
                                             @foreach ( $libselections as $libselection )
                                             <option value="{{$libselection->id}}" @if (old('libselection_id')==$libselection->id) selected @endif>{{$libselection->name}}</option>
@@ -242,16 +235,16 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="libstrategy_id" id="">
+                                        <select name="experiment[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
                                             <option value="">Select Lib Strategy</option>
                                             @foreach ( $libstrategies as $libstrategy )
                                             <option value="{{$libstrategy->id}}" @if (old('libstrategy_id')==$libstrategy->id) selected @endif>{{$libstrategy->name}}</option>
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="text" name="libconsprot"></td>
+                                    <td><input type="text" name="experiment[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
                                     <td>
-                                        <select name="instrument_id" id="">
+                                        <select name="experiment[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
                                             <option value="">Select Instrument</option>
                                             @foreach ( $instruments as $instrument )
                                             <option value="{{$instrument->id}}" @if (old('instrument_id')==$instrument->id) selected @endif>{{$instrument->name}}</option>
@@ -259,14 +252,14 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="liblayout_id" id="">
-                                            <option value="">Select Instrument</option>
+                                        <select name="experiment[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
+                                            <option value="">Select Lib Layout</option>
                                             @foreach ( $liblayouts as $liblayout )
                                             <option value="{{$liblayout->id}}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{$liblayout->name}}</option>
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="text" name="inp_size"></td>
+                                    <td><input type="text" name="experiment[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size"></td>
                                     <td>
                                         <button class="btn btn-danger delete_row" wire:click.prevent="removeBiosample({{$id}})"><i class="bi bi-trash3-fill"></i>
                                         </button>
@@ -291,7 +284,78 @@
                     <h5>Run</h5>
                 </div>
                 <div class="card-body">
+                    <div class="overflow-scroll p-3 bg-light" style="width:100%;max-width: 100%; height: 500px; overflow-x:scroll;">
+                        <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
+                            <thead style="position: sticky;top: 0" class="table-secondary">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Alias</th>
+                                    <th scope="col">Filename</th>
+                                    <th scope="col">Run Contains File</th>
+                                    <th scope="col">Filetype</th>
+                                    <th scope="col">MD5 Checksum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $no = 1; ?>
 
+                                @foreach ( $bioexperiment_id as $id => $run)
+
+                                @if ($this->bioexperiment_id[$id]['liblayout_id'] == 2)
+                                <tr>
+                                    <td>{{$no}}</td>
+                                    <td><input type="text" name="alias_run"></td>
+                                    <td><input type="text" name="file_name"></td>
+                                    <td></td>
+                                    <td>
+                                        <select name="run[{{$id}}][filetype_id]" wire:model="biorun_id.{{$id}}.filetype_id">
+                                            <option value="">Select Filetype</option>
+                                            @foreach ( $filetypes as $filetype )
+                                            <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="md5"></td>
+                                    <?php $no++; ?>
+                                </tr>
+                                <tr>
+                                    <td>{{$no}}</td>
+                                    <td><input type="text" name="alias_run"></td>
+                                    <td><input type="text" name="file_name"></td>
+                                    <td></td>
+                                    <td>
+                                        <select name="run[{{$id}}][filetype_id]" wire:model="biorun_id.{{$id}}.filetype_id">
+                                            <option value="">Select Filetype</option>
+                                            @foreach ( $filetypes as $filetype )
+                                            <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="md5"></td>
+                                    <?php $no++; ?>
+                                </tr>
+                                @else
+                                <tr>
+                                    <td>{{$no}}</td>
+                                    <td><input type="text" name="alias_run"></td>
+                                    <td><input type="text" name="file_name"></td>
+                                    <td></td>
+                                    <td>
+                                        <select name="run[{{$id}}][filetype_id]" wire:model="biorun_id.{{$id}}.filetype_id">
+                                            <option value="">Select Filetype</option>
+                                            @foreach ( $filetypes as $filetype )
+                                            <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="md5"></td>
+                                    <?php $no++; ?>
+                                </tr>
+                                @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(4)">Back</button>
@@ -299,3 +363,25 @@
         </div>
     </div>
 </form>
+@push('js')
+    <script>
+        document.addEventListener('livewire:load', function () {
+            const steps = document.querySelectorAll('#nav-steps .nav-item').length;
+            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
+        })
+        document.addEventListener('livewire:update', function () {
+            $('.form-select.select2').each(function(){
+                $(this).select2({
+                    theme: 'bootstrap-5',
+                    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+                    placeholder: 'Select an option'
+                })
+                $(this).on('change', function (e) {
+                    @this.set($(this).attr("wire:model"), $(this).select2("val"));
+                });
+            });
+            const steps = document.querySelectorAll('#nav-steps .nav-item').length;
+            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
+        })
+    </script>
+@endpush

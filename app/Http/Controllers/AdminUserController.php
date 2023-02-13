@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLog;
 use App\Models\Role;
 use App\Models\Lab;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdminUserController extends Controller
 {
@@ -14,13 +16,13 @@ class AdminUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         return view('dashboard.user.index', [
 
             // 'bioprojects' => Bioproject::with(['organism'])->get(),
-            'users' => User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(15),
+            'users' => User::with('role', 'lab', 'lab.center')->where('role_id', '<>',0)->paginate(10),
         ]);
     }
 
@@ -86,6 +88,7 @@ class AdminUserController extends Controller
     public function update(Request $request, User $user)
     {
         //
+        $action = false;
         $rules = [
             'name' => 'required|max:255',
             'orcid_id' => 'required|max:255',
@@ -103,7 +106,16 @@ class AdminUserController extends Controller
         $validatedData = $request->validate($rules);
         $validatedData['is_activated'] = $request->has('activate');
 
-        User::where('id', $user->id)->update($validatedData);
+        $action = User::where('id', $user->id)->update($validatedData);
+        if ($action) {
+            ActionLog::create([
+                'action' => 'updateUserDetail',
+                'type' => 'User',
+                'item_id' => $user->id,
+                'created_by' =>auth()->id(),
+                'desc' => !isset($request->comment) ? null : $request->comment
+            ]);
+        }
         return redirect('/dashboard/users')->with('success', 'User has been updated!');
     }
 
@@ -118,5 +130,44 @@ class AdminUserController extends Controller
         //
         User::destroy($user->id);
         return redirect('/dashboard/users')->with('success', 'User has been deleted!');
+    }
+    
+    public function filter(Request $request)
+    {   
+        $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(10);
+        if ($request->filled('search')) {
+            $search = $request->search;
+            if ($request->entries > 0) {
+                $data = User::with('role', 'lab', 'lab.center')
+                    ->where('is_activated',false)
+                    ->where(function($query) use ($search){
+                        $query->orWhere('name', 'ilike' ,'%'.$search.'%')
+                            ->orWhere('username',  'ilike' ,'%'.$search.'%')
+                            ->orWhere('email',  'ilike' ,'%'.$search.'%');
+                    })
+                    ->orWhereRelation('role', 'name', 'ilike' ,'%'.$search.'%')
+                    ->orWhereRelation('lab', 'name', 'ilike' ,'%'.$search.'%')
+                    ->paginate($request->entries);
+            } else {
+                $data = User::with('role', 'lab', 'lab.center')
+                    ->where('is_activated',false)
+                    ->where(function($query) use ($search){
+                        $query->orWhere('name', 'ilike' ,'%'.$search.'%')
+                            ->orWhere('username',  'ilike' ,'%'.$search.'%')
+                            ->orWhere('email',  'ilike' ,'%'.$search.'%');
+                    })->get();
+            }
+        } else {
+            if ($request->entries > 0) {
+                $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate($request->entries);
+            } else {
+                $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->get();
+            }
+        }
+
+
+        return view('dashboard.user.table', [
+            'users' => $data,
+        ])->render();
     }
 }

@@ -21,7 +21,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Code</th>
-                <th scope="col">Name</th>
+                <th scope="col">Description</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -29,8 +29,8 @@
             @foreach ( $roles as $role )
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $role->code }}</td>
                 <td>{{ $role->name }}</td>
+                <td>{{ $role->description }}</td>
                 <td>
                     <a href="/dashboard/roles/{{$role->id}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
                     <form action="/dashboard/roles/{{$role->id}}" method="post" class="d-inline">

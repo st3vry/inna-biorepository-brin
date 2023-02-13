@@ -22,7 +22,7 @@
                 </a>
             </li>
         </ul>
-        @can('isAdmin')
+        @canany(['isSuperAdmin','isAdmin'])
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
             <span>Administrator</span>
         </h6>
@@ -46,8 +46,8 @@
                 </a>
             </li>
         </ul>
-        @endcan
-        @can('isCurator')
+        @endcanany
+        @cannot('isAuthor')
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
             <span>Curator</span>
         </h6>
@@ -57,16 +57,16 @@
                     <span data-feather="list"></span>
                     BioProject
                 </a>
-                <a class=" nav-link" href="#">
+                <a class="nav-link {{ Request::is('dashboard/curator/biosamples*') ? 'active' : ''}}" href="/dashboard/curator/biosamples">
                     <span data-feather="layers"></span>
                     BioSample
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link {{ Request::is('dashboard/curator/bioarchives*') ? 'active' : ''}}" href="/dashboard/curator/bioarchives">
                     <span data-feather="hard-drive"></span>
                     BioArchive
                 </a>
             </li>
         </ul>
-        @endcan
+        @endcannot
     </div>
 </nav>

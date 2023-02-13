@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('biosample_id');
             $table->string('title');
             $table->string('file_location');
+            $table->foreignId('user_id');
+            $table->string('curator_id');
             $table->timestamps();
         });
     }

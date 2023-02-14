@@ -18,6 +18,13 @@ class CreateBioarchive extends Component
 {
 
     public $currentStep = 1;
+
+    // submitter 
+    public $submitter_name;
+    public $submitter_email;
+    public $submitter_lab;
+    public $submitter_center;
+
     // Filter table
     public $search = '';
     // submitter
@@ -80,7 +87,7 @@ class CreateBioarchive extends Component
         $validatedData = $this->validate([
             'hold_release' => 'required',
         ]);
-
+        // dd($this->hold_release);
         $this->currentStep = 2;
     }
     // Bioproject form
@@ -89,6 +96,7 @@ class CreateBioarchive extends Component
         $validatedData = $this->validate([
             'bioproject_id' => 'required',
         ]);
+        // dd($this->bioproject_id);
         $this->currentStep = 3;
     }
     // Biosample form

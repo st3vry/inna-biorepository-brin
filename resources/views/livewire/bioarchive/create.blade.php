@@ -169,7 +169,7 @@
                             <tbody>
                                 @foreach ($biosamples as $biosample )
                                 <tr title="{{$biosample->title}}">
-                                    <th scope="row"><input type="checkbox" name="biosample_id[]" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
+                                    <th scope="row"><input type="checkbox" name="biosample_id[]" id="{{ rand() }}" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
                                     <td>{{$biosample->title}}</td>
@@ -327,8 +327,8 @@
                                 @foreach ( $bioexperiment_id as $id => $run)
                                 <tr>
                                     <td>{{$no}}</td>
-                                    <td><input type="text" name="alias_run"></td>
-                                    <td><input type="text" name="file_name"></td>
+                                    <td><input type="text" name="run[{{$id}}][alias_run]" wire:model="biorun_id.{{$id}}.alias_run"></td>
+                                    <td><input type="text" name="run[{{$id}}][file_name]" wire:model="biorun_id.{{$id}}.file_name"></td>
                                     <td></td>
                                     <td>
                                         <select name="run[{{$id}}][filetype_id]" wire:model="biorun_id.{{$id}}.filetype_id">
@@ -351,6 +351,42 @@
             <button class="btn btn-primary pull-right" type="button" wire:click="fifthStepSubmit">Next</button>
         </div>
     </div>
+    <div class="row setup-content {{ $currentStep != 6 ? 'display-none' : '' }}" id="step-6">
+        <div class="col-md-12">
+            <div class="card mb-4">
+        
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <td>Bioproject Accession :</td>
+                            <td><strong>{{$this->bioprojectName($this->bioproject_id)}}</strong></td>
+                        </tr>
+                        <tr>
+                            <td>biosample</td>
+                            {{-- <td>{{$this->biosample_id[9]}}</td> --}}
+                            <td>
+                            @foreach ($this->biosample_id as $item => $value)
+                                {{$this->biosample_id[$item]}}
+                            @endforeach
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bioexperiment</td>
+                            <td>{{print_r($this->bioexperiment_id)}}</td>
+                        </tr>
+                        <tr>
+                            <td>biorun</td>
+                            <td>{{print_r($this->biorun_id)}}</td>
+                        </tr>
+                        
+                    </table>
+                </div>
+            </div>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
+            <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
+        </div>
+    </div>
+
 </form>
 @push('js')
     <script>
@@ -370,7 +406,20 @@
                 });
             });
             const steps = document.querySelectorAll('#nav-steps .nav-item').length;
-            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
+            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%";
+            const biosample_id = document.getElementsByName('biosample_id[]')
+            let biosample_true = Object.assign({}, @this.get('biosample_id'))
+            biosample_id.forEach(element => {
+                element.addEventListener('change', (event) =>{
+                    if (event.currentTarget.checked) {
+                        let val = {[event.currentTarget.value] : event.currentTarget.value}
+                        biosample_true = {...biosample_true, ...val};
+                    } else {
+                        delete biosample_true[event.currentTarget.value]
+                    }
+                    @this.set('biosample_id',biosample_true)
+                })
+            });
         })
     </script>
 @endpush

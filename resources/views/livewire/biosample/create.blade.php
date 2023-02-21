@@ -249,7 +249,7 @@
                                 <div class="row g-2">
                                     @foreach ($row as $attr)
                                     <div class="col-md-1">
-                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}</label>
+                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}@if(in_array((string)$attr->id, $attribute_M))<font color="red">*</font>@endif</label>
                                     </div>
                                     <div class="col-md-2">
                                         @if ($attr->input_type_id == 1)
@@ -265,6 +265,13 @@
                                             </select>
                                         @elseif ($attr->input_type_id == 4)
                                         <input type="date" name="{{$attr->attr_name}}" id="{{$attr->attr_name}}" class="form-control  @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" style="width: 100%; display: inline;" >
+                                        @elseif ($attr->input_type_id == 7)
+                                            <select class="form-select" wire:model="{{$attr->attr_name}}_id" id="{{$attr->attr_name}}_id" name="{{$attr->attr_name}}_id" >
+                                                <option value="">--{{$attr->attr_name}}--</option>
+                                                @foreach(${$attr->attr_name} as $atname)
+                                                    <option value="{{$atname->id}}">{{$atname->name}}</option>
+                                                @endforeach
+                                            </select>
                                         @endif
 
                                     </div>
@@ -388,16 +395,21 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            @if (!empty($attributes) )
+                            @if (!empty($attributes))
                                 @foreach ($attributes->chunk(4) as $row)
                                 <div class="row g-2">
                                     @foreach ($row as $attr)
                                     <div class="col-md-1">
-                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}</label>
+                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}} </label>
                                     </div>
                                     <div class="col-md-2">
-                                       
+                                        @if ($attr->input_type_id == 7)
+                                            @if ((${($attr->attr_name.'_id')})!='')
+                                            <label>: {{(${$attr->attr_name})[(${($attr->attr_name.'_id')})-1]->name}}</label>
+                                            @endif
+                                        @else
                                         <label>: {{(${$attr->attr_name})}}</label>
+                                        @endif
                                     </div>
                                     @endforeach
                                 </div>

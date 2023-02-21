@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Livewire;
+use Illuminate\Http\Request;
 
 use App\Models\Biosample;
 use App\Models\User;
@@ -1223,7 +1224,7 @@ class CreateBiosample extends Component
         $this->sampletype_id = NULL;
     }
 
-    public function submitForm()
+    public function submitForm(Request $request)
     {
 
         $validatedData = $this->validate();

@@ -62,5 +62,12 @@ class Bioproject extends Model
     {
         return 'accession';
     }
-    
+
+    public static function search($search)
+    {
+        return empty($search) ? static::query()
+            : static::query()->where('title', 'like', '%' . $search . '%')
+            ->orWhere('submission', 'like', '%' . $search . '%')
+            ->orWhere('accession', 'like', '%' . $search . '%');
+    }
 }

@@ -19,6 +19,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
                 <th scope="col">Center</th>
+                <th scope="col">Status</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -31,6 +32,25 @@
                 <td>{{ $bioproject->title }}</td>
                 <td>{{ $bioproject->description }}</td>
                 <td>{{ $bioproject->center->name }}</td>
+                <td>
+                    @if(isset($bioproject->published_at))
+                        <span class="badge bg-success">Published</span>
+                    @else
+                        @if($bioproject->draft)
+                            @if (isset($bioproject->curator_id))
+                                <span class="badge bg-warning">Returned to submitter</span>
+                            @else   
+                                <span class="badge bg-warning">Draft</span>                 
+                            @endif
+                        @else
+                            @if (isset($bioproject->curator_id))
+                                <span class="badge bg-info">On review</span>
+                            @else   
+                                <span class="badge bg-danger">Unassigned</span>          
+                            @endif
+                        @endif
+                    @endif
+                </td>
                 <td>
                     @if (!$bioproject->draft)
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>

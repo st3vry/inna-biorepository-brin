@@ -12,6 +12,7 @@ use App\Models\LibraryLayout;
 use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
+use Illuminate\Support\Str;
 use Livewire\WithPagination;
 
 class CreateBioarchive extends Component
@@ -57,6 +58,9 @@ class CreateBioarchive extends Component
     // Filetype
     public $filetypes;
 
+    // Alias number
+    public $alias;
+
     public function mount()
     {
         // submitter 
@@ -80,7 +84,10 @@ class CreateBioarchive extends Component
         $this->liblayouts = LibraryLayout::all();
         // file type
         $this->filetypes = FileType::all();
+        // generate alias
+        $this->alias = Str::random(6);
     }
+
     // Submitter form
     public function firstStepSubmit()
     {
@@ -113,12 +120,12 @@ class CreateBioarchive extends Component
     {
         $validatedData = $this->validate([
             'bioexperiment_id' => 'required',
-            'bioexperiment_id.*.alias_exp' => 'required',
             'bioexperiment_id.*.liblayout_id' => 'required',
         ]);
-        foreach ($this->biosample_id as $key => $value) {
-            $this->biorun_id[] = $value;
-        }
+        // foreach ($this->biosample_id as $key => $value) {
+        //     $this->biorun_id['sample_id'] = $value;
+        // }
+        // dd($this->bioexperiment_id);
         // dd($this->biorun_id);
         $this->currentStep = 5;
     }

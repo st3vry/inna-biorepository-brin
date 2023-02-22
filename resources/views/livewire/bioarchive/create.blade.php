@@ -352,11 +352,8 @@
                                         </tr>
                                         @endfor
                                     @endforeach
-                                
                                 </tbody>
-                                
                             @endif
-                           
                         </table>
                     </div>
                 </div>

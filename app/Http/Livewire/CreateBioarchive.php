@@ -12,12 +12,20 @@ use App\Models\LibraryLayout;
 use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
+use Illuminate\Support\Str;
 use Livewire\WithPagination;
 
 class CreateBioarchive extends Component
 {
 
     public $currentStep = 1;
+
+    // submitter 
+    public $submitter_name;
+    public $submitter_email;
+    public $submitter_lab;
+    public $submitter_center;
+
     // Filter table
     public $search = '';
     // submitter
@@ -46,8 +54,12 @@ class CreateBioarchive extends Component
     public $instruments;
     // Lib Layout
     public $liblayouts;
+
     // Filetype
     public $filetypes;
+
+    // Alias number
+    public $alias;
 
     public function mount()
     {
@@ -72,33 +84,55 @@ class CreateBioarchive extends Component
         $this->liblayouts = LibraryLayout::all();
         // file type
         $this->filetypes = FileType::all();
+        // generate alias
+        $this->alias = Str::random(6);
     }
+
     // Submitter form
     public function firstStepSubmit()
     {
+        $validatedData = $this->validate([
+            'hold_release' => 'required',
+        ]);
+        // dd($this->hold_release);
         $this->currentStep = 2;
     }
     // Bioproject form
     public function secondStepSubmit()
     {
+        $validatedData = $this->validate([
+            'bioproject_id' => 'required',
+        ]);
+        // dd($this->bioproject_id);
         $this->currentStep = 3;
     }
     // Biosample form
     public function thirdStepSubmit()
     {
-        $this->currentStep = 4;
+        $validatedData = $this->validate([
+            'biosample_id' => 'required',
+        ]);
         // dd($this->biosample_id);
+        $this->currentStep = 4;
     }
     // Run form
     public function fourthStepSubmit()
     {
-        $this->currentStep = 5;
+        $validatedData = $this->validate([
+            'bioexperiment_id' => 'required',
+            'bioexperiment_id.*.liblayout_id' => 'required',
+        ]);
+        // foreach ($this->biosample_id as $key => $value) {
+        //     $this->biorun_id['sample_id'] = $value;
+        // }
         // dd($this->bioexperiment_id);
-        // dd($this->biosample_id);
+        // dd($this->biorun_id);
+        $this->currentStep = 5;
     }
     // preview
     public function fifthStepSubmit()
     {
+        // dd($this->biorun_id);
         $this->currentStep = 6;
     }
     public function back($step)
@@ -111,6 +145,14 @@ class CreateBioarchive extends Component
 
         $bioarchive->accession = 'INA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
         $bioarchive->submission_id = 'SUBINA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+        $bioarchive->bioproject_id = $this->bioproject_id;
+
+        dd($bioarchive);
+    }
+
+    public function bioprojectName($id)
+    {
+        return Bioproject::select('accession')->where('id', $id)->pluck('accession')->first();
     }
 
     public function biosampleName($id)

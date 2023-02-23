@@ -132,7 +132,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+
                     </div>
+                    @error('bioproject_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
             </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(1)">Back</button>
@@ -165,7 +169,7 @@
                             <tbody>
                                 @foreach ($biosamples as $biosample )
                                 <tr title="{{$biosample->title}}">
-                                    <th scope="row"><input type="checkbox" name="biosample_id[]" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
+                                    <th scope="row"><input type="checkbox" name="biosample_id[]" id="{{ rand() }}" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
                                     <td>{{$biosample->title}}</td>
@@ -175,6 +179,9 @@
                             </tbody>
                         </table>
                     </div>
+                    @error('biosample_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
             </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(2)">Back</button>
@@ -209,17 +216,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $no = 1; ?>
+                                @php
+                                    $no = 1;
+                                    $alias = $this->alias;
+                                @endphp
                                 @foreach ($biosample_id as $id => $experiment)
                                 <tr>
                                     <!-- {{$id}} -->
                                     <td>{{$no}}</td>
-                                    <td><input type="text" name="experiment[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp"></td>
-                                    <td>{{$this->biosampleSubmission($id)}} : {{$this->biosampleName($id)}}</td>
-                                    <td><input type="text" name="experiment[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title"></td>
-                                    <td><input type="text" name="experiment[{{$id}}][libname]" wire:model="bioexperiment_id.{{$id}}.libname"></td>
                                     <td>
-                                        <select name="experiment[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
+                                        {{$alias_exp = "INNAX-".$alias."-".$no }}
+                                        {{-- <input type="text" name="bioexperiment_id[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp" value="{{$alias}}" disabled>
+                                        @error('bioexperiment_id.*.alias_exp')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror --}}
+                                    </td>
+                                    <td>{{$this->biosampleSubmission($id)}} : {{$this->biosampleName($id)}}</td>
+                                    <td>
+                                        <input type="text" name="bioexperiment_id[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title">
+                                        @error('bioexperiment_id.*.title')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
+                                    </td>
+                                    <td>
+                                        <input type="text" name="bioexperiment_id[{{$id}}][libname]" wire:model="bioexperiment_id.{{$id}}.libname">
+                                        @error('bioexperiment_id.*.libname')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
+                                    </td>
+                                    <td>
+                                        <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
                                             <option value="">Select Lib Source</option>
                                             @foreach ( $libsources as $libsource )
                                             <option value="{{$libsource->id}}" @if (old('libsource_id')==$libsource->id) selected @endif>{{$libsource->name}}</option>
@@ -227,7 +253,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="experiment[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
+                                        <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
                                             <option value="">Select Lib Selection</option>
                                             @foreach ( $libselections as $libselection )
                                             <option value="{{$libselection->id}}" @if (old('libselection_id')==$libselection->id) selected @endif>{{$libselection->name}}</option>
@@ -235,31 +261,34 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="experiment[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
+                                        <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
                                             <option value="">Select Lib Strategy</option>
                                             @foreach ( $libstrategies as $libstrategy )
                                             <option value="{{$libstrategy->id}}" @if (old('libstrategy_id')==$libstrategy->id) selected @endif>{{$libstrategy->name}}</option>
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="text" name="experiment[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
+                                    <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
                                     <td>
-                                        <select name="experiment[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
-                                            <option value="">Select Instrument</option>
+                                        <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
+                                            <option value="0">Select Instrument</option>
                                             @foreach ( $instruments as $instrument )
                                             <option value="{{$instrument->id}}" @if (old('instrument_id')==$instrument->id) selected @endif>{{$instrument->name}}</option>
                                             @endforeach
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="experiment[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
+                                        <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
                                             <option value="">Select Lib Layout</option>
                                             @foreach ( $liblayouts as $liblayout )
                                             <option value="{{$liblayout->id}}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{$liblayout->name}}</option>
                                             @endforeach
                                         </select>
+                                        @error('bioexperiment_id.*.liblayout_id')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
                                     </td>
-                                    <td><input type="text" name="experiment[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size"></td>
+                                    <td><input type="text" name="bioexperiment_id[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size"></td>
                                     <td>
                                         <button class="btn btn-danger delete_row" wire:click.prevent="removeBiosample({{$id}})"><i class="bi bi-trash3-fill"></i>
                                         </button>
@@ -296,64 +325,35 @@
                                     <th scope="col">MD5 Checksum</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php $no = 1; ?>
-
-                                @foreach ( $bioexperiment_id as $id => $run)
-
-                                @if ($this->bioexperiment_id[$id]['liblayout_id'] == 2)
-                                <tr>
-                                    <td>{{$no}}</td>
-                                    <td><input type="text" name="alias_run"></td>
-                                    <td><input type="text" name="file_name"></td>
-                                    <td></td>
-                                    <td>
-                                        <select name="run[{{$id}}][filetype_id]" wire:model="biorun_id.{{$id}}.filetype_id">
-                                            <option value="">Select Filetype</option>
-                                            @foreach ( $filetypes as $filetype )
-                                            <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td><input type="text" name="md5"></td>
-                                    <?php $no++; ?>
-                                </tr>
-                                <tr>
-                                    <td>{{$no}}</td>
-                                    <td><input type="text" name="alias_run"></td>
-                                    <td><input type="text" name="file_name"></td>
-                                    <td></td>
-                                    <td>
-                                        <select name="run[{{$id}}][filetype_id]" wire:model="biorun_id.{{$id}}.filetype_id">
-                                            <option value="">Select Filetype</option>
-                                            @foreach ( $filetypes as $filetype )
-                                            <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td><input type="text" name="md5"></td>
-                                    <?php $no++; ?>
-                                </tr>
-                                @else
-                                <tr>
-                                    <td>{{$no}}</td>
-                                    <td><input type="text" name="alias_run"></td>
-                                    <td><input type="text" name="file_name"></td>
-                                    <td></td>
-                                    <td>
-                                        <select name="run[{{$id}}][filetype_id]" wire:model="biorun_id.{{$id}}.filetype_id">
-                                            <option value="">Select Filetype</option>
-                                            @foreach ( $filetypes as $filetype )
-                                            <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td><input type="text" name="md5"></td>
-                                    <?php $no++; ?>
-                                </tr>
-                                @endif
-                                @endforeach
-                            </tbody>
+                            @if ($currentStep >= 5)
+                                <tbody>
+                                    <?php $no = 1; ?>
+                                    {{-- {{dd($bioexperiment_id)}} --}}
+                                    @foreach ( $bioexperiment_id as $id => $run)
+                                        @for ($i = 0; $i < $bioexperiment_id[$id]['liblayout_id']; $i++)
+                                        <tr>
+                                            <td>{{$no}}</td>
+                                            {{-- <td><input type="text" name="run[{{$id}}][{{$i}}][alias_run]" wire:model="biorun_id.{{$id}}.{{$i}}.alias_run"></td> --}}
+                                            <td>
+                                                {{$alias_run = "INNAR-".$alias."-".$no }}
+                                            </td>
+                                            <td><input type="text" name="run[{{$id}}][{{$i}}][file_name]" wire:model="biorun_id.{{$id}}.{{$i}}.file_name"></td>
+                                            <td>{{$alias_exp}}</td>
+                                            <td>
+                                                <select name="run[{{$id}}][{{$i}}][filetype_id]" wire:model="biorun_id.{{$id}}.{{$i}}.filetype_id">
+                                                    <option value="">Select Filetype</option>
+                                                    @foreach ( $filetypes as $filetype )
+                                                    <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td><input type="text" name="md5"></td>
+                                            <?php $no++; ?>
+                                        </tr>
+                                        @endfor
+                                    @endforeach
+                                </tbody>
+                            @endif
                         </table>
                     </div>
                 </div>
@@ -362,6 +362,42 @@
             <button class="btn btn-primary pull-right" type="button" wire:click="fifthStepSubmit">Next</button>
         </div>
     </div>
+    <div class="row setup-content {{ $currentStep != 6 ? 'display-none' : '' }}" id="step-6">
+        <div class="col-md-12">
+            <div class="card mb-4">
+        
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <td>Bioproject Accession :</td>
+                            <td><strong>{{$this->bioprojectName($this->bioproject_id)}}</strong></td>
+                        </tr>
+                        <tr>
+                            <td>biosample</td>
+                            {{-- <td>{{$this->biosample_id[9]}}</td> --}}
+                            <td>
+                            @foreach ($this->biosample_id as $item => $value)
+                                {{$this->biosample_id[$item]}}
+                            @endforeach
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bioexperiment</td>
+                            <td>{{print_r($this->bioexperiment_id)}}</td>
+                        </tr>
+                        <tr>
+                            <td>biorun</td>
+                            <td>{{print_r($this->biorun_id)}}</td>
+                        </tr>
+                        
+                    </table>
+                </div>
+            </div>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
+            <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
+        </div>
+    </div>
+
 </form>
 @push('js')
     <script>
@@ -381,7 +417,20 @@
                 });
             });
             const steps = document.querySelectorAll('#nav-steps .nav-item').length;
-            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
+            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%";
+            const biosample_id = document.getElementsByName('biosample_id[]')
+            let biosample_true = Object.assign({}, @this.get('biosample_id'))
+            biosample_id.forEach(element => {
+                element.addEventListener('change', (event) =>{
+                    if (event.currentTarget.checked) {
+                        let val = {[event.currentTarget.value] : event.currentTarget.value}
+                        biosample_true = {...biosample_true, ...val};
+                    } else {
+                        delete biosample_true[event.currentTarget.value]
+                    }
+                    @this.set('biosample_id',biosample_true)
+                })
+            });
         })
     </script>
 @endpush

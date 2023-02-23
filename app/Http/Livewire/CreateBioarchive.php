@@ -134,6 +134,8 @@ class CreateBioarchive extends Component
     {
         // dd($this->biorun_id);
         $this->currentStep = 6;
+        // dd($this->bioexperiment_id);
+        // dd($this->biorun_id);
     }
     public function back($step)
     {
@@ -157,12 +159,38 @@ class CreateBioarchive extends Component
 
     public function biosampleName($id)
     {
-        return Biosample::select('title')->where('id', $id)->pluck('title')->first();
+        return Biosample::select('accession')->where('id', $id)->pluck('accession')->first();
     }
 
     public function biosampleSubmission($id)
     {
         return Biosample::select('submission_id')->where('id', $id)->pluck('submission_id')->first();
+    }
+
+    public function libsourceName($id)
+    {
+        return LibrarySource::select('name')->where('id', $id)->pluck('name')->first();
+    }
+
+    public function libselectionName($id)
+    {
+        return LibrarySelection::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public function libstrategyName($id)
+    {
+        return LibraryStrategy::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public function instrumentName($id)
+    {
+        return Instrument::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public function liblayoutName($id)
+    {
+        return LibraryLayout::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public function filetypeName($id)
+    {
+        return FileType::select('name')->where('id', $id)->pluck('name')->first();
     }
 
     public function removeBiosample($index)

@@ -394,6 +394,7 @@
                             <td>:</td>
                             <td>
                                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
+                                    @if ($currentStep >= 6)
                                     @foreach ($bioexperiment_id as $item => $value)
                                         <tr>
                                             <td><b>{{$this->biosampleName($item)}}</b></td>
@@ -451,6 +452,7 @@
                                             <td>{{$bioexperiment_id[$item]['inp_size']}}</td>
                                         </tr>
                                     @endforeach
+                                    @endif
                                 </table>
                             </td>
                         </tr>
@@ -459,6 +461,7 @@
                             <td>:</td>
                             <td>
                                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
+                                    @if ($currentStep >= 6)
                                     @foreach ($biorun_id as $item => $run)
                                         @for ($i = 0; $i < $bioexperiment_id[$item]['liblayout_id']; $i++)
                                             <tr>
@@ -478,6 +481,7 @@
                                             </tr>
                                         @endfor
                                     @endforeach
+                                    @endif
                                 </table>
                             </td>
                         </tr>

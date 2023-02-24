@@ -29,7 +29,7 @@
                     <option value="25">25</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
-                    <option value="0">All</option>
+                    {{-- <option value="0">All</option> --}}
                 </select>
             </div>
             <label for="entries" class="col-sm-6 col-form-label">rows per page</label>

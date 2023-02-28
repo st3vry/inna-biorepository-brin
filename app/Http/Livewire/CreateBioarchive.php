@@ -5,7 +5,9 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Biosample;
 use App\Models\Bioarchive;
+use App\Models\Bioexperiment;
 use App\Models\Bioproject;
+use App\Models\Biorun;
 use App\Models\FileType;
 use App\Models\Instrument;
 use App\Models\LibraryLayout;
@@ -144,12 +146,69 @@ class CreateBioarchive extends Component
     public function submitForm()
     {
         $bioarchive = new Bioarchive();
-
-        $bioarchive->accession = 'INA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
-        $bioarchive->submission_id = 'SUBINA' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+        $bioarchive->accession = 'INNAAR' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+        $bioarchive->submission_id = 'SUBINNAAR' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
         $bioarchive->bioproject_id = $this->bioproject_id;
-
-        dd($bioarchive);
+        $bioarchive->biosample_id = implode(",", $this->biosample_id);
+        $bioarchive->user_id = auth()->user()->id;
+        $bioarchive->hold_release = $this->hold_release;
+        $bioarchive->save();
+        // dd($bioarchive);
+        // dd($this->bioexperiment_id);
+        $no = 1;
+        foreach ($this->bioexperiment_id as $item => $value) {
+            $dataExp = [
+                'bioarchive_id' => $bioarchive->id,
+                'alias' => "INNAX-" . $this->alias . "-" . $no,
+                'title' => $this->bioexperiment_id[$item]['title'],
+                'libname' => $this->bioexperiment_id[$item]['libname'],
+                'libsource_id' => $this->bioexperiment_id[$item]['libsource_id'],
+                'libselection_id' => $this->bioexperiment_id[$item]['libselection_id'],
+                'libstrategy_id' => $this->bioexperiment_id[$item]['libstrategy_id'],
+                'libconsprot' => $this->bioexperiment_id[$item]['libconsprot'],
+                'instrument_id' => $this->bioexperiment_id[$item]['instrument_id'],
+                'liblayout_id' => $this->bioexperiment_id[$item]['liblayout_id'],
+                'input_size' => $this->bioexperiment_id[$item]['inp_size'],
+            ];
+            $no++;
+            $bioexp = Bioexperiment::create($dataExp);
+            // $bioexp->bioarchive_id = $bioarchive->id;
+            // $bioexp->alias = "INNAX-" . $this->alias . "-" . $no;
+            // $bioexp->title = $this->bioexperiment_id[$item]['title'];
+            // $bioexp->libname = $this->bioexperiment_id[$item]['libname'];
+            // $bioexp->libsource_id = $this->bioexperiment_id[$item]['libsource_id'];
+            // $bioexp->libselection_id = $this->bioexperiment_id[$item]['libselection_id'];
+            // $bioexp->libstrategy_id = $this->bioexperiment_id[$item]['libstrategy_id'];
+            // $bioexp->libconsprot = $this->bioexperiment_id[$item]['libconsprot'];
+            // $bioexp->instrument_id = $this->bioexperiment_id[$item]['instrument_id'];
+            // $bioexp->liblayout_id = $this->bioexperiment_id[$item]['liblayout_id'];
+            // $bioexp->input_size = $this->bioexperiment_id[$item]['inp_size'];
+            // $bioexp->save();
+            $noRun = 1;
+            for ($i = 0; $i <  $this->bioexperiment_id[$item]['liblayout_id']; $i++) {
+                # code...
+                $dataRun = [
+                    'bioexperiment_id' => $bioexp->id,
+                    'alias' => "INNAR-" . $this->alias . "-" . $noRun,
+                    'filename' => $this->biorun_id[$item][$i]['file_name'],
+                    'md5' => $this->biorun_id[$item][$i]['md5'],
+                    'filetype_id' => $this->biorun_id[$item][$i]['filetype_id'],
+                ];
+                // $biorun->bioexperiment_id = $bioexp->id;
+                // $biorun->alias = "INNAR-" . $this->alias . "-" . $noRun;
+                // $biorun->filename = $this->biorun_id[$item][$i]['file_name'];
+                // $biorun->md5 = $this->biorun_id[$item][$i]['md5'];
+                // $biorun->filetype_id = $this->biorun_id[$item][$i]['filetype_id'];
+                // $biorun->save();
+                $noRun++;
+                Biorun::create($dataRun);
+            }
+        }
+        session()->flash('message', 'Bioarchive successfully created.');
+        // return redirect()->to('/dashboard/bioarchives/' . $bioarchive->accession);
+        return redirect()->to('/dashboard/bioarchives');
+        // dd($dataExp);
+        // dd($this->biorun_id);
     }
 
     public function bioprojectName($id)

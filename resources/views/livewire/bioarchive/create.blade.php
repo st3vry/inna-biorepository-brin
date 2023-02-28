@@ -347,7 +347,7 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="text" name="md5"></td>
+                                            <td><input type="text" name="run[{{$id}}][{{$i}}][md5]" wire:model="biorun_id.{{$id}}.{{$i}}.md5"></td>
                                             <?php $no++; ?>
                                         </tr>
                                         @endfor
@@ -478,6 +478,11 @@
                                                 <td>File Type</td>
                                                 <td></td>
                                                 <td>{{$this->filetypeName($biorun_id[$item][$i]['filetype_id'])}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>MD5 Checksum</td>
+                                                <td></td>
+                                                <td>{{$biorun_id[$item][$i]['md5']}}</td>
                                             </tr>
                                         @endfor
                                     @endforeach

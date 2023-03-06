@@ -230,7 +230,7 @@
             <form action="/dashboard/curator/bioprojects/{{$bioproject->accession}}" class="row p-2" method="post" class="d-inline">
                 @method('put')
                 @csrf
-                <input type="hidden" name="action" value="assignToCurator">
+                <input type="hidden" name="action" value="assignedToCurator">
                 <label class="fw-bolder" for="target">Assigned to:</label>
                 <div class="col-8">
                     <select class="form-select" name="target" id="target">
@@ -274,8 +274,9 @@
             <label class="fw-bolder" for="action">Action:</label>
             <div class="col-8">
                 <select class="form-select" name="action" id="action">
-                    <option value="approve">Approve</option>
-                    <option value="returnToSubmitter">Return to submitter</option>
+                    <option value="approved">Approve</option>
+                    <option value="returnedToSubmitter">Return to submitter</option>
+                    <option value="rejected">Reject</option>
                 </select>
             </div>
             <div class="col-4 d-grid gap-2">

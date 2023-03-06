@@ -96,17 +96,23 @@ class CuratorBioprojectController extends Controller
     {   
         $action = false;
         $success = '';
-        if ($request->action === "assignToCurator") {
+        if ($request->action === "assignedToCurator") {
             $action = Bioproject::where('accession', $id)->update(['curator_id' => $request->target]);
             $success = 'Assigned to Curator';
         } else {
-            if ($request->action === 'returnToSubmitter') {
+            if ($request->action === 'returnedToSubmitter') {
                 $action = Bioproject::where('accession', $id)->update(['draft' => true]);
                 $success = 'Returned to Submitter';
             }
-            if ($request->action === 'approve') {
+            if ($request->action === 'approved') {
                 $action = Bioproject::where('accession', $id)->update(['published_at' => now()]);
                 $success = 'BioProject Approved';
+            }
+            if ($request->action === 'rejected') {
+                // waiting for action rules
+                dd($request->action);
+                $action = Bioproject::where('accession', $id)->update(['published_at' => now()]);
+                $success = 'BioProject rejected';
             }
         }
         

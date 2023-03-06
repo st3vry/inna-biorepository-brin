@@ -13,9 +13,11 @@
     {{-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> --}}
     <div class="dropdown ms-auto me-0 me-md-3 my-2 my-md-0">
         <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @if($unseen)
             <span class="position-absolute top-10 translate-middle p-1 bg-danger border border-light rounded-circle">
                 <span class="visually-hidden">New Alert</span>
             </span>
+            @endif
             <i class="bi bi-person"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -23,10 +25,12 @@
                 <a class="dropdown-item" href="{{route('users.profile')}}"><i class="bi bi-gear"></i> Profile</a>
             </li>
             <li>
-                <a class="dropdown-item position-relative" href="#">
+                <a class="dropdown-item position-relative" data-bs-toggle="offcanvas" href="#notificationOffCanvas" role="button" aria-controls="notificationOffCanvas">
+                    @if($unseen)
                     <span class="position-absolute top-10 translate-middle p-1 bg-danger border border-light rounded-circle">
                         <span class="visually-hidden">New Alert</span>
                     </span>
+                    @endif
                     <i class="bi bi-bell"></i> 
                     Notification 
                 </a>

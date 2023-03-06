@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActionLogController;
 use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;
@@ -84,6 +85,7 @@ Route::prefix('dashboard')->group(function(){
     Route::get('/profile', [ProfileController::class, 'index'])->name('users.profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('users.profile.update');
     Route::post('/password', [ProfileController::class, 'password'])->name('users.password.update');
+    Route::post('/markasread', [ActionLogController::class, 'markAsRead'])->name('notif.mark.as.read');
 
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('auth');
 

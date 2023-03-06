@@ -14,12 +14,12 @@
         <tr>
             <td>Bioproject Accession </td>
             <td>:</td>
-            <td class="col-sm-7"><strong>{{$bioarchive->bioproject->accession}}</strong></td>
+            <td class="col-sm-10"><strong>{{$bioarchive->bioproject->accession}}</strong></td>
         </tr>
         <tr>
             <td>Biosample Accession </td>
             <td>:</td>
-            <td class="col-sm-7">
+            <td class="col-sm-10">
                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                     @foreach ($biosample_id as $item => $value)
                     <tr>
@@ -34,10 +34,13 @@
         <tr>
             <td>Bioexperiment </td>
             <td>:</td>
-            <td>
+            <td class="col-sm-10">
                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                     @foreach ($bioexperiment as $item => $value)
-                    {{ $value }}
+                    <tr>
+                        <td>Biosample</td>
+                        <td><strong>{{\App\Models\Biosample::select('accession')->where('id', $value['biosample_id'] )->pluck('accession')->first(); }}</strong></td>
+                    </tr>
                     <tr>
                         <td>alias</td>
                         <td>{{ $value['alias'] }}</td>

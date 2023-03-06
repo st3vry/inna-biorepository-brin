@@ -38,18 +38,49 @@
                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                     @foreach ($bioexperiment as $item => $value)
                     <tr>
-                        <td>Biosample</td>
+                        <td><strong>Biosample</strong></td>
                         <td><strong>{{\App\Models\Biosample::select('accession')->where('id', $value['biosample_id'] )->pluck('accession')->first(); }}</strong></td>
                     </tr>
                     <tr>
-                        <td>alias</td>
+                        <td>Alias</td>
                         <td>{{ $value['alias'] }}</td>
                     </tr>
                     <tr>
-                        <td>title</td>
+                        <td>Title</td>
                         <td>{{ $value['title'] }}</td>
                     </tr>
-                        
+                    <tr>
+                        <td>Library Name</td>
+                        <td>{{ $value['libname'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Library Source</td>
+                        <td>{{\App\Models\LibrarySource::select('name')->where('id', $value['libsource_id'])->pluck('name')->first();  }}</td>
+                    </tr>
+                    <tr>
+                        <td>Library Selection</td>
+                        <td>{{\App\Models\LibrarySelection::select('name')->where('id',  $value['libselection_id'])->pluck('name')->first(); }}</td>
+                    </tr>
+                    <tr>
+                        <td>Library Strategy</td>
+                        <td>{{ \App\Models\LibraryStrategy::select('name')->where('id',  $value['libstrategy_id'])->pluck('name')->first(); }}</td>
+                    </tr>
+                    <tr>
+                        <td>Library Con Protocol</td>
+                        <td>{{ $value['libconsprot'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Instrument</td>
+                        <td>{{ \App\Models\Instrument::select('name')->where('id',  $value['instrument_id'])->pluck('name')->first(); }}</td>
+                    </tr>
+                    <tr>
+                        <td>Library layout</td>
+                        <td>{{ \App\Models\LibraryLayout::select('name')->where('id', $value['liblayout_id'])->pluck('name')->first(); }}</td>
+                    </tr>
+                    <tr>
+                        <td>Input Size</td>
+                        <td>{{ $value['input_size'] }}</td>
+                    </tr>
                     @endforeach
                 </table>
             </td>

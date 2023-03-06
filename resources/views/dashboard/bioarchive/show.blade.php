@@ -36,7 +36,18 @@
             <td>:</td>
             <td>
                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
-                    
+                    @foreach ($bioexperiment as $item => $value)
+                    {{ $value }}
+                    <tr>
+                        <td>alias</td>
+                        <td>{{ $value['alias'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>title</td>
+                        <td>{{ $value['title'] }}</td>
+                    </tr>
+                        
+                    @endforeach
                 </table>
             </td>
         </tr>

@@ -81,6 +81,32 @@
                         <td>Input Size</td>
                         <td>{{ $value['input_size'] }}</td>
                     </tr>
+                    <tr>
+                        @php
+                            $runs =  App\Models\Biorun::Select('*')->where('bioexperiment_id',$value['id'])->get()
+                        @endphp
+                        <td class="col-sm-2"><strong>BioRun</strong></td>
+                        <td>
+                            <table class="m-auto table table-striped table-hover table-responsive text-nowrap" >
+                                @foreach ($runs as $item)
+                                <tr>
+                                    <td>Alias</td>
+                                    <td>{{ $item->alias }}</td>
+                                </tr>
+                                <tr>
+                                    <td>File Name</td>
+                                    <td>{{ $item->filename }}</td>
+                                </tr>
+                                <tr>
+                                    <td>MD5 Checksum</td>
+                                    <td>{{ $item->md5 }}</td>
+                                </tr>
+                                @endforeach
+                            </table>
+                        </td>
+                    </tr>
+                        
+
                     @endforeach
                 </table>
             </td>

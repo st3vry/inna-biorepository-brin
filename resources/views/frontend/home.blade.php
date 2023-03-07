@@ -21,6 +21,8 @@
                             <h5>Bio Archive</h5>
                         </div>
                         <div class="card-body">
+                            <p align="justify">Indonesia Nucleotide Archive (InNA) is a repository platform to store nucleotide (DNA/RNA) data to support life sciences, agriculture, and bioinformatics for biodiversity data disclosure, utilization of food genetic resources, precision medicine, etc. InNA can be accessed freely and publicly by researcher or scientists for research. If the data is restricted to be stored and used, please consult Principal Investigator project or your local institutional before uploading it to InNA.
+                                InNA is sdeveloped by Research Center for Computing, National Research and Innovation Agency. We are also developing analysis platform for advanced analysis of nucleotide (DNA/RNA) data called INNAlysis.</p>
                             <section class="text-center">
                                 <div class="row">
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">

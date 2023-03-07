@@ -231,7 +231,7 @@
                 @method('put')
                 @csrf
                 <input type="hidden" name="action" value="assignedToCurator">
-                <label class="fw-bolder" for="target">Assigned to:</label>
+                <label class="fw-bolder" for="target">{{$bioproject->curator_id === null ? 'Assign' : 'Assigned' }} to:</label>
                 <div class="col-8">
                     <select class="form-select" name="target" id="target">
                         <option value="" disabled selected >Select curator</option>
@@ -322,6 +322,11 @@
                                 </p>
                             </li>
                         @endforeach
+
+                        <li class="timeline-item mb-5">
+                            <strong class="fw-bolder">Bioproject Created </strong>
+                            <p class="fw-lighter mb-1">{{$bioproject->created_at->format('j F Y H:i')}}</p>
+                        </li>
                     </ul>
                 </section>
             </div>

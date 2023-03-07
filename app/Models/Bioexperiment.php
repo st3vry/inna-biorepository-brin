@@ -9,4 +9,8 @@ class Bioexperiment extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    public function biorun()
+    {
+        return $this->hasMany(Biorun::class);
+    }
 }

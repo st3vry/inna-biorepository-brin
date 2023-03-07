@@ -159,6 +159,7 @@ class CreateBioarchive extends Component
         foreach ($this->bioexperiment_id as $item => $value) {
             $dataExp = [
                 'bioarchive_id' => $bioarchive->id,
+                'biosample_id' => $item,
                 'alias' => "INNAX-" . $this->alias . "-" . $no,
                 'title' => $this->bioexperiment_id[$item]['title'],
                 'libname' => $this->bioexperiment_id[$item]['libname'],
@@ -207,8 +208,6 @@ class CreateBioarchive extends Component
         session()->flash('message', 'Bioarchive successfully created.');
         // return redirect()->to('/dashboard/bioarchives/' . $bioarchive->accession);
         return redirect()->to('/dashboard/bioarchives');
-        // dd($dataExp);
-        // dd($this->biorun_id);
     }
 
     public function bioprojectName($id)

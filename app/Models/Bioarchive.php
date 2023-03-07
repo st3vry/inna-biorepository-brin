@@ -18,4 +18,20 @@ class Bioarchive extends Model
     {
         return $this->belongsTo(Bioproject::class);
     }
+    public function biosample()
+    {
+        return $this->hasMany(Biosample::class);
+    }
+    public function bioexperiment()
+    {
+        return $this->hasMany(Bioexperiment::class);
+    }
+    public function biorun()
+    {
+        return $this->hasMany(Biorun::class);
+    }
+    public function getRouteKeyName()
+    {
+        return 'accession';
+    }
 }

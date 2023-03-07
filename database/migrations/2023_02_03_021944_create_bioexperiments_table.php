@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('bioexperiments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bioarchive_id');
+            $table->foreignId('bioproject_id');
+            $table->foreignId('biosample_id');
             $table->string('alias');
             $table->string('title');
             $table->string('libname');

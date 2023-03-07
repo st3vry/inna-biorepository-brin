@@ -89,15 +89,4 @@ class ActionLogController extends Controller
     {
         //
     }
-
-    public function markAsRead(Request $request)
-    {   
-        $resp = true;
-        if (isset($request->all)) {
-            $resp = ActionLog::where('user_target', auth()->id())->update(['seen'=>true]);
-        } else {
-            $resp = ActionLog::where('id', $request->id)->update(['seen'=>true]);
-        }
-        return $resp;
-    }
 }

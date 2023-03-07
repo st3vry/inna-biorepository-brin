@@ -137,7 +137,8 @@ class AdminUserController extends Controller
         $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(10);
         if ($request->filled('search')) {
             $search = $request->search;
-            $data = User::with('role', 'lab', 'lab.center')
+            if ($request->entries > 0) {
+                $data = User::with('role', 'lab', 'lab.center')
                     ->where('is_activated',false)
                     ->where(function($query) use ($search){
                         $query->orWhere('name', 'ilike' ,'%'.$search.'%')
@@ -147,9 +148,24 @@ class AdminUserController extends Controller
                     ->orWhereRelation('role', 'name', 'ilike' ,'%'.$search.'%')
                     ->orWhereRelation('lab', 'name', 'ilike' ,'%'.$search.'%')
                     ->paginate($request->entries);
+            } else {
+                $data = User::with('role', 'lab', 'lab.center')
+                    ->where('is_activated',false)
+                    ->where(function($query) use ($search){
+                        $query->orWhere('name', 'ilike' ,'%'.$search.'%')
+                            ->orWhere('username',  'ilike' ,'%'.$search.'%')
+                            ->orWhere('email',  'ilike' ,'%'.$search.'%');
+                    })->get();
+            }
         } else {
-            $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate($request->entries);
+            if ($request->entries > 0) {
+                $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate($request->entries);
+            } else {
+                $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->get();
+            }
         }
+
+
         return view('dashboard.user.table', [
             'users' => $data,
         ])->render();

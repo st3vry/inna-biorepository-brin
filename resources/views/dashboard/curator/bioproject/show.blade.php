@@ -230,10 +230,10 @@
             <form action="/dashboard/curator/bioprojects/{{$bioproject->accession}}" class="row p-2" method="post" class="d-inline">
                 @method('put')
                 @csrf
-                <input type="hidden" name="action" value="assignedToCurator">
-                <label class="fw-bolder" for="target">Assigned to:</label>
+                <input type="hidden" name="action" value="assignToCurator">
+                <label class="fw-bolder" for="curator_id">Assigned to:</label>
                 <div class="col-8">
-                    <select class="form-select" name="target" id="target">
+                    <select class="form-select" name="curator_id" id="curator_id">
                         <option value="" disabled selected >Select curator</option>
                         @foreach ($curators as $curator)
                         <option value="{{$curator->id}}" {{$bioproject->curator_id == $curator->id ? 'selected' : ''}}>{{$curator->name}}</option>
@@ -241,71 +241,10 @@
                     </select>
                 </div>
                 <div class="col-4 d-grid gap-2">
-                    <button type="button" id="btnModalAssign" class="btn btn-primary btn-block border-0" data-bs-toggle="modal" data-bs-target="#modalAssign" disabled>Save</button>
-                </div>
-                <div class="modal fade" id="modalAssign" tabindex="-1" aria-labelledby="modalAssignLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalAssignLabel">Assign to ...</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="desc" class="form-label">Insert Description (Optional)</label>
-                                    <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-secondary " data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="btn btn-primary btm-block border-0 " onclick="return confirm('Are you sure ?')">Save</button>
                 </div>
             </form>
         @endcanany
-        @can('isCurator')
-        @if (!$bioproject->draft && $bioproject->published_at === null)
-        <form action="/dashboard/curator/bioprojects/{{$bioproject->accession}}" class="row p-2" method="post" class="d-inline">
-            @method('put')
-            @csrf
-            <input type="hidden" name="target" value="{{$bioproject->user_id}}">
-            <label class="fw-bolder" for="action">Action:</label>
-            <div class="col-8">
-                <select class="form-select" name="action" id="action">
-                    <option value="approved">Approve</option>
-                    <option value="returnedToSubmitter">Return to submitter</option>
-                    <option value="rejected">Reject</option>
-                </select>
-            </div>
-            <div class="col-4 d-grid gap-2">
-                <button type="button" id="btnModalActionCurator" class="btn btn-primary btn-block border-0" data-bs-toggle="modal" data-bs-target="#modalActionCurator">Save</button>
-            </div>
-            <div class="modal fade" id="modalActionCurator" tabindex="-1" aria-labelledby="modalActionCuratorLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalActionCuratorLabel"></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="desc" class="form-label">Insert Description (Optional)</label>
-                                <textarea class="form-control" id="descCurator" name="desc" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-        @endif
-       
-        @endcan
         <div class="card m-2">
             <div class="card-header">
                 <h6>History</h6>
@@ -315,7 +254,7 @@
                     <ul class="timeline">
                         @foreach ($histories as $history)
                             <li class="timeline-item mb-5">
-                                <strong class="fw-bolder">{{preg_replace('/(?<!\ )[A-Z]/', ' $0', ucfirst($history->action))}} by {{explode(' ', trim($history->creator->name))[0]}}</strong>
+                                <strong class="fw-bolder">{{$history->action}}</strong>
                                 <p class="fw-lighter mb-1">{{$history->created_at->format('j F Y H:i')}}</p>
                                 <p class="text-muted">
                                     {{$history->desc}}
@@ -332,41 +271,11 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            const modalAssign = document.getElementById('modalAssign')
-            if (modalAssign !== null) {
-                $('#target').select2({
-                    theme: 'bootstrap-5',
-                    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
-                    placeholder: 'Select curator'
-                })
-                $('#target').on('change', function(e) {
-                    document.getElementById('btnModalAssign').disabled = false
-                })
-                const inputDesc = document.getElementById('desc')
-                const curatorId = document.getElementById('target')
-                const modalAssignLabel = document.getElementById('modalAssignLabel')
-
-                modalAssign.addEventListener('show.bs.modal', function () {
-                    modalAssignLabel.innerHTML = "Assign to "+ curatorId.options[curatorId.selectedIndex].text +' ?'
-                })
-                modalAssign.addEventListener('shown.bs.modal', function () {
-                    inputDesc.focus()
-                })
-            } else {
-                if ('{{!$bioproject->draft && $bioproject->published_at === null}}') {
-                    const modalActionCurator= document.getElementById('modalActionCurator')
-                    const descCurator = document.getElementById('descCurator')
-                    const action = document.getElementById('action')
-                    const modalActionCuratorLabel = document.getElementById('modalActionCuratorLabel')
-                    modalActionCurator.addEventListener('show.bs.modal', function () {
-                        modalActionCuratorLabel.innerHTML = action.options[action.selectedIndex].text + " ({{$bioproject->title}})?"
-                    })
-                    modalActionCurator.addEventListener('shown.bs.modal', function () {
-                        descCurator.focus()
-                    })
-                }
-                
-            }           
+            $('#curator_id').select2({
+                theme: 'bootstrap-5',
+                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+                placeholder: 'Select curator'
+            })
         })
     </script>
 @endpush

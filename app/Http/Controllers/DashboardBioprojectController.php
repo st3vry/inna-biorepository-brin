@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLog;
 use App\Models\Bioproject;
 use App\Models\Datatype;
 use App\Models\Fundagency;
@@ -115,6 +116,7 @@ class DashboardBioprojectController extends Controller
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
+        $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
 
         //kirim data ke view
         return view('dashboard.bioproject.show', [
@@ -127,7 +129,8 @@ class DashboardBioprojectController extends Controller
             'capture' => $captureBioproject,
             'methodology' => $methodologyBioproject,
             'umbrella' => $umbrella,
-            'externallinks' => $externallinks
+            'externallinks' => $externallinks,
+            'histories' => $histories
         ]);
     }
 

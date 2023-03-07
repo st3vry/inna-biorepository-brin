@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLog;
 use App\Models\Biosample;
 use Illuminate\Http\Request;
 
@@ -51,8 +52,10 @@ class DashboardBiosampleController extends Controller
     public function show(Biosample $biosample)
     {
         //
+        $histories = ActionLog::with(['creator'])->where('item_id',$biosample->accession)->orderBy('created_at', 'desc')->get();
         return view('dashboard.biosample.show', [
             'biosample' => $biosample,
+            'histories' => $histories
         ]);
     }
 

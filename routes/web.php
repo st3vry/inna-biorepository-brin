@@ -8,6 +8,7 @@ use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\BiosampleController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\CuratorBioSampleController;
+use App\Http\Controllers\CuratorBioArchiveController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\DashboardBioarchiveController;
@@ -98,8 +99,8 @@ Route::prefix('dashboard')->group(function(){
     Route::resource('/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
     Route::post('/users', [AdminUserController::class,'filter'])->name('users.filter')->middleware('can:isAdmin');
-    Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
-    Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');
+    // Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
+    // Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');
 
     // Curator
     // Route::get('/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator',]);
@@ -107,6 +108,7 @@ Route::prefix('dashboard')->group(function(){
 
     Route::resource('/curator/biosamples', CuratorBioSampleController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
+    Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
     // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
 
 });

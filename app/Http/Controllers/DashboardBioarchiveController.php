@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLog;
 use App\Http\Controllers\Controller;
 use App\Models\Bioarchive;
 use App\Models\Bioexperiment;
@@ -27,12 +28,15 @@ class DashboardBioarchiveController extends Controller
     public function show(Bioarchive $bioarchive)
     {
         $biosample_id =  explode(",", $bioarchive->biosample_id);
-        $bioexperiment = $bioarchive->bioexperiment()->get();
+        $bioexperiment = $bioarchive->bioexperiment()->get();   
+        $histories = ActionLog::with(['creator'])->where('item_id',$bioarchive->accession)->orderBy('created_at', 'desc')->get();
+
         // dd($biosample_id);
         return view('dashboard.bioarchive.show', [
             'bioarchive' => $bioarchive,
             'biosample_id' => $biosample_id,
             'bioexperiment' => $bioexperiment,
+            'histories' => $histories
             // 'biorun' => $biorun,
         ]);
     }

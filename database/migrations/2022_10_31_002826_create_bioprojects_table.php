@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('curator_id')->nullable();
             $table->boolean('hold_release')->default(false);
             $table->boolean('draft')->default(false);
+            $table->integer('status')->default(1);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });

@@ -8,6 +8,11 @@ use App\Models\Bioarchive;
 use App\Models\Bioexperiment;
 use App\Models\Biorun;
 use App\Models\Biosample;
+use App\Models\Instrument;
+use App\Models\LibraryLayout;
+use App\Models\LibrarySelection;
+use App\Models\LibrarySource;
+use App\Models\LibraryStrategy;
 use Illuminate\Http\Request;
 
 class DashboardBioarchiveController extends Controller
@@ -28,8 +33,8 @@ class DashboardBioarchiveController extends Controller
     public function show(Bioarchive $bioarchive)
     {
         $biosample_id =  explode(",", $bioarchive->biosample_id);
-        $bioexperiment = $bioarchive->bioexperiment()->get();   
-        $histories = ActionLog::with(['creator'])->where('item_id',$bioarchive->accession)->orderBy('created_at', 'desc')->get();
+        $bioexperiment = $bioarchive->bioexperiment()->get();
+        $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
 
         // dd($biosample_id);
         return view('dashboard.bioarchive.show', [
@@ -41,8 +46,28 @@ class DashboardBioarchiveController extends Controller
         ]);
     }
 
-    public function biosampleName($id)
+    public static function biosampleName($id)
     {
         return Biosample::select('accession')->where('id', $id)->pluck('accession')->first();
+    }
+    public static function getLibSourceName($id)
+    {
+        return LibrarySource::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function getLibSelectionName($id)
+    {
+        return LibrarySelection::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function getLibStrategyName($id)
+    {
+        return LibraryStrategy::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function getInstrumentName($id)
+    {
+        return Instrument::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function getLibLayoutName($id)
+    {
+        return LibraryLayout::select('name')->where('id', $id)->pluck('name')->first();
     }
 }

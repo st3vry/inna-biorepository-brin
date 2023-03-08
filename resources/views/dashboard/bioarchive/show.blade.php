@@ -68,7 +68,7 @@
                         @foreach ($bioexperiment as $item => $value)
                         <tr>
                             <td><strong>Biosample</strong></td>
-                            <td><strong>{{\App\Models\Biosample::select('accession')->where('id', $value['biosample_id'] )->pluck('accession')->first(); }}</strong></td>
+                            <td><strong>{{\App\Http\Controllers\DashboardBioarchiveController::biosampleName($value['biosample_id'])}}</strong></td>
                         </tr>
                         <tr>
                             <td>Alias</td>
@@ -84,15 +84,15 @@
                         </tr>
                         <tr>
                             <td>Library Source</td>
-                            <td>{{\App\Models\LibrarySource::select('name')->where('id', $value['libsource_id'])->pluck('name')->first();  }}</td>
+                            <td>{{\App\Http\Controllers\DashboardBioarchiveController::getLibSourceName($value['libsource_id']);}}</td>
                         </tr>
                         <tr>
                             <td>Library Selection</td>
-                            <td>{{\App\Models\LibrarySelection::select('name')->where('id',  $value['libselection_id'])->pluck('name')->first(); }}</td>
+                            <td>{{ \App\Http\Controllers\DashboardBioarchiveController::getLibSelectionName($value['libselection_id']);}} </td>
                         </tr>
                         <tr>
                             <td>Library Strategy</td>
-                            <td>{{ \App\Models\LibraryStrategy::select('name')->where('id',  $value['libstrategy_id'])->pluck('name')->first(); }}</td>
+                            <td>{{ \App\Http\Controllers\DashboardBioarchiveController::getLibStrategyName($value['libstrategy_id']);}}</td>
                         </tr>
                         <tr>
                             <td>Library Con Protocol</td>
@@ -100,42 +100,16 @@
                         </tr>
                         <tr>
                             <td>Instrument</td>
-                            <td>{{ \App\Models\Instrument::select('name')->where('id',  $value['instrument_id'])->pluck('name')->first(); }}</td>
+                            <td>{{ \App\Http\Controllers\DashboardBioarchiveController::getInstrumentName($value['instrument_id'])}}</td>
                         </tr>
                         <tr>
                             <td>Library layout</td>
-                            <td>{{ \App\Models\LibraryLayout::select('name')->where('id', $value['liblayout_id'])->pluck('name')->first(); }}</td>
+                            <td>{{ \App\Http\Controllers\DashboardBioarchiveController::getLibLayoutName($value['liblayout_id'])}}</td>
                         </tr>
                         <tr>
                             <td>Input Size</td>
                             <td>{{ $value['input_size'] }}</td>
                         </tr>
-                        <tr>
-                            @php
-                                $runs =  App\Models\Biorun::Select('*')->where('bioexperiment_id',$value['id'])->get()
-                            @endphp
-                            <td class="col-sm-2"><strong>BioRun</strong></td>
-                            <td>
-                                <table class="m-auto table table-striped table-hover table-responsive text-nowrap" >
-                                    @foreach ($runs as $item)
-                                    <tr>
-                                        <td>Alias</td>
-                                        <td>{{ $item->alias }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>File Name</td>
-                                        <td>{{ $item->filename }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>MD5 Checksum</td>
-                                        <td>{{ $item->md5 }}</td>
-                                    </tr>
-                                    @endforeach
-                                </table>
-                            </td>
-                        </tr>
-                            
-    
                         @endforeach
                     </table>
                 </td>

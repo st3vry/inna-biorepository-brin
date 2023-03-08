@@ -41,7 +41,7 @@ class AttributeSampleSeeder extends Seeder
             'attr_name'=>'organism',
             'attr_text'=>'Organism',
             'description'=>'The most descriptive organism name for this sample (to the species, if relevant) in the <a href="http://www.ncbi.nlm.nih.gov/taxonomy">NCBI Taxonomy database</a>. If it is not in the database, provide as much information about the organism as possible and the DDBJ staff apply a new organism name to NCBI Taxonomy.',
-            'input_type_id'=>7,
+            'input_type_id'=>1,
             'list_value'=>'',
         ]);
         Attributesample::create([

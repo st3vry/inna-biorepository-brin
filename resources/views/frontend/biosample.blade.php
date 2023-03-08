@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{ ($biosamples->currentPage() - 1) * $biosamples->perPage() + $loop->iteration }}</td>
                     <td><a href="biosamples/{{ $biosample->accession }}">{{ $biosample->accession }}</a></td>
-                    <td>{{ $biosample->organism->name }}</td>
+                    <td>{{ $biosample->organism_name }}</td>
                     <td>{{ $biosample->title }}</td>
                     <td>{{ $biosample->description }}</td>
                     <td>{{ $biosample->center->name }}</td>

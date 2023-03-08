@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->string('curator_id')->nullable();
             $table->boolean('hold_release')->default(false);
-            $table->boolean('draft')->default(true);
+            $table->boolean('draft')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });

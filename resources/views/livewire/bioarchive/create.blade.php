@@ -465,34 +465,34 @@
                             <td>
                                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                                     @if ($currentStep >= 6)
-                                    @foreach ($biorun_id as $item => $run)
-                                    @for ($i = 0; $i < $bioexperiment_id[$item]['liblayout_id']; $i++) <tr>
-                                        <td><b>{{$alias_exp[$item]}}</b></td>
-                                        <td></td>
-                                        <td></td>
+                                        @foreach ($biorun_id as $item => $run)
+                                            @for ($i = 0; $i < $bioexperiment_id[$item]['liblayout_id']; $i++) 
+                                            <tr>
+                                                <td><b>{{$alias_exp[$item]}}</b></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>File Name</td>
+                                                <td></td>
+                                                <td>{{$biorun_id[$item][$i]['file_name']}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>File Type</td>
+                                                <td></td>
+                                                <td>{{$this->filetypeName($biorun_id[$item][$i]['filetype_id'])}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>MD5 Checksum</td>
+                                                <td></td>
+                                                <td>{{$biorun_id[$item][$i]['md5']}}</td>
+                                            </tr>
+                                            @endfor
+                                        @endforeach
+                                    @endif
+                                </table>
+                            </td>
                         </tr>
-                        <tr>
-                            <td>File Name</td>
-                            <td></td>
-                            <td>{{$biorun_id[$item][$i]['file_name']}}</td>
-                        </tr>
-                        <tr>
-                            <td>File Type</td>
-                            <td></td>
-                            <td>{{$this->filetypeName($biorun_id[$item][$i]['filetype_id'])}}</td>
-                        </tr>
-                        <tr>
-                            <td>MD5 Checksum</td>
-                            <td></td>
-                            <td>{{$biorun_id[$item][$i]['md5']}}</td>
-                        </tr>
-                        @endfor
-                        @endforeach
-                        @endif
-                    </table>
-                    </td>
-                    </tr>
-
                     </table>
                 </div>
             </div>

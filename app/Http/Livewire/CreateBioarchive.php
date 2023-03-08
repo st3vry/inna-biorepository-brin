@@ -173,37 +173,6 @@ class CreateBioarchive extends Component
             ];
             $no++;
             $bioexp = Bioexperiment::create($dataExp);
-            // $bioexp->bioarchive_id = $bioarchive->id;
-            // $bioexp->alias = "INNAX-" . $this->alias . "-" . $no;
-            // $bioexp->title = $this->bioexperiment_id[$item]['title'];
-            // $bioexp->libname = $this->bioexperiment_id[$item]['libname'];
-            // $bioexp->libsource_id = $this->bioexperiment_id[$item]['libsource_id'];
-            // $bioexp->libselection_id = $this->bioexperiment_id[$item]['libselection_id'];
-            // $bioexp->libstrategy_id = $this->bioexperiment_id[$item]['libstrategy_id'];
-            // $bioexp->libconsprot = $this->bioexperiment_id[$item]['libconsprot'];
-            // $bioexp->instrument_id = $this->bioexperiment_id[$item]['instrument_id'];
-            // $bioexp->liblayout_id = $this->bioexperiment_id[$item]['liblayout_id'];
-            // $bioexp->input_size = $this->bioexperiment_id[$item]['inp_size'];
-            // $bioexp->save();
-            $noRun = 1;
-            for ($i = 0; $i <  $this->bioexperiment_id[$item]['liblayout_id']; $i++) {
-                # code...
-                $dataRun = [
-                    'bioexperiment_id' => $bioexp->id,
-                    'alias' => "INNAR-" . $this->alias . "-" . $noRun,
-                    'filename' => $this->biorun_id[$item][$i]['file_name'],
-                    'md5' => $this->biorun_id[$item][$i]['md5'],
-                    'filetype_id' => $this->biorun_id[$item][$i]['filetype_id'],
-                ];
-                // $biorun->bioexperiment_id = $bioexp->id;
-                // $biorun->alias = "INNAR-" . $this->alias . "-" . $noRun;
-                // $biorun->filename = $this->biorun_id[$item][$i]['file_name'];
-                // $biorun->md5 = $this->biorun_id[$item][$i]['md5'];
-                // $biorun->filetype_id = $this->biorun_id[$item][$i]['filetype_id'];
-                // $biorun->save();
-                $noRun++;
-                Biorun::create($dataRun);
-            }
         }
         session()->flash('message', 'Bioarchive successfully created.');
         // return redirect()->to('/dashboard/bioarchives/' . $bioarchive->accession);

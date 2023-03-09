@@ -18,11 +18,11 @@
             <li class="nav-item">
                 <a href="#step-4" wire:click="back(4)" class="nav-link {{ $currentStep == 4 ? 'active' : '' }} {{ $currentStep < 4 ? 'disabled' : '' }}">Experiment</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#step-5" wire:click="back(5)" class="nav-link {{ $currentStep == 5 ? 'active' : '' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Run</a>
-            </li>
+            </li> --}}
             <li class="nav-item">
-                <a href="#step-6" class="nav-link {{ $currentStep == 6 ? 'active' : 'disabled' }} {{ $currentStep < 6 ? 'disabled' : '' }}">Preview</a>
+                <a href="#step-5" class="nav-link {{ $currentStep == 5 ? 'active' : 'disabled' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Preview</a>
             </li>
         </ul>
         <div class="progress mb-2" style="height: 4px;">
@@ -308,63 +308,8 @@
         </div>
     </div>
 
+    
     <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
-        <div class="col-md-12">
-            <!-- <h4>Bioproject</h4> -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Run</h5>
-                </div>
-                <div class="card-body">
-                    <div class="overflow-scroll p-3 bg-light" style="width:100%;max-width: 100%; height: 500px; overflow-x:scroll;">
-                        <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
-                            <thead style="position: sticky;top: 0" class="table-secondary">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Alias</th>
-                                    <th scope="col">Filename</th>
-                                    <th scope="col">Run Contains File</th>
-                                    <th scope="col">Filetype</th>
-                                    <th scope="col">MD5 Checksum</th>
-                                </tr>
-                            </thead>
-                            @if ($currentStep >= 5)
-                            <tbody>
-                                <?php $no = 1; ?>
-                                {{-- {{dd($bioexperiment_id)}} --}}
-                                @foreach ( $bioexperiment_id as $id => $run)
-                                @for ($i = 0; $i < $bioexperiment_id[$id]['liblayout_id']; $i++) <tr>
-                                    <td>{{$no}}</td>
-                                    {{-- <td><input type="text" name="run[{{$id}}][{{$i}}][alias_run]" wire:model="biorun_id.{{$id}}.{{$i}}.alias_run"></td> --}}
-                                    <td>
-                                        {{$alias_run = "INNAR-".$alias."-".$no }}
-                                    </td>
-                                    <td><input type="text" name="run[{{$id}}][{{$i}}][file_name]" wire:model="biorun_id.{{$id}}.{{$i}}.file_name"></td>
-                                    <td>{{$alias_exp[$id]}}</td>
-                                    <td>
-                                        <select name="run[{{$id}}][{{$i}}][filetype_id]" wire:model="biorun_id.{{$id}}.{{$i}}.filetype_id">
-                                            <option value="">Select Filetype</option>
-                                            @foreach ( $filetypes as $filetype )
-                                            <option value="{{$filetype->id}}" @if (old('filetype_id')==$filetype->id) selected @endif>{{$filetype->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td><input type="text" name="run[{{$id}}][{{$i}}][md5]" wire:model="biorun_id.{{$id}}.{{$i}}.md5"></td>
-                                    <?php $no++; ?>
-                                    </tr>
-                                    @endfor
-                                    @endforeach
-                            </tbody>
-                            @endif
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(4)">Back</button>
-            <button class="btn btn-primary pull-right" type="button" wire:click="fifthStepSubmit">Next</button>
-        </div>
-    </div>
-    <div class="row setup-content {{ $currentStep != 6 ? 'display-none' : '' }}" id="step-6">
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-body">
@@ -395,7 +340,7 @@
                             <td>:</td>
                             <td>
                                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
-                                    @if ($currentStep >= 6)
+                                    @if ($currentStep >= 5)
                                     @foreach ($bioexperiment_id as $item => $value)
                                     <tr>
                                         <td><b>{{$this->biosampleName($item)}}</b></td>
@@ -459,44 +404,10 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr>
-                            <td>biorun</td>
-                            <td>:</td>
-                            <td>
-                                <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
-                                    @if ($currentStep >= 6)
-                                    @foreach ($biorun_id as $item => $run)
-                                    @for ($i = 0; $i < $bioexperiment_id[$item]['liblayout_id']; $i++) <tr>
-                                        <td><b>{{$alias_exp[$item]}}</b></td>
-                                        <td></td>
-                                        <td></td>
-                        </tr>
-                        <tr>
-                            <td>File Name</td>
-                            <td></td>
-                            <td>{{$biorun_id[$item][$i]['file_name']}}</td>
-                        </tr>
-                        <tr>
-                            <td>File Type</td>
-                            <td></td>
-                            <td>{{$this->filetypeName($biorun_id[$item][$i]['filetype_id'])}}</td>
-                        </tr>
-                        <tr>
-                            <td>MD5 Checksum</td>
-                            <td></td>
-                            <td>{{$biorun_id[$item][$i]['md5']}}</td>
-                        </tr>
-                        @endfor
-                        @endforeach
-                        @endif
-                    </table>
-                    </td>
-                    </tr>
-
                     </table>
                 </div>
             </div>
-            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
+            <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(4)">Back</button>
             <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
         </div>
     </div>

@@ -1074,14 +1074,64 @@
             @endif
             </table>
 
-            {{-- <table class="table">
+            <table class="table">
                 <h3>Organism Information</h3>
                 <tr>
                     <td class="col-md-3">Organism</td>
                     <td class="col-md-1">:</td>
-                    <td class="align-left">{{ $this->sampleMethodologyName($this->methodology_id) }}</td>
+                    <td class="align-left">{{ $this->organismName($this->organism_id) }}</td>
                 </tr>
-            </table> --}}
+                
+                <tr>
+                    <td class="col-md-3">Novel Organism</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">
+                        @if ($this->novel_org)
+                            {{ $this->novel_desc }}
+                        @else
+                            None
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Strain, Breed, Cultivar</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->sbc }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Isolate</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->isolate }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Organism Description</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->org_desc }}</td>
+                </tr>
+            </table>
+            <table class="table">
+                <h3>General Properties</h3>
+                <tr>
+                    <td class="col-md-3">Celularity</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->celularityName($this->celularity_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Reproduction</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->reproductionName($this->reproduction_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Ploidy</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->ploidyName($this->ploidy_id) }}, {{ $this->plodesc }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Haploid Size</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{$this->haploid_size }} {{ $this->genomeSizeName($this->genome_size_id) }}</td>
+                </tr>
+            </table>
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
             <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>

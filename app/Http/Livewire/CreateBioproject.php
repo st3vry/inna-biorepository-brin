@@ -342,39 +342,101 @@ class CreateBioproject extends Component
 
     public static function relevanceName($id)
     {
-        return Relevance::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Relevance::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
     public static function bioprojectName($id)
     {
-        return Bioproject::select('accession')->where('id', $id)->pluck('accession')->first();
+        if (!empty($id))
+            return Bioproject::select('accession')->where('id', $id)->pluck('accession')->first();
+        else
+            return null;
     }
     public static function consortiumName($id)
     {
-        return Consortium::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Consortium::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
     public static function dataTypeName($id)
     {
-        return Datatype::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Datatype::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
     public static function sampleScopeName($id)
     {
-        return Samplescope::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Samplescope::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
     public static function sampleMaterialName($id)
     {
-        return Material::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Material::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
     public static function sampleCaptureName($id)
     {
-        return Capture::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Capture::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
     public static function sampleMethodologyName($id)
     {
-        return Methodology::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Methodology::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
     public static function objectiveName($id)
     {
-        return Objective::select('name')->where('id', $id)->pluck('name')->first();
+        if (!empty($id))
+            return Objective::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function organismName($id)
+    {
+        if (!empty($id))
+            return Organism::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function celularityName($id)
+    {
+        if (!empty($id))
+            return Celularity::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function reproductionName($id)
+    {
+        if (!empty($id))
+            return Reproduction::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function ploidyName($id)
+    {
+        if (!empty($id))
+            return Ploidy::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function genomeSizeName($id)
+    {
+        if (!empty($id))
+            return GenomeSize::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
     }
 
     public function submitForm()

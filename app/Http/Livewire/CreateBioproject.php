@@ -350,6 +350,26 @@ class CreateBioproject extends Component
     {
         return Consortium::select('name')->where('id', $id)->pluck('name')->first();
     }
+    public static function dataTypeName($id)
+    {
+        return Datatype::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function sampleScopeName($id)
+    {
+        return Samplescope::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function sampleMaterialName($id)
+    {
+        return Material::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function sampleCaptureName($id)
+    {
+        return Capture::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function sampleMethodologyName($id)
+    {
+        return Methodology::select('name')->where('id', $id)->pluck('name')->first();
+    }
 
     public function submitForm()
     {

@@ -969,16 +969,99 @@
                     <td class="align-right">{{ $this->bioprojectName($this->umbproject_id) }}</td>
                 </tr>
             </table>
+            
+            <table class="table">
+                <h3>External Links Project</h3>
+                @forelse ( $this->externallinks as $item => $value )
+                <tr>
+                    <td class="col-md-3">Link Description</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->externallinks[$item]['link_description'] }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Link URL</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->externallinks[$item]['link_url'] }}</td>
+                </tr>
+                @empty
+                    <td class="col-md-12">There is no External Links data</td> 
+                @endforelse
+            </table>
+
+            <table class="table">
+                <h3>Grants Project</h3>
+                @forelse ( $this->grants as $item => $value )
+                    <tr>
+                        <td class="col-md-3">Fund Agency Description</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->grants[$item]['fundagency_id'] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Grant Title</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->grants[$item]['grant_title'] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Grant Program</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->grants[$item]['grant_program'] }}</td>
+                    </tr>
+                @empty
+                    <td class="col-md-12">There is no Grants data</td>   
+                @endforelse
+            </table>
+
             <table class="table">
                 <h3>Consortium</h3>
                 <tr>
                     <td class="col-md-3">Consortium Name</td>
                     <td class="col-md-1">:</td>
-                    <td class="align-right">{{ $this->consortiumName($this->consortium_id) }}</td>
+                    <td class="align-left">{{ $this->consortiumName($this->consortium_id) }}</td>
                 </tr>
             </table>
-            
-            
+
+            <table class="table">
+                <h3>Project Data Type</h3>
+                @if ($this->data_type_id > 0)
+                    @foreach ( $this->data_type_id as $item => $value )
+                    <tr>
+                    @if ($item == 10)
+                        <td class="col-md-3"></td>
+                        <td class="col-md-1"></td>
+                        <td class="align-left">{{ $this->dataTypeName($item) }} , {{ $this->datatypedesc }}</td>    
+                    @else
+                        <td class="col-md-3"></td>
+                        <td class="col-md-1"></td>
+                        <td class="align-left">{{ $this->dataTypeName($item) }}</td>
+                    @endif 
+                    </tr>  
+                    @endforeach
+                @endif
+            </table>
+
+            <table class="table">
+                <h3>Sample Data</h3>
+                <tr>
+                    <td class="col-md-3">Sample Scope</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->sampleScopeName($this->samplescope_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Sample Material</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->sampleMaterialName($this->material_id) }}</td>
+                </tr>
+                <tr>    
+                    <td class="col-md-3">Sample Capture</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->sampleCaptureName($this->capture_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Sample Methodology</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->sampleMethodologyName($this->methodology_id) }}</td>
+                </tr>
+            </table>
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
             <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
@@ -1006,7 +1089,26 @@
                 });
             });
             const steps = document.querySelectorAll('#nav-steps .nav-item').length;
-            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%"
+            document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep +"%";
+
+            const data_type_id = document.getElementsByName('data_type_id[]')
+            let data_type_id_true = Object.assign({}, @this.get('data_type_id'))
+            data_type_id.forEach(element => {
+                element.addEventListener('change', (event) => {
+                    if (event.currentTarget.checked) {
+                        let val = {
+                            [event.currentTarget.value]: event.currentTarget.value
+                        }
+                        data_type_id_true = {
+                            ...data_type_id_true,
+                            ...val
+                        };
+                    } else {
+                        delete data_type_id_true[event.currentTarget.value]
+                    }
+                    @this.set('data_type_id', data_type_id_true)
+                })
+            });
         })
     </script>
 @endpush

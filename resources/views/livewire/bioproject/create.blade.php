@@ -440,7 +440,7 @@
                         @endforeach
                     </div>
                     @endforeach
-                    @if(is_array($objective_id) && in_array(10,$objective_id))
+                    @if(is_array($objective_id) && in_array(11,$objective_id))
                     <!-- {{print_r($objective_id)}} -->
                     <label for="objectivedesc" class="form-label">Other data type description</label>
                     <input type="text" class="form-control @error('objectivedesc') is-invalid @enderror" wire:model="objectivedesc" id="objectivedesc" name="objectivedesc" value="{{old('objectivedesc')}}">
@@ -938,25 +938,47 @@
     </div>
     <div class="row setup-content {{ $currentStep != 6 ? 'display-none' : '' }}" id="step-6">
         <div class="col-md-12">
-            <h3>Preview</h3>
+            <h3>Project Description</h3>
             <table class="table">
                 <tr>
-                    <td>Title:</td>
-                    <td><strong>{{$title}}</strong></td>
+                    <td class="col-md-3">Project Title</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->title }}</td>
                 </tr>
                 <tr>
-                    <td>Team Price:</td>
-
+                    <td class="col-md-3">Title</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->description }}</td>
                 </tr>
                 <tr>
-                    <td>Team status:</td>
-
-                </tr>
-                <tr>
-                    <td>Team Detail:</td>
-
+                    <td class="col-md-3">Relevance</td>
+                    <td class="col-md-1">:</td>
+                    @if ($this->relevance_id == 7)
+                        <td class="align-left">{{ $this->relevanceName($this->relevance_id) }},  {{ $this->reldesc }}</td>    
+                    @else
+                        <td class="align-left">{{ $this->relevanceName($this->relevance_id) }}</td>
+                    @endif
+                    
                 </tr>
             </table>
+            <table class="table">
+                <h3>Umbrella Project</h3>
+                <tr>
+                    <td class="col-md-3">Project Accession</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-right">{{ $this->bioprojectName($this->umbproject_id) }}</td>
+                </tr>
+            </table>
+            <table class="table">
+                <h3>Consortium</h3>
+                <tr>
+                    <td class="col-md-3">Consortium Name</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-right">{{ $this->consortiumName($this->consortium_id) }}</td>
+                </tr>
+            </table>
+            
+            
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
             <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>

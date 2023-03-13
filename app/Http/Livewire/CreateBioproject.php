@@ -85,6 +85,7 @@ class CreateBioproject extends Component
     public $data_type_id;
     public $selectedDatatype;
     public $objective_id;
+    public $objectivedesc;
     public $selectedObjective;
 
 
@@ -335,6 +336,19 @@ class CreateBioproject extends Component
 
     public function updatedRelevanceOther()
     {
+    }
+
+    public static function relevanceName($id)
+    {
+        return Relevance::select('name')->where('id', $id)->pluck('name')->first();
+    }
+    public static function bioprojectName($id)
+    {
+        return Bioproject::select('accession')->where('id', $id)->pluck('accession')->first();
+    }
+    public static function consortiumName($id)
+    {
+        return Consortium::select('name')->where('id', $id)->pluck('name')->first();
     }
 
     public function submitForm()

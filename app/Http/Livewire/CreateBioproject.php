@@ -35,6 +35,7 @@ use App\Models\Samplescope;
 use App\Models\TempRange;
 use App\Models\TrophicLevel;
 use App\Models\Objective;
+use App\Models\ObjectiveBioProject;
 use App\Models\SampleBioproject;
 use App\Models\User;
 use Livewire\Component;
@@ -56,6 +57,8 @@ class CreateBioproject extends Component
     public $datatypes = [];
     public $datatypedesc;
     public $objectives = [];
+    public $objdesc;
+
 
     public $samplescopes = [];
     public $samplescope_id;
@@ -85,7 +88,6 @@ class CreateBioproject extends Component
     public $data_type_id;
     public $selectedDatatype;
     public $objective_id;
-    public $objectivedesc;
     public $selectedObjective;
 
 
@@ -175,7 +177,7 @@ class CreateBioproject extends Component
 
         'objective_id' => 'required',
         'objective_id.*' => 'numeric',
-        'objectivedesc' => '',
+        'objdesc' => '',
 
         'samplescope_id' => 'required',
         'samplescopedesc' => '',
@@ -370,6 +372,10 @@ class CreateBioproject extends Component
     {
         return Methodology::select('name')->where('id', $id)->pluck('name')->first();
     }
+    public static function objectiveName($id)
+    {
+        return Objective::select('name')->where('id', $id)->pluck('name')->first();
+    }
 
     public function submitForm()
     {
@@ -460,6 +466,7 @@ class CreateBioproject extends Component
                 $data4 = array(
                     'bioproject_id' => $bioproject->id,
                     'datatype_id' => $validatedData['data_type_id'][$item],
+                    'description' => $validatedData['datatypedesc']
                 );
                 DatatypeBioproject::create($data4);
             }
@@ -481,8 +488,9 @@ class CreateBioproject extends Component
                 $data6 = array(
                     'bioproject_id' => $bioproject->id,
                     'objective_id' => $validatedData['objective_id'][$item],
+                    'description' => $validatedData['objdesc']
                 );
-                Objective::create($data6);
+                ObjectiveBioProject::create($data6);
             }
         }
 

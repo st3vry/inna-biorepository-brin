@@ -442,9 +442,9 @@
                     @endforeach
                     @if(is_array($objective_id) && in_array(11,$objective_id))
                     <!-- {{print_r($objective_id)}} -->
-                    <label for="objectivedesc" class="form-label">Other data type description</label>
-                    <input type="text" class="form-control @error('objectivedesc') is-invalid @enderror" wire:model="objectivedesc" id="objectivedesc" name="objectivedesc" value="{{old('objectivedesc')}}">
-                    @error('datatypedesc')
+                    <label for="objdesc" class="form-label">Other objective description</label>
+                    <input type="text" class="form-control @error('objdesc') is-invalid @enderror" wire:model="objdesc" id="objdesc" name="objdesc" value="{{old('objdesc')}}">
+                    @error('objdesc')
                     <div class="invalid-feedback">{{$message}}</div>
                     @enderror
                     @endif
@@ -1026,12 +1026,8 @@
                     @foreach ( $this->data_type_id as $item => $value )
                     <tr>
                     @if ($item == 10)
-                        <td class="col-md-3"></td>
-                        <td class="col-md-1"></td>
                         <td class="align-left">{{ $this->dataTypeName($item) }} , {{ $this->datatypedesc }}</td>    
                     @else
-                        <td class="col-md-3"></td>
-                        <td class="col-md-1"></td>
                         <td class="align-left">{{ $this->dataTypeName($item) }}</td>
                     @endif 
                     </tr>  
@@ -1062,6 +1058,30 @@
                     <td class="align-left">{{ $this->sampleMethodologyName($this->methodology_id) }}</td>
                 </tr>
             </table>
+
+            <table class="table">
+                <h3>Objectives</h3>
+                @if ($this->objective_id > 0)
+                @foreach ( $this->objective_id as $item => $value )
+                <tr>
+                @if ($item == 11)
+                    <td class="align-left">{{ $this->objectiveName($item) }} , {{ $this->objdesc }}</td>    
+                @else
+                    <td class="align-left">{{ $this->objectiveName($item) }}</td>
+                @endif 
+                </tr>  
+                @endforeach
+            @endif
+            </table>
+
+            {{-- <table class="table">
+                <h3>Organism Information</h3>
+                <tr>
+                    <td class="col-md-3">Organism</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">{{ $this->sampleMethodologyName($this->methodology_id) }}</td>
+                </tr>
+            </table> --}}
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
             <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>

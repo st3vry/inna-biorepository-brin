@@ -35,6 +35,7 @@ use App\Models\Samplescope;
 use App\Models\TempRange;
 use App\Models\TrophicLevel;
 use App\Models\Objective;
+use App\Models\ObjectiveBioProject;
 use App\Models\SampleBioproject;
 use App\Models\User;
 use Livewire\Component;
@@ -56,6 +57,8 @@ class CreateBioproject extends Component
     public $datatypes = [];
     public $datatypedesc;
     public $objectives = [];
+    public $objdesc;
+
 
     public $samplescopes = [];
     public $samplescope_id;
@@ -174,7 +177,7 @@ class CreateBioproject extends Component
 
         'objective_id' => 'required',
         'objective_id.*' => 'numeric',
-        'objectivedesc' => '',
+        'objdesc' => '',
 
         'samplescope_id' => 'required',
         'samplescopedesc' => '',
@@ -337,6 +340,105 @@ class CreateBioproject extends Component
     {
     }
 
+    public static function relevanceName($id)
+    {
+        if (!empty($id))
+            return Relevance::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function bioprojectName($id)
+    {
+        if (!empty($id))
+            return Bioproject::select('accession')->where('id', $id)->pluck('accession')->first();
+        else
+            return null;
+    }
+    public static function consortiumName($id)
+    {
+        if (!empty($id))
+            return Consortium::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function dataTypeName($id)
+    {
+        if (!empty($id))
+            return Datatype::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function sampleScopeName($id)
+    {
+        if (!empty($id))
+            return Samplescope::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function sampleMaterialName($id)
+    {
+        if (!empty($id))
+            return Material::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function sampleCaptureName($id)
+    {
+        if (!empty($id))
+            return Capture::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function sampleMethodologyName($id)
+    {
+        if (!empty($id))
+            return Methodology::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function objectiveName($id)
+    {
+        if (!empty($id))
+            return Objective::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function organismName($id)
+    {
+        if (!empty($id))
+            return Organism::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function celularityName($id)
+    {
+        if (!empty($id))
+            return Celularity::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function reproductionName($id)
+    {
+        if (!empty($id))
+            return Reproduction::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function ploidyName($id)
+    {
+        if (!empty($id))
+            return Ploidy::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function genomeSizeName($id)
+    {
+        if (!empty($id))
+            return GenomeSize::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+
     public function submitForm()
     {
 
@@ -426,6 +528,7 @@ class CreateBioproject extends Component
                 $data4 = array(
                     'bioproject_id' => $bioproject->id,
                     'datatype_id' => $validatedData['data_type_id'][$item],
+                    'description' => $validatedData['datatypedesc']
                 );
                 DatatypeBioproject::create($data4);
             }
@@ -447,8 +550,9 @@ class CreateBioproject extends Component
                 $data6 = array(
                     'bioproject_id' => $bioproject->id,
                     'objective_id' => $validatedData['objective_id'][$item],
+                    'description' => $validatedData['objdesc']
                 );
-                Objective::create($data6);
+                ObjectiveBioProject::create($data6);
             }
         }
 

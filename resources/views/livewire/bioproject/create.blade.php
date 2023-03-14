@@ -642,14 +642,14 @@
                                 </td>
                                 <td>
                                     <div class="row">
-                                        <div class="col-md-2">
+                                        <div class="col-md-8">
                                             <input type="text" name="repl[{{$index}}][repl_size]" class="form-control" value="{{$repl['repl_size']}}" wire:model="repls.{{$index}}.repl_size">
                                             @error('repls.*.repl_size')
                                             <p class="text-danger">{{$message}}</p>
                                             @enderror
                                         </div>
                                         <div class="col-md-4">
-                                            <select class="form-select" name="genome_size2_id" id="genome2_size_id" wire:model="genome2_size_id">
+                                            <select class="form-select" name="repls[{{$index}}][genome2_size_id]" id="genome2_size_id" wire:model="repls.{{$index}}.genome2_size_id">
                                                 <option value="">Genome Sizes</option>
                                                 @foreach ($genome_sizes2 as $genome_size )
                                                 <option value="{{$genome_size->id}}" @if (old('genome2_size_id')==$genome_size->id) selected @endif>{{$genome_size->name}}</option>
@@ -1131,6 +1131,35 @@
                     <td class="col-md-1">:</td>
                     <td class="align-left">{{$this->haploid_size }} {{ $this->genomeSizeName($this->genome_size_id) }}</td>
                 </tr>
+            </table>
+            <table class="table">
+                {{-- {{ dd($repls) }} --}}
+                <h3>Organism Replicons</h3>
+                @forelse ( $this->repls as $item => $value )
+                <tr>
+                    <td class="col-md-3">Replicon Name</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->repls[$item]['repl_name'] }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Replicon Type</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->repliconTypeName($this->repls[$item]['repl_type_id']) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Replicon Location</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->repliconLocName($this->repls[$item]['repl_loc_id']) }}</td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-3">Replicon Size</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->repls[$item]['repl_size'] }}  {{ $this->genomeSizeName($this->repls[$item]['genome2_size_id']) }}</td>
+                </tr>
+                @empty
+                    <td class="col-md-12">There is no Replicons Data</td>   
+                @endforelse
             </table>
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>

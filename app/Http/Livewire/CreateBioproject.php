@@ -152,7 +152,7 @@ class CreateBioproject extends Component
     public $repl_loc_id;
     public $repl_size;
     public $genome_sizes2 = [];
-    public $genome_size2_id;
+    public $genome2_size_id;
 
 
     protected $rules = [
@@ -304,7 +304,7 @@ class CreateBioproject extends Component
     }
     public function addRepl()
     {
-        $this->repls[] = ['repl_name' => '', 'repl_type_id' => '', 'repl_loc' => '', 'repl_size' => '', 'genome_size2_id' => ''];
+        $this->repls[] = ['repl_name' => '', 'repl_type_id' => '', 'repl_loc_id' => '', 'repl_size' => '', 'genome2_size_id' => ''];
     }
 
     public function removeRepl($index)
@@ -435,6 +435,20 @@ class CreateBioproject extends Component
     {
         if (!empty($id))
             return GenomeSize::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function repliconTypeName($id)
+    {
+        if (!empty($id))
+            return ReplType::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function repliconLocName($id)
+    {
+        if (!empty($id))
+            return ReplLocation::select('name')->where('id', $id)->pluck('name')->first();
         else
             return null;
     }

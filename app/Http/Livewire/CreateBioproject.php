@@ -452,6 +452,27 @@ class CreateBioproject extends Component
         else
             return null;
     }
+    public static function bioRelName($id)
+    {
+        if (!empty($id))
+            return BioticRelationship::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function trophLevName($id)
+    {
+        if (!empty($id))
+            return TrophicLevel::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function shapeName($id)
+    {
+        if (!empty($id))
+            return ProMorphShape::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
 
     public function submitForm()
     {

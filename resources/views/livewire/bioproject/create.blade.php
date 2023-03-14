@@ -756,8 +756,8 @@
                             <div class="col-md-2">
                                 <select class="form-select" name="motility" id="motility" wire:model="motility">
                                     <option value="">--Motility--</option>
-                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
-                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                    <option value="1" @if (old('motility')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('motility')==0) selected @endif>No</option>
                                 </select>
                             </div>
                             @error('motility')
@@ -769,8 +769,8 @@
                             <div class="col-md-2">
                                 <select class="form-select" name="enveloped" id="enveloped" wire:model="enveloped">
                                     <option value="">--Enveloped--</option>
-                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
-                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                    <option value="1" @if (old('enveloped')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('enveloped')==0) selected @endif>No</option>
                                 </select>
                             </div>
                             @error('enveloped')
@@ -782,8 +782,8 @@
                             <div class="col-md-2">
                                 <select class="form-select" name="endospores" id="endospores" wire:model="endospores">
                                     <option value="">--Endospores--</option>
-                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
-                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                    <option value="1" @if (old('endospores')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('endospores')==0) selected @endif>No</option>
                                 </select>
                             </div>
                             @error('endospores')
@@ -1133,7 +1133,6 @@
                 </tr>
             </table>
             <table class="table">
-                {{-- {{ dd($repls) }} --}}
                 <h3>Organism Replicons</h3>
                 @forelse ( $this->repls as $item => $value )
                 <tr>
@@ -1160,6 +1159,81 @@
                 @empty
                     <td class="col-md-12">There is no Replicons Data</td>   
                 @endforelse
+            </table>
+
+            <table class="table">
+                <h3>Phenotypes</h3>
+                <tr>
+                    <td class="col-md-3">Disease</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->disease }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Biotic Relationship</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->bioRelName($this->bio_rel_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Trophic Level</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->trophLevName($this->trop_level_id) }}</td>
+                </tr>
+            </table>
+
+            <table class="table">
+                <h3>Prokaryote Morphology</h3>
+                <tr>
+                    <td class="col-md-3">Shape</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">
+                    @if ($this->data_type_id > 0)
+                        @foreach ( $this->shape_id as $item => $value )
+                            {{ $this->shapeName($item) }}, 
+                        @endforeach
+                    @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Gram</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">
+                    @if ($this->gram == 1)
+                    Positive
+                    @else 
+                    Negative
+                    @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Motility</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">@if ($this->motility == 1)
+                        Yes
+                        @else 
+                        No
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Enveloped</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">@if ($this->enveloped == 1)
+                        Yes
+                        @else 
+                        No
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Endospores</td>
+                    <td class="col-md-1">:</td>
+                    <td class="align-left">@if ($this->endospores == 1)
+                        Yes
+                        @else 
+                        No
+                        @endif
+                    </td>
+                </tr>
             </table>
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>

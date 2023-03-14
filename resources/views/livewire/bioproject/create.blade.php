@@ -1236,6 +1236,35 @@
                 </tr>
             </table>
 
+            <table class="table">
+                <h3>Ecological Environment</h3>
+                <tr>
+                    <td class="col-md-3">Habitat</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->habitatName($this->habitat_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Salinity</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->salinityName($this->salinity_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Oxygen Requirement</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->oxreqName($this->oxygen_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Temperature Range</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->tempName($this->temp_range_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Optimum Temperature</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->optimum_temp }} Celcius</td>
+                </tr>
+            </table>
+
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
             <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
         </div>

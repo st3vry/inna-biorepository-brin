@@ -473,6 +473,35 @@ class CreateBioproject extends Component
         else
             return null;
     }
+    public static function habitatName($id)
+    {
+        if (!empty($id))
+            return Habitat::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function salinityName($id)
+    {
+        if (!empty($id))
+            return Salinity::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function oxreqName($id)
+    {
+        if (!empty($id))
+            return OxygenReq::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+    public static function tempName($id)
+    {
+        if (!empty($id))
+            return TempRange::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
+
 
     public function submitForm()
     {

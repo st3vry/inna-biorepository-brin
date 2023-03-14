@@ -501,6 +501,13 @@ class CreateBioproject extends Component
         else
             return null;
     }
+    public static function pubName($id)
+    {
+        if (!empty($id))
+            return PubIdentifier::select('name')->where('id', $id)->pluck('name')->first();
+        else
+            return null;
+    }
 
 
     public function submitForm()

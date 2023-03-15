@@ -124,7 +124,7 @@
                     <div class="mb-3">
                         <label for="relevance" class="form-label">Relevance <font color="red">*</font></label>
                         <select class="form-select select2" name="relevance_id" id="relevance_id" wire:model="relevance_id">
-                            <option value="">Relevance</option>
+                            <option value="">--Relevance--</option>
                             @foreach ($relevances as $relevance )
                             <option value="{{$relevance->id}}" @if (old('relevance_id')==$relevance->id) selected @endif>{{$relevance->name}}</option>
                             @endforeach
@@ -152,7 +152,7 @@
                     <div class="mb-3">
                         <label for="umbrella" class="form-label">Umbrella Project</label>
                         <select class="form-select select2" name="umbproject_id" wire:model="umbproject_id" id="umbproject_id">
-                            <option value="">Umbrella Project</option>
+                            <option value="">--Umbrella Project--</option>
                             @foreach ($umbrellas as $umbrella )
                             <option value="{{$umbrella->id}}" @if (old('umbproject_id')==$umbrella->id) selected @endif> {{$umbrella->accession}} &mdash; {{$umbrella->title}}</option>
                             @endforeach
@@ -228,7 +228,7 @@
                             <tr>
                                 <td>
                                     <select class="form-select select2" name="grants[{{$index}}][fundagency_id]" wire:model="grants.{{$index}}.fundagency_id">
-                                        <option value="0">Funding Agency</option>
+                                        <option value="0">--Funding Agency--</option>
                                         @foreach ($fundagencies as $fundagency )
                                         <option value="{{$fundagency->id}}">{{$fundagency->name}}</option>
                                         @endforeach
@@ -275,7 +275,7 @@
                     <div class="mb-3">
                         <label for="consortium_id" class="form-label">Consortium</label>
                         <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
-                            <option value="">Consortium</option>
+                            <option value="">--Consortium--</option>
                             @foreach ($consortia as $consortium )
                             <option value="{{$consortium->id}}" @if (old('consortium_id')==$consortium->id) selected @endif>{{$consortium->name}}</option>
                             @endforeach
@@ -894,7 +894,7 @@
                             <tr>
                                 <td>
                                     <select class="form-select" name="publications[{{$index}}][pub_identifier_id]" wire:model="publications.{{$index}}.pub_identifier_id">
-                                        <option value="0">PubMed / DOI</option>
+                                        <option value="0">--PubMed / DOI--</option>
                                         @foreach ($pub_identifiers as $pub_identifier )
                                         <option value="{{$pub_identifier->id}}">{{$pub_identifier->name}}</option>
                                         @endforeach

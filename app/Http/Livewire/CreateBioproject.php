@@ -90,7 +90,6 @@ class CreateBioproject extends Component
     public $objective_id;
     public $selectedObjective;
 
-
     public $consortium_id;
     public $title;
     public $umbproject_id;
@@ -158,6 +157,8 @@ class CreateBioproject extends Component
     protected $rules = [
         'title' => 'required|min:6',
         'umbproject_id' => '',
+        'relevance_id' => '',
+        'reldesc' => '',
         'organism_id' => 'required',
         'consortium_id' => 'required',
 
@@ -181,6 +182,13 @@ class CreateBioproject extends Component
 
         'samplescope_id' => 'required',
         'samplescopedesc' => '',
+
+        'grants.*.fundagency_id' => 'required',
+        'grants.*.grant_program' => 'required',
+        'grants.*.grant_title' => 'required',
+
+        'externallinks.*.link_description' => 'required',
+        'externallinks.*.link_url' => 'required',
 
         'publications.*.pub_identifier_id' => 'required',
         'publications.*.pub_id' => 'required',
@@ -520,8 +528,8 @@ class CreateBioproject extends Component
         $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
-        $bioproject->objective_id = implode(",", $validatedData['objective_id']);
-        // $bioproject->samplescope_id = $validatedData['samplescope_id'];
+        // $bioproject->objective_id = implode(",", $validatedData['objective_id']);
+        $bioproject->samplescope_id = $validatedData['samplescope_id'];
         // sample scope
 
         $bioproject->umbproject_id = $validatedData['umbproject_id'];

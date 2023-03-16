@@ -23,7 +23,6 @@ return new class extends Migration
             $table->text('comments')->nullable();
             $table->foreignId('sampletype_id');
             $table->foreignId('organism_id');
-            $table->string('organism_name');
             $table->text('description');
             $table->integer('center_id');
             $table->foreignId('user_id');

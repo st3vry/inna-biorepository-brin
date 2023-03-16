@@ -34,6 +34,7 @@
     <div class="container-fluid">
         <div class="row">
             @include('dashboard.layouts.sidebar')
+            @include('dashboard.layouts.notification')
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 @yield('container')
@@ -58,6 +59,42 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+    <script type='text/javascript'>
+        function markReadNotification(va){
+            fetch('{{route('notif.mark.as.read')}}', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "id": va.dataset.id, '_token': '{{ csrf_token() }}'})
+            })
+            .then(response => window.open(va.dataset.target,"_self"))
+            return false;
+        }
+        function markAllAsRead(){
+            const badges =document.querySelectorAll('span.rounded-circle')
+            const unread = document.querySelectorAll('a.unread')
+            fetch('{{route('notif.mark.as.read')}}', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "all": 'all', '_token': '{{ csrf_token() }}'})
+            }).then(response => {
+                badges.forEach(element => {
+                    element.remove()
+                });
+                unread.forEach(element => {
+                    element.classList.add('list-group-item-secondary')
+                });
+                new bootstrap.Offcanvas(document.getElementById('notificationOffCanvas')).hide()
+                
+            });
+            // return false;
+        }
+    </script>
     @livewireScripts
     @stack('js')
 </body>

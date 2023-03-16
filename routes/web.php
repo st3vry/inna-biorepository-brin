@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActionLogController;
 use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\DashboardBioarchiveController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\Fundagency;
@@ -81,6 +83,11 @@ Route::prefix('dashboard')->group(function(){
         return view('dashboard.index');
     })->middleware('auth');
     
+    Route::get('/profile', [ProfileController::class, 'index'])->name('users.profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('users.profile.update');
+    Route::post('/password', [ProfileController::class, 'password'])->name('users.password.update');
+    Route::post('/markasread', [ActionLogController::class, 'markAsRead'])->name('notif.mark.as.read');
+
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('auth');
 
     Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('auth');

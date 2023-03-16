@@ -5,7 +5,7 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">My Bioarchives</li>
+        <li class="breadcrumb-item active" aria-current="page">Curator Bioarchives</li>
     </ol>
 </div>
 <a href="/dashboard/bioarchives/create" class="btn btn-primary mb-3">Create New Bioarchive</a>
@@ -64,11 +64,11 @@
                 </td>
                 <td>
                     @if (!$bioarchive->draft)
-                    <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    <a href="/dashboard/curator/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
-                    <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                    <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" method="post" class="d-inline">
+                    <a href="/dashboard/curator/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    <a href="/dashboard/curator/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                    <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" method="post" class="d-inline">
                         @method('delete')
                         @csrf
                         <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>

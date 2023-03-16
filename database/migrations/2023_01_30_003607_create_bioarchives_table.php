@@ -19,8 +19,12 @@ return new class extends Migration
             $table->string('submission_id')->unique();
             $table->foreignId('bioproject_id');
             $table->string('biosample_id');
-            $table->string('title');
-            $table->string('file_location');
+            $table->foreignId('user_id');
+            $table->string('curator_id')->nullable();
+            $table->boolean('hold_release')->default(false);
+            $table->boolean('draft')->default(false);
+            $table->integer('status')->default(1);
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }

@@ -9,4 +9,29 @@ class Bioarchive extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function bioproject()
+    {
+        return $this->belongsTo(Bioproject::class);
+    }
+    public function biosample()
+    {
+        return $this->hasMany(Biosample::class);
+    }
+    public function bioexperiment()
+    {
+        return $this->hasMany(Bioexperiment::class);
+    }
+    public function biorun()
+    {
+        return $this->hasMany(Biorun::class);
+    }
+    public function getRouteKeyName()
+    {
+        return 'accession';
+    }
 }

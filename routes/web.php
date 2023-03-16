@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActionLogController;
 use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;
@@ -7,12 +8,14 @@ use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\BiosampleController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\CuratorBioSampleController;
+use App\Http\Controllers\CuratorBioArchiveController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\DashboardBioarchiveController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\Fundagency;
@@ -80,6 +83,11 @@ Route::prefix('dashboard')->group(function(){
         return view('dashboard.index');
     })->middleware('auth');
     
+    Route::get('/profile', [ProfileController::class, 'index'])->name('users.profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('users.profile.update');
+    Route::post('/password', [ProfileController::class, 'password'])->name('users.password.update');
+    Route::post('/markasread', [ActionLogController::class, 'markAsRead'])->name('notif.mark.as.read');
+
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('auth');
 
     Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('auth');
@@ -91,8 +99,8 @@ Route::prefix('dashboard')->group(function(){
     Route::resource('/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
     Route::post('/users', [AdminUserController::class,'filter'])->name('users.filter')->middleware('can:isAdmin');
-    Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
-    Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');
+    // Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
+    // Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');
 
     // Curator
     // Route::get('/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator',]);
@@ -100,6 +108,7 @@ Route::prefix('dashboard')->group(function(){
 
     Route::resource('/curator/biosamples', CuratorBioSampleController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
+    Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
     // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
 
 });

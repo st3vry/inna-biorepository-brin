@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ActionLog;
 use App\Http\Controllers\Controller;
+<<<<<<< HEAD
+=======
 use App\Models\Bioarchive;
 use App\Models\Bioexperiment;
 use App\Models\Biorun;
@@ -13,6 +15,7 @@ use App\Models\LibraryLayout;
 use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
+>>>>>>> cb602c39fce0dfde8adc02e2372dcbd607bb805e
 use Illuminate\Http\Request;
 
 class DashboardBioarchiveController extends Controller
@@ -20,9 +23,13 @@ class DashboardBioarchiveController extends Controller
     //
     public function index()
     {
+<<<<<<< HEAD
+        return view('dashboard.bioarchive.index', []);
+=======
         return view('dashboard.bioarchive.index', [
             'bioarchives' => Bioarchive::with(['bioproject', 'user'])->where('user_id', auth()->user()->id)->orderBy('published_at', 'desc')->orderBy('draft', 'desc')->paginate(10),
         ]);
+>>>>>>> cb602c39fce0dfde8adc02e2372dcbd607bb805e
     }
 
     public function create()

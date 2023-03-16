@@ -38,6 +38,49 @@
         <li class="breadcrumb-item active" aria-current="page">{{$biosample->accession}}</li>
     </ol>
 </div>
+<<<<<<< HEAD
+<div class="table-responsive col-lg-8">
+    <table class="table table-striped table-sm">
+        <tr>
+            <td class="col-sm-1">Title</td>
+            <td class="col-sm-7">{{$biosample->title}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Organism</td>
+            <td class="col-sm-7">{{$biosample->organism_name}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Sample Type</td>
+            <td class="col-sm-7">{{$biosample->sampletype->name}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Description</td>
+            <td class="col-sm-7">{{$biosample->description}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Center</td>
+            <td class="col-sm-1">{{$biosample->center->name}}
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Lab</td>
+            <td class="col-sm-7">{{$biosample->user->lab->name}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Submitter</td>
+            <td class="col-sm-7">{{$biosample->user->name}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Submitted at</td>
+            <td class="col-sm-7">{{$biosample->created_at->format('d-m-Y')}}</td>
+        </tr>
+        <tr>
+            <td class="col-sm-1">Published at</td>
+            <td class="col-sm-7">{{$biosample->published_at === null ? 'None' : $biosample->published_at->format('d-m-Y')}}</td>
+        </tr>
+
+    </table>
+=======
 <div class="row">
     <div class="table-responsive col-lg-8">
         <table class="table table-striped table-sm">
@@ -113,5 +156,6 @@
             </div>
         </div>
     </div>
+>>>>>>> cb602c39fce0dfde8adc02e2372dcbd607bb805e
 </div>
 @endsection

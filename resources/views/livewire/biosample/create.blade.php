@@ -178,7 +178,9 @@
                     <div class="card-body mb-3">
                         <label for="comments" class="form-label">Private comments to staff</label>
                         <input type="textarea" class="form-control" wire:model="comments" id="comments" name="comments" value="{{old('comments')}}">
-                       
+                        @error('comments')
+                            <div class="invalid-feedback">{{$message}}</div>
+                        @enderror
                     </div>
                 </div>
                 <button class="btn btn-danger nextBtn  pull-right" type="button" wire:click="back(1)">Back</button>
@@ -237,21 +239,24 @@
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5>@if (!is_null($sample_find)) {{$sample_find->name}} @endif Attributes</h5>
+                        <font color="red">*</font> fields are mandatory. Your submission will fail if any mandatory fields are not completed. If information is unavailable for any mandatory field, please enter 'not collected',  'not applicable' or 'missing' as appropriate.</br>
+                        <font color="red">**</font> fields indicate that at least one of those fields is mandatory. If information is unavailable, please enter 'not collected',  'not applicable' or 'missing' as appropriate.
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
                             @if (!empty($attributes) )
-                                @foreach ($attributes->chunk(4) as $row)
+                                @foreach ($attributes->chunk(3) as $row)
                                 <div class="row g-2">
                                     @foreach ($row as $attr)
-                                    <div class="col-md-1">
-                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}</label>
+                                    <div class="col-md-2">
+                                        <label for="{{$attr->attr_name}}">{{$attr->attr_text}}@if(in_array((string)$attr->id, $attribute_M))<font color="red">*</font>@endif @if(in_array((string)$attr->id, $attribute_E))<font color="red">**</font>@endif</label>
+                                        <label class="popover-test" title="{{$attr->description}}">(?)</label>
                                     </div>
                                     <div class="col-md-2">
                                         @if ($attr->input_type_id == 1)
-                                        <input type="text" class="form-control @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
+                                        <input type="text" class="form-control @error('{{$attr->attr_name}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
                                         @elseif ($attr->input_type_id == 2)
-                                        <input type="textarea" class="form-control @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
+                                        <input type="textarea" class="form-control @error('{{$attr->attr_name}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" value="" >
                                         @elseif ($attr->input_type_id == 3)
                                             <select class="form-select" wire:model="{{$attr->attr_name}}" id="{{$attr->attr_name}}" name="{{$attr->attr_name}}" >
                                                 <option value="">--{{$attr->attr_name}}--</option>
@@ -260,10 +265,21 @@
                                                 @endforeach
                                             </select>
                                         @elseif ($attr->input_type_id == 4)
-                                        <input type="date" name="{{$attr->attr_name}}" id="{{$attr->attr_name}}" class="form-control  @error('{{$attr->attr_name}}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" style="width: 100%; display: inline;" >
+                                        <input type="date" name="{{$attr->attr_name}}" id="{{$attr->attr_name}}" class="form-control  @error('{{$attr->attr_name}}') is-invalid @enderror" wire:model="{{$attr->attr_name}}" style="width: 100%; display: inline;" >
+                                        @elseif ($attr->input_type_id == 7)
+                                            <select class="form-select" wire:model="{{$attr->attr_name}}_id" id="{{$attr->attr_name}}_id" name="{{$attr->attr_name}}_id" >
+                                                <option value="">--{{$attr->attr_name}}--</option>
+                                                @foreach(${$attr->attr_name} as $atname)
+                                                    <option value="{{$atname->id}}">{{$atname->name}}</option>
+                                                @endforeach
+                                            </select>
                                         @endif
-
+                                            @error('{{$attr->attr_name}}')
+                                                <p class="text-danger">{{$message}}</p>
+                                            @enderror
+                                        
                                     </div>
+                                   
                                     @endforeach
                                 </div>
                                 @endforeach
@@ -384,16 +400,21 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            @if (!empty($attributes) )
+                            @if (!empty($attributes))
                                 @foreach ($attributes->chunk(4) as $row)
                                 <div class="row g-2">
                                     @foreach ($row as $attr)
                                     <div class="col-md-1">
-                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}}</label>
+                                        <label for="{{$attr->attr_name}}" class="form-label">{{$attr->attr_text}} </label>
                                     </div>
                                     <div class="col-md-2">
-                                       
+                                        @if ($attr->input_type_id == 7)
+                                            @if ((${($attr->attr_name.'_id')})!='')
+                                            <label>: {{(${$attr->attr_name})[(${($attr->attr_name.'_id')})-1]->name}}</label>
+                                            @endif
+                                        @else
                                         <label>: {{(${$attr->attr_name})}}</label>
+                                        @endif
                                     </div>
                                     @endforeach
                                 </div>

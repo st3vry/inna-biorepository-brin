@@ -35,6 +35,7 @@ class BiosampleFactory extends Factory
             'comments' => $this->faker->paragraph(mt_rand(5, 10)),
             'sampletype_id' => mt_rand(1, 3),
             'organism_id' => mt_rand(1, 4),
+            'organism_name' => $this->faker->sentence(1),
             'description' => $this->faker->paragraph(mt_rand(5, 10)),
             'center_id' => mt_rand(1, 2),
             'user_id' => mt_rand(1, 5),

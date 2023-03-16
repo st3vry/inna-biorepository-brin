@@ -190,6 +190,7 @@
             @method('put')
             @csrf
             <input type="hidden" name="target" value="{{$bioarchive->user_id}}">
+            <input type="hidden" name="bioarchive_id" id="bioarchive_id" value="{{ $bioarchive->id }}">
             <label class="fw-bolder" for="action">Action:</label>
             <div class="col-8">
                 <select class="form-select" name="action" id="action">

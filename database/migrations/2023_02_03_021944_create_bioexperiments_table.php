@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('bioexperiments', function (Blueprint $table) {
             $table->id();
+<<<<<<< HEAD
             $table->foreignId('bioproject_id');
+=======
+            $table->foreignId('bioarchive_id');
+>>>>>>> cb602c39fce0dfde8adc02e2372dcbd607bb805e
             $table->foreignId('biosample_id');
             $table->string('alias');
             $table->string('title');

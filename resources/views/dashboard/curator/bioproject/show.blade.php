@@ -230,8 +230,13 @@
             <form action="/dashboard/curator/bioprojects/{{$bioproject->accession}}" class="row p-2" method="post" class="d-inline">
                 @method('put')
                 @csrf
+<<<<<<< HEAD
                 <input type="hidden" name="action" value="assignToCurator">
                 <label class="fw-bolder" for="curator_id">Assigned to:</label>
+=======
+                <input type="hidden" name="action" value="assignedToCurator">
+                <label class="fw-bolder" for="target">{{$bioproject->curator_id === null ? 'Assign' : 'Assigned' }} to:</label>
+>>>>>>> cb602c39fce0dfde8adc02e2372dcbd607bb805e
                 <div class="col-8">
                     <select class="form-select" name="curator_id" id="curator_id">
                         <option value="" disabled selected >Select curator</option>
@@ -261,6 +266,11 @@
                                 </p>
                             </li>
                         @endforeach
+
+                        <li class="timeline-item mb-5">
+                            <strong class="fw-bolder">Bioproject Created </strong>
+                            <p class="fw-lighter mb-1">{{$bioproject->created_at->format('j F Y H:i')}}</p>
+                        </li>
                     </ul>
                 </section>
             </div>

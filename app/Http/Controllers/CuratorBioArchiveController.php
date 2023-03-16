@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActionLog;
-use App\Models\User;
-use App\Models\Biosample;
 use Illuminate\Http\Request;
+use App\Models\Bioarchive;
+use App\Models\Biosample;
+use App\Models\User;
 
-class CuratorBioSampleController extends Controller
+class CuratorBioArchiveController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +17,7 @@ class CuratorBioSampleController extends Controller
      */
     public function index()
     {
-        $biosamples = BioSample::with(['organism', 'center'])
+        $bioarchives = Bioarchive::with(['bioproject', 'user'])
             ->where('published_at', null)
             ->where(function ($query) {
                 $query->where('draft', false)
@@ -26,17 +27,16 @@ class CuratorBioSampleController extends Controller
             ->orderBy('curator_id','asc')
             ->paginate(5);
         if (auth()->user()->role_id == 2) {
-            $biosamples = BioSample::with(['organism', 'center'])
+            $bioarchives = Bioarchive::with(['bioproject', 'user'])
                 ->where('curator_id', auth()->id())
                 ->orderBy('published_at','desc')
                 ->paginate(5);
         }
-        return view('dashboard.curator.biosample.index', [
-            'title' => 'Biosample',
-            'biosamples' => $biosamples,
+        return view('dashboard.curator.bioarchive.index', [
+            'title' => 'Bioarchives',
+            'bioarchives' => $bioarchives
         ]);
     }
-    
 
     /**
      * Show the form for creating a new resource.
@@ -65,16 +65,21 @@ class CuratorBioSampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Biosample $biosample)
+    public function show(Bioarchive $bioarchive)
     {
-        // dd($biosample);
+        $biosample_id =  explode(",", $bioarchive->biosample_id);
+        $bioexperiment = $bioarchive->bioexperiment()->get();
         $curators = User::select(['id','name'])->where('role_id',2)->where('is_activated',true)->orderBy('name')->get();
-        $histories = ActionLog::with(['creator'])->where('item_id',$biosample->accession)->orderBy('created_at', 'desc')->get();
+        $histories = ActionLog::with(['creator'])->where('item_id',$bioarchive->accession)->orderBy('created_at', 'desc')->get();
 
-        return view('dashboard.curator.biosample.show', [
-            'biosample' => $biosample,
+        // dd($biosample_id);
+        return view('dashboard.curator.bioarchive.show', [
+            'bioarchive' => $bioarchive,
+            'biosample_id' => $biosample_id,
+            'bioexperiment' => $bioexperiment,
             'curators' => $curators,
             'histories' => $histories
+            // 'biorun' => $biorun,
         ]);
     }
 
@@ -98,40 +103,42 @@ class CuratorBioSampleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        dd($id);
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
-            $action = BioSample::where('accession', $id)->update(['curator_id' => $request->target]);
+            
+            $action = Bioarchive::where('accession', $id)->update(['curator_id' => $request->target]);
             $success = 'Assigned to Curator';
         } else {
             if ($request->action === 'returnedToSubmitter') {
-                $action = BioSample::where('accession', $id)->update(['draft' => true]);
+                $action = Bioarchive::where('accession', $id)->update(['draft' => true]);
                 $success = 'Returned to Submitter';
             }
             if ($request->action === 'approved') {
-                $action = BioSample::where('accession', $id)->update(['published_at' => now()]);
-                $success = 'BioSample Approved';
+                $action = Bioarchive::where('accession', $id)->update(['published_at' => now()]);
+                $success = 'BioArchive Approved';
             }
             if ($request->action === 'rejected') {
                 // waiting for action rules
                 dd($request->action);
-                $action = BioSample::where('accession', $id)->update(['published_at' => now()]);
-                $success = 'BioSample rejected';
+                $action = Bioarchive::where('accession', $id)->update(['published_at' => now()]);
+                $success = 'BioArchive rejected';
             }
         }
-        
+
         if ($action) {
             ActionLog::create([
                 'action' => $request->action,
-                'type' => 'Biosample',
+                'type' => 'Bioarchive',
                 'item_id' => $id,
                 'user_target'=> $request->target,
                 'created_by' =>auth()->id(),
                 'desc' => !isset($request->desc) ? null : $request->desc
             ]);
-            return redirect('/dashboard/curator/biosamples/'.$id)->with('success', $success);
+            return redirect('/dashboard/curator/bioarchives/'.$id)->with('success', $success);
         } else {
-            return redirect('/dashboard/curator/biosamples/'.$id)->with('error', 'Something went wrong, please try again later!');
+            return redirect('/dashboard/curator/bioarchives/'.$id)->with('error', 'Something went wrong, please try again later!');
         }
     }
 
@@ -144,5 +151,10 @@ class CuratorBioSampleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function biosampleName($id)
+    {
+        return Biosample::select('accession')->where('id', $id)->pluck('accession')->first();
     }
 }

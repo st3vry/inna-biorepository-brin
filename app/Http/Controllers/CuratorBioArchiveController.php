@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\ActionLog;
 use Illuminate\Http\Request;
 use App\Models\Bioarchive;
+use App\Models\Bioexperiment;
 use App\Models\Biosample;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 
 class CuratorBioArchiveController extends Controller
 {
@@ -21,15 +23,15 @@ class CuratorBioArchiveController extends Controller
             ->where('published_at', null)
             ->where(function ($query) {
                 $query->where('draft', false)
-                      ->orWhere('curator_id','<>', null);
+                    ->orWhere('curator_id', '<>', null);
             })
-            ->orderBy('published_at','desc')
-            ->orderBy('curator_id','asc')
+            ->orderBy('published_at', 'desc')
+            ->orderBy('curator_id', 'asc')
             ->paginate(5);
         if (auth()->user()->role_id == 2) {
             $bioarchives = Bioarchive::with(['bioproject', 'user'])
                 ->where('curator_id', auth()->id())
-                ->orderBy('published_at','desc')
+                ->orderBy('published_at', 'desc')
                 ->paginate(5);
         }
         return view('dashboard.curator.bioarchive.index', [
@@ -69,8 +71,8 @@ class CuratorBioArchiveController extends Controller
     {
         $biosample_id =  explode(",", $bioarchive->biosample_id);
         $bioexperiment = $bioarchive->bioexperiment()->get();
-        $curators = User::select(['id','name'])->where('role_id',2)->where('is_activated',true)->orderBy('name')->get();
-        $histories = ActionLog::with(['creator'])->where('item_id',$bioarchive->accession)->orderBy('created_at', 'desc')->get();
+        $curators = User::select(['id', 'name'])->where('role_id', 2)->where('is_activated', true)->orderBy('name')->get();
+        $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
 
         // dd($biosample_id);
         return view('dashboard.curator.bioarchive.show', [
@@ -103,11 +105,12 @@ class CuratorBioArchiveController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($id);
+        // dd($id);
+        // dd($request->bioarchive_id);
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
-            
+
             $action = Bioarchive::where('accession', $id)->update(['curator_id' => $request->target]);
             $success = 'Assigned to Curator';
         } else {
@@ -116,8 +119,19 @@ class CuratorBioArchiveController extends Controller
                 $success = 'Returned to Submitter';
             }
             if ($request->action === 'approved') {
-                $action = Bioarchive::where('accession', $id)->update(['published_at' => now()]);
+                // $action = Bioarchive::where('accession', $id)->update(['published_at' => now()]);
+                $action = Bioarchive::where('accession', $id)->update(['status' => 4]);
+                // approving bioarchive
                 $success = 'BioArchive Approved';
+                // create directory
+                $bioexperiments = Bioexperiment::where('bioarchive_id', $request->bioarchive_id)->get();
+                foreach ($bioexperiments as $bioexperiment) {
+                    // dd($bioexperiment->alias);
+                    $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
+                    if (!File::exists($path)) {
+                        File::makeDirectory($path, $mode = 0777, true, true);
+                    }
+                }
             }
             if ($request->action === 'rejected') {
                 // waiting for action rules
@@ -132,13 +146,13 @@ class CuratorBioArchiveController extends Controller
                 'action' => $request->action,
                 'type' => 'Bioarchive',
                 'item_id' => $id,
-                'user_target'=> $request->target,
-                'created_by' =>auth()->id(),
+                'user_target' => $request->target,
+                'created_by' => auth()->id(),
                 'desc' => !isset($request->desc) ? null : $request->desc
             ]);
-            return redirect('/dashboard/curator/bioarchives/'.$id)->with('success', $success);
+            return redirect('/dashboard/curator/bioarchives/' . $id)->with('success', $success);
         } else {
-            return redirect('/dashboard/curator/bioarchives/'.$id)->with('error', 'Something went wrong, please try again later!');
+            return redirect('/dashboard/curator/bioarchives/' . $id)->with('error', 'Something went wrong, please try again later!');
         }
     }
 

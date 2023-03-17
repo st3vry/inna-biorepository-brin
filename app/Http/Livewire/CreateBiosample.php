@@ -44,6 +44,7 @@ class CreateBiosample extends Component
     public $attributes_M = [];
     public $attributes_E = []; 
     public $attributes_O = [];
+ 
     // -- variables for attributes --
     
     public $sample_name;

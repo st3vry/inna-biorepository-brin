@@ -17,6 +17,7 @@ use App\Http\Controllers\InnalysisGalaxyController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\Fundagency;
@@ -71,6 +72,8 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store']);
+
+Route::post('/search', SearchController::class)->name('search');
 
 
 Route::get('/bioprojects', [BioprojectController::class, 'index']);

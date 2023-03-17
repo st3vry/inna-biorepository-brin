@@ -44,6 +44,7 @@ class CreateBiosample extends Component
     public $attributes_M = [];
     public $attributes_E = []; 
     public $attributes_O = [];
+ 
     // -- variables for attributes --
     
     public $sample_name;
@@ -1172,7 +1173,7 @@ class CreateBiosample extends Component
         } 
         $validatedData = $this->validate($valData);
         
-        dd($validatedData);
+        //dd($validatedData);
         $this->currentStep = 5;
     }
 
@@ -1225,7 +1226,6 @@ class CreateBiosample extends Component
 
     public function submitForm()
     {
-
         $validatedData = $this->validate();
         $biosample = new Biosample();
         $biosample->accession = 'SAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
@@ -1242,7 +1242,6 @@ class CreateBiosample extends Component
         $biosample->organism_id = mt_rand(1, 4);
         $biosample->organism_name = $validatedData['organism'];
         //
-
         $biosample->save();
 
         if (count($validatedData['biosample_links']) > 0) {

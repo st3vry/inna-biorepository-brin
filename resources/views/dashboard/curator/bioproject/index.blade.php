@@ -32,23 +32,25 @@
                 <td>{{ $bioproject->description }}</td>
                 <td>{{ $bioproject->center->name }}</td>
                 <td>
-                    @if(isset($bioproject->published_at))
-                        <span class="badge bg-success">Published</span>
-                    @else
-                        @if($bioproject->draft)
-                            @if (isset($bioproject->curator_id))
-                                <span class="badge bg-warning">Returned to submitter</span>
-                            @else
-                                <span class="badge bg-warning">Draft</span>
-                            @endif
-                        @else
-                            @if (isset($bioproject->curator_id))
-                                <span class="badge bg-info">On review</span>
-                            @else   
-                                <span class="badge bg-danger">Unassigned</span>          
-                            @endif
-                        @endif
-                    @endif
+                    @switch($bioproject->status)
+                        @case(1)
+                            <span class="badge bg-danger">Unassigned</span>  
+                            @break
+                        @case(2)
+                            <span class="badge bg-info">On review</span>
+                            @break
+                        @case(3)
+                            <span class="badge bg-warning">Returned to submitter</span>
+                            @break
+                        @case(4)
+                            <span class="badge bg-warning">Waiting for File upload</span>
+                            @break
+                        @case(5)
+                            <span class="badge bg-success">Published</span>
+                            @break
+                        @default
+                            <span class="badge bg-secondary">Rejected</span>
+                    @endswitch
                 </td>
                 <td>
                     <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>

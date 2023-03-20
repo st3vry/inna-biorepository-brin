@@ -22,10 +22,12 @@ class CuratorBioprojectController extends Controller
         //
         $bioprojects = Bioproject::with(['organism'])
             ->where('published_at', null)
-            ->where(function ($query) {
-                $query->where('draft', false)
-                      ->orWhere('curator_id','<>', null);
-            })
+            ->where('draft',false)
+            ->where('status',1)
+            // ->where(function ($query) {
+            //     $query->where('draft', false)
+            //           ->orWhere('curator_id','<>', null);
+            // })
             ->orderBy('published_at','desc')
             ->orderBy('curator_id','asc')
             ->paginate(5);
@@ -97,21 +99,31 @@ class CuratorBioprojectController extends Controller
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
-            $action = Bioproject::where('accession', $id)->update(['curator_id' => $request->target]);
+            $action = Bioproject::where('accession', $id)->update([
+                'curator_id' => $request->target,
+                'status' => 2,
+            ]);
             $success = 'Assigned to Curator';
         } else {
             if ($request->action === 'returnedToSubmitter') {
-                $action = Bioproject::where('accession', $id)->update(['draft' => true]);
+                $action = Bioproject::where('accession', $id)->update([
+                    'draft' => true,
+                    'status'=>3
+                ]);
                 $success = 'Returned to Submitter';
             }
             if ($request->action === 'approved') {
-                $action = Bioproject::where('accession', $id)->update(['published_at' => now()]);
+                $action = Bioproject::where('accession', $id)->update([
+                    'published_at' => now(),
+                    'status' => 5
+                ]);
                 $success = 'BioProject Approved';
             }
             if ($request->action === 'rejected') {
                 // waiting for action rules
-                dd($request->action);
-                $action = Bioproject::where('accession', $id)->update(['published_at' => now()]);
+                $action = Bioproject::where('accession', $id)->update([
+                    'status' => 0
+                ]);
                 $success = 'BioProject rejected';
             }
         }

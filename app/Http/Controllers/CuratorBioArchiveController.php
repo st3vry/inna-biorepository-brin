@@ -21,17 +21,19 @@ class CuratorBioArchiveController extends Controller
     {
         $bioarchives = Bioarchive::with(['bioproject', 'user'])
             ->where('published_at', null)
-            ->where(function ($query) {
-                $query->where('draft', false)
-                    ->orWhere('curator_id', '<>', null);
-            })
-            ->orderBy('published_at', 'desc')
+            ->where('draft',false)
+            ->where('status',1)
+            // ->where(function ($query) {
+            //     $query->where('draft', false)
+            //         ->orWhere('curator_id', '<>', null);
+            // })
+            ->orderBy('created_at', 'desc')
             ->orderBy('curator_id', 'asc')
             ->paginate(5);
         if (auth()->user()->role_id == 2) {
             $bioarchives = Bioarchive::with(['bioproject', 'user'])
                 ->where('curator_id', auth()->id())
-                ->orderBy('published_at', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(5);
         }
         return view('dashboard.curator.bioarchive.index', [
@@ -110,32 +112,48 @@ class CuratorBioArchiveController extends Controller
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
-
-            $action = Bioarchive::where('accession', $id)->update(['curator_id' => $request->target]);
+            $action = Bioarchive::where('accession', $id)->update([
+                'curator_id' => $request->target,
+                'status' => 2,
+            ]);
             $success = 'Assigned to Curator';
         } else {
             if ($request->action === 'returnedToSubmitter') {
-                $action = Bioarchive::where('accession', $id)->update(['draft' => true]);
+                $action = Bioarchive::where('accession', $id)->update([
+                    'draft' => true,
+                    'status'=>3
+                ]);
                 $success = 'Returned to Submitter';
             }
-            if ($request->action === 'approved') {
-                // $action = Bioarchive::where('accession', $id)->update(['published_at' => now()]);
-                $action = Bioarchive::where('accession', $id)->update(['status' => 4]);
+            if ($request->action === 'proceedToFileUpload') {
+                $action = Bioarchive::where('accession', $id)->update([
+                    'draft' => true,
+                    'status' => 4
+                ]);
                 // approving bioarchive
-                $success = 'BioArchive Approved';
+                $success = 'BioArchive Approved for File Upload';
                 // create directory
                 $bioexperiments = Bioexperiment::where('bioarchive_id', $request->bioarchive_id)->get();
                 foreach ($bioexperiments as $bioexperiment) {
                     // dd($bioexperiment->alias);
                     $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
                     if (!File::exists($path)) {
-                        File::makeDirectory($path, $mode = 0777, true, true);
+                        File::makeDirectory($path, $mode = 0755, true, true);
                     }
                 }
             }
+            if ($request->action === 'approved') {
+                $action = Bioarchive::where('accession', $id)->update([
+                    'published_at' => now(),
+                    'status' => 5
+                ]);
+                $success = 'BioArchive Approved';
+            }
             if ($request->action === 'rejected') {
-                // waiting for action rules
-                dd($request->action);
+                
+                $action = Bioarchive::where('accession', $id)->update([
+                    'status' => 0
+                ]);
                 $action = Bioarchive::where('accession', $id)->update(['published_at' => now()]);
                 $success = 'BioArchive rejected';
             }

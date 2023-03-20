@@ -146,46 +146,49 @@
     </div>
     <div class="col-md-4">
         @canany(['isSuperAdmin','isAdmin'])
-            <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
-                @method('put')
-                @csrf
-                <input type="hidden" name="action" value="assignedToCurator">
-                <label class="fw-bolder" for="target">{{$bioarchive->curator_id === null ? 'Assign' : 'Assigned' }} to:</label>
-                <div class="col-8">
-                    <select class="form-select" name="target" id="target">
-                        <option value="" disabled selected >Select curator</option>
-                        @foreach ($curators as $curator)
-                        <option value="{{$curator->id}}" {{$bioarchive->curator_id == $curator->id ? 'selected' : ''}}>{{$curator->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-4 d-grid gap-2">
-                    <button type="button" id="btnModalAssign" class="btn btn-primary btn-block border-0" data-bs-toggle="modal" data-bs-target="#modalAssign" disabled>Save</button>
-                </div>
-                <div class="modal fade" id="modalAssign" tabindex="-1" aria-labelledby="modalAssignLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalAssignLabel">Assign to ...</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="desc" class="form-label">Insert Description (Optional)</label>
-                                    <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+            @if ($bioarchive->status === 1)
+                <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
+                    @method('put')
+                    @csrf
+                    <input type="hidden" name="action" value="assignedToCurator">
+                    <label class="fw-bolder" for="target">{{$bioarchive->curator_id === null ? 'Assign' : 'Assigned' }} to:</label>
+                    <div class="col-8">
+                        <select class="form-select" name="target" id="target">
+                            <option value="" disabled selected >Select curator</option>
+                            @foreach ($curators as $curator)
+                            <option value="{{$curator->id}}" {{$bioarchive->curator_id == $curator->id ? 'selected' : ''}}>{{$curator->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-4 d-grid gap-2">
+                        <button type="button" id="btnModalAssign" class="btn btn-primary btn-block border-0" data-bs-toggle="modal" data-bs-target="#modalAssign" disabled>Save</button>
+                    </div>
+                    <div class="modal fade" id="modalAssign" tabindex="-1" aria-labelledby="modalAssignLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalAssignLabel">Assign to ...</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-secondary " data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="desc" class="form-label">Insert Description (Optional)</label>
+                                        <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-secondary " data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+                
+            @endif
         @endcanany
         @can('isCurator')
-        @if (!$bioarchive->draft && $bioarchive->published_at === null)
+        @if ($bioarchive->status===2)
         <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
             @method('put')
             @csrf
@@ -194,8 +197,9 @@
             <label class="fw-bolder" for="action">Action:</label>
             <div class="col-8">
                 <select class="form-select" name="action" id="action">
-                    <option value="approved">Approve</option>
+                    <option value="proceedToFileUpload">Proceed to File Upload</option>
                     <option value="returnedToSubmitter">Return to submitter</option>
+                    <option value="approved">Approve</option>
                     <option value="rejected">Reject</option>
                 </select>
             </div>

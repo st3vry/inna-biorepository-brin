@@ -18,10 +18,12 @@ class CuratorBioSampleController extends Controller
     {
         $biosamples = BioSample::with(['organism', 'center'])
             ->where('published_at', null)
-            ->where(function ($query) {
-                $query->where('draft', false)
-                      ->orWhere('curator_id','<>', null);
-            })
+            ->where('draft',false)
+            ->where('status',1)
+            // ->where(function ($query) {
+            //     $query->where('draft', false)
+            //           ->orWhere('curator_id','<>', null);
+            // })
             ->orderBy('published_at','desc')
             ->orderBy('curator_id','asc')
             ->paginate(5);
@@ -101,21 +103,32 @@ class CuratorBioSampleController extends Controller
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
-            $action = BioSample::where('accession', $id)->update(['curator_id' => $request->target]);
+            $action = BioSample::where('accession', $id)->update([
+                'curator_id' => $request->target,
+                'status' => 2,
+            ]);
             $success = 'Assigned to Curator';
         } else {
             if ($request->action === 'returnedToSubmitter') {
-                $action = BioSample::where('accession', $id)->update(['draft' => true]);
+                $action = BioSample::where('accession', $id)->update([
+                    'draft' => true,
+                    'status'=>3
+                ]);
                 $success = 'Returned to Submitter';
             }
             if ($request->action === 'approved') {
-                $action = BioSample::where('accession', $id)->update(['published_at' => now()]);
+                $action = BioSample::where('accession', $id)->update([
+                    'published_at' => now(),
+                    'status' => 5
+                ]);
                 $success = 'BioSample Approved';
             }
             if ($request->action === 'rejected') {
                 // waiting for action rules
                 dd($request->action);
-                $action = BioSample::where('accession', $id)->update(['published_at' => now()]);
+                $action = BioSample::where('accession', $id)->update([
+                    'status' => 0
+                ]);
                 $success = 'BioSample rejected';
             }
         }

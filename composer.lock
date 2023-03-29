@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60abd611408751f88837dcebcc5fed78",
+    "content-hash": "bd4b49418ea228240ba749220167503c",
     "packages": [
         {
             "name": "brick/math",
@@ -1625,20 +1625,20 @@
         },
         {
             "name": "league/flysystem-sftp-v3",
-            "version": "3.10.3",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-sftp-v3.git",
-                "reference": "0a52a54421a7e551f0c616e2db321c2735424c9f"
+                "reference": "7c2c48394e9ae1aa72a2608b5199859db9163876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp-v3/zipball/0a52a54421a7e551f0c616e2db321c2735424c9f",
-                "reference": "0a52a54421a7e551f0c616e2db321c2735424c9f",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp-v3/zipball/7c2c48394e9ae1aa72a2608b5199859db9163876",
+                "reference": "7c2c48394e9ae1aa72a2608b5199859db9163876",
                 "shasum": ""
             },
             "require": {
-                "league/flysystem": "^3.0.14",
+                "league/flysystem": "^2.0.0 || ^3.0.0",
                 "league/mime-type-detection": "^1.0.0",
                 "php": "^8.0.2",
                 "phpseclib/phpseclib": "^3.0"
@@ -1659,7 +1659,7 @@
                     "email": "info@frankdejonge.nl"
                 }
             ],
-            "description": "SFTP filesystem adapter for Flysystem.",
+            "description": "In-memory filesystem adapter for Flysystem.",
             "keywords": [
                 "Flysystem",
                 "file",
@@ -1669,11 +1669,11 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem-sftp-v3/issues",
-                "source": "https://github.com/thephpleague/flysystem-sftp-v3/tree/3.10.3"
+                "source": "https://github.com/thephpleague/flysystem-sftp-v3/tree/3.0.0"
             },
             "funding": [
                 {
-                    "url": "https://ecologi.com/frankdejonge",
+                    "url": "https://offset.earth/frankdejonge",
                     "type": "custom"
                 },
                 {
@@ -1685,7 +1685,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-26T18:15:09+00:00"
+            "time": "2022-01-13T21:23:39+00:00"
         },
         {
             "name": "league/mime-type-detection",

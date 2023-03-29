@@ -110,6 +110,14 @@
                             <td>Input Size</td>
                             <td>{{ $value['input_size'] }}</td>
                         </tr>
+                        @if ($bioarchive->status == 4)
+
+                        <tr>
+                            <td>SFTP Link</td>
+                            <td><a href="#">{{ $value['alias'] }}</a></td>
+                        </tr>
+                            
+                        @endif
                         @endforeach
                     </table>
                 </td>

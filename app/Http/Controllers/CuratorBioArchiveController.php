@@ -142,6 +142,7 @@ class CuratorBioArchiveController extends Controller
                     if (!File::exists($path)) {
                         File::makeDirectory($path, $mode = 0755, true, true);
                     }
+
                     try {
                         // Nama direktori yang akan dibuat
                         $directory = ' / ' . $id . ' / ' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage

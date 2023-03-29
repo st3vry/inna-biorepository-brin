@@ -9,6 +9,8 @@ use App\Models\Bioexperiment;
 use App\Models\Biosample;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class CuratorBioArchiveController extends Controller
 {
@@ -21,8 +23,8 @@ class CuratorBioArchiveController extends Controller
     {
         $bioarchives = Bioarchive::with(['bioproject', 'user'])
             ->where('published_at', null)
-            ->where('draft',false)
-            ->where('status',1)
+            ->where('draft', false)
+            ->where('status', 1)
             // ->where(function ($query) {
             //     $query->where('draft', false)
             //         ->orWhere('curator_id', '<>', null);
@@ -121,7 +123,7 @@ class CuratorBioArchiveController extends Controller
             if ($request->action === 'returnedToSubmitter') {
                 $action = Bioarchive::where('accession', $id)->update([
                     'draft' => true,
-                    'status'=>3
+                    'status' => 3
                 ]);
                 $success = 'Returned to Submitter';
             }
@@ -140,6 +142,52 @@ class CuratorBioArchiveController extends Controller
                     if (!File::exists($path)) {
                         File::makeDirectory($path, $mode = 0755, true, true);
                     }
+
+                    try {
+                        // Nama direktori yang akan dibuat
+                        $directory = ' / ' . $id . ' / ' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
+
+                        // Buat direktori baru jika belum ada
+                        if (!Storage::disk('sftp')->exists($directory)) {
+                            Storage::disk('sftp')->makeDirectory($directory);
+                        }
+                    } catch (Exception $e) {
+                        // Tangani kesalahan
+                        // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
+                        echo $e->getMessage();
+                    }
+                    // try {
+                    //     // Konfigurasi adapter
+                    //     $config = [
+                    //         'host' => env('SFTP_HOST'), // Mengambil alamat SFTP dari file .env
+                    //         'username' => env('SFTP_USERNAME'), // Mengambil username SFTP dari file .env
+                    //         'password' => env('SFTP_PASSWORD'), // Mengambil password SFTP dari file .env
+                    //         'root' => '/', // Ganti dengan root directory pada SFTP
+                    //         'port' => 22, // Port default untuk SFTP
+                    //         'timeout' => 10, // Timeout untuk koneksi SFTP
+                    //         'directoryPerm' => 0755, // Hak akses direktori baru yang akan dibuat
+                    //     ];
+
+                    //     // Buat adapter
+                    //     $adapter = new SftpAdapter($config);
+
+                    //     // Buat instance Filesystem dengan adapter SFTP
+                    //     $filesystem = new Filesystem($adapter);
+
+                    //     // Nama direktori yang akan dibuat
+                    //     $directory = 'path/to/directory'; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
+
+                    //     // Buat direktori baru jika belum ada
+                    //     if (!$filesystem->has($directory)) {
+                    //         Storage::disk('sftp')->makeDirectory($directory);
+                    //     } else {
+                    //         echo 'Folder already exists on SFTP';
+                    //     }
+                    // } catch (Exception $e) {
+                    //     // Tangani kesalahan
+                    //     // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
+                    //     echo $e->getMessage();
+                    // }
                 }
             }
             if ($request->action === 'approved') {
@@ -150,7 +198,7 @@ class CuratorBioArchiveController extends Controller
                 $success = 'BioArchive Approved';
             }
             if ($request->action === 'rejected') {
-                
+
                 $action = Bioarchive::where('accession', $id)->update([
                     'status' => 0
                 ]);

@@ -145,8 +145,8 @@ class CuratorBioArchiveController extends Controller
 
                     try {
                         // Nama direktori yang akan dibuat
-                        $directory = ' / ' . $id . ' / ' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
-
+                        $directory = '/'.$id.'/'.$bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
+                        // dd($directory);
                         // Buat direktori baru jika belum ada
                         if (!Storage::disk('sftp')->exists($directory)) {
                             Storage::disk('sftp')->makeDirectory($directory);

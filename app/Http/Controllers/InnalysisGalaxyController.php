@@ -13,7 +13,11 @@ class InnalysisGalaxyController extends Controller
     {
         $response = Http::get('http://202.46.7.138:8081/workflows');
         $workflows = json_decode($response);
-        return $workflows;
+        // return $workflows;
+        return view('dashboard.innalysis.galaxy', [
+            'workflows' => $workflows
+        ]);
+
     }
 
     public function run(Request $request)

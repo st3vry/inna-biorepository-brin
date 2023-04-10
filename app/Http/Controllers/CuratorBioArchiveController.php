@@ -77,14 +77,21 @@ class CuratorBioArchiveController extends Controller
         $bioexperiment = $bioarchive->bioexperiment()->get();
         $curators = User::select(['id', 'name'])->where('role_id', 2)->where('is_activated', true)->orderBy('name')->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
+        $files = array();
 
+        foreach ($bioexperiment as $key => $value) {
+            $obj = new \stdClass();
+            $obj->{$value['alias']} = Storage::disk('ftp')->files("files/{$bioarchive->accession}/{$value['alias']}");
+            array_push($files, $obj);
+        }
         // dd($biosample_id);
         return view('dashboard.curator.bioarchive.show', [
             'bioarchive' => $bioarchive,
             'biosample_id' => $biosample_id,
             'bioexperiment' => $bioexperiment,
             'curators' => $curators,
-            'histories' => $histories
+            'histories' => $histories,
+            'files' => $files
             // 'biorun' => $biorun,
         ]);
     }

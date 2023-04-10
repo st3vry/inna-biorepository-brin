@@ -135,8 +135,47 @@
                                 </table>
                             </td>
                         </tr>
-                            
-    
+                            @foreach ($files as $i =>$file)
+                                @foreach ($file as $key => $item)
+                                    @if ($key === $value['alias'])
+                                    @foreach ($item as $it)
+                                    <tr>
+                                        <td>File {{$key}} ({{ $i+1}})</td>
+                                        <td>
+                                            {{$it}}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    
+                                    @endif
+                                @endforeach                            
+                            @endforeach
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#fileCheck{{$value['alias']}}">
+                                        File Check
+                                    </button>                                      
+                                </td>
+                            </tr>
+                            <div class="modal fade" id="fileCheck{{$value['alias']}}" tabindex="-1" aria-labelledby="fileCheck{{$value['alias']}}Label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                                <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" >
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="fileCheck{{$value['alias']}}Label">{{$value['alias']}}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div id="sshRespon{{$value['alias']}}" class="modal-body" style="min-height:300px">
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" id="btlsltr{{$value['alias']}}">LS -ltr</button>
+                                            <button type="button" class="btn btn-primary" id="btls{{$value['alias']}}">LS</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </table>
                 </td>
@@ -296,7 +335,44 @@
                     })
                 }
                 
-            }           
+            }
+
+            function tesSSH(elem, cmd, folder) {
+                fetch('{{route('tesSSH')}}', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    { 
+                        "id": '{{$bioarchive->accession}}',
+                        "folder": folder,
+                        "cmd": cmd,
+                         '_token': '{{ csrf_token() }}'
+                    }
+                )
+            })
+            .then(response => response.text())
+            .then(response => {
+                console.log(response)
+                
+                elem.innerHTML += "<p>"+response+"</p>"
+            })}
+            
+            @foreach ($bioexperiment as $item => $value)
+            const btls{{$item}} = document.getElementById('btls{{$value['alias']}}')
+            const btlsltr{{$item}} = document.getElementById('btlsltr{{$value['alias']}}')
+            const sshRespon{{$item}} =  document.getElementById('sshRespon{{$value['alias']}}')
+            btls{{$item}}.addEventListener("click",function() {
+                tesSSH(sshRespon{{$item}}, "ls", '{{$value['alias']}}')
+            })
+            btlsltr{{$item}}.addEventListener("click",function() {
+                tesSSH(sshRespon{{$item}}, "ls -ltr", '{{$value['alias']}}')
+            })
+
+            @endforeach
+
         })
     </script>
 @endpush

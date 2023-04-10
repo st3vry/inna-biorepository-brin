@@ -1,6 +1,8 @@
 @extends('dashboard.layouts.main')
 
 @push('css')
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 <style>
     .timeline {
         border-left: 1px solid hsl(0, 0%, 90%);
@@ -113,9 +115,50 @@
                         @if ($bioarchive->status == 4)
 
                         <tr>
-                            <td>SFTP Link</td>
-                            <td><a href="#">{{ $value['alias'] }}</a></td>
+                            <td><strong>File</strong></td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal{{ $value['alias'] }}">
+                                    Upload {{ $value['alias'] }} File(s)
+                                </button>
+                            </td>
                         </tr>
+
+                        @foreach ($files as $file)
+                            @foreach ($file as $key => $item)
+                                @if ($key === $value['alias'])
+                                @foreach ($item as $it)
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        {{$it}}
+                                    </td>
+                                </tr>
+                                @endforeach
+                                
+                                @endif
+                            @endforeach                            
+                        @endforeach
+
+                        <div class="modal fade" id="modal{{ $value['alias'] }}" tabindex="-1" aria-labelledby="modal{{ $value['alias'] }}Label" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modal{{ $value['alias'] }}Label">Upload {{ $value['alias'] }} File(s) </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{route('file-upload')}}"
+                                        class="dropzone"
+                                        id="form{{ $value['alias'] }}">
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
                             
                         @endif
                         @endforeach
@@ -125,6 +168,39 @@
         </table>
     </div>
     <div class="col-md-4">
+        @if ($bioarchive->status===4)
+        <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
+            @method('put')
+            @csrf
+            <input type="hidden" name="action" id="action" value="fileUploaded">
+            <input type="hidden" name="target" value="{{$bioarchive->curator_id}}">
+            <input type="hidden" name="bioarchive_id" id="bioarchive_id" value="{{ $bioarchive->id }}">
+            <label class="fw-bolder" for="action">Action:</label>
+            <div class="col-12 d-grid gap-2">
+                <button type="button" id="btModalCompleteFile" class="btn btn-primary btn-block border-0" data-bs-toggle="modal" data-bs-target="#modalCompleteFile">Complete File Upload Process</button>
+            </div>
+            <div class="modal fade" id="modalCompleteFile" tabindex="-1" aria-labelledby="modalCompleteFileLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalCompleteFileLabel">Complete File Upload Process</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="desc" class="form-label">Insert Description (Optional)</label>
+                                <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @endif
         <div class="card m-2">
             <div class="card-header">
                 <h6>History</h6>
@@ -160,3 +236,27 @@
 </div>
 
 @endsection
+
+@push('js')
+    <script>
+        
+         @foreach ($bioexperiment as $item => $value)
+         var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
+            chunking: true,
+            method: "POST",
+            maxFilesize: 200000000,
+            chunkSize: 100000000,
+            parallelChunkUploads: true
+        });
+
+        myDropzone{{ $value['id']}}.on('sending', function (file, xhr, formData) {
+            formData.append("_token", '{{ csrf_token() }}');
+            formData.append("mainFolder", "{{$bioarchive->accession}}")
+            formData.append("subFolder", "{{ $value['alias']}}")
+            console.log(formData,formData)
+        })
+        @endforeach
+
+
+    </script>
+@endpush

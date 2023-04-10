@@ -18,6 +18,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UploaderController;
+use App\Http\Controllers\SSHController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\Fundagency;
@@ -117,6 +119,10 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
     // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
+
+    Route::post('file/upload', [UploaderController::class, 'upload'])->name('file-upload')->middleware('auth');
+    Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('auth');
+    Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
 
 });
 

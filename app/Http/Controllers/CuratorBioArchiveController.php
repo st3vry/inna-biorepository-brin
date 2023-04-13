@@ -80,9 +80,13 @@ class CuratorBioArchiveController extends Controller
         $files = array();
 
         foreach ($bioexperiment as $key => $value) {
-            $obj = new \stdClass();
-            $obj->{$value['alias']} = Storage::disk('ftp')->files("files/{$bioarchive->accession}/{$value['alias']}");
-            array_push($files, $obj);
+            $directory = "files/{$bioarchive->accession}/{$value['alias']}";
+            if (Storage::disk('sftp')->exists($directory)) {
+                $d = Storage::disk('sftp')->files($directory);
+                $obj = new \stdClass();
+                $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
+                array_push($files, $obj);
+            }
         }
         // dd($biosample_id);
         return view('dashboard.curator.bioarchive.show', [

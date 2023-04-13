@@ -9,10 +9,11 @@ class SSHController extends Controller
 {
     public function tesSSH(Request $request)
     {
-        $process = Ssh::create('stevry', '192.168.248.18', 22)
+        
+        $process = Ssh::create(env('SFTP_USERNAME'), env('SFTP_HOST'), intval(env('SFTP_PORT')))
             ->disablePasswordAuthentication()
-            ->usePrivateKey('/home/stevrt/.ssh/id_rsa')
-            ->execute("{$request->cmd} FTP/files/{$request->id}/{$request->folder}");
+            ->usePrivateKey(env('SFTP_KEY'))
+            ->execute("{$request->cmd} /var/innasto/files/{$request->id}/{$request->folder}");
         if ($process->isSuccessful()){
             return $process->getOutput();
         } else {

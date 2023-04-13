@@ -89,7 +89,7 @@ class UploaderController extends Controller
     // move the file name
     // $file->move($finalPath, $fileName);
     try {
-        $filePath = Storage::disk('ftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
+        $filePath = Storage::disk('sftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
     } catch (\Throwable $th) {
         throw $th;
     }

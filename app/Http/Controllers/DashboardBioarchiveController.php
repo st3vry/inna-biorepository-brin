@@ -35,11 +35,16 @@ class DashboardBioarchiveController extends Controller
         $bioexperiment = $bioarchive->bioexperiment()->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
-        
+
         foreach ($bioexperiment as $key => $value) {
-            $obj = new \stdClass();
-            $obj->{$value['alias']} = Storage::disk('ftp')->files("files/{$bioarchive->accession}/{$value['alias']}");
-            array_push($files, $obj);
+            $directory = "files/{$bioarchive->accession}/{$value['alias']}";
+            if (Storage::disk('sftp')->exists($directory)) {
+                $d = Storage::disk('sftp')->files($directory);
+                $obj = new \stdClass();
+                $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
+                array_push($files, $obj);
+            }
+            
         }
         
         // Storage::disk('ftp')->files("files/{$bioarchive->accession}/");

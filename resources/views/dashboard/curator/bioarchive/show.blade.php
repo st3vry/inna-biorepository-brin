@@ -154,8 +154,6 @@
                                 @endforeach                            
                             @endforeach
                             
-                                
-                           
                         <tr>
                             <td></td>
                             <td>

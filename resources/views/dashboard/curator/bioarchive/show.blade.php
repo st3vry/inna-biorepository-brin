@@ -26,6 +26,8 @@
         width: 11px;
         content: "";
     }
+
+    table tr.separator { height: 15px; }
 </style>
 @endpush
 
@@ -111,6 +113,7 @@
                             <td>Input Size</td>
                             <td>{{ $value['input_size'] }}</td>
                         </tr>
+                        @if (count($files) > 1 && $bioarchive->status == 2 && $bioarchive->draft == false )
                         <tr>
                             @php
                                 $runs =  App\Models\Biorun::Select('*')->where('bioexperiment_id',$value['id'])->get()
@@ -150,14 +153,20 @@
                                     @endif
                                 @endforeach                            
                             @endforeach
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#fileCheck{{$value['alias']}}">
-                                        File Check
-                                    </button>                                      
-                                </td>
-                            </tr>
+                            
+                                
+                           
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#fileCheck{{$value['alias']}}">
+                                    File Check
+                                </button>                                      
+                            </td>
+                        </tr>
+                        @endif
+                        <tr class="separator">
+                        </tr>
                             <div class="modal fade" id="fileCheck{{$value['alias']}}" tabindex="-1" aria-labelledby="fileCheck{{$value['alias']}}Label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
                                 <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" >
                                     <div class="modal-content">

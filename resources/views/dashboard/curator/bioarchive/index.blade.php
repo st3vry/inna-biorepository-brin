@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active" aria-current="page">Curator Bioarchives</li>
     </ol>
 </div>
-<a href="/dashboard/bioarchives/create" class="btn btn-primary mb-3">Create New Bioarchive</a>
+{{-- <a href="/dashboard/bioarchives/create" class="btn btn-primary mb-3">Create New Bioarchive</a> --}}
 <div class="table-responsive col-md-11">
     <table class="table table-striped table-sm">
         <thead>

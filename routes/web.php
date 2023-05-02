@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\BiosampleController;
+use App\Http\Controllers\BioarchiveController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\CuratorBioSampleController;
 use App\Http\Controllers\CuratorBioArchiveController;
@@ -56,17 +57,17 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Route::get('/bioprojects', [BioprojectController::class, 'index'])->name('bioprojectindex');
 // Route::get('/bioprojects/{$bioproject:alias}', [BioprojectController::class, 'show'])->name('bioprojectshow');
 
-Route::get('/biosamples', function () {
-    return view('frontend.biosample', [
-        'title' => 'BioSample',
-    ]);
-});
+// Route::get('/biosamples', function () {
+//     return view('frontend.biosample', [
+//         'title' => 'BioSample',
+//     ]);
+// });
 
-Route::get('/bioarchives', function () {
-    return view('frontend.bioarchive', [
-        'title' => 'BioArchive'
-    ]);
-});
+// Route::get('/bioarchives', function () {
+//     return view('frontend.bioarchive', [
+//         'title' => 'BioArchive'
+//     ]);
+// });
 
 // Account Routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -82,6 +83,7 @@ Route::get('/bioprojects', [BioprojectController::class, 'index']);
 Route::get('/bioprojects/{bioproject}', [BioprojectController::class, 'show']);
 Route::get('/biosamples', [BiosampleController::class, 'index']);
 Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
+Route::get('/bioarchives', [BioarchiveController::class, 'index']);
 
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {

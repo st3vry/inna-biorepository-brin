@@ -20,9 +20,9 @@
 
             <strong>Center</strong>
             <ul class="ps-2" type="none">
-                {{-- @foreach ($centers as $center)
+                @foreach ($centers as $center)
                     <li><a href="#" class="text-sidebar">{{$center->name}} ({{$center->count}})</a></li>
-                @endforeach --}}
+                @endforeach
             </ul>
 
         </div>

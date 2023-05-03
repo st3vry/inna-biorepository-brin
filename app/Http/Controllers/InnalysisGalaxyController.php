@@ -11,7 +11,7 @@ class InnalysisGalaxyController extends Controller
     //
     public function index()
     {
-        $response = Http::get('http://202.46.7.138:8081/workflows');
+        $response = Http::get('http://10.10.253.7:8080/workflows');
         $workflows = json_decode($response);
         // return $workflows;
         return view('dashboard.innalysis.galaxy', [
@@ -35,7 +35,7 @@ class InnalysisGalaxyController extends Controller
 
         // dd(json_encode($wf));
         // return $wf;
-        $response = Http::post('202.46.7.138:8081/run', $wf);
+        $response = Http::post('http://10.10.253.7:8080/workflows', $wf);
         return $response;
     }
 }

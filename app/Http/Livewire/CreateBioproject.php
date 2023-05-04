@@ -247,7 +247,11 @@ class CreateBioproject extends Component
     public function fifthStepSubmit()
     {
         $validatedData = $this->validate([
-            'status' => 'required',
+            // 'status' => 'required',
+            'publications' => '',
+            'publications.*.pub_identifier_id' => 'required',
+            'publications.*.pub_id' => 'required',
+            'publications.*.article_title' => 'required',
         ]);
 
         $this->currentStep = 6;

@@ -29,5 +29,12 @@ class LabSeeder extends Seeder
             'address' => 'Jalan bunga Melati',
             'website' => 'www.lab-obat.com'
         ]);
+
+        Lab::create([
+            'name' => 'Laboratorium Sequencing',
+            'center_id' => 3,
+            'address' => 'Jalan bunga Mawar',
+            'website' => 'www.lab-sequence.com'
+        ]);
     }
 }

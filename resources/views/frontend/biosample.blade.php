@@ -33,7 +33,7 @@
                     <div class="row">
                         <div class="col-1" style="width: auto"><h6>{{ ($biosamples->currentPage() - 1) * $biosamples->perPage() + $loop->iteration }}</h6></div>
                         <div class="col-11">
-                            <a href="bioprojects/{{ $biosample->accession }}" class="text-dark"><h6 class="card-title fw-bold">{{ $biosample->title }}</h6></a>
+                            <a href="biosamples/{{ $biosample->accession }}" class="text-dark"><h6 class="card-title fw-bold">{{ $biosample->title }}</h6></a>
                             <p class="mb-1">{{ Str::words($biosample->description,20, ' ')}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readMore(this)"> Read more...</a></p>
                             <p class="mb-1 d-none">{{ $biosample->description}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readLess(this)"> Read less.</a></p>
                             <p class="fw-light mb-0">Organism: {{ $biosample->organism->name }}</p>

@@ -190,6 +190,7 @@ class CreateBioproject extends Component
         'grants' => '',
         'externallinks' => '',
 
+        'publications' => '',
         'publications.*.pub_identifier_id' => 'required',
         'publications.*.pub_id' => 'required',
         'publications.*.article_title' => 'required',
@@ -245,9 +246,9 @@ class CreateBioproject extends Component
     }
     public function fifthStepSubmit()
     {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
+        $validatedData = $this->validate([
+            'status' => 'required',
+        ]);
 
         $this->currentStep = 6;
     }

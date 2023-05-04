@@ -84,6 +84,7 @@ Route::get('/bioprojects/{bioproject}', [BioprojectController::class, 'show']);
 Route::get('/biosamples', [BiosampleController::class, 'index']);
 Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
 Route::get('/bioarchives', [BioarchiveController::class, 'index']);
+Route::get('/bioarchives/{bioarchive}', [BioarchiveController::class, 'show']);
 
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {

@@ -153,6 +153,8 @@ class CreateBioproject extends Component
     public $repl_size;
     public $genome_sizes2 = [];
     public $genome_size2_id;
+    public $genome2_sizes = [];
+    public $genome2_size_id;
 
 
     protected $rules = [
@@ -181,6 +183,12 @@ class CreateBioproject extends Component
 
         'samplescope_id' => 'required',
         'samplescopedesc' => '',
+
+        'relevance_id' => 'required',
+        'reldesc' => '',
+
+        'grants' => '',
+        'externallinks' => '',
 
         'publications.*.pub_identifier_id' => 'required',
         'publications.*.pub_id' => 'required',
@@ -449,8 +457,8 @@ class CreateBioproject extends Component
         $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
-        $bioproject->objective_id = implode(",", $validatedData['objective_id']);
-        // $bioproject->samplescope_id = $validatedData['samplescope_id'];
+        // $bioproject->objective_id = implode(",", $validatedData['objective_id']);
+        $bioproject->samplescope_id = $validatedData['samplescope_id'];
         // sample scope
 
         $bioproject->umbproject_id = $validatedData['umbproject_id'];

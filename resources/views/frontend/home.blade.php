@@ -26,7 +26,7 @@
                             <p align="justify">Indonesia Nucleotide Archive (InNA) is a repository platform to store nucleotide (DNA/RNA) data to support life sciences, agriculture, and bioinformatics for biodiversity data disclosure, utilization of food genetic resources, precision medicine, etc. InNA can be accessed freely and publicly by researcher or scientists for research. If the data is restricted to be stored and used, please consult Principal Investigator project or your local institutional before uploading it to InNA.
                                 InNA is sdeveloped by Research Center for Computing, National Research and Innovation Agency. We are also developing analysis platform for advanced analysis of nucleotide (DNA/RNA) data called INNAlysis.</p>
                             <section class="text-center">
-                                {{-- <div class="row">
+                                <div class="row">
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
                                         <a href="/dashboard" class="nav-link text-muted">
                                             <h6 class="fw-normal mb-2">Submit</h6>
@@ -36,7 +36,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
-                                        <a href="/browse" class="nav-link text-muted">
+                                        <a href="#" class="nav-link text-muted">
                                             <h6 class="fw-normal mb-2">Browse</h6>
                                             <span data-feather="globe"></span>
                                             <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
@@ -44,7 +44,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-0 position-relative">
-                                        <a href="/download" class="nav-link text-muted">
+                                        <a href="#" class="nav-link text-muted">
                                             <h6 class="fw-normal mb-2">Download</h6>
                                             <span data-feather="download"></span>
                                             <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
@@ -52,12 +52,12 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-0 position-relative">
-                                        <a href="/document" class="nav-link text-muted">
+                                        <a href="#" class="nav-link text-muted">
                                             <h6 class="fw-normal mb-2">Document</h6>
                                             <span data-feather="file-text"></span>
                                         </a>
                                     </div>
-                                </div> --}}
+                                </div>
                             </section>
                         </div>
                     </div>

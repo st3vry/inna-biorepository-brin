@@ -14,6 +14,7 @@ use App\Models\Attributesample;
 use App\Models\BioProjectExternalLink;
 use App\Models\BioSampleExternalLink;
 use App\Models\CaptureBioproject;
+use App\Models\Datainconcern;
 use App\Models\DatatypeBioproject;
 use App\Models\ObjectiveBioProject;
 use App\Models\MaterialBioproject;
@@ -58,6 +59,8 @@ class DatabaseSeeder extends Seeder
         Grant::factory(50)->create();
         BioProjectExternalLink::factory(50)->create();
         BioSampleExternalLink::factory(50)->create();
+
+        Datainconcern::factory(5)->create();
 
         // Relevance, Material Bioproject
         $max = 50;

@@ -13,6 +13,7 @@ use App\Http\Controllers\CuratorBioArchiveController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\DashboardBioarchiveController;
+use App\Http\Controllers\DashboardIndexController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InnalysisGalaxyController;
 use App\Http\Controllers\LoginController;
@@ -88,9 +89,7 @@ Route::get('/bioarchives/{bioarchive}', [BioarchiveController::class, 'show']);
 
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard.index');
-    })->middleware('auth');
+    Route::get('/', [DashboardIndexController::class, 'index'])->middleware('auth');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('users.profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('users.profile.update');

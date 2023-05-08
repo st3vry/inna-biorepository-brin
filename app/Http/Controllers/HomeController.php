@@ -15,8 +15,8 @@ class HomeController extends Controller
     public function index()
     {
         $data_in_concerns = Datainconcern::latest()->take(4)->get();
-        $bioprojects_latest = Bioproject::latest()->take(2)->where('draft', FALSE)->get();
-        $biosamples_latest = Biosample::latest()->take(2)->where('draft', FALSE)->get();
+        $bioprojects_latest = Bioproject::latest()->take(2)->where('draft', FALSE)->whereNotNull('published_at')->get();
+        $biosamples_latest = Biosample::latest()->take(2)->where('draft', FALSE)->whereNotNull('published_at')->get();
         $bioarchives_latest = Bioarchive::latest()->take(2)->where('draft', TRUE)->get();
         // dd($data_in_concern);
         return view('frontend.home', [

@@ -124,10 +124,9 @@
                         </div>
                         <div class="card-body">
                             <ul>
-                                <li>Data1</li>
-                                <li>Data2</li>
-                                <li>Data3</li>
-                                <li>Data4</li>
+                            @foreach ($data_in_concerns as $item)
+                                <li><a href="biosamples/{{ $item->biosample->accession }}">{{ $item->biosample->accession }}</a> : {{ $item->biosample->title }}</li>
+                            @endforeach
                             </ul>
                         </div>
                     </div>
@@ -153,11 +152,23 @@
                             <h5>Latest Released Data</h5>
                         </div>
                         <div class="card-body">
+                            <h6>BioProject</h6>
                             <ul>
-                                <li>Data1</li>
-                                <li>Data2</li>
-                                <li>Data3</li>
-                                <li>Data4</li>
+                                @foreach ($bioprojects_latest as $item)
+                                    <li><a href="bioprojects/{{ $item->accession }}">{{ $item->accession }}</a> : {{ $item->title }}</li>
+                                @endforeach
+                            </ul>
+                            <h6>BioSample</h6>
+                            <ul>
+                                @foreach ($biosamples_latest as $item)
+                                    <li><a href="biosamples/{{ $item->accession }}">{{ $item->accession }}</a> : {{ $item->title }}</li>
+                                @endforeach
+                            </ul>
+                            <h6>BioArchive</h6>
+                            <ul>
+                                @foreach ($bioarchives_latest as $item)
+                                    <li><a href="bioarchives/{{ $item->accession }}">{{ $item->accession }}</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>

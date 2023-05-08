@@ -14,6 +14,14 @@ body{
     color: #fff;
 }
 
+a {
+  color: white;
+}
+
+a:hover {
+  color: salmon;
+}
+
 .bg-c-blue {
     background: linear-gradient(45deg,#4099ff,#73b4ff);
 }
@@ -66,6 +74,7 @@ body{
                     <h6 class="m-b-20">BioProjects</h6>
                     <h2 class="text-right"><i data-feather="list" style="width:32px;height:32px;"class="f-left"></i><span>{{ $bioproject_pub_count }} Projects</span> </h2>
                     <p class="m-b-0">UnPublish<span class="f-right">{{ $bioproject_count }} Projects</span> </p>
+                    <a href="/dashboard/bioprojects" class="stretched-link">Bioprojects Page</a>
                 </div>
             </div>
         </div>
@@ -76,6 +85,7 @@ body{
                     <h6 class="m-b-20">BioSamples</h6>
                     <h2 class="text-right"><i data-feather="layers" style="width:32px;height:32px;"class="f-left"></i><span>{{ $biosample_pub_count }} Samples</span></h2>
                     <p class="m-b-0">UnPublish<span class="f-right">{{ $biosample_count }} Samples</span></p>
+                    <a href="/dashboard/biosamples" class="stretched-link">Biosamples Page</a>
                 </div>
             </div>
         </div>
@@ -86,6 +96,7 @@ body{
                     <h6 class="m-b-20">BioArchives</h6>
                     <h2 class="text-right"><i data-feather="hard-drive" style="width:32px;height:32px;"class="f-left"></i><span>{{ $bioarchive_pub_count }} Archives</span></h2>
                     <p class="m-b-0">UnPublish<span class="f-right">{{ $bioarchive_pub_count }} Archives</span></p>
+                    <a href="/dashboard/bioarchives" class="stretched-link">Bioarchives Page</a>
                 </div>
             </div>
         </div>

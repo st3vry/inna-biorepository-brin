@@ -202,6 +202,9 @@ class CuratorBioArchiveController extends Controller
                 }
             }
             if ($request->action === 'approved') {
+
+                dd( $request);
+
                 $action = Bioarchive::where('accession', $id)->update([
                     'published_at' => now(),
                     'status' => 5

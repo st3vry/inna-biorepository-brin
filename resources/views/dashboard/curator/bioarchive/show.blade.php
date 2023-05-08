@@ -177,8 +177,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" id="btlsltr{{$value['alias']}}">LS -ltr</button>
-                                            <button type="button" class="btn btn-primary" id="btls{{$value['alias']}}">LS</button>
+                                            <button type="button" class="btn btn-primary" id="btmd5{{$value['alias']}}">MD5 Checksum</button>
                                         </div>
                                     </div>
                                 </div>
@@ -343,8 +342,13 @@
                 }
                 
             }
-
-            function tesSSH(elem, cmd, folder) {
+            const files = @json($files, JSON_PRETTY_PRINT);
+            let md5 = "gagal"
+            console.log(files[0])
+            function tesSSH(elem, cmd, folder, item) {
+                let fileName = files[item][folder][0].split('/').slice(-1)[0]
+                let extension = fileName.split('.').slice(-1)[0]
+                console.log(fileName, extension)
                 fetch('{{route('tesSSH')}}', {
                 method: 'post',
                 headers: {
@@ -355,27 +359,31 @@
                     { 
                         "id": '{{$bioarchive->accession}}',
                         "folder": folder,
+                        "fileName":fileName,
+                        "extension":extension,
                         "cmd": cmd,
                          '_token': '{{ csrf_token() }}'
                     }
                 )
             })
-            .then(response => response.text())
-            .then(response => {
-                console.log(response)
-                
-                elem.innerHTML += "<p>"+response+"</p>"
-            })}
+                .then(response => response.text())
+                .then(response => {
+                    console.log(response)
+                    md5 = response.split("  ")[0]
+                    elem.innerHTML += "<p>"+response+"</p>"
+                })
+            }
+
+           
             
             @foreach ($bioexperiment as $item => $value)
             const btls{{$item}} = document.getElementById('btls{{$value['alias']}}')
             const btlsltr{{$item}} = document.getElementById('btlsltr{{$value['alias']}}')
             const sshRespon{{$item}} =  document.getElementById('sshRespon{{$value['alias']}}')
-            btls{{$item}}.addEventListener("click",function() {
-                tesSSH(sshRespon{{$item}}, "ls", '{{$value['alias']}}')
-            })
-            btlsltr{{$item}}.addEventListener("click",function() {
-                tesSSH(sshRespon{{$item}}, "ls -ltr", '{{$value['alias']}}')
+            const btmd5{{$item}} = document.getElementById('btmd5{{$value['alias']}}')
+
+            btmd5{{$item}}.addEventListener("click", function() {
+                tesSSH(sshRespon{{$item}}, "md5sum ", '{{$value['alias']}}', '{{$item}}')
             })
 
             @endforeach

@@ -128,12 +128,6 @@
                                 <li><a href="biosamples/{{ $item->biosample->accession }}">{{ $item->biosample->accession }}</a> : {{ $item->biosample->title }}</li>
                             @endforeach
                             </ul>
-                            {{-- <ul>
-                                <li>Data1</li>
-                                <li>Data2</li>
-                                <li>Data3</li>
-                                <li>Data4</li>
-                            </ul> --}}
                         </div>
                     </div>
                 </div>

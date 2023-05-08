@@ -7,7 +7,7 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <style>
 body{
-    margin-top:20px;
+    /* margin-top:20px; */
     background:#FAFAFA;
 }
 .order-card {
@@ -20,7 +20,7 @@ a {
 
 a:hover {
   color: salmon;
-}
+} 
 
 .bg-c-blue {
     background: linear-gradient(45deg,#4099ff,#73b4ff);
@@ -63,7 +63,7 @@ a:hover {
 
 .f-right {
     float: right;
-}
+} 
 </style>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">

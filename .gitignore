@@ -3,7 +3,7 @@
 /public/hot
 /public/storage
 /storage/*.key
-/vendor/*
+vendor/*
 .gitignore
 .env
 .env.backup

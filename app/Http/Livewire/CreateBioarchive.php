@@ -152,6 +152,7 @@ class CreateBioarchive extends Component
         $bioarchive->biosample_id = implode(",", $this->biosample_id);
         $bioarchive->user_id = auth()->user()->id;
         $bioarchive->hold_release = $this->hold_release;
+        $bioarchive->draft = true;
         $bioarchive->save();
         // dd($bioarchive);
         // dd($this->bioexperiment_id);

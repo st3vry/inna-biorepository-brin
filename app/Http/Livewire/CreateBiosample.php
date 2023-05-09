@@ -580,7 +580,7 @@ class CreateBiosample extends Component
         'hold_release' => 'required',
         'sampletype_id' => 'required',
         'comments' => '',
-
+        'biosample_links' => '',
         'biosample_links.*.link_description' => '',
         'biosample_links.*.link_url' => '',
         

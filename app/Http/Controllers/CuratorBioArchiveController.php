@@ -255,7 +255,6 @@ class CuratorBioArchiveController extends Controller
 
     public function updateBiorun(Request $request)
     {
-        dd($request);
         $action = Biorun::where('id', $request->biorun_id)->update([
             'filename' => $request->fileNameInModal,
             'md5' => $request->md5InModal,

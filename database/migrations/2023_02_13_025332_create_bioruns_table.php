@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bioexperiment_id');
             $table->string('alias');
-            $table->string('filename');
-            $table->string('md5');
+            $table->string('filename')->nullable();
+            $table->string('md5')->nullable();
             $table->foreignId('filetype_id');
             $table->timestamps();
         });

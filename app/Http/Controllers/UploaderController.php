@@ -98,7 +98,6 @@ class UploaderController extends Controller
     $biorun = new BioRun;
     $biorun->bioexperiment_id = $request->bioexperiment_id;
     $biorun->alias = $request->subFolder;
-    $biorun->filename = $fileName;
     $biorun->filetype_id = $request->filetype;
     $biorun->save();
 

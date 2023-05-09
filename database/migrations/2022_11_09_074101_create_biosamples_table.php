@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('sampletype_id');
             $table->foreignId('organism_id');
             $table->string('organism_name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('center_id');
             $table->foreignId('user_id');
             $table->integer('curator_id')->nullable();

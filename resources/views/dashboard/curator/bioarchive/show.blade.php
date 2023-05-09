@@ -369,7 +369,7 @@
                 .then(response => {
                     console.log(response)
                     md5 = response.split("  ")[0]
-                    elem.innerHTML += "<p>"+response+"</p>"
+                    elem.innerHTML += "<p> MD5 Check"+md5+" OK</p>"
                 })
             }
 

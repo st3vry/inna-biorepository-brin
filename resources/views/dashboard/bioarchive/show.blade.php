@@ -170,6 +170,26 @@
                             </div>
                             </div>
                             
+                        @else
+                        <tr>
+                            <td><strong>File</strong></td>
+                        @foreach ($files as $file)
+                            @foreach ($file as $key => $item)
+                                @if ($key === $value['alias'])
+                                @foreach ($item as $it)
+                                {{-- <tr> --}}
+                                    {{-- <td></td> --}}
+                                    <td>
+                                        {{$it}}
+                                    </td>
+                                {{-- </tr> --}}
+                                @endforeach
+                                
+                                @endif
+                            @endforeach                            
+                        @endforeach
+
+                        </tr>
                         @endif
                         @endforeach
                     </table>

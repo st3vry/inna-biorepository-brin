@@ -88,7 +88,7 @@ class CuratorBioArchiveController extends Controller
                 array_push($files, $obj);
             }
         }
-        // dd($biosample_id);
+        // dd($files);
         return view('dashboard.curator.bioarchive.show', [
             'bioarchive' => $bioarchive,
             'biosample_id' => $biosample_id,

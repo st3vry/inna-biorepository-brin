@@ -113,7 +113,7 @@
                             <td>Input Size</td>
                             <td>{{ $value['input_size'] }}</td>
                         </tr>
-                        @if (count($files) > 1 && $bioarchive->status == 2 && $bioarchive->draft == false )
+                        @if (count($files) > 0 && $bioarchive->status == 2 && $bioarchive->draft == false )
                         <tr>
                             @php
                                 $runs =  App\Models\Biorun::Select('*')->where('bioexperiment_id',$value['id'])->get()
@@ -153,7 +153,6 @@
                                     @endif
                                 @endforeach                            
                             @endforeach
-                            
                         <tr>
                             <td></td>
                             <td>

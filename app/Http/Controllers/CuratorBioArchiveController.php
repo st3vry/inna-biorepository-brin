@@ -260,9 +260,9 @@ class CuratorBioArchiveController extends Controller
             'md5' => $request->md5InModal,
         ]);
         if ($action) {
-            return redirect('/dashboard/curator/bioarchives/' . $id)->with('success', $success);
+            return back()->with('success', $success);
         } else {
-            return redirect('/dashboard/curator/bioarchives/' . $id)->with('error', 'Something went wrong, please try again later!');
+            return back()->with('error', 'Something went wrong, please try again later!');
         }
         
     }

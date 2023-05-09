@@ -40,6 +40,19 @@
         <li class="breadcrumb-item active" aria-current="page">{{$bioarchive->accession}}</li>
     </ol>
 </div>
+@if (session()->has('success'))
+
+<div class="alert alert-success alert-dismissible fade show col-lg-8" role="alert">
+    <strong> {{session('success')}}</strong>
+</div>
+@endif
+
+@if (session()->has('error'))
+
+<div class="alert alert-danger alert-dismissible fade show col-lg-8" role="alert">
+    <strong> {{session('error')}}</strong>
+</div>
+@endif
 <div class="row">
     <div class="table-responsive col-md-8">
         <table class="table table-sm">
@@ -195,8 +208,7 @@
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             <button type="button" class="btn btn-primary" id="btmd5{{$value['alias']}}">MD5 Checksum</button>
                                             
-
-                                            <button type="submit" class="btn btn-primary">Save Change</button>
+                                            <button disabled id="btSubmitBiorun{{$value['id']}}" type="submit" class="btn btn-primary">Save Change</button>
                                             </form>
 
                                         </div>
@@ -369,7 +381,7 @@
             let md5 = "gagal"
             const md5Array = []
             console.log(files[0])
-            function tesSSH(elem, fileNameInModal, md5InModal, cmd, folder, item) {
+            function tesSSH(elem, fileNameInModal, md5InModal, cmd, folder, item, button) {
                 let fileName = files[item][folder][0].split('/').slice(-1)[0]
                 let extension = fileName.split('.').slice(-1)[0]
                 console.log(fileName, extension)
@@ -398,7 +410,10 @@
                     md5Input.value = JSON.stringify(md5Array) 
                     fileNameInModal.value = fileName
                     md5InModal.value = md5
-                    elem.innerHTML += "<p> MD5 Check ("+md5+")</p>"
+                    if (md5.length > 1) {
+                        button.disabled=false;
+                    }
+                    // elem.innerHTML += "<p> MD5 Check ("+md5+")</p>"
                 })
             }
 
@@ -411,9 +426,10 @@
             const btmd5{{$item}} = document.getElementById('btmd5{{$value['alias']}}')
             const fileNameInModal{{$item}} = document.getElementById('fileNameInModal{{$value['id']}}')
             const md5InModal{{$item}} = document.getElementById('md5InModal{{$value['id']}}')
+            const btSubmitBiorun{{$item}} = document.getElementById('btSubmitBiorun{{$value['id']}}')
 
             btmd5{{$item}}.addEventListener("click", function() {
-                tesSSH(sshRespon{{$item}}, fileNameInModal{{$item}}, md5InModal{{$item}},  "md5sum ", '{{$value['alias']}}', '{{$item}}')
+                tesSSH(sshRespon{{$item}}, fileNameInModal{{$item}}, md5InModal{{$item}},  "md5sum ", '{{$value['alias']}}', '{{$item}}', btSubmitBiorun{{$item}})
             })
 
             @endforeach

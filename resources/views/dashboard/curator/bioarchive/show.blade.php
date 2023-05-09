@@ -188,7 +188,7 @@
                                            
                                             <form action="{{route('updateBiorun')}}" method="post">
                                                 @csrf
-                                                <input type="hidden" name="biorun_id" value="{{$value['id']}}">
+                                                <input type="hidden" name="alias" value="{{$value['alias']}}">
                                                 <div class="mb-1 row">
                                                     <label for="fileNameInModal{{$value['id']}}" class="col-sm-2 col-form-label">File Name</label>
                                                     <div class="col-sm-10">

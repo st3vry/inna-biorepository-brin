@@ -238,6 +238,7 @@
             @csrf
             <input type="hidden" name="target" value="{{$bioarchive->user_id}}">
             <input type="hidden" name="bioarchive_id" id="bioarchive_id" value="{{ $bioarchive->id }}">
+            <input type="hidden" name="md5Input" id="md5Input" value="">
             <label class="fw-bolder" for="action">Action:</label>
             <div class="col-8">
                 <select class="form-select" name="action" id="action">
@@ -342,7 +343,9 @@
                 
             }
             const files = @json($files, JSON_PRETTY_PRINT);
+            const md5Input = document.getElementById("md5Input");
             let md5 = "gagal"
+            const md5Array = []
             console.log(files[0])
             function tesSSH(elem, cmd, folder, item) {
                 let fileName = files[item][folder][0].split('/').slice(-1)[0]
@@ -369,7 +372,10 @@
                 .then(response => {
                     console.log(response)
                     md5 = response.split("  ")[0]
-                    elem.innerHTML += "<p> MD5 Check"+md5+" OK</p>"
+                    md5Array.push(md5)
+                    md5Input.value = JSON.stringify(md5Array) 
+                    elem.innerHTML += "<p> MD5 Check ("+md5+")</p>"
+                    
                 })
             }
 

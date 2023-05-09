@@ -10,6 +10,7 @@ use App\Models\Biosample;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Biorun;
 use Exception;
 
 class CuratorBioArchiveController extends Controller
@@ -250,5 +251,20 @@ class CuratorBioArchiveController extends Controller
     public function biosampleName($id)
     {
         return Biosample::select('accession')->where('id', $id)->pluck('accession')->first();
+    }
+
+    public function updateBiorun(Request $request)
+    {
+        dd($request);
+        $action = Biorun::where('id', $request->biorun_id)->update([
+            'filename' => $request->fileNameInModal,
+            'md5' => $request->md5InModal,
+        ]);
+        if ($action) {
+            return redirect('/dashboard/curator/bioarchives/' . $id)->with('success', $success);
+        } else {
+            return redirect('/dashboard/curator/bioarchives/' . $id)->with('error', 'Something went wrong, please try again later!');
+        }
+        
     }
 }

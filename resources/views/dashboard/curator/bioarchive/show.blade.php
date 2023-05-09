@@ -171,12 +171,34 @@
                                             <h5 class="modal-title" id="fileCheck{{$value['alias']}}Label">{{$value['alias']}}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div id="sshRespon{{$value['alias']}}" class="modal-body" style="min-height:300px">
+                                        <div class="modal-body" style="min-height:300px">
+                                           
+                                            <form action="{{route('updateBiorun')}}" method="post">
+                                                @csrf
+                                                <input type="hidden" name="biorun_id" value="{{$value['id']}}">
+                                                <div class="mb-1 row">
+                                                    <label for="fileNameInModal{{$value['id']}}" class="col-sm-2 col-form-label">File Name</label>
+                                                    <div class="col-sm-10">
+                                                    <input type="text" readonly class="form-control-plaintext" name="fileNameInModal" id="fileNameInModal{{$value['id']}}" value="-">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2 row">
+                                                    <label for="md5InModal{{$value['id']}}" class="col-sm-2 col-form-label">MD5 Checksum</label>
+                                                    <div class="col-sm-10">
+                                                    <input type="text" readonly class="form-control-plaintext" name="md5InModal" id="md5InModal{{$value['id']}}" value="-">
+                                                    </div>
+                                                </div>
+                                            <div id="sshRespon{{$value['alias']}}"></div>
                                             
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             <button type="button" class="btn btn-primary" id="btmd5{{$value['alias']}}">MD5 Checksum</button>
+                                            
+
+                                            <button type="submit" class="btn btn-primary">Save Change</button>
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -347,7 +369,7 @@
             let md5 = "gagal"
             const md5Array = []
             console.log(files[0])
-            function tesSSH(elem, cmd, folder, item) {
+            function tesSSH(elem, fileNameInModal, md5InModal, cmd, folder, item) {
                 let fileName = files[item][folder][0].split('/').slice(-1)[0]
                 let extension = fileName.split('.').slice(-1)[0]
                 console.log(fileName, extension)
@@ -374,8 +396,9 @@
                     md5 = response.split("  ")[0]
                     md5Array.push(md5)
                     md5Input.value = JSON.stringify(md5Array) 
+                    fileNameInModal.value = fileName
+                    md5InModal.value = md5
                     elem.innerHTML += "<p> MD5 Check ("+md5+")</p>"
-                    
                 })
             }
 
@@ -386,9 +409,11 @@
             const btlsltr{{$item}} = document.getElementById('btlsltr{{$value['alias']}}')
             const sshRespon{{$item}} =  document.getElementById('sshRespon{{$value['alias']}}')
             const btmd5{{$item}} = document.getElementById('btmd5{{$value['alias']}}')
+            const fileNameInModal{{$item}} = document.getElementById('fileNameInModal{{$value['id']}}')
+            const md5InModal{{$item}} = document.getElementById('md5InModal{{$value['id']}}')
 
             btmd5{{$item}}.addEventListener("click", function() {
-                tesSSH(sshRespon{{$item}}, "md5sum ", '{{$value['alias']}}', '{{$item}}')
+                tesSSH(sshRespon{{$item}}, fileNameInModal{{$item}}, md5InModal{{$item}},  "md5sum ", '{{$value['alias']}}', '{{$item}}')
             })
 
             @endforeach

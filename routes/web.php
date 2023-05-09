@@ -122,6 +122,9 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
     // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
 
+
+    Route::post('/curator/biorun', [CuratorBioArchiveController::class, 'updateBiorun'])->name('updateBiorun')->middleware(['auth']);
+
     Route::post('file/upload', [UploaderController::class, 'upload'])->name('file-upload')->middleware('auth');
     Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('auth');
     Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');

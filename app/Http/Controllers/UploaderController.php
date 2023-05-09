@@ -11,6 +11,7 @@ use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use App\Models\Biorun;
 
 class UploaderController extends Controller
 {
@@ -93,6 +94,14 @@ class UploaderController extends Controller
     } catch (\Throwable $th) {
         throw $th;
     }
+    // dd($request);
+    $biorun = new BioRun;
+    $biorun->bioexperiment_id = $request->bioexperiment_id;
+    $biorun->alias = $request->subFolder;
+    $biorun->filename = $fileName;
+    $biorun->filetype_id = $request->filetype;
+    $biorun->save();
+
     // $filePath = Storage::disk('ftp')->put("{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
     
 

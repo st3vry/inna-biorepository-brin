@@ -150,6 +150,16 @@
                                     <form action="{{route('file-upload')}}"
                                         class="dropzone"
                                         id="form{{ $value['alias'] }}">
+                                        <div class="row mt-3">
+                                            <label for="filetype{{ $value['alias'] }}" class="col-sm-2 col-form-label col-form-label-sm form-label">File Type</label>
+                                            <div class="col-sm-10">
+                                                <select name="filetype" id="filetype{{ $value['alias'] }}" class="form-select" aria-label="Default select example">
+                                                    @foreach ($filetypes as $filetype)
+                                                        <option value="{{$filetype->id}}">{{$filetype->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                          </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
@@ -252,7 +262,9 @@
         myDropzone{{ $value['id']}}.on('sending', function (file, xhr, formData) {
             formData.append("_token", '{{ csrf_token() }}');
             formData.append("mainFolder", "{{$bioarchive->accession}}")
+            formData.append("bioexperiment_id", "{{$value['id']}}")
             formData.append("subFolder", "{{ $value['alias']}}")
+            formData.append("filetype", document.getElementById("filetype{{ $value['alias'] }}").value)
             console.log(formData,formData)
         })
         @endforeach

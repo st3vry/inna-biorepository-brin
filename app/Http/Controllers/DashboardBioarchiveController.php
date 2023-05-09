@@ -11,6 +11,7 @@ use App\Models\LibraryLayout;
 use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
+use App\Models\FileType;
 use Storage;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,8 @@ class DashboardBioarchiveController extends Controller
         $bioexperiment = $bioarchive->bioexperiment()->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
+        $filetypes = FileType::get();
+        // dd($filetypes);
 
         foreach ($bioexperiment as $key => $value) {
             $directory = "files/{$bioarchive->accession}/{$value['alias']}";
@@ -56,7 +59,8 @@ class DashboardBioarchiveController extends Controller
             'biosample_id' => $biosample_id,
             'bioexperiment' => $bioexperiment,
             'histories' => $histories,
-            'files' => $files
+            'files' => $files,
+            'filetypes'=>$filetypes
             // 'biorun' => $biorun,
         ]);
     }

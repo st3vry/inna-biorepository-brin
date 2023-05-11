@@ -36,6 +36,7 @@
                 <td class="col-sm-1">Lab</td>
                 <td class="col-sm-7">{{$bioarchive->user->lab->name}}</td>
             </tr>
+            {{-- {{ dd($bioruns) }} --}}
             <tr>
                 <td class="col-sm-1">Bioexperiments</td>
                 <td class="col-sm-7">
@@ -68,6 +69,10 @@
                         <tr>
                             <td class="col-sm-1">Library Layout</td>
                             <td class="col-sm-7">{{$bioexperiment->liblayout->name}}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-sm-1">File</td>
+                            <td class="col-sm-7">{{$bioruns[0]->filename}}</td>
                         </tr>
                     @endforeach
                         

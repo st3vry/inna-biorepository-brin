@@ -30,12 +30,10 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Sample Type</td>
-                @if ($sample_type) {
+                @if ($sample_type) 
                     <td class="col-sm-7">{{$sample_type->sampletype->name}}</td>
-                }
-                @else{
+                @else
                     <td class="col-sm-7">None</td>  
-                }
                 @endif
             </tr>
             <tr>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bioarchive;
 use App\Models\Bioproject;
 use App\Models\Bioexperiment;
+use App\Models\Biorun;
 use Illuminate\Http\Request;
 
 class BioarchiveController extends Controller
@@ -35,11 +36,14 @@ class BioarchiveController extends Controller
 
         // $biosample_links = $bioarchive->externallink()->get();
         $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
-        // dd($bioexperiments);
+        $bioruns = Biorun::where('bioexperiment_id', $bioexperiments[0]->id)->get();
+        // dd($bioruns);
+        // dd($bioexperiments[0]->id);
         return view('frontend.showbioarchive', [
             'title' => 'Biosample',
             'bioarchive' => $bioarchive,
             'bioexperiments' => $bioexperiments,
+            'bioruns' => $bioruns,
             // 'biosample_links' => $biosample_links
         ]);
     }

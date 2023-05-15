@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Biosample;
+use App\Models\AttributeValue;
 use App\Models\Datatype;
 use Illuminate\Http\Request;
 
@@ -41,11 +42,16 @@ class BiosampleController extends Controller
         }
 
         $biosample_links = $biosample->externallink()->get();
+        $sample_type = AttributeValue::where('biosample_id', $biosample->id)->first();
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        // dd($sample_attr);
 
         return view('frontend.showbiosample', [
             'title' => 'Biosample',
             'biosample' => $biosample,
-            'biosample_links' => $biosample_links
+            'biosample_links' => $biosample_links,
+            'sample_attr' => $sample_attr,
+            'sample_type' => $sample_type,
         ]);
     }
 }

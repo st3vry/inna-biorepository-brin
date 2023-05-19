@@ -237,9 +237,9 @@ class CreateBioproject extends Component
     {
         $validatedData = $this->validate([
             'organism_id' => 'required',
-            'sbc' => 'required',
-            'isolate' => 'required',
-            'org_desc' => 'required',
+            'sbc' => '',
+            'isolate' => '',
+            'org_desc' => '',
         ]);
 
         $this->currentStep = 5;

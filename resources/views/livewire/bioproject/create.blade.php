@@ -273,7 +273,7 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="consortium_id" class="form-label">Consortium</label>
+                        <label for="consortium_id" class="form-label">Consortium <font color="red">*</font></label>
                         <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
                             <option value="">Consortium</option>
                             @foreach ($consortia as $consortium )
@@ -466,7 +466,7 @@
                 </div>
                 <div class="card-body mb-3">
                     <div class="mb-3">
-                        <label for="organism_id" class="form-label">Organism</label>
+                        <label for="organism_id" class="form-label">Organism <font color="red">*</font></label>
                         <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
                             <option value="">Organism</option>
                             @foreach ($organisms as $organism )

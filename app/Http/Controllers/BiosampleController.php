@@ -42,14 +42,12 @@ class BiosampleController extends Controller
         }
 
         $biosample_links = $biosample->externallink()->get();
-        $sample_type = AttributeValue::where('biosample_id', $biosample->id)->first();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
         return view('frontend.showbiosample', [
             'title' => 'Biosample',
             'biosample' => $biosample,
             'biosample_links' => $biosample_links,
             'sample_attr' => $sample_attr,
-            'sample_type' => $sample_type,
         ]);
     }
 }

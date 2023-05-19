@@ -217,8 +217,8 @@ class CreateBioproject extends Component
             'grants.*.grant_program' => 'required',
             'grants.*.grant_title' => 'required',
 
-            'externallinks.*.link_description' => 'required',
-            'externallinks.*.link_url' => 'required',
+            'externallinks.*.link_description' => '',
+            'externallinks.*.link_url' => '',
 
             'consortium_id' => 'required',
         ]);
@@ -237,9 +237,9 @@ class CreateBioproject extends Component
     {
         $validatedData = $this->validate([
             'organism_id' => 'required',
-            'sbc' => 'required',
-            'isolate' => 'required',
-            'org_desc' => 'required',
+            'sbc' => '',
+            'isolate' => '',
+            'org_desc' => '',
         ]);
 
         $this->currentStep = 5;

@@ -273,7 +273,7 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="consortium_id" class="form-label">Consortium</label>
+                        <label for="consortium_id" class="form-label">Consortium <font color="red">*</font></label>
                         <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
                             <option value="">Consortium</option>
                             @foreach ($consortia as $consortium )
@@ -466,7 +466,7 @@
                 </div>
                 <div class="card-body mb-3">
                     <div class="mb-3">
-                        <label for="organism_id" class="form-label">Organism</label>
+                        <label for="organism_id" class="form-label">Organism <font color="red">*</font></label>
                         <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
                             <option value="">Organism</option>
                             @foreach ($organisms as $organism )
@@ -483,7 +483,7 @@
                         <label class="form-check-label">Novel</label>
                     </div>
                     <div class="mb-3">
-                        <label for="novel_desc" class="form-label">Novel Description <font color="red">*</font></label>
+                        <label for="novel_desc" class="form-label">Novel Description</label>
                         <textarea class="form-control" id="novel_desc" name="novel_desc" wire:model="novel_desc" rows="3" @if ($novel_org==false) disabled @endif>{{old('novel_desc')}}</textarea>
 
                         @error('novel_desc')
@@ -491,21 +491,21 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="sbc" class="form-label">Strain, Breed, Cultivar <font color="red">*</font></label>
+                        <label for="sbc" class="form-label">Strain, Breed, Cultivar</label>
                         <input type="text" class="form-control @error('sbc') is-invalid @enderror" wire:model="sbc" id="sbc" name="sbc" value="{{old('sbc')}}">
                         @error('sbc')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="isolate" class="form-label">Isolate name or label <font color="red">*</font></label>
+                        <label for="isolate" class="form-label">Isolate name or label</label>
                         <input type="text" class="form-control @error('isolate') is-invalid @enderror" wire:model="isolate" id="isolate" name="isolate" value="{{old('isolate')}}">
                         @error('isolate')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="org_desc" class="form-label">Organism Description <font color="red">*</font></label>
+                        <label for="org_desc" class="form-label">Organism Description</label>
                         <textarea class="form-control" id="org_desc" name="org_desc" wire:model="org_desc" rows="3">{{old('org_desc')}}</textarea>
 
                         @error('org_desc')

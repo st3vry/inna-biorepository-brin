@@ -14,6 +14,8 @@ use Livewire\Component;
 class EditBioproject extends Component
 {
     public $bioproject_id;
+    public $accession;
+    public $selectedSampleScope;
     public $umbrellas = [];
     public $selectedUmbrella;
     public $organisms = [];

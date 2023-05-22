@@ -54,7 +54,7 @@
                     @endswitch
                 </td>
                 <td class="col-md-2">
-                    @if ($bioproject->draft==true)
+                    @if ($bioproject->draft==false)
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>

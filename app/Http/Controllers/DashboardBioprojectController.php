@@ -148,7 +148,7 @@ class DashboardBioprojectController extends Controller
         //     return view('error.404');
         // }
 
-        if ($bioproject->draft == true) {
+        if ($bioproject->draft == false) {
             return view('error.404');
         }
         // dd($bioproject);

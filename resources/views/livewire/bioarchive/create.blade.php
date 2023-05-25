@@ -290,7 +290,7 @@
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
                                     </td>
-                                    <td><input type="text" name="bioexperiment_id[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size"></td>
+                                    <td><input onkeydown="return numbersOnly(event)" onkeyup="this.value=this.value.replace(',','.')" type="text" name="bioexperiment_id[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size" ></td>
                                     <td>
                                         <button class="btn btn-danger delete_row" wire:click.prevent="removeBiosample({{$id}})"><i class="bi bi-trash3-fill"></i>
                                         </button>
@@ -451,5 +451,11 @@
             })
         });
     })
+
+    function numbersOnly(event) {
+        var key = event.keyCode;
+        return ((key >= 96 && key <= 105) || (key >= 48 && key <= 57) || key == 188 || key==46 || key==8);
+    };
+
 </script>
 @endpush

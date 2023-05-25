@@ -34,7 +34,7 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/dashboard/curator/biosample">Curator Biosample</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard/curator/biosamples">Curator Biosample</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{$biosample->accession}}</li>
     </ol>
 </div>

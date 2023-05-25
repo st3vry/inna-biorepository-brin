@@ -230,6 +230,7 @@ class CreateBioproject extends Component
         // $validatedData = $this->validate([
         //     'status' => 'required',
         // ]);
+        $validatedData = $this->validate([]);
 
         $this->currentStep = 4;
     }

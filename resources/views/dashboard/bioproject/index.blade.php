@@ -9,7 +9,7 @@
     </ol>
 </div>
 <a href="/dashboard/bioprojects/create" class="btn btn-primary mb-3">Create New Bioproject</a>
-<div class="table-responsive col-md-11">
+<div class="table-responsive col-md-12">
     <table class="table table-striped table-sm">
         <thead>
             <tr>
@@ -27,12 +27,12 @@
             @foreach ( $bioprojects as $bioproject )
             <tr>
                 <td>{{ ($bioprojects->currentPage() - 1) * $bioprojects->perPage() + $loop->iteration }}</td>
-                <td>{{ $bioproject->accession }}</td>
-                <td>{{ $bioproject->organism->name }}</td>
-                <td>{{ $bioproject->title }}</td>
-                <td>{{ $bioproject->description }}</td>
-                <td>{{ $bioproject->center->name }}</td>
-                <td>
+                <td class="col-md-1">{{ $bioproject->accession }}</td>
+                <td class="col-md-1">{{ $bioproject->organism->name }}</td>
+                <td class="col-md-2">{{ $bioproject->title }}</td>
+                <td class="col-md-3">{{ $bioproject->description }}</td>
+                <td class="col-md-2">{{ $bioproject->center->name }}</td>
+                <td class="col-md-1">
                     @switch($bioproject->status)
                         @case(1)
                             <span class="badge bg-danger">Unassigned</span>  
@@ -53,8 +53,8 @@
                             <span class="badge bg-secondary">Rejected</span>
                     @endswitch
                 </td>
-                <td>
-                    @if (!$bioproject->draft)
+                <td class="col-md-2">
+                    @if ($bioproject->draft==false)
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>

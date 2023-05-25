@@ -143,8 +143,12 @@ class DashboardBioprojectController extends Controller
     public function edit(Bioproject $bioproject)
     {
         //
-        if (!empty($bioproject->published_at)) {
-            // return 'ada published at';
+        // if (!empty($bioproject->published_at)) {
+        //     // return 'ada published at';
+        //     return view('error.404');
+        // }
+
+        if ($bioproject->draft == false) {
             return view('error.404');
         }
         // dd($bioproject);

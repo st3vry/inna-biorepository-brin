@@ -296,7 +296,7 @@
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5>Project Data Type</h5>
+                    <h5>Project Data Type <font color="red">*</font></h5>
                 </div>
                 <div class="card-body">
                     @foreach ($datatypes->chunk(6) as $row)
@@ -333,7 +333,7 @@
 
                     <!-- sample scope -->
                     <div class="mb-3">
-                        <label for="samplescope" class="form-label">Sample scope</label>
+                        <label for="samplescope" class="form-label">Sample scope <font color="red">*</font></label>
                         <select class="form-select" name="samplescope_id" id="samplescope_id" wire:model="samplescope_id">
                             <option value="">Sample scope</option>
                             @foreach ($samplescopes as $samplescope )
@@ -357,7 +357,7 @@
 
                     <!-- material -->
                     <div class="mb-3">
-                        <label for="material" class="form-label">Material</label>
+                        <label for="material" class="form-label">Material <font color="red">*</font></label>
                         <select class="form-select" name="material_id" id="material_id" wire:model="material_id">
                             <option value="">Material</option>
                             @foreach ($materials as $material )
@@ -379,7 +379,7 @@
 
                     <!-- capture -->
                     <div class="mb-3">
-                        <label for="capture" class="form-label">Capture</label>
+                        <label for="capture" class="form-label">Capture <font color="red">*</font></label>
                         <select class="form-select" name="capture_id" id="capture_id" wire:model="capture_id">
                             <option value="">Capture</option>
                             @foreach ($captures as $capture )
@@ -401,7 +401,7 @@
 
                     <!-- methodology -->
                     <div class="mb-3">
-                        <label for="methodology" class="form-label">Methodology</label>
+                        <label for="methodology" class="form-label">Methodology <font color="red">*</font></label>
                         <select class="form-select" name="methodology_id" id="methodology_id" wire:model="methodology_id">
                             <option value="">Methodology</option>
                             @foreach ($methodologies as $methodology )
@@ -425,7 +425,7 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5>Objectives</h5>
+                    <h5>Objectives <font color="red">*</font></h5>
                 </div>
                 <div class="card-body">
                     @foreach ($objectives->chunk(6) as $row)

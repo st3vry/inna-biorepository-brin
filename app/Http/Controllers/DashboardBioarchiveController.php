@@ -93,6 +93,13 @@ class DashboardBioarchiveController extends Controller
         }
     }
 
+    public function destroy(Bioarchive $bioarchive)
+    {
+        //
+        Bioarchive::destroy($bioarchive->id);
+        return redirect('/dashboard/bioarchives')->with('success', 'Bioarchives has been deleted!');
+    }
+
     public static function biosampleName($id)
     {
         return Biosample::select('accession')->where('id', $id)->pluck('accession')->first();

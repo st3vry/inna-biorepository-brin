@@ -564,7 +564,10 @@
                         @foreach ( $row as $datatype)
                         <div class="col-sm-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="data_type_id[]" wire:model="data_type_id.{{ $datatype->id }}" value="{{$datatype->id}}" @if(is_array(old('data_type_id')) && in_array($datatype->id, old('data_type_id'))) checked @endif>
+                                @foreach ($selectedDatatypes as $item)
+                                    <input class="form-check-input" type="checkbox" name="data_type_id[]" wire:model="data_type_id.{{ $datatype->id }}" value="{{$datatype->id}}" @if(is_array(old('data_type_id')) && in_array($datatype->id, old('data_type_id'))) checked @endif @if ($datatype->id==$item->id) checked @endif>
+                                    
+                                @endforeach
                                 <label class="form-check-label">{{$datatype->name}}</label>
                             </div>
                         </div>

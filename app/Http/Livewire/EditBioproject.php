@@ -306,7 +306,9 @@ class EditBioproject extends Component
 
 
         $this->datatypes = Datatype::all();
-        $this->selectedDatatypes = array_map('intval', explode(',', $bioproject->data_type_id));
+        // $this->data_type_id = array_map('intval', explode(',', $bioproject->data_type_id));
+        $this->selectedDatatypes = DatatypeBioproject::where('bioproject_id', $bioproject->id)->get();
+        // dd($this->selectedDatatypes);
 
         $this->samplescopes = Samplescope::all();
         $this->selectedSampleScope = $bioproject->samplescope_id;

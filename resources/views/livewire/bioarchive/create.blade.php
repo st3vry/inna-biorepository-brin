@@ -110,7 +110,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                            <input type="text" id='searchBioproject' wire:model="searchBioproject" class="form-control" placeholder="Search Bioproject here">
                         </div>
                     </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
@@ -125,11 +125,11 @@
                             </thead>
                             <tbody>
                                 @foreach ($bioprojects as $bioproject )
-                                <tr>
+                                <tr class="bioprojects">
                                     <th scope="row"><input type="radio" name="bioproject_id" wire:model="bioproject_id" value="{{$bioproject->id}}" @if (old('bioproject_id')==$bioproject->id) ) checked @endif></th>
                                     <td>{{$bioproject->accession}}</td>
                                     <td>{{$bioproject->submission_id}}</td>
-                                    <td>{{$bioproject->title}}</td>
+                                    <td class="bioprojectsTitles">{{$bioproject->title}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -430,6 +430,31 @@
                 @this.set($(this).attr("wire:model"), $(this).select2("val"));
             });
         });
+
+        let timer = null
+        $('#searchBioproject').on('keyup',function(){
+            // console.log($(this).val());
+            // // console.log($(this).attr("wire:model"));
+            // @this.set($(this).attr("wire:model"), $(this).val());
+            clearTimeout(timer);
+            const bioprojectRows = document.getElementsByClassName('bioprojects')
+            const bioprojectTitles = document.getElementsByClassName('bioprojectsTitles')
+            timer = setTimeout(() => {
+                for (let i = 0; i<bioprojectTitles.length; i++ ) 
+                {
+                    console.log(bioprojectTitles[i].innerHTML)
+                    if (!bioprojectTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase())) 
+                    {
+                        bioprojectRows[i].classList.add("d-none")
+                    }
+                    else {
+                        bioprojectRows[i].classList.remove("d-none")
+                    }
+                }
+            }, 500)
+            
+        })
+
         const steps = document.querySelectorAll('#nav-steps .nav-item').length;
         document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep + "%";
         const biosample_id = document.getElementsByName('biosample_id[]')

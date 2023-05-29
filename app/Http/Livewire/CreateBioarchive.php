@@ -30,6 +30,7 @@ class CreateBioarchive extends Component
 
     // Filter table
     public $searchBioproject = '';
+    public $searchBiosample = '';
     // submitter
     public $hold_release;
     // bioproject
@@ -116,7 +117,7 @@ class CreateBioarchive extends Component
             'biosample_id' => 'required',
         ]);
         // dd($this->biosample_id);
-        dd($this->searchBioproject);
+        // dd($this->searchBioproject);
         $this->currentStep = 4;
     }
     // Run form

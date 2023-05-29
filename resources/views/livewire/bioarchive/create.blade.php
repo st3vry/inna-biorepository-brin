@@ -155,7 +155,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                            <input type="text" id='searchBiosample' wire:model="searchBiosample" class="form-control" placeholder="Search here">
                         </div>
                     </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
@@ -170,11 +170,11 @@
                             </thead>
                             <tbody>
                                 @foreach ($biosamples as $biosample )
-                                <tr title="{{$biosample->title}}">
+                                <tr class="biosamples" title="{{$biosample->title}}">
                                     <th scope="row"><input type="checkbox" name="biosample_id[]" id="{{ rand() }}" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
-                                    <td>{{$biosample->title}}</td>
+                                    <td class="biosamplesTitles">{{$biosample->title}}</td>
                                 </tr>
                                 @endforeach
 
@@ -449,6 +449,29 @@
                     }
                     else {
                         bioprojectRows[i].classList.remove("d-none")
+                    }
+                }
+            }, 500)
+            
+        })
+
+        $('#searchBiosample').on('keyup',function(){
+            // console.log($(this).val());
+            // // console.log($(this).attr("wire:model"));
+            // @this.set($(this).attr("wire:model"), $(this).val());
+            clearTimeout(timer);
+            const biosampleRows = document.getElementsByClassName('biosamples')
+            const biosampleTitles = document.getElementsByClassName('biosamplesTitles')
+            timer = setTimeout(() => {
+                for (let i = 0; i<biosampleTitles.length; i++ ) 
+                {
+                    console.log(biosampleTitles[i].innerHTML)
+                    if (!biosampleTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase())) 
+                    {
+                        biosampleRows[i].classList.add("d-none")
+                    }
+                    else {
+                        biosampleRows[i].classList.remove("d-none")
                     }
                 }
             }, 500)

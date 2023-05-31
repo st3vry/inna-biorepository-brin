@@ -30,6 +30,7 @@ class CuratorBioSampleController extends Controller
         if (auth()->user()->role_id == 2) {
             $biosamples = BioSample::with(['organism', 'center'])
                 ->where('curator_id', auth()->id())
+                ->where('status', '<>', 1)
                 ->orderBy('published_at','desc')
                 ->paginate(5);
         }

@@ -36,6 +36,7 @@ class CuratorBioArchiveController extends Controller
         if (auth()->user()->role_id == 2) {
             $bioarchives = Bioarchive::with(['bioproject', 'user'])
                 ->where('curator_id', auth()->id())
+                ->where('status', '<>', 1)
                 ->orderBy('created_at', 'desc')
                 ->paginate(5);
         }

@@ -102,6 +102,9 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('auth');
     Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('auth');
 
+
+   
+
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('auth');
 
@@ -127,6 +130,7 @@ Route::prefix('dashboard')->group(function () {
 
     Route::post('file/upload', [UploaderController::class, 'upload'])->name('file-upload')->middleware('auth');
     Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('auth');
+    Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('auth');
     Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
 
 });

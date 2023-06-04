@@ -141,7 +141,15 @@
                                     </tr>
                                     <tr>
                                         <td>File Name</td>
-                                        <td>{{ $item->filename }}</td>
+                                        <td>
+                                            {{ $item->filename }}
+                                            <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                @method('post')
+                                                @csrf
+                                                <input type="hidden" name="file" value="{{$item}}">
+                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>MD5 Checksum</td>
@@ -151,7 +159,7 @@
                                 </table>
                             </td>
                         </tr>
-                            @foreach ($files as $i =>$file)
+                            {{-- @foreach ($files as $i =>$file)
                                 @foreach ($file as $key => $item)
                                     @if ($key === $value['alias'])
                                     @foreach ($item as $it)
@@ -165,7 +173,7 @@
                                     
                                     @endif
                                 @endforeach                            
-                            @endforeach
+                            @endforeach --}}
                         <tr>
                             <td></td>
                             <td>

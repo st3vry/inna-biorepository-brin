@@ -65,8 +65,10 @@
                     @endswitch
                 </td>
                 <td>
+                    @if (!$bioarchive->draft)
                     @if ($bioarchive->status==4)
-                    <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="upload"></span></a>
+                        <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="upload"></span></a>
+                    @endif
                     @else
                     <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     {{-- <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a> --}}

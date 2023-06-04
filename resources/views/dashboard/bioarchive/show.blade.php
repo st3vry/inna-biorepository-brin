@@ -148,6 +148,7 @@
                                                  @method('post')
                                                  @csrf
                                                  <input type="hidden" name="source" value="sftp">
+                                                 <input type="hidden" name="alias" value="{{$key}}">
                                                  <input type="hidden" name="file" value="{{$item}}">
                                                  <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
                                              </form>
@@ -166,7 +167,7 @@
                             @endforeach                            
                         @endforeach
 
-                        <div class="modal fade" id="modal{{ $value['alias'] }}" tabindex="-1" aria-labelledby="modal{{ $value['alias'] }}Label" aria-hidden="true">
+                        <div class="modal fade modalfile" id="modal{{ $value['alias'] }}" tabindex="-1" aria-labelledby="modal{{ $value['alias'] }}Label" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                 <div class="modal-header">
@@ -191,7 +192,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
                                 </div>
                                 </div>
                             </div>
@@ -324,6 +325,8 @@
         })
         @endforeach
 
-
+        $(".modalfile").on("hidden.bs.modal", function () {
+            location.reload()
+        });
     </script>
 @endpush

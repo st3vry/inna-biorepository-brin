@@ -98,6 +98,7 @@ class UploaderController extends Controller
     $biorun = new BioRun;
     $biorun->bioexperiment_id = $request->bioexperiment_id;
     $biorun->alias = $request->subFolder;
+    $biorun->filename = $fileName;
     $biorun->filetype_id = $request->filetype;
     $biorun->save();
 
@@ -139,9 +140,14 @@ class UploaderController extends Controller
   public function delete (Request $request){
 
     if (isset($request->source) && $request->source == 'sftp') {
+      // dd($request);
+      Biorun::where([
+        ['alias', $request->alias],
+        ['filename',array_reverse(explode("/",$request->file))[0]]
+      ])->delete();
       $delete = Storage::disk('sftp')->delete($request->file);
       if ($delete) {
-        return back()->with('success', array_reverse(explode("/",$request->file))[0]. "Deleted Successfully");
+        return back()->with('success', array_reverse(explode("/",$request->file))[0]. " Deleted Successfully");
       } else {
         return back()->with('error', 'Something went wrong, please try again later!');
       } 

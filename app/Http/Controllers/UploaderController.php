@@ -138,31 +138,44 @@ class UploaderController extends Controller
   */
   public function delete (Request $request){
 
-    $user_obj = auth()->user();
+    if (isset($request->source) && $request->source == 'sftp') {
+      $delete = Storage::disk('sftp')->delete($request->file);
+      if ($delete) {
+        return back()->with('success', array_reverse(explode("/",$request->file))[0]. "Deleted Successfully");
+      } else {
+        return back()->with('error', 'Something went wrong, please try again later!');
+      } 
+    } else {
+      $user_obj = auth()->user();
+      $file = $request->filename;
+      $filePath = "public/{$request->mainFolder}/{$request->subFolder}/";
+      //delete timestamp from filename
+      $temp_arr = explode('_', $file);
+      if ( isset($temp_arr[0]) ) unset($temp_arr[0]);
+      $file = implode('_', $temp_arr);
 
-    $file = $request->filename;
+      $dir = $request->date;
 
-    //delete timestamp from filename
-    $temp_arr = explode('_', $file);
-    if ( isset($temp_arr[0]) ) unset($temp_arr[0]);
-    $file = implode('_', $temp_arr);
+      $filePath = "public/upload/medialibrary/{$user_obj->id}/{$dir}/";
+      $finalPath = storage_path("app/".$filePath);
 
-    $dir = $request->date;
-
-    $filePath = "public/upload/medialibrary/{$user_obj->id}/{$dir}/";
-    $finalPath = storage_path("app/".$filePath);
-
-    if ( unlink($finalPath.$file) ){
-      return response()->json([
-        'status' => 'ok'
-      ], 200);
-    }
-    else{
-      return response()->json([
-        'status' => 'error'
-      ], 403);
+      if ( unlink($finalPath.$file) ){
+        return response()->json([
+          'status' => 'ok'
+        ], 200);
+      }
+      else{
+        return response()->json([
+          'status' => 'error'
+        ], 403);
+      }
     }
   }
+
+  public function download(Request $request)
+    {
+        return Storage::disk('sftp')->download($request->file);
+    }
 
 }
 

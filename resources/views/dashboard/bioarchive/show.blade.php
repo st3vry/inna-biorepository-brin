@@ -39,6 +39,18 @@
         <li class="breadcrumb-item active" aria-current="page">{{$bioarchive->accession}}</li>
     </ol>
 </div>
+@if (session()->has('success'))
+<div class="alert alert-success alert-dismissible fade show col-lg-12" role="alert">
+    <strong> {{session('success')}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+@if (session()->has('error'))
+<div class="alert alert-danger alert-dismissible fade show col-lg-12" role="alert">
+    <strong> {{session('error')}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 <div class="row">
     <div class="table-responsive col-md-8">
         <table class="table table-sm">
@@ -124,14 +136,29 @@
                         </tr>
 
                         @foreach ($files as $file)
-                            @foreach ($file as $key => $item)
+                            @foreach ($file as $key => $items)
                                 @if ($key === $value['alias'])
-                                @foreach ($item as $it)
+                                @foreach ($items as $item)
                                 <tr>
                                     <td></td>
                                     <td>
-                                        {{$it}}
-                                    </td>
+                                        {{array_reverse(explode("/",$item))[0]}} 
+                                         <span>
+                                             <form action="/dashboard/file/delete" method="post" class="d-inline">
+                                                 @method('post')
+                                                 @csrf
+                                                 <input type="hidden" name="source" value="sftp">
+                                                 <input type="hidden" name="file" value="{{$item}}">
+                                                 <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
+                                             </form>
+                                             <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                 @method('post')
+                                                 @csrf
+                                                 <input type="hidden" name="file" value="{{$item}}">
+                                                 <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                             </form>
+                                         </span>
+                                     </td>
                                 </tr>
                                 @endforeach
                                 
@@ -174,13 +201,21 @@
                         <tr>
                             <td><strong>File</strong></td>
                         @foreach ($files as $file)
-                            @foreach ($file as $key => $item)
+                            @foreach ($file as $key => $items)
                                 @if ($key === $value['alias'])
-                                @foreach ($item as $it)
+                                @foreach ($items as $item)
                                 {{-- <tr> --}}
                                     {{-- <td></td> --}}
                                     <td>
-                                        {{$it}}
+                                       {{array_reverse(explode("/",$item))[0]}} 
+                                        <span>
+                                            <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                @method('post')
+                                                @csrf
+                                                <input type="hidden" name="file" value="{{$item}}">
+                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                            </form>
+                                        </span>
                                     </td>
                                 {{-- </tr> --}}
                                 @endforeach

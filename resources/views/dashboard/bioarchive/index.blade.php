@@ -66,17 +66,19 @@
                 </td>
                 <td>
                     @if (!$bioarchive->draft)
-                    @if ($bioarchive->status==4)
-                        <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="upload"></span></a>
-                    @endif
+                        <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
-                    <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    {{-- <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a> --}}
-                    <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" method="post" class="d-inline">
-                        @method('delete')
-                        @csrf
-                        <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
-                    </form>
+                        @if ($bioarchive->status==4)
+                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="upload"></span></a>
+                        @else
+                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                            {{-- <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a> --}}
+                            <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" method="post" class="d-inline">
+                                @method('delete')
+                                @csrf
+                                <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
+                            </form>
+                        @endif
                     @endif
                 </td>
             </tr>

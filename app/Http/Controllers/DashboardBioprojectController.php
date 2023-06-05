@@ -11,6 +11,12 @@ use App\Models\MaterialBioproject;
 use App\Models\CaptureBioproject;
 use App\Models\RelevanceBioproject;
 use App\Models\MethodologyBioproject;
+use App\Models\Publication;
+use App\Models\SampleBioproject;
+use App\Models\DatatypeBioproject;
+use App\Models\BioProjectExternalLink;
+use App\Models\ObjectiveBioProject;
+
 use Illuminate\Http\Request;
 
 class DashboardBioprojectController extends Controller
@@ -66,32 +72,134 @@ class DashboardBioprojectController extends Controller
         $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->relevance = $data['relevance'];
         $bioproject->data_type_id = implode(",", $data['data_type_id']);
-        $bioproject->objective_id = implode(",", $data['objective_id']);
+        // $bioproject->objective_id = implode(",", $data['objective_id']);
         $bioproject->samplescope_id = $data['samplescope_id'];
         $bioproject->umbproject_id = $data['umbproject_id'];
         $bioproject->organism_id = $data['organism_id'];
+        $bioproject->consortium_id = $data['consortium_id'];
         $bioproject->title = $data['title'];
         $bioproject->description = $data['description'];
         $bioproject->center_id = auth()->user()->lab->center_id;
         $bioproject->user_id = auth()->user()->id;
         // dd($data);
-        $bioproject->save();
+        // $bioproject->save();
+        $result = $bioproject->save();
+        if ($result) {
+            return redirect('/dashboard/bioprojects')->with('success', 'New Bioproject has been added!');
+            $relevanceData = [
+                'bioproject_id' => $bioproject->id,
+                'relevance_id' => $data['relevance_id'],
+                'description' => $data['reldesc']
+            ];
+            RelevanceBioproject::create($relevanceData);
+            $materialData = [
+                'bioproject_id' => $bioproject->id,
+                'material_id' => $data['material_id'],
+                'description' => $data['matdesc']
+            ];
+            MaterialBioproject::create($materialData);
+
+            $captureData = [
+                'bioproject_id' => $bioproject->id,
+                'capture_id' => $data['capture_id'],
+                'description' => $data['capdesc']
+            ];
+            CaptureBioproject::create($captureData);
+
+            $methodologyData = [
+                'bioproject_id' => $bioproject->id,
+                'methodology_id' => $data['methodology_id'],
+                'description' => $data['metdesc']
+            ];
+            MethodologyBioproject::create($methodologyData);
+
+            $samplescopeData = [
+                'bioproject_id' => $bioproject->id,
+                'samplescope_id' => $data['samplescope_id'],
+                'description' => $data['samplescopedesc']
+            ];
+            SampleBioproject::create($samplescopeData);
 
 
-        if (count($data['grants']) > 0) {
-            foreach ($data['grants'] as  $item => $value) {
-                $data2 = array(
-                    'bioproject_id' => $bioproject->id,
-                    'fundagency_id' => $data['grants'],
-                    'grant_title' => $data['grants'],
-                    'grant_program' => $data['grants'][$item],
-                );
-                // dd($data2);
-                Grant::create($data2);
+            if (count($data['grants']) > 0) {
+                foreach ($data['grants'] as  $item => $value) {
+                    $data2 = array(
+                        'bioproject_id' => $bioproject->id,
+                        'fundagency_id' => $data['grants'][$item]['fundagency_id'],
+                        'grant_title' => $data['grants'][$item]['grant_title'],
+                        'grant_program' => $data['grants'][$item]['grant_program'],
+                    );
+                    Grant::create($data2);
+                }
             }
+            if (count($data['publications']) > 0) {
+                foreach ($data['publications'] as  $item => $value) {
+                    $data3 = array(
+                        'bioproject_id' => $bioproject->id,
+                        'pub_identifier_id' => $data['publications'][$item]['pub_identifier_id'],
+                        'pub_id' => $data['publications'][$item]['pub_id'],
+                        'article_title' => $data['publications'][$item]['article_title'],
+                    );
+                    Publication::create($data3);
+                }
+            }
+
+            if (count($data['data_type_id']) > 0) {
+                foreach ($data['data_type_id'] as $item => $value) {
+                    $data4 = array(
+                        'bioproject_id' => $bioproject->id,
+                        'datatype_id' => $data['data_type_id'][$item],
+                        'description' => $data['datatypedesc']
+                    );
+                    DatatypeBioproject::create($data4);
+                }
+            }
+
+            if (count($data['externallinks']) > 0) {
+                foreach ($data['externallinks'] as  $item => $value) {
+                    $data5 = array(
+                        'bioproject_id' => $bioproject->id,
+                        'link_description' => $data['externallinks'][$item]['link_description'],
+                        'link_url' => $data['externallinks'][$item]['link_url'],
+                    );
+                    BioProjectExternalLink::create($data5);
+                }
+            }
+
+            if (count($data['objective_id']) > 0) {
+                foreach ($data['objective_id'] as $item => $value) {
+                    $data6 = array(
+                        'bioproject_id' => $bioproject->id,
+                        'objective_id' => $data['objective_id'][$item],
+                        'description' => $data['objdesc']
+                    );
+                    ObjectiveBioProject::create($data6);
+                }
+            }
+        } else {
+            return 0;
         }
+        // else {
+        //       return ke java script        
+        // }
+
+
+        // if (count($data['grants']) > 0) {
+        //     foreach ($data['grants'] as  $item => $value) {
+        //         $data2 = array(
+        //             'bioproject_id' => $bioproject->id,
+        //             'fundagency_id' => $data['grants'],
+        //             'grant_title' => $data['grants'],
+        //             'grant_program' => $data['grants'][$item],
+        //         );
+        //         // dd($data2);
+        //         Grant::create($data2);
+        //     }
+        // }
         // dd($bioproject);
-        return redirect('/dashboard/bioprojects')->with('success', 'New Bioproject has been added!');
+        
+        // return nanti redirect ke reload halaman if else untuk check error
+        // action log storing
     }
 
     /**

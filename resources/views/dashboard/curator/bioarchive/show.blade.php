@@ -146,7 +146,7 @@
                                             <form action="/dashboard/file/download" method="post" class="d-inline">
                                                 @method('post')
                                                 @csrf
-                                                <input type="hidden" name="file" value="{{$item}}">
+                                                <input type="hidden" name="file" value="files/{{$bioarchive->accession}}/{{$item->alias}}/{{$item->filename}}">
                                                 <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
                                             </form>
                                         </td>

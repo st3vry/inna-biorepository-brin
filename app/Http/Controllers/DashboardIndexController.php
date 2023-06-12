@@ -15,17 +15,17 @@ class DashboardIndexController extends Controller
     {
         $bioproject = Bioproject::where('user_id', auth()->user()->id)->where('draft', TRUE)->get();
         $bioproject_count = $bioproject->count();
-        $bioproject_pub = Bioproject::where('user_id', auth()->user()->id)->get();
+        $bioproject_pub = Bioproject::where('user_id', auth()->user()->id)->where('published_at', '<>', null)->get();
         $bioproject_pub_count = $bioproject_pub->count();
 
         $biosample = Biosample::where('user_id', auth()->user()->id)->where('draft', TRUE)->get();
         $biosample_count = $biosample->count();
-        $biosample_pub = Biosample::where('user_id', auth()->user()->id)->get();
+        $biosample_pub = Biosample::where('user_id', auth()->user()->id)->where('published_at', '<>', null)->get();
         $biosample_pub_count = $biosample_pub->count();
 
         $bioarchive = Bioarchive::where('user_id', auth()->user()->id)->where('draft', TRUE)->get();
         $bioarchive_count = $bioarchive->count();
-        $bioarchive_pub = Bioarchive::where('user_id', auth()->user()->id)->get();
+        $bioarchive_pub = Bioarchive::where('user_id', auth()->user()->id)->where('published_at', '<>', null)->get();
         $bioarchive_pub_count = $bioarchive_pub->count();
 
         return view('dashboard.index', [

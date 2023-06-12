@@ -31,7 +31,7 @@ class DashboardBioprojectController extends Controller
         //
         return view('dashboard.bioproject.index', [
             // 'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('draft', 'desc')->paginate(5),
-            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->where('status', 1)->orderBy('id')->paginate(5),
+            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->paginate(5),
         ]);
     }
 

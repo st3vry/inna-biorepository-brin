@@ -18,7 +18,8 @@ class DashboardBiosampleController extends Controller
     {
         //
         return view('dashboard.biosample.index', [
-            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('draft', 'desc')->paginate(5),
+            // 'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('id')->paginate(5),
+            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->orderBy('id')->paginate(5),
         ]);
     }
 

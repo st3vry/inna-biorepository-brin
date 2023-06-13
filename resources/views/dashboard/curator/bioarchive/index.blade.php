@@ -81,7 +81,7 @@
             @endforeach
         </tbody>
     </table>
-
+    {{$bioarchives->links();}}
 </div>
 
 @endsection

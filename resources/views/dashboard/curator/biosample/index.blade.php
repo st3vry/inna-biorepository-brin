@@ -9,10 +9,10 @@
     </ol>
 </div>
 <div class="table-responsive col-md-11">
-    <table class="table table-striped table-sm">
+    <table class="table table-striped table-sm" id="dataTable">
         <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">No.</th>
                 <th scope="col">Accession</th>
                 <th scope="col">Organism</th>
                 <th scope="col">Title</th>
@@ -26,7 +26,7 @@
             @foreach ( $biosamples as $biosample )
             <tr>
 
-                <td>{{ ($biosamples->currentPage() - 1) * $biosamples->perPage() + $loop->iteration }}</td>
+                <td></td>
                 <td>{{ $biosample->accession }}</td>
                 <td>{{ $biosample->organism->name }}</td>
                 <td>{{ $biosample->title }}</td>
@@ -60,7 +60,35 @@
             @endforeach
         </tbody>
     </table>
-    {{$biosamples->links();}}
 </div>
 
 @endsection
+
+
+@push('js')
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const dataTable = $('#dataTable').DataTable({
+                    columnDefs: [
+                    {
+                        searchable: false,
+                        orderable: false,
+                        targets: 0,
+                    },
+                ],
+                order: [[1, 'asc']],
+            });
+            dataTable.on('order.dt search.dt', function () {
+                let i = 1;
+        
+                dataTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                    this.data(i++);
+                });
+            }).draw();
+        });
+
+    </script>
+
+@endpush

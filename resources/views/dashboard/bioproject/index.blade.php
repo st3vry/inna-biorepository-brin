@@ -1,5 +1,6 @@
 @extends('dashboard.layouts.main')
 
+
 @section('container')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
 
@@ -10,10 +11,10 @@
 </div>
 <a href="/dashboard/bioprojects/create" class="btn btn-primary mb-3">Create New Bioproject</a>
 <div class="table-responsive col-md-12">
-    <table class="table table-striped table-sm">
+    <table class="table table-striped table-sm" id="dataTable">
         <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">No.</th>
                 <th scope="col">Accession</th>
                 <th scope="col">Organism</th>
                 <th scope="col">Title</th>
@@ -26,13 +27,13 @@
         <tbody>
             @foreach ( $bioprojects as $bioproject )
             <tr>
-                <td>{{ ($bioprojects->currentPage() - 1) * $bioprojects->perPage() + $loop->iteration }}</td>
-                <td class="col-md-1">{{ $bioproject->accession }}</td>
-                <td class="col-md-1">{{ $bioproject->organism->name }}</td>
-                <td class="col-md-2">{{ $bioproject->title }}</td>
-                <td class="col-md-3">{{ $bioproject->description }}</td>
-                <td class="col-md-2">{{ $bioproject->center->name }}</td>
-                <td class="col-md-1">
+                <td class="text-center"></td>
+                <td>{{ $bioproject->accession }}</td>
+                <td>{{ $bioproject->organism->name }}</td>
+                <td>{{ $bioproject->title }}</td>
+                <td>{{ $bioproject->description }}</td>
+                <td>{{ $bioproject->center->name }}</td>
+                <td class="text-center align-middle">
                     @switch($bioproject->status)
                         @case(1)
                             <span class="badge bg-danger">Unassigned</span>  
@@ -53,7 +54,7 @@
                             <span class="badge bg-secondary">Rejected</span>
                     @endswitch
                 </td>
-                <td class="col-md-2">
+                <td class="text-center align-middle" style="white-space: nowrap">
                     @if ($bioproject->draft==false)
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     @else
@@ -70,7 +71,35 @@
             @endforeach
         </tbody>
     </table>
-    {{$bioprojects->links();}}
 </div>
 
 @endsection
+
+
+@push('js')
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const dataTable = $('#dataTable').DataTable({
+                    columnDefs: [
+                    {
+                        searchable: false,
+                        orderable: false,
+                        targets: 0,
+                    },
+                ],
+                order: [[1, 'asc']],
+            });
+            dataTable.on('order.dt search.dt', function () {
+                let i = 1;
+        
+                dataTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                    this.data(i++);
+                });
+            }).draw();
+        });
+
+    </script>
+
+@endpush

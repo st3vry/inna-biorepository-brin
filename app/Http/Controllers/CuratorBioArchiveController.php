@@ -32,13 +32,13 @@ class CuratorBioArchiveController extends Controller
             // })
             ->orderBy('created_at', 'desc')
             ->orderBy('curator_id', 'asc')
-            ->paginate(5);
+            ->get();
         if (auth()->user()->role_id == 2) {
             $bioarchives = Bioarchive::with(['bioproject', 'user'])
                 ->where('curator_id', auth()->id())
                 ->where('status', '<>', 1)
                 ->orderBy('created_at', 'desc')
-                ->paginate(5);
+                ->get();
         }
         return view('dashboard.curator.bioarchive.index', [
             'title' => 'Bioarchives',

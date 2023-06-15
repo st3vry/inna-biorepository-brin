@@ -26,13 +26,13 @@ class CuratorBioSampleController extends Controller
             // })
             ->orderBy('published_at','desc')
             ->orderBy('curator_id','asc')
-            ->paginate(5);
+            ->get();
         if (auth()->user()->role_id == 2) {
             $biosamples = BioSample::with(['organism', 'center'])
                 ->where('curator_id', auth()->id())
                 ->where('status', '<>', 1)
                 ->orderBy('published_at','desc')
-                ->paginate(5);
+                ->get();
         }
         return view('dashboard.curator.biosample.index', [
             'title' => 'Biosample',

@@ -30,7 +30,7 @@ class BioarchiveController extends Controller
     public function show(Bioarchive $bioarchive)
     {
         //
-        if ($bioarchive->published_at != null) {
+        if ($bioarchive->published_at == null) {
             return view('error.404');
         }
 

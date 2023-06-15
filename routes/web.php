@@ -112,7 +112,7 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
-    Route::post('/users', [AdminUserController::class, 'filter'])->name('users.filter')->middleware('can:isAdmin');
+    // Route::post('/users', [AdminUserController::class, 'filter'])->name('users.filter')->middleware('can:isAdmin');
     // Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
     // Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');
 

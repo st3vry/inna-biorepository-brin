@@ -1,5 +1,10 @@
 @extends('dashboard.layouts.main')
 
+@push('css')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@endpush
+
 @section('container')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
 
@@ -10,10 +15,10 @@
 </div>
 {{-- <a href="/dashboard/bioarchives/create" class="btn btn-primary mb-3">Create New Bioarchive</a> --}}
 <div class="table-responsive col-md-11">
-    <table class="table table-striped table-sm">
+    <table class="table table-striped table-sm" id="dataTable">
         <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">No.</th>
                 <th scope="col">Accession</th>
                 <th scope="col">Submission ID</th>
                 <th scope="col">Bioproject</th>
@@ -25,7 +30,7 @@
         <tbody>
             @foreach ( $bioarchives as $bioarchive )
             <tr>
-                <td>{{ ($bioarchives->currentPage() - 1) * $bioarchives->perPage() + $loop->iteration }}</td>
+                <td></td>
                 <td>{{ $bioarchive->accession }}</td>
                 <td>{{ $bioarchive->submission_id }}</td>
                 <td>{{ $bioarchive->bioproject->accession }}</td>
@@ -81,7 +86,34 @@
             @endforeach
         </tbody>
     </table>
-    {{$bioarchives->links();}}
 </div>
 
 @endsection
+
+@push('js')
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const dataTable = $('#dataTable').DataTable({
+                    columnDefs: [
+                    {
+                        searchable: false,
+                        orderable: false,
+                        targets: 0,
+                    },
+                ],
+                order: [[1, 'asc']],
+            });
+            dataTable.on('order.dt search.dt', function () {
+                let i = 1;
+        
+                dataTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                    this.data(i++);
+                });
+            }).draw();
+        });
+
+    </script>
+
+@endpush

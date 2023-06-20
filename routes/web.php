@@ -10,6 +10,7 @@ use App\Http\Controllers\BioarchiveController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\CuratorBioSampleController;
 use App\Http\Controllers\CuratorBioArchiveController;
+use App\Http\Controllers\Dashboard\Innalysis\InnalysisController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\DashboardBioarchiveController;
@@ -107,6 +108,7 @@ Route::prefix('dashboard')->group(function () {
 
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('auth');
+    Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('auth');
 
     // Admin
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');

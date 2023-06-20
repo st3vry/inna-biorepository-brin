@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard\User;
 
+use App\Models\Biosample;
+use App\Models\ActionLog;
+use App\Models\AttributeValue;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -15,6 +18,10 @@ class BiosampleController extends Controller
     public function index()
     {
         //
+        return view('dashboard.biosample.index', [
+            // 'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('id')->paginate(5),
+            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('id')->paginate(5),
+        ]);
     }
 
     /**
@@ -25,6 +32,7 @@ class BiosampleController extends Controller
     public function create()
     {
         //
+        return view('dashboard.biosample.create');
     }
 
     /**
@@ -44,9 +52,16 @@ class BiosampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Biosample $biosample)
     {
         //
+        $histories = ActionLog::with(['creator'])->where('item_id', $biosample->accession)->orderBy('created_at', 'desc')->get();
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        return view('dashboard.biosample.show', [
+            'biosample' => $biosample,
+            'histories' => $histories,
+            'sample_attr' => $sample_attr,
+        ]);
     }
 
     /**
@@ -78,8 +93,10 @@ class BiosampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Biosample $biosample)
     {
         //
+        Biosample::destroy($biosample->id);
+        return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
     }
 }

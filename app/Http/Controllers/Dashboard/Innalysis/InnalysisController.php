@@ -17,77 +17,36 @@ class InnalysisController extends Controller
     {
         //
         // $response = Http::get('http://10.10.253.7:8080/workflows');
-        $response = Http::get('http://202.46.7.138:8080/workflows');
+        $response = Http::timeout(5)->get('http://202.46.7.138:8080/workflows');
         $workflows = json_decode($response);
-        // return $workflows;
-        return view('dashboard.innalysis.galaxy', [
+
+        return view('dashboard.innalysis.innalysis_galaxy', [
             'workflows' => $workflows
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function send(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        /*
+        {
+            "user_id": "test",
+            "wf_id": "bfa3e789fd89d473",
+            "inputs": { "0": {"uuid":"bed3bd53-ffda-4d94-9ef8-59790875fcee", "filename": ["run_id/exp_id/acc_id/A1_1.fq.gz", "run_id/exp_id/acc_id/A1_2.fq.gz"] } } ,
+            "parameter": "ini nnti"
+        }
+        */
+        $data = array(
+            'user_id' => 'test',
+            'wf_id' => $request->workflow,
+            'inputs' => (object)array(
+                array(
+                    'uuid' => 'bed3bd53-ffda-4d94-9ef8-59790875fcee',
+                    'filename' => array($request->input1, $request->input2),
+                ),
+            ),
+            'parameter' => '',
+        );
+        // dd(json_encode($data));
+        $response = Http::post('http://202.46.7.138:8080/run');
     }
 }

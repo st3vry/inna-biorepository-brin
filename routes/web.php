@@ -103,12 +103,10 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('auth');
     Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('auth');
 
-
-   
-
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('auth');
     Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('auth');
+    Route::post('/send-workflow', [InnalysisController::class, 'send'])->middleware('auth')->name('send.workflow');
 
     // Admin
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');

@@ -8,6 +8,11 @@
 {{-- {{ dd($workflows) }} --}}
 {{-- <workflows-grid></workflows-grid> --}}
 {{-- test --}}
+    @if(Session::has('statusJob'))
+        <div class="alert alert-primary" role="alert">
+            {{ Session::get('statusJob') }}
+        </div>
+    @endif
  <form method="POST" action="{{ route('send.workflow') }}">
     @csrf
     <div class="mb-3">

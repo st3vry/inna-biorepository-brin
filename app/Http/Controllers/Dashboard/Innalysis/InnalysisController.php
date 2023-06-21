@@ -47,6 +47,14 @@ class InnalysisController extends Controller
             'parameter' => '',
         );
         // dd(json_encode($data));
-        $response = Http::post('http://202.46.7.138:8080/run');
+        $response = Http::post('http://202.46.7.138:8080/run', [$data]);
+        $json_data = $response->json();
+        // dd($json_data['status']);
+        if ($json_data['status'] == 200) {
+            // echo "success";
+            return redirect()->to('/dashboard/innalysis_galaxy')->with('statusJob', 'Job Submitted!');;
+        } else {
+            echo "not success";
+        }
     }
 }

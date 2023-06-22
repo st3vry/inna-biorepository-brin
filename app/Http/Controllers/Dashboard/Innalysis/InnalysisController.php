@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\Innalysis;
 
 use App\Http\Controllers\Controller;
+use App\Models\InnalysisGalaxy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -17,10 +18,24 @@ class InnalysisController extends Controller
     {
         //
         // $response = Http::get('http://10.10.253.7:8080/workflows');
+        // $response = Http::timeout(5)->get('http://202.46.7.138:8080/workflows');
+        // $workflows = json_decode($response);
+        $workflows = InnalysisGalaxy::where('user_id', auth()->user()->id)->orderBy('id')->get();
+
+        return view('dashboard.innalysis.innalysis_galaxy', [
+            // 'workflows' => $workflows
+            'workflows' => $workflows,
+        ]);
+    }
+
+    public function create()
+    {
+        //
+        // $response = Http::get('http://10.10.253.7:8080/workflows');
         $response = Http::timeout(5)->get('http://202.46.7.138:8080/workflows');
         $workflows = json_decode($response);
 
-        return view('dashboard.innalysis.innalysis_galaxy', [
+        return view('dashboard.innalysis.create_galaxy', [
             'workflows' => $workflows
         ]);
     }
@@ -36,7 +51,7 @@ class InnalysisController extends Controller
         }
         */
         $data = array(
-            'user_id' => 'test',
+            'user_id' => auth()->user()->id,
             'wf_id' => $request->workflow,
             'inputs' => (object)array(
                 array(
@@ -52,7 +67,16 @@ class InnalysisController extends Controller
         // dd($json_data['status']);
         if ($json_data['status'] == 200) {
             // echo "success";
-            return redirect()->to('/dashboard/innalysis_galaxy')->with('statusJob', 'Job Submitted!');;
+            $innalysis_galaxy = new InnalysisGalaxy();
+            $innalysis_galaxy->user_id = auth()->user()->id;
+            $innalysis_galaxy->wf_id = $request->workflow;
+            $innalysis_galaxy->status = 1;
+            $result = $innalysis_galaxy->save();
+            if ($result) {
+                return redirect()->to('/dashboard/innalysis_galaxy')->with('statusJob', 'Job Submitted!');
+            } else {
+                return 0;
+            }
         } else {
             echo "not success";
         }

@@ -18,11 +18,13 @@ class InnalysisController extends Controller
     {
         //
         // $response = Http::get('http://10.10.253.7:8080/workflows');
-        $response = Http::timeout(5)->get('http://202.46.7.138:8080/workflows');
-        $workflows = json_decode($response);
+        // $response = Http::timeout(5)->get('http://202.46.7.138:8080/workflows');
+        // $workflows = json_decode($response);
+        $workflows = InnalysisGalaxy::where('user_id', auth()->user()->id)->orderBy('id')->get();
 
         return view('dashboard.innalysis.innalysis_galaxy', [
-            'workflows' => $workflows
+            // 'workflows' => $workflows
+            'workflows' => $workflows,
         ]);
     }
 

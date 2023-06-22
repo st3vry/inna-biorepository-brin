@@ -30,9 +30,44 @@
             </tr>
         </thead>
         <tbody>
-           
+           @foreach ($workflows as $item)
+                <tr>
+                    <td class="text-center"></td>
+                    <td>{{ $item->wf_id }}</td>
+                    <td>{{ $item->wf_id }}</td>
+                    <td>{{ $item->wf_id }}</td>
+                    <td>{{ $item->status }}</td>
+                </tr>
+           @endforeach
         </tbody>
     </table>
 </div>
 
 @endsection
+@push('js')
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const dataTable = $('#dataTable').DataTable({
+                    columnDefs: [
+                    {
+                        searchable: false,
+                        orderable: false,
+                        targets: 0,
+                    },
+                ],
+                order: [[1, 'asc']],
+            });
+            dataTable.on('order.dt search.dt', function () {
+                let i = 1;
+        
+                dataTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                    this.data(i++);
+                });
+            }).draw();
+        });
+
+    </script>
+
+@endpush

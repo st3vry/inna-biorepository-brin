@@ -10,6 +10,7 @@ use App\Http\Controllers\BioarchiveController;
 use App\Http\Controllers\CuratorBioprojectController;
 use App\Http\Controllers\CuratorBioSampleController;
 use App\Http\Controllers\CuratorBioArchiveController;
+use App\Http\Controllers\Dashboard\Innalysis\InnalysisController;
 use App\Http\Controllers\DashboardBioprojectController;
 use App\Http\Controllers\DashboardBiosampleController;
 use App\Http\Controllers\DashboardBioarchiveController;
@@ -102,11 +103,10 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('auth');
     Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('auth');
 
-
-   
-
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('auth');
+    Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('auth');
+    Route::post('/send-workflow', [InnalysisController::class, 'send'])->middleware('auth')->name('send.workflow');
 
     // Admin
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');

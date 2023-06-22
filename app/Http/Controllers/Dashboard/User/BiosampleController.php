@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Http\Controllers\Dashboard\User;
+
+use App\Models\Biosample;
+use App\Models\ActionLog;
+use App\Models\AttributeValue;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class BiosampleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+        return view('dashboard.biosample.index', [
+            // 'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('id')->paginate(5),
+            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('id')->paginate(5),
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+        return view('dashboard.biosample.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Biosample $biosample)
+    {
+        //
+        $histories = ActionLog::with(['creator'])->where('item_id', $biosample->accession)->orderBy('created_at', 'desc')->get();
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        return view('dashboard.biosample.show', [
+            'biosample' => $biosample,
+            'histories' => $histories,
+            'sample_attr' => $sample_attr,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Biosample $biosample)
+    {
+        //
+        Biosample::destroy($biosample->id);
+        return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
+    }
+}

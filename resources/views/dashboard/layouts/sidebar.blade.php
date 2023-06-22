@@ -27,7 +27,7 @@
         </h6>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('dashboard/galaxy_workflows*') ? 'active' : ''}}" href="/dashboard/galaxy_workflows">
+                <a class="nav-link {{ Request::is('dashboard/innalysis_galaxy*') ? 'active' : ''}}" href="/dashboard/galaxy_workflows">
                     <span data-feather="tool"></span>
                     Galaxy Workflows
                 </a>

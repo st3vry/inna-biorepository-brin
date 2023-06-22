@@ -105,6 +105,7 @@ Route::prefix('dashboard')->group(function () {
 
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('auth');
+    Route::get('/innalysis_galaxy/create', [InnalysisController::class, 'create'])->middleware('auth');
     Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('auth');
     Route::post('/send-workflow', [InnalysisController::class, 'send'])->middleware('auth')->name('send.workflow');
 
@@ -123,6 +124,7 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/curator/biosamples', CuratorBioSampleController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
+    
     // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
 
 

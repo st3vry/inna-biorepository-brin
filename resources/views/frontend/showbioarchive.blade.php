@@ -6,7 +6,7 @@
 
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/biosamples">Bioarchive</a></li>
+            <li class="breadcrumb-item"><a href="/bioarchives">Bioarchive</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{$bioarchive->accession}}</li>
         </ol>
     </div>
@@ -72,7 +72,7 @@
                         </tr>
                         <tr>
                             <td class="col-sm-1">File</td>
-                            <td class="col-sm-7">{{$bioruns[0]->filename}}</td>
+                            <td class="col-sm-7">{{$bioruns[0]->filename ?? 'Not Exist'}}</td>
                         </tr>
                     @endforeach
                         

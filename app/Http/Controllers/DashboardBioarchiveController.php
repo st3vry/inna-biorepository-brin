@@ -21,7 +21,7 @@ class DashboardBioarchiveController extends Controller
     public function index()
     {
         return view('dashboard.bioarchive.index', [
-            'bioarchives' => Bioarchive::with(['bioproject', 'user'])->where('user_id', auth()->user()->id)->orderBy('id'),
+            'bioarchives' => Bioarchive::with(['bioproject', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
         ]);
     }
 

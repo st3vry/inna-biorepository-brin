@@ -1,5 +1,10 @@
 @extends('dashboard.layouts.main')
 
+@push('css')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@endpush
+
 
 @section('container')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
@@ -36,7 +41,7 @@
                 <td class="text-center align-middle">
                     @switch($bioproject->status)
                         @case(1)
-                            <span class="badge bg-danger">Unassigned</span>  
+                            <span class="badge bg-danger">Unassigned</span>
                             @break
                         @case(2)
                             <span class="badge bg-info">On review</span>
@@ -93,7 +98,7 @@
             });
             dataTable.on('order.dt search.dt', function () {
                 let i = 1;
-        
+
                 dataTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
                     this.data(i++);
                 });

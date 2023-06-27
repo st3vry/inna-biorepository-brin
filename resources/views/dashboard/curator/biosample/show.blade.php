@@ -55,6 +55,25 @@
                 <td class="col-sm-10">{{$biosample->description}}</td>
             </tr>
             <tr>
+                <th class="col-sm-2">Sample Attribute</th>
+                <td class="col-sm-10">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm">
+                                @forelse ($sample_attr as $item)
+                                    <tr>
+                                         <td class="col-sm-3">{{$item->attributesample->attr_text}}</td>
+                                        <td class="col-sm-3">{{$item->value}}</td>
+                                    </tr>
+                                @empty
+                                None
+                                @endforelse
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <th class="col-sm-2">Center</th>
                 <td class="col-sm-10">{{$biosample->center->name}}</td>
             </tr>

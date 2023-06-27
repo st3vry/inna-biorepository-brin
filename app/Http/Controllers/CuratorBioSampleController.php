@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActionLog;
 use App\Models\User;
 use App\Models\Biosample;
+use App\Models\AttributeValue;
 use Illuminate\Http\Request;
 
 class CuratorBioSampleController extends Controller
@@ -72,12 +73,14 @@ class CuratorBioSampleController extends Controller
     {
         // dd($biosample);
         $curators = User::select(['id','name'])->where('role_id',2)->where('is_activated',true)->orderBy('name')->get();
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
         $histories = ActionLog::with(['creator'])->where('item_id',$biosample->accession)->orderBy('created_at', 'desc')->get();
 
         return view('dashboard.curator.biosample.show', [
             'biosample' => $biosample,
             'curators' => $curators,
-            'histories' => $histories
+            'histories' => $histories,
+            'sample_attr' => $sample_attr,
         ]);
     }
 

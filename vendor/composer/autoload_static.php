@@ -441,8 +441,8 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces/src',
-            1 => __DIR__ . '/..' . '/league/uri/src',
+            0 => __DIR__ . '/..' . '/league/uri/src',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces/src',
         ),
         'League\\OAuth2\\Server\\' => 
         array (
@@ -657,6 +657,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\InnalysisGalaxyController' => __DIR__ . '/../..' . '/app/Http/Controllers/InnalysisGalaxyController.php',
         'App\\Http\\Controllers\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoginController.php',
+        'App\\Http\\Controllers\\LoginSsoController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoginSsoController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
         'App\\Http\\Controllers\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/RegisterController.php',
         'App\\Http\\Controllers\\SSHController' => __DIR__ . '/../..' . '/app/Http/Controllers/SSHController.php',
@@ -714,6 +715,7 @@ class ComposerStaticInite8a00216b7945eb9a84eee09b80ac271
         'App\\Models\\MaterialBioproject' => __DIR__ . '/../..' . '/app/Models/MaterialBioproject.php',
         'App\\Models\\Methodology' => __DIR__ . '/../..' . '/app/Models/Methodology.php',
         'App\\Models\\MethodologyBioproject' => __DIR__ . '/../..' . '/app/Models/MethodologyBioproject.php',
+        'App\\Models\\OauthAccessToken' => __DIR__ . '/../..' . '/app/Models/OauthAccessToken.php',
         'App\\Models\\Objective' => __DIR__ . '/../..' . '/app/Models/Objective.php',
         'App\\Models\\ObjectiveBioProject' => __DIR__ . '/../..' . '/app/Models/ObjectiveBioProject.php',
         'App\\Models\\Organism' => __DIR__ . '/../..' . '/app/Models/Organism.php',

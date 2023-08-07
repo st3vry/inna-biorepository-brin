@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardIndexController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InnalysisGalaxyController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LoginSsoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
@@ -70,6 +71,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 //         'title' => 'BioArchive'
 //     ]);
 // });
+//SSO Routes
+Route::get('/loginsso', [LoginSsoController::class, 'index'])->name('loginsso')->middleware('guest');
+// Route::post('/loginsso', [LoginSsoController::class, 'authenticate']);
 
 // Account Routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

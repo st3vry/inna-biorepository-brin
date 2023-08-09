@@ -2,37 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AuthSso;
-use Illuminate\Support\Facades\Cache;
+use App\Services\SsoService;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redirect;
+
 
 class LoginSsoController extends Controller
 {
     //
-    public function index(Request $request)
+    private $ssoService;
+    public function __construct()
     {
-        $token = session('is_login_baladeva');
+    }
+    public function index()
+    {
+        return view('login.index', [
+            'title' => 'Login'
+        ]);
+        // return redirect(route('loginsso'));
+    }
+    public function authenticate(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_activated' => true])) {
+            $request->session()->regenerate();
+            return redirect()->intended('/dashboard');
+        }
+
+        return back()->with('loginError', 'Login Failed');
+        // dd('berhasil login');
+    }
+    public function logout()
+    {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    }
+    // Kodingan Farham
+    public function sso(Request $request)
+    {
+        $token = session('is_login_inna_repo');
         $allSessions = session()->all();
-        //dd($token);
+
         if (Cache::has($token)) {
-            //dd('masuk ke cace');
-            $Auth = Cache::get($token)->userData;
-            return redirect(route('admin.dashboard'));
+
+            $Auth = Cache::get($token);
+
+            return $Auth;
         } else {
-            $SSO = new AuthSso();
-            $data = $SSO->authorize($request);
-            $response = null;
-            $accessToken = null;
-            // dd($data);
+            $ssoService = new SsoService;
+            $data = $ssoService->authorize($request);
 
             if (is_array($data) && $data['success'] == 1) {
-                $token = $SSO->loginsso($request, $response, $accessToken);
-                // dd('gak ada return sukses');
-                return redirect(route('admin.dashboard'));
+                $token = $ssoService->loginsso($request);
+
+                return 'Langsung Masuk Karena masih ada Token';
             } else {
-                dd('Redirek');
-                // return Redirect::to($data);
+                //dd('Redirek');
+                return Redirect::to($data);
             }
         }
     }

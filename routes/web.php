@@ -72,8 +72,11 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 //     ]);
 // });
 //SSO Routes
-Route::get('/loginsso', [LoginSsoController::class, 'index'])->name('loginsso')->middleware('guest');
+// Route::get('/loginsso', [LoginSsoController::class, 'index'])->name('loginsso')->middleware('guest');
 // Route::post('/loginsso', [LoginSsoController::class, 'authenticate']);
+Route::get('/login/sso', [LoginSsoController::class, 'sso'])->name('loginsso');
+
+
 
 // Account Routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -128,7 +131,7 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/curator/biosamples', CuratorBioSampleController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
-    
+
     // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
 
 
@@ -138,7 +141,6 @@ Route::prefix('dashboard')->group(function () {
     Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('auth');
     Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('auth');
     Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
-
 });
 
 Route::fallback(function () {

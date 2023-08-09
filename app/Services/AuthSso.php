@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Services\SsoServices;
+namespace App\Services;
 
 use App\Exceptions\Handler;
-use App\Exceptions\HttpException;
+// use App\Exceptions\HttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Models\OauthAccessToken;
 use App\Models\User;
 // use App\Model\MstUser;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 use App\Services\UserService;
+// use App\Services\UserServiceImplement;
 
 //use Illuminate\Http\Request AS Req;
 
@@ -137,7 +139,7 @@ class AuthSso
         }
     }
     // Store to Login SSO
-    private function loginsso(Request $request, $response, $accessToken)
+    public function loginsso(Request $request, $response, $accessToken)
     {
         //  dd("BApenas");
         try {

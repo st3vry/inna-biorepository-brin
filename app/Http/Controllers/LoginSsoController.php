@@ -12,16 +12,15 @@ use Illuminate\Support\Facades\Redirect;
 class LoginSsoController extends Controller
 {
     //
-    private $ssoService;
     public function __construct()
     {
     }
     public function index()
     {
-        return view('login.index', [
-            'title' => 'Login'
-        ]);
-        // return redirect(route('loginsso'));
+        // return view('login.index', [
+        //     'title' => 'Login'
+        // ]);
+        return redirect(route('loginsso'));
     }
     public function authenticate(Request $request)
     {
@@ -49,23 +48,21 @@ class LoginSsoController extends Controller
     public function sso(Request $request)
     {
         $token = session('is_login_inna_repo');
-        $allSessions = session()->all();
 
         if (Cache::has($token)) {
-
             $Auth = Cache::get($token);
-
             return $Auth;
         } else {
             $ssoService = new SsoService;
             $data = $ssoService->authorize($request);
-
+            // dd('belum login kesini');
             if (is_array($data) && $data['success'] == 1) {
                 $token = $ssoService->loginsso($request);
-
                 return 'Langsung Masuk Karena masih ada Token';
             } else {
-                //dd('Redirek');
+                // dd($data);
+                // dd('Redirek');
+                // dd($token);
                 return Redirect::to($data);
             }
         }

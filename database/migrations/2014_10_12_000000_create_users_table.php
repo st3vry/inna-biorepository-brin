@@ -15,13 +15,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('user_id')->unique();
             $table->string('username')->unique();
-            $table->string('usernameintra')->unique();
-            $table->string('external_account')->nullable();
-            $table->string('email')->unique();
+            // $table->string('usernameintra')->unique();
+            // $table->string('user_data');
+            $table->json('user_data')->nullable();
+            // $table->string('external_account')->nullable();
+            // $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            // $table->string('password');
             $table->foreignId('lab_id')->default(1);
             $table->string('orcid_id')->default('none');
             $table->foreignId('role_id')->default(3);
@@ -29,7 +31,7 @@ return new class extends Migration
             $table->string('refresh_token')->nullable();
             $table->boolean('is_activated')->default(false);
             $table->string('publickey')->nullable();
-            $table->string('expired')->nullable();
+            $table->string('expired_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

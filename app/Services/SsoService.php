@@ -9,6 +9,7 @@ use App\Exceptions\HttpException;
 use GuzzleHttp\Psr7\Header;
 use GuzzleHttp\Client as ClientGuzzle;
 use App\Models\OauthAccessToken;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 
 class SsoService
@@ -77,22 +78,23 @@ class SsoService
     {
 
         $provider = $this->provider();
-        //dd($request->code);
+        // dd($provider);
         if (!isset($request->code)) {
-            //dd('tidak ada code');
+            // dd('tidak ada code');
             $authUrl = $provider->getAuthorizationUrl();
-
+            
             session(['oauth2state' => $provider->getState()]);
+            // dd($authUrl);
             return $authUrl;
             exit;
 
             // Check given state against previously stored one to mitigate CSRF attack
         } elseif (empty($request->state) || ($request->state !== $request->session()->get('oauth2state'))) {
-
+            // dd($request->state);
             $request->session()->forget('oauth2state');
             exit('Invalid state');
         } else {
-            //dd('aam autorize');
+            // dd($provider);
             // Try to get an access token (using the authorization code grant)
             $accessToken = $provider->getAccessToken('authorization_code', [
                 'code' => $request->code
@@ -109,7 +111,6 @@ class SsoService
                 );
                 $response = $provider->getParsedResponse($requests);
                 $response = json_decode(json_encode($response));
-
                 $this->loginsso($request, $response, $accessToken);
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -121,6 +122,7 @@ class SsoService
     // Store to Login SSO
     public function loginsso(Request $request, $response, $accessToken)
     {
+        // dd($request);
         try {
             $result = new \stdClass();
             $tokens = $accessToken->getToken();
@@ -129,10 +131,12 @@ class SsoService
                 throw new Exception('Akun Belum Aktivasi, Silahkan cek email anda untuk melakukan aktivasi akun');
             }
             // Store to Oauth Access token;
-            $token = new OauthAccessToken();
-            $token->id = $request->session()->get('brin_sso_access_token');
+            // Store to User Table;
+            // $token = new OauthAccessToken();
+            $token = new User();
+            $token->user_id = $request->session()->get('brin_sso_access_token');
             $token->username = $response->userData->username;
-            $token->expires_at = Carbon::createFromTimestamp($accessToken->getExpires());
+            $token->expired_at = Carbon::createFromTimestamp($accessToken->getExpires());
             $token->user_data = json_encode($response);
             $token->created_at = Carbon::now();
             $token->save();
@@ -210,9 +214,9 @@ class SsoService
 
         // $accessToken = OauthAccessToken::where('id', $token)->first();
 
-        // if (!$accessToken){
+        // if (!$accessToken) {
         //     return redirect(route('admin.login'));
-        // }else{
+        // } else {
         //     $accessToken->delete();
         //     Cache::forget($token);
         //     $sessFlus = session()->flush();

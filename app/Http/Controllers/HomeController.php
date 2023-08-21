@@ -20,19 +20,7 @@ class HomeController extends Controller
         $bioprojects_latest = Bioproject::latest()->take(2)->where('draft', FALSE)->whereNotNull('published_at')->get();
         $biosamples_latest = Biosample::latest()->take(2)->where('draft', FALSE)->whereNotNull('published_at')->get();
         $bioarchives_latest = Bioarchive::latest()->take(2)->where('draft', TRUE)->get();
-        // $code = Cache::get('code');
-        // dd($code);
-        $allSessions = session()->all();
-        $ssoService = new SsoService;
-        $data = $ssoService->authorize($request);
-        // dd($data);
-        // $tokens = $accessToken->getToken();
-        // dd($tokens);
-
-        // $value = $request->session()->get('brin_sso_access_token');
-        // dd($allSessions);
-        // dd($value);
-        // dd($data_in_concern);
+       
         return view('frontend.home', [
             'title' => 'Home',
             'data_in_concerns' => $data_in_concerns,

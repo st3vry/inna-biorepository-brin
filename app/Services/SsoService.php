@@ -11,6 +11,7 @@ use GuzzleHttp\Client as ClientGuzzle;
 use App\Models\OauthAccessToken;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class SsoService
 {
@@ -74,6 +75,34 @@ class SsoService
         return $provider;
     }
 
+    public function getAccessToken(Request $request)
+    {
+        $provider = $this->provider();
+        $accessToken = $provider->getAccessToken('authorization_code', [
+            'code' => $request->code
+        ]);
+        return $accessToken;
+    }
+
+    public function getAuthenticatedRequest($method, $url, $accessToken, $options)
+    {
+        $provider = $this->provider();
+        $request = $provider->getAuthenticatedRequest(
+            $method,
+            $url,
+            $accessToken,
+            $options
+        );
+        return $request;
+    }
+
+    public function getParsedResponse($request)
+    {
+        $provider = $this->provider();
+        $response = $provider->getParsedResponse($request);
+        return $response;
+    }
+    
     public function authorize(Request $request)
     {
 
@@ -84,21 +113,22 @@ class SsoService
             $authUrl = $provider->getAuthorizationUrl();
             
             session(['oauth2state' => $provider->getState()]);
-            // dd($authUrl);
+            // dd($request);
             return $authUrl;
             exit;
 
             // Check given state against previously stored one to mitigate CSRF attack
         } elseif (empty($request->state) || ($request->state !== $request->session()->get('oauth2state'))) {
-            // dd($request->state);
+            
             $request->session()->forget('oauth2state');
             exit('Invalid state');
         } else {
-            // dd($provider);
+            // dd($request->code);
             // Try to get an access token (using the authorization code grant)
             $accessToken = $provider->getAccessToken('authorization_code', [
                 'code' => $request->code
             ]);
+            // dd($accessToken);
             session(['brin_sso_access_token' => $accessToken]);
             $options['headers']['content-type'] = 'application/json';
             // Optional: Now you have a token you can look up a users profile data
@@ -111,7 +141,12 @@ class SsoService
                 );
                 $response = $provider->getParsedResponse($requests);
                 $response = json_decode(json_encode($response));
+                // dd($response);
                 $this->loginsso($request, $response, $accessToken);
+                // dd($result);
+                
+
+
             } catch (Exception $e) {
                 echo $e->getMessage();
                 // Failed to get user details
@@ -122,64 +157,56 @@ class SsoService
     // Store to Login SSO
     public function loginsso(Request $request, $response, $accessToken)
     {
-        // dd($request);
+        // dd($response);
         try {
             $result = new \stdClass();
+            
             $tokens = $accessToken->getToken();
             $refreshtoken = $accessToken->getRefreshToken();
             if ($response->userData->active == 0) {
                 throw new Exception('Akun Belum Aktivasi, Silahkan cek email anda untuk melakukan aktivasi akun');
             }
-            // Store to Oauth Access token;
-            // Store to User Table;
-            // $token = new OauthAccessToken();
-            $token = new User();
-            $token->user_id = $request->session()->get('brin_sso_access_token');
-            $token->username = $response->userData->username;
-            $token->expired_at = Carbon::createFromTimestamp($accessToken->getExpires());
-            $token->user_data = json_encode($response);
-            $token->created_at = Carbon::now();
-            $token->save();
 
             // Cek Userename udah ada apa Belum? kalo udah Insert, kalo belom Update refresh Token
-            // $result = User::where('usernameintra', $response->userData->username)->first();
+            $result = User::where('username', $response->userData->username)->first();
             // dd($result);
             if ($result) {
                 // Update
-                $result->access_token = $tokens;
-                $result->refresh_token = $refreshtoken;
-                $result->expired = $accessToken->getExpires();
-                $result->active = $response->userData->active;
-                $result->save();
-            } else {
-                // Insert
-                $newData = new \stdClass();
-                $newData->name = $response->userData->first_name;
-                $newData->email = $response->userData->email;
-                $newData->email_verified_at = $request->username;
-                $newData->remember_token = $tokens;
-                $newData->usernameintra = $response->userData->username;
-                $newData->external_account = $response->userData->external_account;
-                $newData->active = $response->userData->active;
-                $newData->access_token = $tokens;
-                $newData->refresh_token = $refreshtoken;
-                $newData->expired = $accessToken->getExpires();
-
-                if ($response->userData->external_account != '1') {
-                    // Sivitas BRIN
-                    $newData->instansi = 'Badan Riset dan Inovasi Nasional';
-                    if ($response->userData->username == 'farh001') {
-                        $newData->role = 'ADMIN';
-                    } else {
-                        $newData->role = 'GUEST';
-                    }
-                } else {
-                    // Sivitas Non BRIN
-                    $newData->instansi = '';
-                    $newData->role = 'GUEST';
-                }
-                $result = $this->userService->saveUser($newData);
                 // dd($result);
+                try {
+                    $result->access_token = $tokens;
+                    $result->refresh_token = $refreshtoken;
+                    $result->expired_at = $accessToken->getExpires();
+                    $result->is_activated = $response->userData->active;
+                    $result->update();
+                } catch (\Exception $e) {
+                    // do task when error
+                    $e->getMessage();   // insert query
+                }
+
+            } else {
+                try {
+                    $newData = new User();
+                    $newData->user_id = $request->session()->get('brin_sso_access_token');
+                    $newData->username = $response->userData->username;
+                    $newData->name = $response->userData->first_name;
+                    $newData->email = $response->userData->email;
+                    // $newData->email_verified_at = $request->username;
+                    $newData->remember_token = $tokens;
+                    $newData->external_account = $response->userData->external_account;
+                    $newData->is_activated = $response->userData->active;
+                    $newData->access_token = $tokens;
+                    $newData->refresh_token = $refreshtoken;
+                    $newData->expired_at = Carbon::createFromTimestamp($accessToken->getExpires());
+                    $newData->user_data = json_encode($response);
+                    $newData->created_at = Carbon::now();
+                    // dd($newData);
+                    $newData->save();
+                } catch (\Exception $e) {
+                    // do task when error
+                    $e->getMessage();   // insert query
+                }
+
             }
 
             Cache::add($tokens, $result, 3600);
@@ -190,9 +217,10 @@ class SsoService
         } catch (Exception $e) {
             echo $e->getMessage();
         }
+
     }
 
-    public function getAuthUserSso(string $token)
+    public function getAuthUserSso($token)
     {
         $guzzle = new ClientGuzzle();
 
@@ -208,9 +236,13 @@ class SsoService
 
 
 
-    public function logout()
+    public function logout(Request $request)
     {
+        // $logout_link = curl_init('https://dev-sso.brin.go.id/logout');
+        // curl_exec($logout_link);
         $token = $this->token();
+        // dd($token);
+        // dd(session());
 
         // $accessToken = OauthAccessToken::where('id', $token)->first();
 
@@ -222,10 +254,21 @@ class SsoService
         //     $sessFlus = session()->flush();
         //     return redirect(route('admin.login'));
         // }
-
+        // dd($token);
+        // dd(Cache::get($token));
+        // Cache::flush();
 
         Cache::forget($token);
-        $sessFlus = session()->flush();
+        $request->session()->forget('brin_sso_access_token');
+        $request->session()->forget('is_login_inna_repo');
+        $request->session()->flush();
+        $request->session()->regenerate();
+        $request->session()->invalidate();
+        // Auth::logout();
+        // request()->session()->invalidate();
+        // request()->session()->regenerateToken();
+        // return redirect('/');
+        // dd($sessFlus);
         // return redirect(route('admin.login'));
         return redirect('/');
     }

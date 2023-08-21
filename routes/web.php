@@ -76,7 +76,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Route::get('/loginsso', [LoginSsoController::class, 'index'])->name('loginsso')->middleware('guest');
 // Route::post('/loginsso', [LoginSsoController::class, 'authenticate']);
 Route::get('/login/sso', [LoginSsoController::class, 'sso'])->name('loginsso');
-// Route::get('/logout/sso', [SsoService::class, 'logout'])->name('logoutsso');
+Route::post('/logout/sso', [SsoService::class, 'logout'])->name('logoutsso');
 
 
 

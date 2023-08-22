@@ -57,7 +57,7 @@
                 <td class="col-sm-1">Description</td>
                 <td class="col-sm-7">{{$biosample->description}}</td>
             </tr>
-                        <tr>
+            <tr>
                 <td class="col-sm-1">Sample Attribute</td>
                 <td class="col-sm-7">
                     <div class="card shadow-sm mb-2">

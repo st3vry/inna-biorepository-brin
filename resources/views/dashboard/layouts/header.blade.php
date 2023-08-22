@@ -39,7 +39,7 @@
                 <hr class="dropdown-divider">
             </li>
             <li>
-                <form action="/logout" method="post">
+                <form action="/logout/sso" method="post">
                     @csrf
                     <button type="submit" role="button" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Logout</button>
                 </form>

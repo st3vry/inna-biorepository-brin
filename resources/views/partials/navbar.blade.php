@@ -43,7 +43,7 @@
                 @else
 
                 <li class="nav-item">
-                    <a class="nav-link {{ ($title === 'Login') ? 'active' : '' }}" href="/login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                    <a class="nav-link {{ ($title === 'Login') ? 'active' : '' }}" href="/login/sso"><i class="bi bi-box-arrow-in-right"></i> Login</a>
                 </li>
                 @endauth
             </ul>

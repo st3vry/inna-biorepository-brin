@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardIndexController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InnalysisGalaxyController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LoginSsoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
@@ -27,6 +28,7 @@ use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\Fundagency;
 use App\Models\Organism;
+use App\Services\SsoService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -70,6 +72,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 //         'title' => 'BioArchive'
 //     ]);
 // });
+//SSO Routes
+// Route::get('/loginsso', [LoginSsoController::class, 'index'])->name('loginsso')->middleware('guest');
+// Route::post('/loginsso', [LoginSsoController::class, 'authenticate']);
+Route::get('/login/sso', [LoginSsoController::class, 'sso'])->name('loginsso');
+Route::post('/logout/sso', [SsoService::class, 'logout'])->name('logoutsso');
+
+
 
 // Account Routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -90,24 +99,24 @@ Route::get('/bioarchives/{bioarchive}', [BioarchiveController::class, 'show']);
 
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {
-    Route::get('/', [DashboardIndexController::class, 'index'])->middleware('auth');
+    Route::get('/', [DashboardIndexController::class, 'index'])->middleware('authsso');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('users.profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('users.profile.update');
     Route::post('/password', [ProfileController::class, 'password'])->name('users.password.update');
     Route::post('/markasread', [ActionLogController::class, 'markAsRead'])->name('notif.mark.as.read');
 
-    Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('auth');
+    Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('authsso');
 
-    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('auth');
-    Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('auth');
-    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('auth');
+    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('authsso');
+    Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
+    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('authsso');
 
     // INNAlysis
-    Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('auth');
-    Route::get('/innalysis_galaxy/create', [InnalysisController::class, 'create'])->middleware('auth');
-    Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('auth');
-    Route::post('/send-workflow', [InnalysisController::class, 'send'])->middleware('auth')->name('send.workflow');
+    Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('authsso');
+    Route::get('/innalysis_galaxy/create', [InnalysisController::class, 'create'])->middleware('authsso');
+    Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('authsso');
+    Route::post('/send-workflow', [InnalysisController::class, 'send'])->middleware('authsso')->name('send.workflow');
 
     // Admin
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
@@ -124,17 +133,16 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/curator/biosamples', CuratorBioSampleController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
-    
+
     // Route::get('/curator/biosamples/{biosample}', [CuratorBioSampleController::class, 'edit'])->middleware(['is_admin']);
 
 
-    Route::post('/curator/biorun', [CuratorBioArchiveController::class, 'updateBiorun'])->name('updateBiorun')->middleware(['auth']);
+    Route::post('/curator/biorun', [CuratorBioArchiveController::class, 'updateBiorun'])->name('updateBiorun')->middleware(['authsso']);
 
-    Route::post('file/upload', [UploaderController::class, 'upload'])->name('file-upload')->middleware('auth');
-    Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('auth');
-    Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('auth');
+    Route::post('file/upload', [UploaderController::class, 'upload'])->name('file-upload')->middleware('authsso');
+    Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('authsso');
+    Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('authsso');
     Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
-
 });
 
 Route::fallback(function () {

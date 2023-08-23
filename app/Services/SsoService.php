@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Session;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -202,16 +203,22 @@ class SsoService
                     $newData->created_at = Carbon::now();
                     // dd($newData);
                     $newData->save();
+                     //@gelar
+                    $result=$newData;
+                     //End @gelar
                 } catch (\Exception $e) {
                     // do task when error
                     $e->getMessage();   // insert query
                 }
 
             }
-
+            
             Cache::add($tokens, $result, 3600);
             session(['is_login_inna_repo' => $tokens]);
             session([$tokens => $result]);
+             //@gelar      
+             Auth::login($result);
+             //End @gelar
 
             return $result;
         } catch (Exception $e) {
@@ -264,6 +271,12 @@ class SsoService
         $request->session()->flush();
         $request->session()->regenerate();
         $request->session()->invalidate();
+
+        //@gelar
+        Session::flush();
+        Auth::logout();
+        //End @gelar
+
         // Auth::logout();
         // request()->session()->invalidate();
         // request()->session()->regenerateToken();

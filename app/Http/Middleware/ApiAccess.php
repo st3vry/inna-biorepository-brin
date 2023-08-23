@@ -19,7 +19,8 @@ class ApiAccess
         if (isset($session['is_login_inna_repo'])) {
             return $next($request);
         }
-
-        return redirect('/login/sso');
+        // @gelar
+        return redirect('/');
+        // END @gelar
     }
 }

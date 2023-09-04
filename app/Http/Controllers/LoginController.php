@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\Services\SsoServices\AuthSso;
 
 class LoginController extends Controller
@@ -35,7 +36,10 @@ class LoginController extends Controller
 
     public function logout()
     {
+        // dd("test");
         Auth::logout();
+        Cache::flush();
+
         request()->session()->invalidate();
         request()->session()->regenerateToken();
         //@gelar

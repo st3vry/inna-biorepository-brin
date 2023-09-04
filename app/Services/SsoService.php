@@ -144,9 +144,7 @@ class SsoService
                 $response = json_decode(json_encode($response));
                 // dd($response);
                 $this->loginsso($request, $response, $accessToken);
-                // dd($result);
                 
-
 
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -218,9 +216,10 @@ class SsoService
             session([$tokens => $result]);
              //@gelar      
              Auth::login($result);
-             //End @gelar
-
+            //End @gelar
+            // dd("test sso service");
             return $result;
+            
         } catch (Exception $e) {
             echo $e->getMessage();
         }

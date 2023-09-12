@@ -87,10 +87,6 @@ class CaptureController extends Controller
             'name' => 'required'
         ];
 
-        if ($request->taxon_id != $capture->taxon_id) {
-            $rules['code'] = 'required|unique:roles';
-        }
-
         $validatedData = $request->validate($rules);
 
         Capture::where('id', $capture->id)->update($validatedData);

@@ -5,7 +5,7 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Capture</li>
+        <li class="breadcrumb-item active" aria-current="page">Celularities</li>
     </ol>
 </div>
 @if (session()->has('success'))
@@ -14,7 +14,7 @@
     <strong> {{session('success')}}</strong>
 </div>
 @endif
-<a href="/dashboard/captures/create" class="btn btn-primary mb-3">Create Capture</a>
+<a href="/dashboard/celularities/create" class="btn btn-primary mb-3">Create Celularities</a>
 <div class="table-responsive col-lg-8">
     <table class="table table-striped table-sm">
         <thead>
@@ -25,14 +25,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ( $captures as $capture )
+            @foreach ( $celularities as $celularity )
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $capture->name }}</td>
+                <td>{{ $celularity->name }}</td>
                 {{-- <td>{{ $bioticrel->description }}</td> --}}
                 <td>
-                    <a href="/dashboard/captures/{{$capture->id}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                    <form action="/dashboard/captures/{{$capture->id}}" method="post" class="d-inline">
+                    <a href="/dashboard/celularities/{{$celularity->id}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                    <form action="/dashboard/celularities/{{$celularity->id}}" method="post" class="d-inline">
                         @method('delete')
                         @csrf
                         <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>

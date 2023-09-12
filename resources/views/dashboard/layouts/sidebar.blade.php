@@ -68,6 +68,12 @@
                     Capture
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/celularities*') ? 'active' : ''}}" aria-current="page" href="/dashboard/celularities">
+                    <span data-feather="grid"></span>
+                    Celularities
+                </a>
+            </li>
         </ul>
         @endcanany
         @cannot('isAuthor')

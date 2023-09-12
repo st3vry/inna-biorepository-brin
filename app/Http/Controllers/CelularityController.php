@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Celularity;
 use Illuminate\Http\Request;
-use App\Models\BioticRelationship;
 
-class BioticRelationController extends Controller
+class CelularityController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,8 @@ class BioticRelationController extends Controller
     public function index()
     {
         //
-        // dd("here");
-        return view('dashboard.bioticrel.index', [
-            'bioticrels' => BioticRelationship::all(),
+        return view('dashboard.celularity.index', [
+            'celularities' => Celularity::all(),
         ]);
     }
 
@@ -29,7 +28,7 @@ class BioticRelationController extends Controller
     public function create()
     {
         //
-        return view('dashboard.bioticrel.create');
+        return view('dashboard.celularity.create');
     }
 
     /**
@@ -45,8 +44,8 @@ class BioticRelationController extends Controller
             'name' => 'required'
         ]);
 
-        BioticRelationship::create($validatedData);
-        return redirect('/dashboard/bioticrels')->with('success', 'New Biotic Relationship has been added!');
+        Celularity::create($validatedData);
+        return redirect('/dashboard/celularities')->with('success', 'New Celularity has been added!');
     }
 
     /**
@@ -66,11 +65,11 @@ class BioticRelationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(BioticRelationship $bioticrel)
+    public function edit(Celularity $celularity)
     {
         //
-        return view('dashboard.bioticrel.edit', [
-            'bioticrel' => $bioticrel,
+        return view('dashboard.celularity.edit', [
+            'celularity' => $celularity,
         ]);
     }
 
@@ -81,7 +80,7 @@ class BioticRelationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BioticRelationship $bioticrel)
+    public function update(Request $request, Celularity $celularity)
     {
         //
         $rules = [
@@ -90,8 +89,8 @@ class BioticRelationController extends Controller
 
         $validatedData = $request->validate($rules);
 
-        BioticRelationship::where('id', $bioticrel->id)->update($validatedData);
-        return redirect('/dashboard/bioticrels')->with('success', 'Biotic Relationship has been updated!');
+        Celularity::where('id', $celularity->id)->update($validatedData);
+        return redirect('/dashboard/celularities')->with('success', 'Celularity has been updated!');
     }
 
     /**
@@ -100,10 +99,10 @@ class BioticRelationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BioticRelationship $bioticrel)
+    public function destroy(Celularity $celularity)
     {
         //
-        BioticRelationship::destroy($bioticrel->id);
-        return redirect('/dashboard/bioticrels')->with('success', 'Biotic Relationship has been deleted!');
+        Celularity::destroy($celularity->id);
+        return redirect('/dashboard/celularities')->with('success', 'Celularity has been deleted!');
     }
 }

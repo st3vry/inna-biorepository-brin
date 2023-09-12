@@ -62,6 +62,12 @@
                     Biotic Relationship
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/captures*') ? 'active' : ''}}" aria-current="page" href="/dashboard/captures">
+                    <span data-feather="grid"></span>
+                    Capture
+                </a>
+            </li>
         </ul>
         @endcanany
         @cannot('isAuthor')

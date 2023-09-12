@@ -24,8 +24,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UploaderController;
 use App\Http\Controllers\SSHController;
+use App\Http\Controllers\BioticRelationController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
+use App\Models\BioticRelationship;
 use App\Models\Fundagency;
 use App\Models\Organism;
 use App\Services\SsoService;
@@ -122,6 +124,7 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/roles', AdminRoleController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/users', AdminUserController::class)->except('show')->middleware('can:isAdmin');
+    Route::resource('/bioticrels', BioticRelationController::class)->except('show')->middleware('can:isAdmin');
     // Route::post('/users', [AdminUserController::class, 'filter'])->name('users.filter')->middleware('can:isAdmin');
     // Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
     // Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');

@@ -56,6 +56,12 @@
                     Organism
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/bioticrels*') ? 'active' : ''}}" aria-current="page" href="/dashboard/bioticrels">
+                    <span data-feather="grid"></span>
+                    Biotic Relationship
+                </a>
+            </li>
         </ul>
         @endcanany
         @cannot('isAuthor')

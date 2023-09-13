@@ -86,6 +86,12 @@
                     Consortium
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/diseases*') ? 'active' : ''}}" aria-current="page" href="/dashboard/diseases">
+                    <span data-feather="grid"></span>
+                    Diseases
+                </a>
+            </li>
         </ul>
         @endcanany
         @cannot('isAuthor')

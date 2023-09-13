@@ -74,6 +74,12 @@
                     Celularities
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/centers*') ? 'active' : ''}}" aria-current="page" href="/dashboard/centers">
+                    <span data-feather="grid"></span>
+                    Center
+                </a>
+            </li>
         </ul>
         @endcanany
         @cannot('isAuthor')

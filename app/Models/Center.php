@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Center extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     public function lab()
     {
         return $this->hasMany(Lab::class);

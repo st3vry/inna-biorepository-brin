@@ -80,6 +80,12 @@
                     Center
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/consortium*') ? 'active' : ''}}" aria-current="page" href="/dashboard/consortium">
+                    <span data-feather="grid"></span>
+                    Consortium
+                </a>
+            </li>
         </ul>
         @endcanany
         @cannot('isAuthor')

@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 @section('container')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
-    <h1>Edit Capture Data</h1>
+    <h1>Edit Center Data</h1>
 </div>
 <div class="col-lg-8">
     <form method="post" action="/dashboard/centers/{{$center->id}}">

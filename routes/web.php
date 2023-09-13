@@ -28,6 +28,7 @@ use App\Http\Controllers\BioticRelationController;
 use App\Http\Controllers\CaptureController;
 use App\Http\Controllers\CelularityController;
 use App\Http\Controllers\CenterController;
+use App\Http\Controllers\ConsortiaController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\BioticRelationship;
@@ -131,6 +132,7 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/captures', CaptureController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/celularities', CelularityController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/centers', CenterController::class)->except('show')->middleware('can:isAdmin');
+    Route::resource('/consortium', ConsortiaController::class)->except('show')->middleware('can:isAdmin');
     // Route::post('/users', [AdminUserController::class, 'filter'])->name('users.filter')->middleware('can:isAdmin');
     // Route::get('/curation/bioprojects', [DashboardBioprojectController::class, 'curation'])->middleware('can:isAdmin');
     // Route::get('/curation/biosamples', [DashboardBiosampleController::class, 'curation'])->middleware('can:isAdmin');

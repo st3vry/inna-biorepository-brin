@@ -1187,9 +1187,10 @@ class CreateBiosample extends Component
     {
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
-        $this->submitter_lab = auth()->user()->lab->name;
-        $this->submitter_center = auth()->user()->lab->center->name;
-
+        // $this->submitter_lab = auth()->user()->lab->name;
+        // $this->submitter_center = auth()->user()->lab->center->name;
+        $this->submitter_lab = auth()->user()->affiliate;
+        $this->submitter_center = auth()->user()->administrative;
         //$this->biosample_links = [
         //    ['biosamplelink_id' => '', 'link_description' => '', 'link_url' => '']
         //];

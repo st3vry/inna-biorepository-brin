@@ -144,9 +144,7 @@ class SsoService
                 $response = json_decode(json_encode($response));
                 // dd($response);
                 $this->loginsso($request, $response, $accessToken);
-                // dd($result);
                 
-
 
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -193,6 +191,8 @@ class SsoService
                     $newData->name = $response->userData->first_name;
                     $newData->email = $response->userData->email;
                     // $newData->email_verified_at = $request->username;
+                    $newData->administrative = $response->pegawaiData->administrative_name;
+                    $newData->affiliate = $response->pegawaiData->affiliate_name;
                     $newData->remember_token = $tokens;
                     $newData->external_account = $response->userData->external_account;
                     $newData->is_activated = $response->userData->active;
@@ -218,9 +218,10 @@ class SsoService
             session([$tokens => $result]);
              //@gelar      
              Auth::login($result);
-             //End @gelar
-
+            //End @gelar
+            // dd("test sso service");
             return $result;
+            
         } catch (Exception $e) {
             echo $e->getMessage();
         }

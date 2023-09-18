@@ -56,6 +56,42 @@
                     Organism
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/bioticrels*') ? 'active' : ''}}" aria-current="page" href="/dashboard/bioticrels">
+                    <span data-feather="grid"></span>
+                    Biotic Relationship
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/captures*') ? 'active' : ''}}" aria-current="page" href="/dashboard/captures">
+                    <span data-feather="grid"></span>
+                    Capture
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/celularities*') ? 'active' : ''}}" aria-current="page" href="/dashboard/celularities">
+                    <span data-feather="grid"></span>
+                    Celularities
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/centers*') ? 'active' : ''}}" aria-current="page" href="/dashboard/centers">
+                    <span data-feather="grid"></span>
+                    Center
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/consortium*') ? 'active' : ''}}" aria-current="page" href="/dashboard/consortium">
+                    <span data-feather="grid"></span>
+                    Consortium
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/diseases*') ? 'active' : ''}}" aria-current="page" href="/dashboard/diseases">
+                    <span data-feather="grid"></span>
+                    Diseases
+                </a>
+            </li>
         </ul>
         @endcanany
         @cannot('isAuthor')

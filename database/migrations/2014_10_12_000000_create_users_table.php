@@ -26,7 +26,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             // $table->string('password');
             $table->boolean('external_account')->default(false);
-            $table->foreignId('lab_id')->default(1);
+            // $table->foreignId('lab_id')->default(1);
+            $table->string('administrative')->nullable();
+            $table->string('affiliate')->nullable();
             $table->string('orcid_id')->default('none');
             $table->foreignId('role_id')->default(3);
             $table->string('access_token')->nullable();

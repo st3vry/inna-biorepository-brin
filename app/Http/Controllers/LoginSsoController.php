@@ -35,7 +35,7 @@ class LoginSsoController extends Controller
     //     }
 
     //     return back()->with('loginError', 'Login Failed');
-    //     // dd('berhasil loginhttps://dev-sso.brin.go.id/dashpproval_prompt=auto&redirect_uri=http%3A%2F%2Finna-biorepository.test%2Flogin%2Fsso&client_id=demo');
+    //     // dd('berhasil login https://dev-sso.brin.go.id/dashpproval_prompt=auto&redirect_uri=http%3A%2F%2Finna-biorepository.test%2Flogin%2Fsso&client_id=demo');
     // }
     // public function logout()
     // {
@@ -53,20 +53,22 @@ class LoginSsoController extends Controller
         // dd($token);
         if (Cache::has($token)) {
             $Auth = Cache::get($token);
-            // dd($Auth);
+            // dd("test login sso cont");
             // return $Auth;
             return redirect()->action([DashboardIndexController::class, 'index']);
         } else {
             $ssoService = new SsoService;
             $data = $ssoService->authorize($request);
-            
+            // dd($data);
             if (is_array($data) && $data['success'] == 1) {
                 // dd($token);
+                
                 $token = $ssoService->loginsso($request);
                 // dd($token);
-                // return 'Langsung Masuk Karena masih ada Token';
-                return redirect()->action([DashboardIndexController::class, 'index']);
+                return 'Langsung Masuk Karena masih ada Token';
+                // return redirect()->action([DashboardIndexController::class, 'index']);
             } else {
+                // dd($token);
                 // dd('Redirek');
                 // dd($data);
                 return Redirect::to($data);

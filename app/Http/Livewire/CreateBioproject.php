@@ -267,11 +267,11 @@ class CreateBioproject extends Component
 
     public function mount()
     {
-
+        // dd(auth()->user());
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
-        $this->submitter_lab = auth()->user()->lab->name;
-        $this->submitter_center = auth()->user()->lab->center->name;
+        $this->submitter_lab = auth()->user()->affiliate;
+        $this->submitter_center = auth()->user()->administrative;
 
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();

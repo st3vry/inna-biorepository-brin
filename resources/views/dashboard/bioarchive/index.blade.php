@@ -24,6 +24,10 @@
                 <th scope="col">Bioproject</th>
                 <th scope="col">Biosample</th>
                 <th scope="col">Status</th>
+                <th scope="col">Submission ID</th>
+                <th scope="col">Bioproject</th>
+                <th scope="col">Biosample</th>
+                <th scope="col">Status</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -51,7 +55,7 @@
                 <td class="text-center align-middle">
                     @switch($bioarchive->status)
                         @case(1)
-                            <span class="badge bg-danger">Unassigned</span>  
+                            <span class="badge bg-danger">Unassigned</span>
                             @break
                         @case(2)
                             <span class="badge bg-info">On review</span>
@@ -112,7 +116,7 @@
             });
             dataTable.on('order.dt search.dt', function () {
                 let i = 1;
-        
+
                 dataTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
                     this.data(i++);
                 });

@@ -33,7 +33,7 @@
 
                 <td class="text-center"></td>
                 <td>{{ $biosample->accession }}</td>
-                <td>{{ $biosample->organism_name }}</td>
+                <td>{{ $biosample->organism->name }}</td>
                 <td>{{ $biosample->title }}</td>
                 <td>{{ $biosample->description }}</td>
                 <td>{{ $biosample->center->name }}</td>

@@ -40,7 +40,7 @@
                 <td>
                     @switch($bioproject->status)
                         @case(1)
-                            <span class="badge bg-danger">Unassigned</span>  
+                            <span class="badge bg-danger">Unassigned</span>
                             @break
                         @case(2)
                             <span class="badge bg-info">On review</span>
@@ -59,6 +59,7 @@
                     @endswitch
                 </td>
                 <td>
+                    <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                 </td>
             </tr>
@@ -87,7 +88,7 @@
             });
             dataTable.on('order.dt search.dt', function () {
                 let i = 1;
-        
+
                 dataTable.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
                     this.data(i++);
                 });

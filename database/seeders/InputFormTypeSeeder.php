@@ -34,8 +34,5 @@ class InputFormTypeSeeder extends Seeder
         InputFormType::create([
             'name'=>'checkbox'
         ]);
-        InputFormType::create([
-            'name'=>'selectDB'
-        ]);
     }
 }

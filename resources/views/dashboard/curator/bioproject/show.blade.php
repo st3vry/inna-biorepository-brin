@@ -106,7 +106,7 @@
                     &mdash; {{$methodology->description}}
                     @endif </td>
             </tr>
-    
+
             <tr>
                 <th class="col-sm-2">Publication</th>
                 <td class="col-sm-10">
@@ -122,11 +122,11 @@
                                     <td class="col-sm-3">{{$pub->article_title}}</td>
                                     <td class="col-sm-3">
                                         @if($pub->pub_identifier_id == 1)
-                                            <a href="https://www.doi.org/{{$pub->pub_id}}" target="_blank">{{$pub->pub_id}} </a> 
+                                            <a href="https://www.doi.org/{{$pub->pub_id}}" target="_blank">{{$pub->pub_id}} </a>
                                         @else
-                                            <a href="https://pubmed.ncbi.nlm.nih.gov/{{$pub->pub_id}}" target="_blank">{{$pub->pub_id}} </a> 
+                                            <a href="https://pubmed.ncbi.nlm.nih.gov/{{$pub->pub_id}}" target="_blank">{{$pub->pub_id}} </a>
                                         @endif
-                                        
+
                                     </td>
                                 </tr>
                                 @empty
@@ -137,7 +137,7 @@
                     </div>
                 </td>
             </tr>
-            
+
             <tr>
                 <th class="col-sm-2">Grant</th>
                 <td class="col-sm-10">
@@ -163,7 +163,7 @@
                     </div>
                 </td>
             </tr>
-    
+
             <tr>
                 <th class="col-sm-2">External Link</th>
                 <td class="col-sm-10">
@@ -187,7 +187,7 @@
                     </div>
                 </td>
             </tr>
-    
+
             <tr>
                 <th class="col-sm-2">Sample Scope</th>
                 <td class="col-sm-10">{{$bioproject->samplescope->name}}</td>
@@ -222,12 +222,12 @@
                 <th class="col-sm-2">Published at</th>
                 <td class="col-sm-10">{{$bioproject->published_at === null ? 'None' : $bioproject->published_at->format('d-m-Y')}}</td>
             </tr>
-    
+
         </table>
     </div>
     <div class="col-md-4">
         @canany(['isSuperAdmin','isAdmin'])
-            @if ($bioproject->status ===1) 
+            @if ($bioproject->status ===1)
                 <form action="/dashboard/curator/bioprojects/{{$bioproject->accession}}" class="row p-2" method="post" class="d-inline">
                     @method('put')
                     @csrf
@@ -306,7 +306,7 @@
                 </div>
             </form>
         @endif
-       
+
         @endcan
         <div class="card m-2">
             <div class="card-header">
@@ -317,6 +317,7 @@
                     <ul class="timeline">
                         @foreach ($histories as $history)
                             <li class="timeline-item mb-5">
+                                <strong class="fw-bolder">{{preg_replace('/(?<!\ )[A-Z]/', ' $0', ucfirst($history->action))}} by {{explode(' ', trim($history->creator->name))[0]}}</strong>
                                 <strong class="fw-bolder">{{preg_replace('/(?<!\ )[A-Z]/', ' $0', ucfirst($history->action))}} by {{explode(' ', trim($history->creator->name))[0]}}</strong>
                                 <p class="fw-lighter mb-1">{{$history->created_at->format('j F Y H:i')}}</p>
                                 <p class="text-muted">
@@ -372,8 +373,43 @@
                         descCurator.focus()
                     })
                 }
-                
-            }           
+
+            }
+            const modalAssign = document.getElementById('modalAssign')
+            if (modalAssign !== null) {
+                $('#target').select2({
+                    theme: 'bootstrap-5',
+                    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+                    placeholder: 'Select curator'
+                })
+                $('#target').on('change', function(e) {
+                    document.getElementById('btnModalAssign').disabled = false
+                })
+                const inputDesc = document.getElementById('desc')
+                const curatorId = document.getElementById('target')
+                const modalAssignLabel = document.getElementById('modalAssignLabel')
+
+                modalAssign.addEventListener('show.bs.modal', function () {
+                    modalAssignLabel.innerHTML = "Assign to "+ curatorId.options[curatorId.selectedIndex].text +' ?'
+                })
+                modalAssign.addEventListener('shown.bs.modal', function () {
+                    inputDesc.focus()
+                })
+            } else {
+                if ('{{!$bioproject->draft && $bioproject->published_at === null}}') {
+                    const modalActionCurator= document.getElementById('modalActionCurator')
+                    const descCurator = document.getElementById('descCurator')
+                    const action = document.getElementById('action')
+                    const modalActionCuratorLabel = document.getElementById('modalActionCuratorLabel')
+                    modalActionCurator.addEventListener('show.bs.modal', function () {
+                        modalActionCuratorLabel.innerHTML = action.options[action.selectedIndex].text + " ({{$bioproject->title}})?"
+                    })
+                    modalActionCurator.addEventListener('shown.bs.modal', function () {
+                        descCurator.focus()
+                    })
+                }
+
+            }
         })
     </script>
 @endpush

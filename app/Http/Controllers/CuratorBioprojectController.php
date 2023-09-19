@@ -58,6 +58,7 @@ class CuratorBioprojectController extends Controller
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
         $curators = User::select(['id','name'])->where('role_id',2)->where('is_activated',true)->orderBy('name')->get();
         $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
+        $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
 
         return view('dashboard.curator.bioproject.show', [
             'bioproject' => $bioproject,
@@ -96,7 +97,7 @@ class CuratorBioprojectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   
+    {
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
@@ -128,7 +129,7 @@ class CuratorBioprojectController extends Controller
                 $success = 'BioProject rejected';
             }
         }
-        
+
         if ($action) {
             ActionLog::create([
                 'action' => $request->action,
@@ -144,5 +145,7 @@ class CuratorBioprojectController extends Controller
         }
     }
 
-    
+
+
+
 }

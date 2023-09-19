@@ -47,9 +47,9 @@ class DashboardBioarchiveController extends Controller
                 $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
                 array_push($files, $obj);
             }
-            
+
         }
-        
+
         // Storage::disk('ftp')->files("files/{$bioarchive->accession}/");
         // Storage::disk('ftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}")
 

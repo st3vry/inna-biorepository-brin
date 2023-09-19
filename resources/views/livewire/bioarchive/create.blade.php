@@ -27,8 +27,11 @@
         </ul>
         <div class="progress mb-2" style="height: 4px;">
             <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress mb-2" style="height: 4px;">
+            <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
+
 
     <div class="row setup-content {{ $currentStep != 1 ? 'display-none' : '' }}" id="step-1">
         <div class="col-md-12">
@@ -100,6 +103,7 @@
         </div>
     </div>
 
+
     <div class="row setup-content {{ $currentStep != 2 ? 'display-none' : '' }}" id="step-2">
         <div class="col-md-12">
             <!-- <h4>Bioproject</h4> -->
@@ -136,6 +140,9 @@
                         </table>
 
                     </div>
+                    @error('bioproject_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
                     @error('bioproject_id')
                     <p class="text-danger">{{$message}}</p>
                     @enderror
@@ -184,6 +191,9 @@
                     @error('biosample_id')
                     <p class="text-danger">{{$message}}</p>
                     @enderror
+                    @error('biosample_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
             </div>
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(2)">Back</button>
@@ -222,10 +232,21 @@
                                 $no = 1;
                                 $alias = $this->alias;
                                 @endphp
+                                @php
+                                $no = 1;
+                                $alias = $this->alias;
+                                @endphp
                                 @foreach ($biosample_id as $id => $experiment)
                                 <tr>
                                     <!-- {{$id}} -->
                                     <td>{{$no}}</td>
+                                    <td>
+                                        {{$alias_exp[$id] = "INNAX-".$alias."-".$no }}
+                                        {{-- <input type="text" name="bioexperiment_id[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp" value="{{$alias}}" disabled>
+                                        @error('bioexperiment_id.*.alias_exp')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror --}}
+                                    </td>
                                     <td>
                                         {{$alias_exp[$id] = "INNAX-".$alias."-".$no }}
                                         {{-- <input type="text" name="bioexperiment_id[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp" value="{{$alias}}" disabled>
@@ -247,6 +268,19 @@
                                         @enderror
                                     </td>
                                     <td>
+                                        <input type="text" name="bioexperiment_id[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title">
+                                        @error('bioexperiment_id.*.title')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
+                                    </td>
+                                    <td>
+                                        <input type="text" name="bioexperiment_id[{{$id}}][libname]" wire:model="bioexperiment_id.{{$id}}.libname">
+                                        @error('bioexperiment_id.*.libname')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
+                                    </td>
+                                    <td>
+                                        <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
                                         <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
                                             <option value="">Select Lib Source</option>
                                             @foreach ( $libsources as $libsource )
@@ -256,6 +290,7 @@
                                     </td>
                                     <td>
                                         <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
+                                        <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
                                             <option value="">Select Lib Selection</option>
                                             @foreach ( $libselections as $libselection )
                                             <option value="{{$libselection->id}}" @if (old('libselection_id')==$libselection->id) selected @endif>{{$libselection->name}}</option>
@@ -264,6 +299,7 @@
                                     </td>
                                     <td>
                                         <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
+                                        <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
                                             <option value="">Select Lib Strategy</option>
                                             @foreach ( $libstrategies as $libstrategy )
                                             <option value="{{$libstrategy->id}}" @if (old('libstrategy_id')==$libstrategy->id) selected @endif>{{$libstrategy->name}}</option>
@@ -271,7 +307,10 @@
                                         </select>
                                     </td>
                                     <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
+                                    <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
                                     <td>
+                                        <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
+                                            <option value="0">Select Instrument</option>
                                         <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
                                             <option value="0">Select Instrument</option>
                                             @foreach ( $instruments as $instrument )
@@ -281,11 +320,15 @@
                                     </td>
                                     <td>
                                         <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
+                                        <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
                                             <option value="">Select Lib Layout</option>
                                             @foreach ( $liblayouts as $liblayout )
                                             <option value="{{$liblayout->id}}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{$liblayout->name}}</option>
                                             @endforeach
                                         </select>
+                                        @error('bioexperiment_id.*.liblayout_id')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
                                         @error('bioexperiment_id.*.liblayout_id')
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -308,7 +351,7 @@
         </div>
     </div>
 
-    
+
     <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
         <div class="col-md-12">
             <div class="card mb-4">
@@ -440,10 +483,10 @@
             const bioprojectRows = document.getElementsByClassName('bioprojects')
             const bioprojectTitles = document.getElementsByClassName('bioprojectsTitles')
             timer = setTimeout(() => {
-                for (let i = 0; i<bioprojectTitles.length; i++ ) 
+                for (let i = 0; i<bioprojectTitles.length; i++ )
                 {
                     console.log(bioprojectTitles[i].innerHTML)
-                    if (!bioprojectTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase())) 
+                    if (!bioprojectTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase()))
                     {
                         bioprojectRows[i].classList.add("d-none")
                     }
@@ -452,7 +495,7 @@
                     }
                 }
             }, 500)
-            
+
         })
 
         $('#searchBiosample').on('keyup',function(){
@@ -463,10 +506,10 @@
             const biosampleRows = document.getElementsByClassName('biosamples')
             const biosampleTitles = document.getElementsByClassName('biosamplesTitles')
             timer = setTimeout(() => {
-                for (let i = 0; i<biosampleTitles.length; i++ ) 
+                for (let i = 0; i<biosampleTitles.length; i++ )
                 {
                     console.log(biosampleTitles[i].innerHTML)
-                    if (!biosampleTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase())) 
+                    if (!biosampleTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase()))
                     {
                         biosampleRows[i].classList.add("d-none")
                     }
@@ -475,7 +518,7 @@
                     }
                 }
             }, 500)
-            
+
         })
 
         const steps = document.querySelectorAll('#nav-steps .nav-item').length;

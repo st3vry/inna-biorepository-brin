@@ -42,5 +42,18 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('unseen',ActionLog::where('user_target',auth()->id())->where('seen',false)->first());
             }
         );
+        view()->composer(
+            'dashboard.layouts.notification',
+            function ($view) {
+                $view->with('notifications',ActionLog::with(['creator'])->where('user_target',auth()->id())->orderBy('created_at', 'desc')->orderBy('seen','asc')->take(10)->get());
+            }
+        );
+
+        view()->composer(
+            'dashboard.layouts.header',
+            function ($view) {
+                $view->with('unseen',ActionLog::where('user_target',auth()->id())->where('seen',false)->first());
+            }
+        );
     }
 }

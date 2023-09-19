@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ActionLogController;
-use App\Http\Controllers\ActionLogController;
 use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;

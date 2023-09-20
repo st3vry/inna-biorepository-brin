@@ -695,7 +695,8 @@ class CreateBiosample extends Component
         $biosample->comments = $validatedData['comments'];
         $biosample->sampletype_id = $validatedData['sampletype_id'];
 
-        $biosample->center_id = auth()->user()->lab->center_id;
+        // $biosample->center_id = auth()->user()->lab->center_id;
+        $biosample->center_id = auth()->user()->administrative;
         $biosample->user_id = auth()->user()->id;
         // need to change if organism table ready
         $biosample->organism_id = mt_rand(1, 4);

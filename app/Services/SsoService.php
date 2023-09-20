@@ -191,8 +191,8 @@ class SsoService
                     $newData->name = $response->userData->first_name;
                     $newData->email = $response->userData->email;
                     // $newData->email_verified_at = $request->username;
-                    $newData->administrative = $response->pegawaiData->administrative_name;
-                    $newData->affiliate = $response->pegawaiData->affiliate_name;
+                    $newData->administrative = $response->pegawaiData->administrative_unit_id;
+                    $newData->affiliate = $response->pegawaiData->affiliate_unit_id;
                     $newData->remember_token = $tokens;
                     $newData->external_account = $response->userData->external_account;
                     $newData->is_activated = $response->userData->active;

@@ -475,7 +475,8 @@ class CreateBioproject extends Component
         $bioproject->title = $validatedData['title'];
         $bioproject->description = $validatedData['description'];
         $bioproject->hold_release = $validatedData['hold_release'];
-        $bioproject->center_id = auth()->user()->lab->center_id;
+        // $bioproject->center_id = auth()->user()->lab->center_id;
+        $bioproject->center_id = auth()->user()->administrative;
         $bioproject->user_id = auth()->user()->id;
 
         $bioproject->save();

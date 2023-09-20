@@ -22,18 +22,21 @@ class CuratorBioprojectController extends Controller
         //
         $bioprojects = Bioproject::with(['organism'])
             ->where('published_at', null)
-            ->where(function ($query) {
-                $query->where('draft', false)
-                      ->orWhere('curator_id','<>', null);
-            })
+            ->where('draft',false)
+            ->where('status',1)
+            // ->where(function ($query) {
+            //     $query->where('draft', false)
+            //           ->orWhere('curator_id','<>', null);
+            // })
             ->orderBy('published_at','desc')
             ->orderBy('curator_id','asc')
-            ->paginate(5);
+            ->get();
         if (auth()->user()->role_id == 2) {
             $bioprojects = Bioproject::with(['organism', 'center'])
                 ->where('curator_id', auth()->id())
+                ->where('status', '<>', 1)
                 ->orderBy('published_at','desc')
-                ->paginate(5);
+                ->get();
         }
         return view('dashboard.curator.bioproject.index', [
             'title' => 'Bioproject',
@@ -54,6 +57,7 @@ class CuratorBioprojectController extends Controller
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
         $curators = User::select(['id','name'])->where('role_id',2)->where('is_activated',true)->orderBy('name')->get();
+        $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
         $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
 
         return view('dashboard.curator.bioproject.show', [
@@ -93,29 +97,39 @@ class CuratorBioprojectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   
+    {
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
-            $action = Bioproject::where('accession', $id)->update(['curator_id' => $request->target]);
+            $action = Bioproject::where('accession', $id)->update([
+                'curator_id' => $request->target,
+                'status' => 2,
+            ]);
             $success = 'Assigned to Curator';
         } else {
             if ($request->action === 'returnedToSubmitter') {
-                $action = Bioproject::where('accession', $id)->update(['draft' => true]);
+                $action = Bioproject::where('accession', $id)->update([
+                    'draft' => true,
+                    'status'=>3
+                ]);
                 $success = 'Returned to Submitter';
             }
             if ($request->action === 'approved') {
-                $action = Bioproject::where('accession', $id)->update(['published_at' => now()]);
+                $action = Bioproject::where('accession', $id)->update([
+                    'published_at' => now(),
+                    'status' => 5
+                ]);
                 $success = 'BioProject Approved';
             }
             if ($request->action === 'rejected') {
                 // waiting for action rules
-                dd($request->action);
-                $action = Bioproject::where('accession', $id)->update(['published_at' => now()]);
+                $action = Bioproject::where('accession', $id)->update([
+                    'status' => 0
+                ]);
                 $success = 'BioProject rejected';
             }
         }
-        
+
         if ($action) {
             ActionLog::create([
                 'action' => $request->action,
@@ -131,5 +145,7 @@ class CuratorBioprojectController extends Controller
         }
     }
 
-    
+
+
+
 }

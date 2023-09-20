@@ -27,8 +27,11 @@
         </ul>
         <div class="progress mb-2" style="height: 4px;">
             <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress mb-2" style="height: 4px;">
+            <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
+
 
     <div class="row setup-content {{ $currentStep != 1 ? 'display-none' : '' }}" id="step-1">
         <div class="col-md-12">
@@ -100,6 +103,7 @@
         </div>
     </div>
 
+
     <div class="row setup-content {{ $currentStep != 2 ? 'display-none' : '' }}" id="step-2">
         <div class="col-md-12">
             <!-- <h4>Bioproject</h4> -->
@@ -110,7 +114,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                            <input type="text" id='searchBioproject' wire:model="searchBioproject" class="form-control" placeholder="Search Bioproject here">
                         </div>
                     </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
@@ -125,17 +129,20 @@
                             </thead>
                             <tbody>
                                 @foreach ($bioprojects as $bioproject )
-                                <tr>
+                                <tr class="bioprojects">
                                     <th scope="row"><input type="radio" name="bioproject_id" wire:model="bioproject_id" value="{{$bioproject->id}}" @if (old('bioproject_id')==$bioproject->id) ) checked @endif></th>
                                     <td>{{$bioproject->accession}}</td>
                                     <td>{{$bioproject->submission_id}}</td>
-                                    <td>{{$bioproject->title}}</td>
+                                    <td class="bioprojectsTitles">{{$bioproject->title}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
 
                     </div>
+                    @error('bioproject_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
                     @error('bioproject_id')
                     <p class="text-danger">{{$message}}</p>
                     @enderror
@@ -155,7 +162,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <input type="text" wire:model="search" class="form-control" placeholder="Search here">
+                            <input type="text" id='searchBiosample' wire:model="searchBiosample" class="form-control" placeholder="Search here">
                         </div>
                     </div>
                     <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
@@ -170,17 +177,20 @@
                             </thead>
                             <tbody>
                                 @foreach ($biosamples as $biosample )
-                                <tr title="{{$biosample->title}}">
+                                <tr class="biosamples" title="{{$biosample->title}}">
                                     <th scope="row"><input type="checkbox" name="biosample_id[]" id="{{ rand() }}" wire:model="biosample_id.{{ $biosample->id }}" value="{{$biosample->id}}" @if(is_array(old('biosample_id')) && in_array($biosample->id, old('biosample_id'))) checked @endif></th>
                                     <td>{{$biosample->accession}}</td>
                                     <td>{{$biosample->submission_id}}</td>
-                                    <td>{{$biosample->title}}</td>
+                                    <td class="biosamplesTitles">{{$biosample->title}}</td>
                                 </tr>
                                 @endforeach
 
                             </tbody>
                         </table>
                     </div>
+                    @error('biosample_id')
+                    <p class="text-danger">{{$message}}</p>
+                    @enderror
                     @error('biosample_id')
                     <p class="text-danger">{{$message}}</p>
                     @enderror
@@ -222,10 +232,21 @@
                                 $no = 1;
                                 $alias = $this->alias;
                                 @endphp
+                                @php
+                                $no = 1;
+                                $alias = $this->alias;
+                                @endphp
                                 @foreach ($biosample_id as $id => $experiment)
                                 <tr>
                                     <!-- {{$id}} -->
                                     <td>{{$no}}</td>
+                                    <td>
+                                        {{$alias_exp[$id] = "INNAX-".$alias."-".$no }}
+                                        {{-- <input type="text" name="bioexperiment_id[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp" value="{{$alias}}" disabled>
+                                        @error('bioexperiment_id.*.alias_exp')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror --}}
+                                    </td>
                                     <td>
                                         {{$alias_exp[$id] = "INNAX-".$alias."-".$no }}
                                         {{-- <input type="text" name="bioexperiment_id[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp" value="{{$alias}}" disabled>
@@ -247,6 +268,19 @@
                                         @enderror
                                     </td>
                                     <td>
+                                        <input type="text" name="bioexperiment_id[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title">
+                                        @error('bioexperiment_id.*.title')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
+                                    </td>
+                                    <td>
+                                        <input type="text" name="bioexperiment_id[{{$id}}][libname]" wire:model="bioexperiment_id.{{$id}}.libname">
+                                        @error('bioexperiment_id.*.libname')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
+                                    </td>
+                                    <td>
+                                        <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
                                         <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
                                             <option value="">Select Lib Source</option>
                                             @foreach ( $libsources as $libsource )
@@ -256,6 +290,7 @@
                                     </td>
                                     <td>
                                         <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
+                                        <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
                                             <option value="">Select Lib Selection</option>
                                             @foreach ( $libselections as $libselection )
                                             <option value="{{$libselection->id}}" @if (old('libselection_id')==$libselection->id) selected @endif>{{$libselection->name}}</option>
@@ -264,6 +299,7 @@
                                     </td>
                                     <td>
                                         <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
+                                        <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
                                             <option value="">Select Lib Strategy</option>
                                             @foreach ( $libstrategies as $libstrategy )
                                             <option value="{{$libstrategy->id}}" @if (old('libstrategy_id')==$libstrategy->id) selected @endif>{{$libstrategy->name}}</option>
@@ -271,7 +307,10 @@
                                         </select>
                                     </td>
                                     <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
+                                    <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
                                     <td>
+                                        <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
+                                            <option value="0">Select Instrument</option>
                                         <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
                                             <option value="0">Select Instrument</option>
                                             @foreach ( $instruments as $instrument )
@@ -281,6 +320,7 @@
                                     </td>
                                     <td>
                                         <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
+                                        <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
                                             <option value="">Select Lib Layout</option>
                                             @foreach ( $liblayouts as $liblayout )
                                             <option value="{{$liblayout->id}}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{$liblayout->name}}</option>
@@ -289,8 +329,11 @@
                                         @error('bioexperiment_id.*.liblayout_id')
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
+                                        @error('bioexperiment_id.*.liblayout_id')
+                                        <p class="text-danger">{{$message}}</p>
+                                        @enderror
                                     </td>
-                                    <td><input type="text" name="bioexperiment_id[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size"></td>
+                                    <td><input onkeydown="return numbersOnly(event)" onkeyup="this.value=this.value.replace(',','.')" type="text" name="bioexperiment_id[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size" ></td>
                                     <td>
                                         <button class="btn btn-danger delete_row" wire:click.prevent="removeBiosample({{$id}})"><i class="bi bi-trash3-fill"></i>
                                         </button>
@@ -308,7 +351,7 @@
         </div>
     </div>
 
-    
+
     <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
         <div class="col-md-12">
             <div class="card mb-4">
@@ -430,6 +473,54 @@
                 @this.set($(this).attr("wire:model"), $(this).select2("val"));
             });
         });
+
+        let timer = null
+        $('#searchBioproject').on('keyup',function(){
+            // console.log($(this).val());
+            // // console.log($(this).attr("wire:model"));
+            // @this.set($(this).attr("wire:model"), $(this).val());
+            clearTimeout(timer);
+            const bioprojectRows = document.getElementsByClassName('bioprojects')
+            const bioprojectTitles = document.getElementsByClassName('bioprojectsTitles')
+            timer = setTimeout(() => {
+                for (let i = 0; i<bioprojectTitles.length; i++ )
+                {
+                    console.log(bioprojectTitles[i].innerHTML)
+                    if (!bioprojectTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase()))
+                    {
+                        bioprojectRows[i].classList.add("d-none")
+                    }
+                    else {
+                        bioprojectRows[i].classList.remove("d-none")
+                    }
+                }
+            }, 500)
+
+        })
+
+        $('#searchBiosample').on('keyup',function(){
+            // console.log($(this).val());
+            // // console.log($(this).attr("wire:model"));
+            // @this.set($(this).attr("wire:model"), $(this).val());
+            clearTimeout(timer);
+            const biosampleRows = document.getElementsByClassName('biosamples')
+            const biosampleTitles = document.getElementsByClassName('biosamplesTitles')
+            timer = setTimeout(() => {
+                for (let i = 0; i<biosampleTitles.length; i++ )
+                {
+                    console.log(biosampleTitles[i].innerHTML)
+                    if (!biosampleTitles[i].innerHTML.toLowerCase().includes($(this).val().toLowerCase()))
+                    {
+                        biosampleRows[i].classList.add("d-none")
+                    }
+                    else {
+                        biosampleRows[i].classList.remove("d-none")
+                    }
+                }
+            }, 500)
+
+        })
+
         const steps = document.querySelectorAll('#nav-steps .nav-item').length;
         document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep + "%";
         const biosample_id = document.getElementsByName('biosample_id[]')
@@ -451,5 +542,11 @@
             })
         });
     })
+
+    function numbersOnly(event) {
+        var key = event.keyCode;
+        return ((key >= 96 && key <= 105) || (key >= 48 && key <= 57) || key == 188 || key==46 || key==8);
+    };
+
 </script>
 @endpush

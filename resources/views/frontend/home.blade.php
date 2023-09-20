@@ -4,13 +4,15 @@
     <div class="container">
         <div class="text-center mt-3">
             <div class="input-group">
-
-                <input type="text" class="form-control" placeholder="Search Bioproject, Biosample, Bioarchive">
+                <input type="text" class="form-control dropdown-toggle" id="search" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" placeholder="Search">
                 <div class="input-group-append">
                     <button class="btn btn-danger" type="button">
                         <span data-feather="search"></span>
                     </button>
                 </div>
+                <ul class="dropdown-menu text-dark" id="searchResult" style="width:100%">
+                    <li class="mx-3"><span>Search Bioproject, Biosample, Bioarchive</span></li>
+                </ul>
             </div>
         </div>
         <div class="row mt-3">
@@ -18,7 +20,7 @@
                 <div class="card-deck mt-3">
                     <div class="card">
                         <div class="card-header">
-                            <h5>Bio Archive</h5>
+                            <h5>Indonesia Nucleotide Archive (InNA)</h5>
                         </div>
                         <div class="card-body">
                             <p align="justify">Indonesia Nucleotide Archive (InNA) is a repository platform to store nucleotide (DNA/RNA) data to support life sciences, agriculture, and bioinformatics for biodiversity data disclosure, utilization of food genetic resources, precision medicine, etc. InNA can be accessed freely and publicly by researcher or scientists for research. If the data is restricted to be stored and used, please consult Principal Investigator project or your local institutional before uploading it to InNA.
@@ -34,7 +36,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-5 mb-lg-0 position-relative">
-                                        <a href="/browse" class="nav-link text-muted">
+                                        <a href="#" class="nav-link text-muted">
                                             <h6 class="fw-normal mb-2">Browse</h6>
                                             <span data-feather="globe"></span>
                                             <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
@@ -42,7 +44,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-0 position-relative">
-                                        <a href="/download" class="nav-link text-muted">
+                                        <a href="#" class="nav-link text-muted">
                                             <h6 class="fw-normal mb-2">Download</h6>
                                             <span data-feather="download"></span>
                                             <div class="vr vr-blurry position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
@@ -50,7 +52,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-6 mb-5 mb-md-0 position-relative">
-                                        <a href="/document" class="nav-link text-muted">
+                                        <a href="#" class="nav-link text-muted">
                                             <h6 class="fw-normal mb-2">Document</h6>
                                             <span data-feather="file-text"></span>
                                         </a>
@@ -122,10 +124,9 @@
                         </div>
                         <div class="card-body">
                             <ul>
-                                <li>Data1</li>
-                                <li>Data2</li>
-                                <li>Data3</li>
-                                <li>Data4</li>
+                            @foreach ($data_in_concerns as $item)
+                                <li><a href="biosamples/{{ $item->biosample->accession }}">{{ $item->biosample->accession }}</a> : {{ $item->biosample->title }}</li>
+                            @endforeach
                             </ul>
                         </div>
                     </div>
@@ -151,11 +152,23 @@
                             <h5>Latest Released Data</h5>
                         </div>
                         <div class="card-body">
+                            <h6>BioProject</h6>
                             <ul>
-                                <li>Data1</li>
-                                <li>Data2</li>
-                                <li>Data3</li>
-                                <li>Data4</li>
+                                @foreach ($bioprojects_latest as $item)
+                                    <li><a href="bioprojects/{{ $item->accession }}">{{ $item->accession }}</a> : {{ $item->title }}</li>
+                                @endforeach
+                            </ul>
+                            <h6>BioSample</h6>
+                            <ul>
+                                @foreach ($biosamples_latest as $item)
+                                    <li><a href="biosamples/{{ $item->accession }}">{{ $item->accession }}</a> : {{ $item->title }}</li>
+                                @endforeach
+                            </ul>
+                            <h6>BioArchive</h6>
+                            <ul>
+                                @foreach ($bioarchives_latest as $item)
+                                    <li><a href="bioarchives/{{ $item->accession }}">{{ $item->accession }}</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -165,3 +178,84 @@
     </div>
 </div>
 @endsection
+
+@push('js')
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            async function search(searchVal) {
+                const response = await fetch('{{route('search')}}', {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "search": searchVal, '_token': '{{ csrf_token() }}'})
+                })
+                return await response.json();
+                
+            }
+            const searchResult = document.getElementById('searchResult');
+            const searchInput = document.getElementById('search');
+            const boldSearchInput = (sentence, characters) => {
+                const regEx = new RegExp(characters, 'gi');
+                return sentence.replace(regEx, '<strong>$&</strong>')
+            }
+
+            function createSearchList(text, target=null) {
+                const li = document.createElement('li')
+                const a = document.createElement('a')
+                a.classList.add('dropdown-item')
+                if (target === null) {
+                    a.innerHTML = text.bold()
+                    a.href = 'javascript:void(0)'
+                    li.appendChild(a)
+                    searchResult.appendChild(li)
+                } else {
+                    a.innerHTML = boldSearchInput(text,searchInput.value)
+                    a.href = target
+                    li.appendChild(a)
+                    li.classList.add('mx-2')
+                    searchResult.appendChild(li)
+                }
+            }
+
+            function appendSearchResult(results) {
+                if (results.bioprojects.length > 0 ) {
+                    createSearchList("Bioprojects")
+                    results.bioprojects.forEach(bioproject => {
+                        createSearchList(bioproject, '#')
+                    });
+                } 
+                if (results.biosamples.length > 0 ) {
+                    const divider = document.createElement('li')
+                    divider.innerHTML='<hr class="dropdown-divider">'
+                    searchResult.appendChild(divider)
+
+                    createSearchList("Biosamples")
+                    results.biosamples.forEach(biosample => {
+                        createSearchList(biosample, '#')
+                    });
+                } 
+                if (results.bioprojects.length ===0 && results.biosamples.length ===0 ) {
+                    searchResult.innerHTML = '<li class="mx-3">No result found for <strong>'+searchInput.value+'</strong></li>'
+                }
+            }
+
+            searchInput.addEventListener('keyup', function(e){
+                searchResult.innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border text-danger" role="status"></div></div>'
+                if (this.value.length >= 1 ) {
+                    search(this.value).then(results => {
+                        searchResult.innerHTML = ''
+                        appendSearchResult(results)
+                    })
+                } else {
+                    searchResult.innerHTML = '<li class="mx-3"><span>Search Bioproject, Biosample, Bioarchive</span></li>'
+                }
+            })
+        });
+
+        
+       
+    </script>
+    
+@endpush

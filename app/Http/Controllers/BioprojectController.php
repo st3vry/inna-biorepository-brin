@@ -19,11 +19,17 @@ class BioprojectController extends Controller
      */
     public function index()
     {
-        //
 
+        $bioprojects = Bioproject::with(['organism', 'samplescope'])->where('status', 5)->paginate(5);
+        $organisms = Bioproject::leftJoin('organisms', 'organisms.id','=','bioprojects.organism_id')->selectRaw('organisms.name, organisms.taxon_id, count(bioprojects.organism_id) as count')->groupBy('organisms.id')->orderBy('organisms.name')->get();
+        $centers = Bioproject::leftJoin('centers', 'centers.id','=','bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->groupBy('centers.name')->get();
+        $scopes = Bioproject::leftJoin('samplescopes', 'samplescopes.id','=','bioprojects.samplescope_id')->selectRaw('samplescopes.name, count(bioprojects.samplescope_id) as count')->groupBy('samplescopes.name')->get();
         return view('frontend.bioproject', [
             'title' => 'Bioproject',
-            'bioprojects' => Bioproject::with(['organism'])->whereNotNull('published_at')->paginate(5),
+            'bioprojects' => $bioprojects,
+            'organisms' => $organisms,
+            'centers' => $centers,
+            'scopes' => $scopes
         ]);
     }
 
@@ -45,7 +51,7 @@ class BioprojectController extends Controller
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $id_objective = explode(',', $bioproject->getAttribute('objective_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
-        $objectives = Objective::whereIn('id', $id_objective)->pluck('name');
+        //$objectives = Objective::whereIn('id', $id_objective)->pluck('name');
         $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
@@ -57,7 +63,7 @@ class BioprojectController extends Controller
             'pubs' => $pubs,
             'grants' => $grants,
             'data_types' => $data_types,
-            'objectives' => $objectives,
+            //'objectives' => $objectives,
             'relevance' => $relevanceBioproject,
             'material' => $materialBioproject,
             'capture' => $captureBioproject,

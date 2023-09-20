@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\InnalysisGalaxyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Whoops\Run;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route::apiResource('innalysisworkflows', InnalysisGalaxyController::class);
+Route::post('/innalysisworkflows/run', [InnalysisGalaxyController::class, 'run']);
+Route::get('/innalysisworkflows', [InnalysisGalaxyController::class, 'index']);

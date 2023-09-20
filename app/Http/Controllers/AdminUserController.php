@@ -21,8 +21,7 @@ class AdminUserController extends Controller
         //
         return view('dashboard.user.index', [
 
-            // 'bioprojects' => Bioproject::with(['organism'])->get(),
-            'users' => User::with('role', 'lab', 'lab.center')->where('role_id', '<>',0)->paginate(10),
+            'users' => User::with('role', 'lab', 'lab.center')->where('role_id', '<>',0)->get(),
         ]);
     }
 
@@ -131,27 +130,5 @@ class AdminUserController extends Controller
         User::destroy($user->id);
         return redirect('/dashboard/users')->with('success', 'User has been deleted!');
     }
-    
-    public function filter(Request $request)
-    {   
-        $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate(10);
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $data = User::with('role', 'lab', 'lab.center')
-                    ->where('is_activated',false)
-                    ->where(function($query) use ($search){
-                        $query->orWhere('name', 'ilike' ,'%'.$search.'%')
-                            ->orWhere('username',  'ilike' ,'%'.$search.'%')
-                            ->orWhere('email',  'ilike' ,'%'.$search.'%');
-                    })
-                    ->orWhereRelation('role', 'name', 'ilike' ,'%'.$search.'%')
-                    ->orWhereRelation('lab', 'name', 'ilike' ,'%'.$search.'%')
-                    ->paginate($request->entries);
-        } else {
-            $data = User::with('role', 'lab', 'lab.center')->where('is_activated', false)->paginate($request->entries);
-        }
-        return view('dashboard.user.table', [
-            'users' => $data,
-        ])->render();
-    }
+
 }

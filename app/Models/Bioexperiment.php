@@ -9,8 +9,35 @@ class Bioexperiment extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    protected $dates = ['created_at', 'updated_at'];
     public function biorun()
     {
         return $this->hasMany(Biorun::class);
     }
+    public function biosample()
+    {
+        return $this->belongsTo(Biosample::class);
+    }
+    public function libsource()
+    {
+        return $this->belongsTo(LibrarySource::class);
+    }
+    public function libselection()
+    {
+        return $this->belongsTo(LibrarySelection::class);
+    }
+    public function libstrategy()
+    {
+        return $this->belongsTo(LibraryStrategy::class);
+    }
+    public function instrument()
+    {
+        return $this->belongsTo(Instrument::class);
+    }
+    public function liblayout()
+    {
+        return $this->belongsTo(LibraryLayout::class);
+    }
+
+
 }

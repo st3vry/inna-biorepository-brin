@@ -26,6 +26,8 @@
         width: 11px;
         content: "";
     }
+
+    table tr.separator { height: 15px; }
 </style>
 @endpush
 
@@ -38,6 +40,19 @@
         <li class="breadcrumb-item active" aria-current="page">{{$bioarchive->accession}}</li>
     </ol>
 </div>
+@if (session()->has('success'))
+
+<div class="alert alert-success alert-dismissible fade show col-lg-8" role="alert">
+    <strong> {{session('success')}}</strong>
+</div>
+@endif
+
+@if (session()->has('error'))
+
+<div class="alert alert-danger alert-dismissible fade show col-lg-8" role="alert">
+    <strong> {{session('error')}}</strong>
+</div>
+@endif
 <div class="row">
     <div class="table-responsive col-md-8">
         <table class="table table-sm">
@@ -111,6 +126,7 @@
                             <td>Input Size</td>
                             <td>{{ $value['input_size'] }}</td>
                         </tr>
+                        @if (count($files) > 0 && $bioarchive->status == 2 && $bioarchive->draft == false )
                         <tr>
                             @php
                                 $runs =  App\Models\Biorun::Select('*')->where('bioexperiment_id',$value['id'])->get()
@@ -125,7 +141,15 @@
                                     </tr>
                                     <tr>
                                         <td>File Name</td>
-                                        <td>{{ $item->filename }}</td>
+                                        <td>
+                                            {{ $item->filename }}
+                                            <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                @method('post')
+                                                @csrf
+                                                <input type="hidden" name="file" value="files/{{$bioarchive->accession}}/{{$item->alias}}/{{$item->filename}}">
+                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>MD5 Checksum</td>
@@ -135,8 +159,70 @@
                                 </table>
                             </td>
                         </tr>
-                            
-    
+                            {{-- @foreach ($files as $i =>$file)
+                                @foreach ($file as $key => $item)
+                                    @if ($key === $value['alias'])
+                                    @foreach ($item as $it)
+                                    <tr>
+                                        <td>File {{$key}} ({{ $i+1}})</td>
+                                        <td>
+                                            {{$it}}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    
+                                    @endif
+                                @endforeach                            
+                            @endforeach --}}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#fileCheck{{$value['alias']}}">
+                                    File Check
+                                </button>                                      
+                            </td>
+                        </tr>
+                        @endif
+                        <tr class="separator">
+                        </tr>
+                            <div class="modal fade" id="fileCheck{{$value['alias']}}" tabindex="-1" aria-labelledby="fileCheck{{$value['alias']}}Label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                                <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" >
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="fileCheck{{$value['alias']}}Label">{{$value['alias']}}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" style="min-height:300px">
+                                           
+                                            <form action="{{route('updateBiorun')}}" method="post">
+                                                @csrf
+                                                <input type="hidden" name="alias" value="{{$value['alias']}}">
+                                                <div class="mb-1 row">
+                                                    <label for="fileNameInModal{{$value['id']}}" class="col-sm-2 col-form-label">File Name</label>
+                                                    <div class="col-sm-10">
+                                                    <input type="text" readonly class="form-control-plaintext" name="fileNameInModal" id="fileNameInModal{{$value['id']}}" value="-">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2 row">
+                                                    <label for="md5InModal{{$value['id']}}" class="col-sm-2 col-form-label">MD5 Checksum</label>
+                                                    <div class="col-sm-10">
+                                                    <input type="text" readonly class="form-control-plaintext" name="md5InModal" id="md5InModal{{$value['id']}}" value="-">
+                                                    </div>
+                                                </div>
+                                            <div id="sshRespon{{$value['alias']}}"></div>
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" id="btmd5{{$value['alias']}}">MD5 Checksum</button>
+                                            
+                                            <button disabled id="btSubmitBiorun{{$value['id']}}" type="submit" class="btn btn-primary">Save Change</button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </table>
                 </td>
@@ -146,55 +232,61 @@
     </div>
     <div class="col-md-4">
         @canany(['isSuperAdmin','isAdmin'])
-            <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
-                @method('put')
-                @csrf
-                <input type="hidden" name="action" value="assignedToCurator">
-                <label class="fw-bolder" for="target">{{$bioarchive->curator_id === null ? 'Assign' : 'Assigned' }} to:</label>
-                <div class="col-8">
-                    <select class="form-select" name="target" id="target">
-                        <option value="" disabled selected >Select curator</option>
-                        @foreach ($curators as $curator)
-                        <option value="{{$curator->id}}" {{$bioarchive->curator_id == $curator->id ? 'selected' : ''}}>{{$curator->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-4 d-grid gap-2">
-                    <button type="button" id="btnModalAssign" class="btn btn-primary btn-block border-0" data-bs-toggle="modal" data-bs-target="#modalAssign" disabled>Save</button>
-                </div>
-                <div class="modal fade" id="modalAssign" tabindex="-1" aria-labelledby="modalAssignLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalAssignLabel">Assign to ...</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="desc" class="form-label">Insert Description (Optional)</label>
-                                    <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+            @if ($bioarchive->status === 1)
+                <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
+                    @method('put')
+                    @csrf
+                    <input type="hidden" name="action" value="assignedToCurator">
+                    <label class="fw-bolder" for="target">{{$bioarchive->curator_id === null ? 'Assign' : 'Assigned' }} to:</label>
+                    <div class="col-8">
+                        <select class="form-select" name="target" id="target">
+                            <option value="" disabled selected >Select curator</option>
+                            @foreach ($curators as $curator)
+                            <option value="{{$curator->id}}" {{$bioarchive->curator_id == $curator->id ? 'selected' : ''}}>{{$curator->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-4 d-grid gap-2">
+                        <button type="button" id="btnModalAssign" class="btn btn-primary btn-block border-0" data-bs-toggle="modal" data-bs-target="#modalAssign" disabled>Save</button>
+                    </div>
+                    <div class="modal fade" id="modalAssign" tabindex="-1" aria-labelledby="modalAssignLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalAssignLabel">Assign to ...</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-secondary " data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="desc" class="form-label">Insert Description (Optional)</label>
+                                        <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-secondary " data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+                
+            @endif
         @endcanany
         @can('isCurator')
-        @if (!$bioarchive->draft && $bioarchive->published_at === null)
+        @if ($bioarchive->status===2)
         <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
             @method('put')
             @csrf
             <input type="hidden" name="target" value="{{$bioarchive->user_id}}">
+            <input type="hidden" name="bioarchive_id" id="bioarchive_id" value="{{ $bioarchive->id }}">
+            <input type="hidden" name="md5Input" id="md5Input" value="">
             <label class="fw-bolder" for="action">Action:</label>
             <div class="col-8">
                 <select class="form-select" name="action" id="action">
-                    <option value="approved">Approve</option>
+                    <option value="proceedToFileUpload">Proceed to File Upload</option>
                     <option value="returnedToSubmitter">Return to submitter</option>
+                    <option value="approved">Approve</option>
                     <option value="rejected">Reject</option>
                 </select>
             </div>
@@ -291,7 +383,65 @@
                     })
                 }
                 
-            }           
+            }
+            const files = @json($files, JSON_PRETTY_PRINT);
+            const md5Input = document.getElementById("md5Input");
+            let md5 = "gagal"
+            const md5Array = []
+            console.log(files[0])
+            function tesSSH(elem, fileNameInModal, md5InModal, cmd, folder, item, button) {
+                let fileName = files[item][folder][0].split('/').slice(-1)[0]
+                let extension = fileName.split('.').slice(-1)[0]
+                console.log(fileName, extension)
+                fetch('{{route('tesSSH')}}', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    { 
+                        "id": '{{$bioarchive->accession}}',
+                        "folder": folder,
+                        "fileName":fileName,
+                        "extension":extension,
+                        "cmd": cmd,
+                         '_token': '{{ csrf_token() }}'
+                    }
+                )
+            })
+                .then(response => response.text())
+                .then(response => {
+                    console.log(response)
+                    md5 = response.split("  ")[0]
+                    md5Array.push(md5)
+                    md5Input.value = JSON.stringify(md5Array) 
+                    fileNameInModal.value = fileName
+                    md5InModal.value = md5
+                    if (md5.length > 1) {
+                        button.disabled=false;
+                    }
+                    // elem.innerHTML += "<p> MD5 Check ("+md5+")</p>"
+                })
+            }
+
+           
+            
+            @foreach ($bioexperiment as $item => $value)
+            const btls{{$item}} = document.getElementById('btls{{$value['alias']}}')
+            const btlsltr{{$item}} = document.getElementById('btlsltr{{$value['alias']}}')
+            const sshRespon{{$item}} =  document.getElementById('sshRespon{{$value['alias']}}')
+            const btmd5{{$item}} = document.getElementById('btmd5{{$value['alias']}}')
+            const fileNameInModal{{$item}} = document.getElementById('fileNameInModal{{$value['id']}}')
+            const md5InModal{{$item}} = document.getElementById('md5InModal{{$value['id']}}')
+            const btSubmitBiorun{{$item}} = document.getElementById('btSubmitBiorun{{$value['id']}}')
+
+            btmd5{{$item}}.addEventListener("click", function() {
+                tesSSH(sshRespon{{$item}}, fileNameInModal{{$item}}, md5InModal{{$item}},  "md5sum ", '{{$value['alias']}}', '{{$item}}', btSubmitBiorun{{$item}})
+            })
+
+            @endforeach
+
         })
     </script>
 @endpush

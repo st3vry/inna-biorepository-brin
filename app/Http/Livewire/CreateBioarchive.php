@@ -15,10 +15,10 @@ use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
 use Illuminate\Support\Str;
-use Livewire\WithPagination;
 
 class CreateBioarchive extends Component
 {
+
 
     public $currentStep = 1;
 
@@ -29,7 +29,8 @@ class CreateBioarchive extends Component
     public $submitter_center;
 
     // Filter table
-    public $search = '';
+    public $searchBioproject = '';
+    public $searchBiosample = '';
     // submitter
     public $hold_release;
     // bioproject
@@ -68,10 +69,14 @@ class CreateBioarchive extends Component
         // submitter 
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
-        $this->submitter_lab = auth()->user()->lab->name;
-        $this->submitter_center = auth()->user()->lab->center->name;
+        // $this->submitter_lab = auth()->user()->lab->name;
+        // $this->submitter_center = auth()->user()->lab->center->name;
+        $this->submitter_lab = auth()->user()->affiliate;
+        $this->submitter_center = auth()->user()->administrative;
         // bioproject
-        $this->bioprojects = Bioproject::search($this->search)->get();
+        // $this->bioprojects = Bioproject::get();
+        $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
+        
         // biosample
         $this->biosamples = Biosample::where('draft', false)->get();
         // lib source 
@@ -105,7 +110,6 @@ class CreateBioarchive extends Component
         $validatedData = $this->validate([
             'bioproject_id' => 'required',
         ]);
-        // dd($this->bioproject_id);
         $this->currentStep = 3;
     }
     // Biosample form
@@ -115,6 +119,7 @@ class CreateBioarchive extends Component
             'biosample_id' => 'required',
         ]);
         // dd($this->biosample_id);
+        // dd($this->searchBioproject);
         $this->currentStep = 4;
     }
     // Run form
@@ -152,6 +157,7 @@ class CreateBioarchive extends Component
         $bioarchive->biosample_id = implode(",", $this->biosample_id);
         $bioarchive->user_id = auth()->user()->id;
         $bioarchive->hold_release = $this->hold_release;
+        // $bioarchive->draft = true;
         $bioarchive->save();
         // dd($bioarchive);
         // dd($this->bioexperiment_id);

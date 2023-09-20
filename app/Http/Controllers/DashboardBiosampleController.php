@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ActionLog;
 use App\Models\Biosample;
+use App\Models\AttributeValue;
 use Illuminate\Http\Request;
 
 class DashboardBiosampleController extends Controller
@@ -17,7 +18,7 @@ class DashboardBiosampleController extends Controller
     {
         //
         return view('dashboard.biosample.index', [
-            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('published_at','desc')->orderBy('draft','desc')->paginate(5),
+            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
         ]);
     }
 
@@ -53,9 +54,11 @@ class DashboardBiosampleController extends Controller
     {
         //
         $histories = ActionLog::with(['creator'])->where('item_id',$biosample->accession)->orderBy('created_at', 'desc')->get();
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
         return view('dashboard.biosample.show', [
             'biosample' => $biosample,
-            'histories' => $histories
+            'histories' => $histories,
+            'sample_attr' => $sample_attr,
         ]);
     }
 

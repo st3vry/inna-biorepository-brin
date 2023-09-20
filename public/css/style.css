@@ -1,5 +1,6 @@
 body {
-    background-color: azure;
+    background-color: white;
+    font-size: 90%;
 }
 
   .form-signin .form-floating:focus-within {
@@ -20,5 +21,60 @@ body {
   
   .form-registration input{
     border-radius: 0;
+  }
+
+  .bg-brin{
+    background-color: #EC2425;
+  }
+
+
+  a.text-brin{
+    color: #EC2425;
+  }
+  a.text-brin:hover{
+    color: #c33434;
+  }
+  a.text-brin:active{
+    background-color: #fff;
+  }
+
+  a.text-brin-no-decor{
+    color: #EC2425;
+    text-decoration: none;
+  }
+  a.text-brin-no-decor:hover{
+    color: #c33434;
+    text-decoration: underline;
+  }
+  a.text-brin-no-decor:active{
+    background-color: #fff;
+  }
+
+  a:active{
+    background-color: #c33434;
+  }
+
+  .dropdown-item:active{
+    background-color: #fc3c3c;
+  }
+
+  a.text-sidebar{
+    color: #000;
+    text-decoration: none;
+  }
+  a.text-sidebar:hover{
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .pagination .page-item .page-link {
+    color: #c33434;
+  }
+  
+  .pagination .page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #EC2425;
+    border-color: #EC2425;
   }
   

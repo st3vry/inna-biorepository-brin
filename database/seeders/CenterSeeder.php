@@ -28,5 +28,11 @@ class CenterSeeder extends Seeder
             'address' => 'Depok',
             'website' => 'www.ui.ac.id'
         ]);
+
+        Center::create([
+            'name' => 'Pusat Riset Komputasi',
+            'address' => 'Cibinong',
+            'website' => 'www.prk.brin.go.id'
+        ]);
     }
 }

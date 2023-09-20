@@ -22,6 +22,17 @@
                 </a>
             </li>
         </ul>
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
+            <span>INNAlysis</span>
+        </h6>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/innalysis_galaxy*') ? 'active' : ''}}" href="/dashboard/innalysis_galaxy">
+                    <span data-feather="tool"></span>
+                    Galaxy Workflows
+                </a>
+            </li>
+        </ul>
         @canany(['isSuperAdmin','isAdmin'])
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
             <span>Administrator</span>
@@ -43,6 +54,42 @@
                 <a class="nav-link {{ Request::is('dashboard/organisms*') ? 'active' : ''}}" aria-current="page" href="/dashboard/organisms">
                     <span data-feather="grid"></span>
                     Organism
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/bioticrels*') ? 'active' : ''}}" aria-current="page" href="/dashboard/bioticrels">
+                    <span data-feather="grid"></span>
+                    Biotic Relationship
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/captures*') ? 'active' : ''}}" aria-current="page" href="/dashboard/captures">
+                    <span data-feather="grid"></span>
+                    Capture
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/celularities*') ? 'active' : ''}}" aria-current="page" href="/dashboard/celularities">
+                    <span data-feather="grid"></span>
+                    Celularities
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/centers*') ? 'active' : ''}}" aria-current="page" href="/dashboard/centers">
+                    <span data-feather="grid"></span>
+                    Center
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/consortium*') ? 'active' : ''}}" aria-current="page" href="/dashboard/consortium">
+                    <span data-feather="grid"></span>
+                    Consortium
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/diseases*') ? 'active' : ''}}" aria-current="page" href="/dashboard/diseases">
+                    <span data-feather="grid"></span>
+                    Diseases
                 </a>
             </li>
         </ul>

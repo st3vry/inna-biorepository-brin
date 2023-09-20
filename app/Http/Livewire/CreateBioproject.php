@@ -90,6 +90,7 @@ class CreateBioproject extends Component
     public $objective_id;
     public $selectedObjective;
 
+
     public $consortium_id;
     public $title;
     public $umbproject_id;
@@ -151,14 +152,14 @@ class CreateBioproject extends Component
     public $repl_loc_id;
     public $repl_size;
     public $genome_sizes2 = [];
+    public $genome_size2_id;
+    public $genome2_sizes = [];
     public $genome2_size_id;
 
 
     protected $rules = [
         'title' => 'required|min:6',
         'umbproject_id' => '',
-        'relevance_id' => '',
-        'reldesc' => '',
         'organism_id' => 'required',
         'consortium_id' => 'required',
 
@@ -183,13 +184,13 @@ class CreateBioproject extends Component
         'samplescope_id' => 'required',
         'samplescopedesc' => '',
 
-        'grants.*.fundagency_id' => 'required',
-        'grants.*.grant_program' => 'required',
-        'grants.*.grant_title' => 'required',
+        'relevance_id' => 'required',
+        'reldesc' => '',
 
-        'externallinks.*.link_description' => 'required',
-        'externallinks.*.link_url' => 'required',
+        'grants' => '',
+        'externallinks' => '',
 
+        'publications' => '',
         'publications.*.pub_identifier_id' => 'required',
         'publications.*.pub_id' => 'required',
         'publications.*.article_title' => 'required',
@@ -216,8 +217,8 @@ class CreateBioproject extends Component
             'grants.*.grant_program' => 'required',
             'grants.*.grant_title' => 'required',
 
-            'externallinks.*.link_description' => 'required',
-            'externallinks.*.link_url' => 'required',
+            'externallinks.*.link_description' => '',
+            'externallinks.*.link_url' => '',
 
             'consortium_id' => 'required',
         ]);
@@ -229,6 +230,9 @@ class CreateBioproject extends Component
         // $validatedData = $this->validate([
         //     'status' => 'required',
         // ]);
+        $validatedData = $this->validate([
+            'data_type_id' => 'required',
+        ]);
 
         $this->currentStep = 4;
     }
@@ -236,18 +240,22 @@ class CreateBioproject extends Component
     {
         $validatedData = $this->validate([
             'organism_id' => 'required',
-            'sbc' => 'required',
-            'isolate' => 'required',
-            'org_desc' => 'required',
+            'sbc' => '',
+            'isolate' => '',
+            'org_desc' => '',
         ]);
 
         $this->currentStep = 5;
     }
     public function fifthStepSubmit()
     {
-        // $validatedData = $this->validate([
-        //     'status' => 'required',
-        // ]);
+        $validatedData = $this->validate([
+            // 'status' => 'required',
+            'publications' => '',
+            'publications.*.pub_identifier_id' => 'required',
+            'publications.*.pub_id' => 'required',
+            'publications.*.article_title' => 'required',
+        ]);
 
         $this->currentStep = 6;
     }
@@ -259,11 +267,11 @@ class CreateBioproject extends Component
 
     public function mount()
     {
-
+        // dd(auth()->user());
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
-        $this->submitter_lab = auth()->user()->lab->name;
-        $this->submitter_center = auth()->user()->lab->center->name;
+        $this->submitter_lab = auth()->user()->affiliate;
+        $this->submitter_center = auth()->user()->administrative;
 
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();
@@ -312,7 +320,7 @@ class CreateBioproject extends Component
     }
     public function addRepl()
     {
-        $this->repls[] = ['repl_name' => '', 'repl_type_id' => '', 'repl_loc_id' => '', 'repl_size' => '', 'genome2_size_id' => ''];
+        $this->repls[] = ['repl_name' => '', 'repl_type_id' => '', 'repl_loc' => '', 'repl_size' => '', 'genome_size2_id' => ''];
     }
 
     public function removeRepl($index)
@@ -446,77 +454,6 @@ class CreateBioproject extends Component
         else
             return null;
     }
-    public static function repliconTypeName($id)
-    {
-        if (!empty($id))
-            return ReplType::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function repliconLocName($id)
-    {
-        if (!empty($id))
-            return ReplLocation::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function bioRelName($id)
-    {
-        if (!empty($id))
-            return BioticRelationship::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function trophLevName($id)
-    {
-        if (!empty($id))
-            return TrophicLevel::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function shapeName($id)
-    {
-        if (!empty($id))
-            return ProMorphShape::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function habitatName($id)
-    {
-        if (!empty($id))
-            return Habitat::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function salinityName($id)
-    {
-        if (!empty($id))
-            return Salinity::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function oxreqName($id)
-    {
-        if (!empty($id))
-            return OxygenReq::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function tempName($id)
-    {
-        if (!empty($id))
-            return TempRange::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-    public static function pubName($id)
-    {
-        if (!empty($id))
-            return PubIdentifier::select('name')->where('id', $id)->pluck('name')->first();
-        else
-            return null;
-    }
-
 
     public function submitForm()
     {
@@ -538,7 +475,8 @@ class CreateBioproject extends Component
         $bioproject->title = $validatedData['title'];
         $bioproject->description = $validatedData['description'];
         $bioproject->hold_release = $validatedData['hold_release'];
-        $bioproject->center_id = auth()->user()->lab->center_id;
+        // $bioproject->center_id = auth()->user()->lab->center_id;
+        $bioproject->center_id = auth()->user()->administrative;
         $bioproject->user_id = auth()->user()->id;
 
         $bioproject->save();

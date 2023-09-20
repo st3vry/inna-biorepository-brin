@@ -38,7 +38,13 @@ class CreateBiosample extends Component
     public $attributes = [];
     public $attribute_id;
     public $all_attributes = [];
-    
+    public $attribute_M = [];
+    public $attribute_E = [];
+    public $attribute_O = [];
+    public $attributes_M = [];
+    public $attributes_E = [];
+    public $attributes_O = [];
+
     // -- variables for attributes --
     public $sample_name;
     public $sample_title;
@@ -561,7 +567,7 @@ class CreateBiosample extends Component
     public $ww_temperature;
     public $ww_total_suspended_solids;
 
-    
+
 
 
     protected $rules = [
@@ -571,12 +577,12 @@ class CreateBiosample extends Component
         'hold_release' => 'required',
         'sampletype_id' => 'required',
         'comments' => '',
-
+        'biosample_links' => '',
         'biosample_links.*.link_description' => '',
         'biosample_links.*.link_url' => '',
 
         // Attributes
-        
+
     ];
 
     public function firstStepSubmit()
@@ -591,9 +597,9 @@ class CreateBiosample extends Component
     {
         $validatedData = $this->validate([
             'hold_release' => 'required',
-
-            'biosample_links.*.link_description' => 'required',
-            'biosample_links.*.link_url' => 'required',
+            'biosample_links' => '',
+            'biosample_links.*.link_description' => '',
+            'biosample_links.*.link_url' => '',
         ]);
         $this->currentStep = 3;
     }
@@ -603,20 +609,29 @@ class CreateBiosample extends Component
         $validatedData = $this->validate([
             'sampletype_id' => 'required',
         ]);
-        
+
         $this->sample_find = Sampletype::find((int)$validatedData['sampletype_id']);
         $this->sampletype_attributes = explode(',', $this->sample_find->attribute_property);
         $this->attributes = [];
         $this->attributes = Attributesample::whereIn('id', $this->sampletype_attributes)->get();
-        
+
         $this->currentStep = 4;
     }
 
     public function fourthStepSubmit()
     {
-        $validatedData = $this->validate([
-            'sample_name' => 'required',
-        ]);
+
+        $valData = [];
+        foreach ($this->attributes_M as $attr_M){
+            $valData[$attr_M->attr_name] = 'required';
+
+            //$validatedData = $this->validate([
+            //    $attr_M->attr_name => 'required',
+            //]);
+        }
+        $validatedData = $this->validate($valData);
+
+        //dd($validatedData);
         $this->currentStep = 5;
     }
 
@@ -629,9 +644,10 @@ class CreateBiosample extends Component
     {
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
-        $this->submitter_lab = auth()->user()->lab->name;
-        $this->submitter_center = auth()->user()->lab->center->name;
-
+        // $this->submitter_lab = auth()->user()->lab->name;
+        // $this->submitter_center = auth()->user()->lab->center->name;
+        $this->submitter_lab = auth()->user()->affiliate;
+        $this->submitter_center = auth()->user()->administrative;
         //$this->biosample_links = [
         //    ['biosamplelink_id' => '', 'link_description' => '', 'link_url' => '']
         //];
@@ -648,9 +664,9 @@ class CreateBiosample extends Component
         $this->host_tissue_sampled = Tissue::all();
         $this->all_attributes = Attributesample::all();
 
-       
+
     }
-    
+
     public function addLink()
     {
         $this->biosample_links[] = ['link_description' => '', 'link_url' => ''];
@@ -669,7 +685,6 @@ class CreateBiosample extends Component
 
     public function submitForm()
     {
-
         $validatedData = $this->validate();
         $biosample = new Biosample();
         $biosample->accession = 'SAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
@@ -680,11 +695,13 @@ class CreateBiosample extends Component
         $biosample->comments = $validatedData['comments'];
         $biosample->sampletype_id = $validatedData['sampletype_id'];
 
-        $biosample->center_id = auth()->user()->lab->center_id;
+        // $biosample->center_id = auth()->user()->lab->center_id;
+        $biosample->center_id = auth()->user()->administrative;
         $biosample->user_id = auth()->user()->id;
-
-        $biosample->organism = $validatedData['organism'];
-
+        // need to change if organism table ready
+        $biosample->organism_id = mt_rand(1, 4);
+        $biosample->organism_name = $validatedData['organism'];
+        //
         $biosample->save();
 
         if (count($validatedData['biosample_links']) > 0) {
@@ -704,7 +721,7 @@ class CreateBiosample extends Component
             $attribute_value->biosample_id = $biosample->id;
             $attribute_value->sampletype_id = $validatedData['sampletype_id'];
             $attribute_value->attributesample_id = $attr->id;
-            
+
             $attribute_value->value = $validatedData[$attr->attr_name];
             $attribute_value->save();
         }

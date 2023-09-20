@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Super Admin',
             'username' => 'superadmin',
+            'usernameintra' => 'supe001',
             'email' => 'super.administrator@gmail.com',
             'password' => bcrypt('12345'),
             'role_id' => 0,
@@ -31,6 +32,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin Administrator',
             'username' => 'admin123',
+            'usernameintra' => 'admi001',
             'email' => 'admin.administrator@gmail.com',
             'password' => bcrypt('12345'),
             'role_id' => 1,
@@ -41,6 +43,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'John Doe',
             'username' => 'johndoe',
+            'usernameintra' => 'john001',
             'email' => 'john.doe@gmail.com',
             'password' => bcrypt('12345'),
             'role_id' => 2,
@@ -51,6 +54,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'John Doe 2',
             'username' => 'johndoe2',
+            'usernameintra' => 'john002',
             'email' => 'john.doe2@gmail.com',
             'password' => bcrypt('12345'),
             'role_id' => 3,
@@ -58,6 +62,30 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10)
         ]);
 
-        User::factory(20)->create();
+        User::create([
+            'name' => 'Maulida',
+            'username' => 'maul123',
+            'usernameintra' => 'maul123',
+            'email' => 'maul123@gmail.com',
+            'password' => bcrypt('maul123'),
+            'role_id' => 3,
+            'is_activated' => true,
+            'remember_token' => Str::random(10),
+            'lab_id' => 3,
+        ]);
+
+        User::create([
+            'name' => 'Anis',
+            'username' => 'anis123',
+            'usernameintra' => 'anis123',
+            'email' => 'anis123@gmail.com',
+            'password' => bcrypt('anis123'),
+            'role_id' => 3,
+            'is_activated' => true,
+            'remember_token' => Str::random(10),
+            'lab_id' => 3,
+        ]);
+
+        // User::factory(20)->create();
     }
 }

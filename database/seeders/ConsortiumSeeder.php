@@ -16,6 +16,10 @@ class ConsortiumSeeder extends Seeder
     public function run()
     {
         //
-        Consortium::factory(50)->create();
+        // Consortium::factory(50)->create();
+        Consortium::create([
+            'name' => 'Badan Riset dan Inovasi Nasional',
+            'url' => 'www.brin.go.id'
+        ]);
     }
 }

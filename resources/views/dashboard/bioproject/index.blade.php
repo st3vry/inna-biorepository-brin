@@ -37,7 +37,7 @@
                 <td>{{ $bioproject->organism->name }}</td>
                 <td>{{ $bioproject->title }}</td>
                 <td>{{ $bioproject->description }}</td>
-                <td>{{ $bioproject->center->name }}</td>
+                <td>{{ $bioproject->center_id }}</td>
                 <td class="text-center align-middle">
                     @switch($bioproject->status)
                         @case(1)

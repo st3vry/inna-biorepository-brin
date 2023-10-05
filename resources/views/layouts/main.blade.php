@@ -6,10 +6,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- My Styles -->
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+    <script src="/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="/vendor/aos/aos.js"></script>
+    <script src="/vendor/php-email-form/validate.js"></script>
 
     <!-- Bootstrap Icons -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"> -->
@@ -21,7 +27,9 @@
 
 <body>
     @include('partials.navbar')
+    @yield('header')
     @yield('container')
+    @include('partials.footer')
 
 
     <!-- Optional JavaScript; choose one of the two! -->
@@ -45,6 +53,7 @@
     <!-- feather icons js -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
     <script src="/js/dashboard.js"></script>
+    <script src="/js/script.js"></script>
 
     <!-- select2 js -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->

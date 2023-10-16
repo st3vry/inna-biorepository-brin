@@ -495,7 +495,10 @@ a.text-sidebar:hover {
 /*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
-
+.about .content {
+    background-color: #fff6f6;
+    padding: 40px;
+}
 .about h3 {
     font-size: 14px;
     font-weight: 700;
@@ -1119,4 +1122,12 @@ section {
     [data-aos-delay] {
         transition-delay: 0 !important;
     }
+}
+
+
+.svg-bg {
+    background: #fff;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 38px 38px;
+    background-position: -19px -19px;
 }

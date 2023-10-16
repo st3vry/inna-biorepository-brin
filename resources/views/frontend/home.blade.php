@@ -4,8 +4,8 @@
 <section id="hero" class="masthead">
     <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-start">
         <div class="row d-flex justify-content-center">
-            <div class="col-lg-6 d-flex flex-column justify-content-center">
-                <h1 data-aos="fade-up" class="text-uppercase">Indonesia Nucleotide Archive</h1>
+            <div class="col-lg-7 d-flex flex-column justify-content-center">
+                <h1 data-aos="fade-up" class="text-uppercase">Indonesian Nucleotide Archive</h1>
                 <h2 data-aos="fade-up" data-aos-delay="400">A life sciences, agriculture, and bioinformatics for biodiversity data repository platform</h2>
                 <div data-aos="fade-up" data-aos-delay="600">
                 <div class="text-center text-lg-start">
@@ -16,7 +16,7 @@
                 </div>
                 </div>
             </div>
-            <div class="col-lg-6 hero-img align-items-center py-md-5 ps-md-5 pe-md-1" data-aos="zoom-out" data-aos-delay="200">
+            <div class="col-lg-5 hero-img align-items-center py-md-5 ps-md-5 pe-md-1" data-aos="zoom-out" data-aos-delay="200">
                 <img src="images/inna-illustrator.svg" class="img-fluid" alt="">
             </div>
         </div>
@@ -33,10 +33,14 @@
         <p>About</p>
     </header>
     <div class="row gx-0">
-        <div class="col-lg-12 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+
+        <div class="col-lg-6 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="200">
+            <img src="images/programming.svg" class="img-fluid svg-bg" alt="">
+        </div>
+        <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
             <div class="content">
-                <p class="text-center">
-                Indonesia Nucleotide Archive (InNA) is a repository platform to store nucleotide (DNA/RNA) data to support life sciences, agriculture, and bioinformatics for biodiversity data disclosure, utilization of food genetic resources, precision medicine, etc. InNA can be accessed freely and publicly by researcher or scientists for research. If the data is restricted to be stored and used, please consult Principal Investigator project or your local institutional before uploading it to InNA. InNA is sdeveloped by Research Center for Computing, National Research and Innovation Agency. We are also developing analysis platform for advanced analysis of nucleotide (DNA/RNA) data called INNAlysis.
+                <p class="text-end">
+                Indonesian Nucleotide Archive (InNA) is a repository platform to store nucleotide (DNA/RNA) data to support life sciences, agriculture, and bioinformatics for biodiversity data disclosure, utilization of food genetic resources, precision medicine, etc. InNA can be accessed freely and publicly by researcher or scientists for research. If the data is restricted to be stored and used, please consult Principal Investigator project or your local institutional before uploading it to InNA. InNA is sdeveloped by Research Center for Computing, National Research and Innovation Agency. We are also developing analysis platform for advanced analysis of nucleotide (DNA/RNA) data called INNAlysis.
                 </p>
             </div>
             </div>

@@ -1128,6 +1128,6 @@ section {
 .svg-bg {
     background: #fff;
     background-image: radial-gradient(black 1px, transparent 0);
-    background-size: 38px 38px;
-    background-position: -19px -19px;
+    background-size: 40px 40px;
+    background-position: -2px -2px;
 }

@@ -30,6 +30,7 @@ use App\Http\Controllers\CelularityController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\ConsortiaController;
 use App\Http\Controllers\DiseaseController;
+use App\Http\Controllers\Dashboard\User\BiosampleController as UserSampleController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\BioticRelationship;
@@ -156,6 +157,17 @@ Route::prefix('dashboard')->group(function () {
     Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('authsso');
     Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('authsso');
     Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
+
+
+
+    Route::prefix('v2')->group(function () {
+        Route::resource('/biosamples', UserSampleController::class)->middleware('authsso');
+
+
+
+        Route::get('/biosamples/getSample/{id}', [UserSampleController::class,"getSample"])->middleware('authsso');
+        Route::get('/biosamples/getAttributes/{id}', [UserSampleController::class,"getAttributes"])->middleware('authsso');
+    });
 });
 
 Route::fallback(function () {

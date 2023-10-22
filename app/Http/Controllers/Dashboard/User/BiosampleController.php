@@ -7,6 +7,9 @@ use App\Models\ActionLog;
 use App\Models\AttributeValue;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\SampletypePackage;
+use App\Models\Sampletype;
+use App\Models\Attributesample;
 
 class BiosampleController extends Controller
 {
@@ -32,7 +35,20 @@ class BiosampleController extends Controller
     public function create()
     {
         //
-        return view('dashboard.biosample.create');
+        $submitter = new \stdClass();
+        $submitter->name = auth()->user()->name;
+        $submitter->email = auth()->user()->email;
+        $submitter->lab = auth()->user()->affiliate;
+        $submitter->center = auth()->user()->administrative;
+
+        $return = [
+            "submitter" => $submitter,
+            "packages" => SampletypePackage::All()
+        ];
+
+
+
+        return view('dashboard.v2.biosample.create', $return);
     }
 
     /**
@@ -43,7 +59,8 @@ class BiosampleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        dd($request);
     }
 
     /**
@@ -98,5 +115,22 @@ class BiosampleController extends Controller
         //
         Biosample::destroy($biosample->id);
         return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
+    }
+
+    public function getSample($id) {
+        $results = Sampletype::where("sampletype_package_id", $id)->get();
+        return response()->json($results);
+    }
+
+    public function getAttributes($id) {
+        $sampletypes = Sampletype::where('id', $id)->first();
+        $attr_sample = explode(',', $sampletypes['attribute_property']);
+        $attributes = Attributesample::whereIn('id', $attr_sample)->get();
+        $results = new \stdClass();
+        $results->attributes = $attributes;
+        $results->attributesM = explode(',', $sampletypes['attribute_M']);
+        $results->attributesE = explode(',', $sampletypes['attribute_E']);
+        // dd($results);
+        return response()->json($results);
     }
 }

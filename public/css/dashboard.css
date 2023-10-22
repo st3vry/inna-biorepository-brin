@@ -99,3 +99,15 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
+.custom-popover {
+    --bs-popover-max-width: 30rem;
+}
+
+.nav-tabs .nav-link {
+    color: var(--bs-body-color);
+}
+.nav-tabs .nav-link.active {
+    background-color: var(--bs-primary);
+    color: #fff;
+}
+

@@ -5,7 +5,7 @@
 </div>
 <div class="row">
     <div class="col-md-8">
-        <form class="needs-validation" action="/dashboard/v2/biosamples/" method="POST" novalidate id="formBioSample">
+        <form class="needs-validation" action="/dashboard/v2/biosamples" method="POST" novalidate id="formBioSample">
             @method('post')
             @csrf
             <ul class="nav nav-tabs nav-fill mb-3" id="mytabs" role="tablist">

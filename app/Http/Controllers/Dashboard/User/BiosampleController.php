@@ -23,7 +23,7 @@ class BiosampleController extends Controller
         //
         return view('dashboard.biosample.index', [
             // 'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('id')->paginate(5),
-            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('id')->paginate(5),
+            'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
         ]);
     }
 
@@ -60,7 +60,45 @@ class BiosampleController extends Controller
     public function store(Request $request)
     {
 
-        dd($request);
+        // dd($request);
+        $biosample = new Biosample();
+        $biosample->accession = 'SAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
+        $biosample->submission_id = 'SUBSAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
+        $biosample->title = $request->sample_title;
+        $biosample->description = $request->description;
+        $biosample->hold_release = $request->hold_release;
+        $biosample->sampletype_id = $request->sample_type;
+
+        // $biosample->comments = $request->comments;
+        $biosample->description = $request->description;
+        // $biosample->hold_release = $validatedData['hold_release'];
+        // $biosample->comments = $validatedData['comments'];
+        // $biosample->sampletype_id = $validatedData['sampletype_id'];
+
+        // $biosample->center_id = auth()->user()->lab->center_id;
+        $biosample->center_id = auth()->user()->administrative;
+        $biosample->user_id = auth()->user()->id;
+        // need to change if organism table ready
+        $biosample->organism_id = $request->taxonomy_id;
+        $biosample->organism_name = $request->organism;
+        // $biosample->organism_name = $validatedData['organism'];
+        //
+        $biosample->save();
+
+        $sample_types = Sampletype::where('id', $request->sample_type)->first();
+        $attr_arr = explode(',', $sample_types['attribute_property']);
+        $attr_sample = Attributesample::whereIn('id', $attr_arr)->get();
+        foreach ($attr_sample as $attr) {
+            $attribute_value = new AttributeValue();
+            $attribute_value->biosample_id = $biosample->id;
+            $attribute_value->sampletype_id = $request->sample_type;
+            $attribute_value->attributesample_id = $attr->id;
+            $attribute_value->value = $request[$attr->attr_name];
+            // dd($request[$attr->attr_name]);
+            $attribute_value->save();
+        }
+        return redirect('/dashboard/v2/biosamples')->with('success', 'New Biosample has been added!');
+
     }
 
     /**

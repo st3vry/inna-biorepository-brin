@@ -42,8 +42,10 @@
                 <td>{{ $user->username }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{{ $user->lab->name }}</td>
-                <td>{{ $user->lab->center->name }}</td>
+                {{-- <td>{{ $user->lab->name }}</td> --}}
+                <td>{{ $user->administrative }}</td>
+                {{-- <td>{{ $user->lab->center->name }}</td> --}}
+                <td>{{ $user->affiliate }}</td>
                 <td>{{ $user->role->name }}</td>
                 <td>@if ($user->is_activated) Active @else Inactive @endif</td>
                 <td>

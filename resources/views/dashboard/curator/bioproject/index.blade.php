@@ -36,7 +36,8 @@
                 <td>{{ $bioproject->organism->name }}</td>
                 <td>{{ $bioproject->title }}</td>
                 <td>{{ $bioproject->description }}</td>
-                <td>{{ $bioproject->center->name }}</td>
+                {{-- <td>{{ $bioproject->center->name }}</td> --}}
+                <td>{{ $bioproject->center_id }}</td>
                 <td>
                     @switch($bioproject->status)
                         @case(1)
@@ -59,7 +60,6 @@
                     @endswitch
                 </td>
                 <td>
-                    <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                 </td>
             </tr>

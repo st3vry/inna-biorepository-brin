@@ -177,7 +177,7 @@ class BiosampleController extends Controller
 
     public function getOrganism($slug)
     {
-        $organism =  Organism::where('name', 'ilike', '%' . $slug . '%')->select("name as text", "id", "taxon_id")->get();
+        $organism =  Organism::where('name', 'ilike', '%' . $slug . '%')->select("name as text", "id", "taxon_id")->take(10)->get();
         return response()->json($organism);
     }
 }

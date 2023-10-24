@@ -68,7 +68,7 @@ class BiosampleController extends Controller
         $biosample->title = $request->sample_title;
         $biosample->description = $request->description;
         $biosample->hold_release = $request->hold_release;
-        $biosample->sampletype_id = $request->sample_type;
+        $biosample->sampletype_id = $request->sample_type_select;
 
         // $biosample->comments = $request->comments;
         $biosample->description = $request->description;

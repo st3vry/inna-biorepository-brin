@@ -117,7 +117,8 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('authsso');
 
     Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('authsso');
-    Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
+    Route::resource('/biosamples', UserSampleController::class)->middleware('authsso');
+    // Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
     Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('authsso');
 
     // INNAlysis

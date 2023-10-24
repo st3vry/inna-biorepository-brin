@@ -124,7 +124,7 @@
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     {{-- <label for="sampleTypePackages" class="form-label fw-bold">Package</label> --}}
-                                    <select id="sampleTypePackages" name="sample_type_packages" class="form-select" aria-label="Package" data-st-require="required">
+                                    <select id="sampleTypePackages" name="sample_type_packages_select" class="form-select" aria-label="Package" data-st-require="required">
                                         <option selected disabled value="">Choose package</option>
                                         @foreach ($packages as $package)
                                             <option value="{{$package->id}}">{{$package->name}}</option>
@@ -137,7 +137,7 @@
                                 </div>
                                 <div class="col-12">
                                     {{-- <label for="sampleType" class="form-label fw-bold">Sample Type</label> --}}
-                                    <select id="sampleType" name="sample_type"  class="form-select" aria-label="Sample Type" data-st-require="required">
+                                    <select id="sampleType" name="sample_type_select"  class="form-select" aria-label="Sample Type" data-st-require="required">
                                         <option selected disabled value="">Choose sample type</option>
                                     </select>
                                     <div class="invalid-feedback">
@@ -215,29 +215,10 @@
 @endsection
 @push('js')
 <script>
-    $('#organism_id').select2({
-        placeholder: "Organism",
-        theme: "bootstrap-5",
-        width: '100%'
-
-    });
-    $('#umbproject_id').select2({
-        placeholder: "Umbrella Project",
-        theme: "bootstrap-5",
-        width: '100%'
-
-    });
-    $('#grant_agency').select2({
-        placeholder: "Fund Agency",
-        theme: "bootstrap-5",
-        width: '100%'
-
-    });
-</script>
-<script>
 
     var counterFundAgency = 0;
     var i = 0;
+    let GLOBAL_ORGANISM = []
     $(document).ready(function() {
         $(".delete-row").on('click', function(e) {
             e.preventDefault()
@@ -463,6 +444,44 @@
             )
             let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
             let popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+            if (obj.attr_name == "taxonomy_id")  {
+                $("#taxonomy_id").prop( "readonly", true );
+            }
+            if (obj.attr_name == "organism") {
+                let organismSelect = $('#organism').select2({
+                    placeholder:"Select Organism",
+                    theme: "bootstrap-5",
+                    width: '100%',
+                    ajax: {
+                        url: function (params) {
+                            console.log("params",params)
+                            return '/dashboard/v2/biosamples/getOrganism/' + params.term;
+                        },
+                        dataType: 'json',
+                        type: "GET",
+                        quietMillis: 50,
+                        data: function (term) {
+                            console.log("term",term)
+                            return {
+                                term: term
+                            };
+                        },
+                        processResults: function (data) {
+                            GLOBAL_ORGANISM = data
+                            console.log("DATA", GLOBAL_ORGANISM)
+                            return {
+                                results:$.map(data, function(obj) {
+                                    return { id: obj.id, text: obj.text, taxon_id: obj.taxon_id };
+                                })
+                            };
+                        },
+                    }
+                });
+
+                organismSelect.on("select2:select", function (e) {
+                    $("#taxonomy_id").val( e.params.data.taxon_id)
+                });
+            }
         }
         const formBioSample = $('#formBioSample')
 
@@ -488,12 +507,16 @@
                 }
             } else if (label == "comments") {
                 label = "Comments"
-            } else if (label == "sample_type_packages") {
+            } else if (label == "sample_type_packages_select") {
                 label = "Sample Type Package"
                 value = document.querySelector('#sampleTypePackages option:checked').innerHTML
-            } else if (label == "sample_type") {
+            } else if (label == "sample_type_select") {
                 label = "Sample Type"
                 value = document.querySelector('#sampleType option:checked').innerHTML
+            } else if (label == "organism") {
+
+                label = "Organism <span class='text-danger'>*</span>"
+                value = document.querySelector('#organism option:checked').innerHTML
             } else {
                 label =  document.querySelector(`[name=${label}]`).previousSibling.previousSibling.previousElementSibling.innerHTML
             }

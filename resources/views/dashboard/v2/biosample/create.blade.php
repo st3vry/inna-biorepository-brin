@@ -10,7 +10,7 @@
             @csrf
             <ul class="nav nav-tabs nav-fill mb-3" id="mytabs" role="tablist">
                 <li class="nav-item " role="presentation">
-                    <a class="nav-link active" id="tabGeneralInformation" data-bs-toggle="tab"
+                    <a class="nav-link disabled active" id="tabGeneralInformation" data-bs-toggle="tab"
                         href="#contentGeneralInfo"
                         role="tab"
                         aria-controls="contentGeneralInfo"
@@ -19,7 +19,8 @@
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link"
+                    <a class="nav-link disabled"
+                        aria-disabled="true"
                         id="tabSampleInformation"
                         data-bs-toggle="tab"
                         href="#contentSampleInformation"
@@ -30,7 +31,7 @@
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link"
+                    <a class="nav-link disabled"
                         id="tabPreview"
                         data-bs-toggle="tab"
                         href="#contentPreview"
@@ -64,7 +65,7 @@
                     </div>
                     <div class="card mb-3">
                         <div class="card-header fw-bold fs-6">
-                            External Link
+                            External Link <span class="text-danger"> **</span>
                         </div>
                         <div class="card-body">
                             <table id="externalLinkTable" class="table w-100" data-toggle="table" data-mobile-responsive="true">
@@ -98,7 +99,7 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <textarea class="form-control" id="comments" rows="3"></textarea>
+                                <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
                                 <div id="commentsHelpBlock" class="form-text">
                                     Private comments to staff
                                 </div>
@@ -107,8 +108,9 @@
                     </div>
                     <hr class="mb-0" >
                     <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
+                    <p class="mb-3"><small><strong class="text-danger">**</strong> Required when added</small></p>
                     <div class="d-flex align-items-center justify-content-end mb-3">
-                        <button class="btn btn-sm btn-primary btn-next" data-st-target="tabSampleInformation">
+                        <button class="btn btn-sm btn-primary btn-next-prev" id="btnNext" data-st-location="contentGeneralInfo" data-st-target="contentSampleInformation">
                             Next <i class="bi bi-chevron-right"></i>
                         </button>
                     </div>
@@ -122,18 +124,25 @@
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     {{-- <label for="sampleTypePackages" class="form-label fw-bold">Package</label> --}}
-                                    <select id="sampleTypePackages" name="sample_type_packages" class="form-select" aria-label="Package">
-                                        <option selected disabled>Choose package</option>
+                                    <select id="sampleTypePackages" name="sample_type_packages" class="form-select" aria-label="Package" data-st-require="required">
+                                        <option selected disabled value="">Choose package</option>
                                         @foreach ($packages as $package)
                                             <option value="{{$package->id}}">{{$package->name}}</option>
                                         @endforeach
                                     </select>
+                                    <div class="invalid-feedback">
+                                        This field is required!
+                                    </div>
+
                                 </div>
                                 <div class="col-12">
                                     {{-- <label for="sampleType" class="form-label fw-bold">Sample Type</label> --}}
-                                    <select id="sampleType" name="sample_type"  class="form-select" aria-label="Sample Type">
-                                        <option selected disabled value="0">Choose sample type</option>
+                                    <select id="sampleType" name="sample_type"  class="form-select" aria-label="Sample Type" data-st-require="required">
+                                        <option selected disabled value="">Choose sample type</option>
                                     </select>
+                                    <div class="invalid-feedback">
+                                        This field is required!
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -151,10 +160,10 @@
                     <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
                     <p class="mb-3"><small><strong class="text-danger">**</strong> At least one field required</small></p>
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <button class="btn btn-sm btn-danger btn-back" data-st-target="tabGeneralInformation">
+                        <button class="btn btn-sm btn-danger btn-next-prev" data-st-target="contentGeneralInfo">
                             <i class="bi bi-chevron-left"></i> Back
                         </button>
-                        <button class="btn btn-sm btn-primary btn-next" data-st-target="tabPreview">
+                        <button class="btn btn-sm btn-primary btn-next-prev"  data-st-location="contentSampleInformation" data-st-target="contentPreview">
                             Next <i class="bi bi-chevron-right"></i>
                         </button>
                     </div>
@@ -173,9 +182,9 @@
 
                         </div>
                     </div>
-                    <hr class="mb-0" >
+                    <hr class="mb-3" >
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <button class="btn btn-sm btn-danger btn-back" data-st-target="tabSampleInformation">
+                        <button class="btn btn-sm btn-danger btn-next-prev " data-st-target="contentSampleInformation">
                             <i class="bi bi-chevron-left"></i> Back
                         </button>
                         <button id="btnSubmit" type="submit" class="btn btn-sm btn-primary">
@@ -300,14 +309,10 @@
             $("#cardSampleAttributes").removeClass("d-none")
             $("#cardSampleAttributesHeader").html(`${name} Attributes `)
             formAttributes.html("")
-
-            // formAttributes.append(`<h5 class="mt-3">${name} Attributes </h5>`)
             let attributes = attrs["attributes"];
             let mandatories = attrs["attributesM"];
             let eithers = attrs["attributesE"];
             mandatories.forEach(mandatory => {
-                // console.log(attributes.filter((attribute) => attribute.id == mandatory))
-                // console.log(mandatory)
                 if (mandatory.length !== 0) {
                     createInput(attributes.filter((attribute) => attribute.id == mandatory)[0], "required")
                 }
@@ -315,7 +320,6 @@
             });
 
             eithers.forEach(either => {
-                // console.log(attributes.filter((attribute) => attribute.id == either))
                 if (either.length !== 0) {
                     createInput(attributes.filter((attribute) => attribute.id == either)[0],"either")
                 }
@@ -324,7 +328,6 @@
 
             attributes.forEach(attribute => {
                 createInput(attribute, "optional")
-                // console.log(attribute)
             })
         }
 
@@ -335,7 +338,6 @@
                 async: false,
                 success: function(response) {
                     setAttributesInputs(response,name)
-                    // console.log(response)
                 },
                 error: function (data) {
                     console.log(data.status + ':' + data.statusText,data.responseText);
@@ -356,10 +358,16 @@
                 `
                     <tr>
                         <td>
-                            <input class="form-control" type="text" name="external_link_description[]">
+                            <input class="form-control" type="text" name="external_link_description[]" data-st-require="required">
+                            <div class="invalid-feedback">
+                                This field cannot be empty!
+                            </div>
                         </td>
                         <td>
-                            <input class="form-control"  type="text" name="external_link_url[]">
+                            <input class="form-control"  type="text" name="external_link_url[]" data-st-require="required">
+                            <div class="invalid-feedback">
+                                This field cannot be empty!
+                            </div>
                         </td>
                         <td>
                             <button class="btn btn-danger delete-row" title="Delete"><i class="bi bi-trash"></i></button>
@@ -372,8 +380,6 @@
                 $(this).closest('tr').remove();
             });
         })
-
-
 
         sampleTypePackages.on("change",function(e) {
             sampleType.empty()
@@ -393,7 +399,6 @@
         function createInput(obj, requireType) {
             let asterisk = requireType == "required" ? "<span class='text-danger'>* </span>" : requireType == "either" ? "<span class='text-danger'>** </span>" : ""
             let input = ""
-            console.log(obj, requireType)
             switch (obj.input_type_id) {
                 case 1:
                     input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
@@ -420,14 +425,29 @@
                     input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
                     break;
                 case 6:
-
                     input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
                     break;
 
                 default:
-
                     input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
                     break;
+            }
+            if (requireType == "required") {
+                input +=
+                    `
+                    <div class="invalid-feedback">
+                        This field cannot be empty!
+                    </div>
+                    `
+            }
+
+            if (requireType == "either") {
+                input +=
+                    `
+                    <div class="invalid-feedback">
+                        At least one field required!
+                    </div>
+                    `
             }
 
             formAttributes.append(
@@ -435,7 +455,7 @@
                 <div class="col-md-6 col-sm-12">
                     <div class="mb-3">
                         <label for="${obj.attr_name}" class="form-label fw-bold">${obj.attr_text+asterisk}</label>
-                        <i class="bi bi-question-circle ms-1" tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-custom-class="custom-popover" data-bs-html="true" data-bs-placement="right" data-bs-content="${decodeHTMLEntities(obj.description)}"></i>
+                        <i class="bi bi-question-circle ms-1" tabindex="-1" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-custom-class="custom-popover" data-bs-html="true" data-bs-placement="right" data-bs-content="${decodeHTMLEntities(obj.description)}"></i>
                         ${input}
                     </div>
                 </div>
@@ -445,35 +465,137 @@
             let popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
         }
         const formBioSample = $('#formBioSample')
+
+        function getTableRow(label, value) {
+            if (label == "hold_release") {
+                label = "Hold/Release"
+                value = document.querySelector('input[name=hold_release]:checked').nextElementSibling.innerHTML
+            } else if (label == "external_link_description[]" || label == "external_link_url[]") {
+                if (document.querySelector("tr[data-st-trlabel='External Link']")== null) {
+                    let externalLinkDesc = document.querySelectorAll("input[name='external_link_description[]']")
+                    let externalLinkUrl = document.querySelectorAll("input[name='external_link_url[]']")
+                    let li = ""
+                    label = "External Link"
+                    externalLinkDesc.forEach((element, index) => {
+                        li +=`<li><a href="${externalLinkUrl[index].value}">${element.value}</a></li>`
+                    });
+                    value = `<ul>
+                        ${li}
+                        </ul>
+                    `
+                } else {
+                    return false
+                }
+            } else if (label == "comments") {
+                label = "Comments"
+            } else if (label == "sample_type_packages") {
+                label = "Sample Type Package"
+                value = document.querySelector('#sampleTypePackages option:checked').innerHTML
+            } else if (label == "sample_type") {
+                label = "Sample Type"
+                value = document.querySelector('#sampleType option:checked').innerHTML
+            } else {
+                label =  document.querySelector(`[name=${label}]`).previousSibling.previousSibling.previousElementSibling.innerHTML
+            }
+            return (
+            `
+                <tr data-st-trlabel="${label}">
+                    <td>
+                        <strong>${label}</strong>
+                    </td>
+                    <td>
+                        ${value}
+                    </td>
+                </tr>
+            `
+            )
+        }
+
         function serializeForm(){
             let formData = formBioSample.serializeArray()
             $("#previewTable tbody").html("")
+            let externalLinkDesc = document.querySelectorAll("input[name='external_link_description[]']")
+            let externalLinkUrl = document.querySelectorAll("input[name='external_link_url[]']")
+
             formData.forEach(element => {
                 if (element.name != "_method" && element.name != "_token") {
-                    $("#previewTable tbody").append(
-                        `
-                        <tr>
-                            <td>
-                                <strong>${element.name}</strong>
-                            </td>
-                            <td>
-                                ${element.value == "" ? "-" :element.value}
-                            </td>
-                        </tr>
-                        `
-                    )
+                    console.log(getTableRow(element.name, element.value == "" ? "-" :element.value ))
+                    $("#previewTable tbody").append(getTableRow(element.name, element.value == "" ? "-" :element.value ))
                 }
             });
         }
-        // $("#btnSubmit").on("click", function(e) {
-        //     e.preventDefault()
-        //     let formData = formBioSample.serialize()
-        //     console.log(formData)
-        // })
+
+
+        function activeTab(tab){
+            $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+        }
+
+        function validate(tabName) {
+            if (tabName == null) {
+                return true
+            }
+            let tab = document.getElementById(tabName)
+            let allFormRequired = tab.querySelectorAll('[data-st-require="required"]')
+            let trueState = []
+            allFormRequired.forEach(element => {
+                if (element.value == "") {
+                    element.classList.add("is-invalid")
+                    element.nextElementSibling.style.display = "block"
+                    trueState.push(false)
+                } else {
+                    element.classList.remove("is-invalid")
+                    element.nextElementSibling.style.display = "none"
+                    trueState.push(true)
+                }
+            });
+
+            let allFormEither = tab.querySelectorAll('[data-st-require="either"]')
+            if (allFormEither.length > 0) {
+                let eitherStateArray = []
+                allFormEither.forEach(element => {
+                    if (element.value == "") {
+                        eitherStateArray.push(false)
+                    } else {
+                        eitherStateArray.push(true)
+                    }
+                });
+
+                let eitherOk = !eitherStateArray.every(v => v === false);
+
+                if (!eitherOk) {
+                    allFormEither.forEach(element => {
+                        element.classList.add("is-invalid")
+                        element.nextElementSibling.style.display = "block"
+                    });
+                } else {
+
+                    allFormEither.forEach(element => {
+                        element.classList.remove("is-invalid")
+                        element.nextElementSibling.style.display = "none"
+                    });
+                }
+                trueState.push(eitherOk)
+            }
+
+
+
+            return trueState.every(v => v === true);
+        }
 
 
         $('#tabPreview').on('shown.bs.tab', function (e) {
-            console.log(serializeForm())
+            serializeForm()
+        });
+
+        let btnPrevNext =  document.querySelectorAll(".btn-next-prev")
+        btnPrevNext.forEach(element => {
+            element.addEventListener("click", function(e) {
+                e.preventDefault()
+                if (validate(element.dataset.stLocation)) {
+                    activeTab(element.dataset.stTarget)
+                }
+
+            })
         });
     });
 </script>

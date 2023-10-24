@@ -25,6 +25,7 @@ class BiosampleController extends Controller
         return view('dashboard.biosample.index', [
             // 'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('id')->paginate(5),
             'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
+    
         ]);
     }
 
@@ -80,7 +81,7 @@ class BiosampleController extends Controller
         $biosample->center_id = auth()->user()->administrative;
         $biosample->user_id = auth()->user()->id;
         // need to change if organism table ready
-        $biosample->organism_id = $request->taxonomy_id;
+        $biosample->organism_id = $request->organism;
         // $biosample->organism_name = $request->organism;
         // $biosample->organism_name = $validatedData['organism'];
         //

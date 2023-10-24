@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\SampletypePackage;
 use App\Models\Sampletype;
 use App\Models\Attributesample;
+use App\Models\Organism;
 
 class BiosampleController extends Controller
 {
@@ -80,18 +81,18 @@ class BiosampleController extends Controller
         $biosample->user_id = auth()->user()->id;
         // need to change if organism table ready
         $biosample->organism_id = $request->taxonomy_id;
-        $biosample->organism_name = $request->organism;
+        // $biosample->organism_name = $request->organism;
         // $biosample->organism_name = $validatedData['organism'];
         //
         $biosample->save();
 
-        $sample_types = Sampletype::where('id', $request->sample_type)->first();
+        $sample_types = Sampletype::where('id', $request->sample_type_select)->first();
         $attr_arr = explode(',', $sample_types['attribute_property']);
         $attr_sample = Attributesample::whereIn('id', $attr_arr)->get();
         foreach ($attr_sample as $attr) {
             $attribute_value = new AttributeValue();
             $attribute_value->biosample_id = $biosample->id;
-            $attribute_value->sampletype_id = $request->sample_type;
+            $attribute_value->sampletype_id = $request->sample_type_select;
             $attribute_value->attributesample_id = $attr->id;
             $attribute_value->value = $request[$attr->attr_name];
             // dd($request[$attr->attr_name]);
@@ -112,10 +113,12 @@ class BiosampleController extends Controller
         //
         $histories = ActionLog::with(['creator'])->where('item_id', $biosample->accession)->orderBy('created_at', 'desc')->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        $organism = Organism::where('id', $biosample->organism_id)->first();
         return view('dashboard.biosample.show', [
             'biosample' => $biosample,
             'histories' => $histories,
             'sample_attr' => $sample_attr,
+            'organism' => $organism,
         ]);
     }
 
@@ -170,5 +173,11 @@ class BiosampleController extends Controller
         $results->attributesE = explode(',', $sampletypes['attribute_E']);
         // dd($results);
         return response()->json($results);
+    }
+
+    public function getOrganism($slug)
+    {
+        $organism =  Organism::where('name', 'ilike', '%' . $slug . '%')->select("name as text", "id", "taxon_id")->get();
+        return response()->json($organism);
     }
 }

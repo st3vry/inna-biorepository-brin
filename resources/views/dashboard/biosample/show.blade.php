@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Organism</td>
-                <td class="col-sm-7">{{$biosample->organism_name}}</td>
+                <td class="col-sm-7">{{$organism->name}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Sample Type</td>

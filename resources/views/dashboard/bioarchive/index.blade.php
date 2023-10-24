@@ -24,10 +24,6 @@
                 <th scope="col">Bioproject</th>
                 <th scope="col">Biosample</th>
                 <th scope="col">Status</th>
-                <th scope="col">Submission ID</th>
-                <th scope="col">Bioproject</th>
-                <th scope="col">Biosample</th>
-                <th scope="col">Status</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>

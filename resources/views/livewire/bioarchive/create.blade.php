@@ -215,15 +215,15 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Alias</th>
                                     <th scope="col">Biosample Used</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Library Name</th>
-                                    <th scope="col">Library Source</th>
-                                    <th scope="col">Library Selection</th>
-                                    <th scope="col">Library Strategy</th>
-                                    <th scope="col">Library Construction Protocol</th>
-                                    <th scope="col">Instrument</th>
-                                    <th scope="col">Library Layout</th>
-                                    <th scope="col">Insert Size</th>
+                                    <th scope="col">Title <font color="red">*</font></th>
+                                    <th scope="col">Library Name <font color="red">*</font></th>
+                                    <th scope="col">Library Source <font color="red">*</font></th>
+                                    <th scope="col">Library Selection <font color="red">*</font></th>
+                                    <th scope="col">Library Strategy <font color="red">*</font></th>
+                                    <th scope="col">Library Construction Protocol <font color="red">*</font></th>
+                                    <th scope="col">Instrument <font color="red">*</font></th>
+                                    <th scope="col">Library Layout <font color="red">*</font></th>
+                                    <th scope="col">Insert Size <font color="red">*</font></th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -247,13 +247,6 @@
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror --}}
                                     </td>
-                                    <td>
-                                        {{$alias_exp[$id] = "INNAX-".$alias."-".$no }}
-                                        {{-- <input type="text" name="bioexperiment_id[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp" value="{{$alias}}" disabled>
-                                        @error('bioexperiment_id.*.alias_exp')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror --}}
-                                    </td>
                                     <td>{{$this->biosampleSubmission($id)}} : {{$this->biosampleName($id)}}</td>
                                     <td>
                                         <input type="text" name="bioexperiment_id[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title">
@@ -268,19 +261,7 @@
                                         @enderror
                                     </td>
                                     <td>
-                                        <input type="text" name="bioexperiment_id[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title">
-                                        @error('bioexperiment_id.*.title')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror
-                                    </td>
-                                    <td>
-                                        <input type="text" name="bioexperiment_id[{{$id}}][libname]" wire:model="bioexperiment_id.{{$id}}.libname">
-                                        @error('bioexperiment_id.*.libname')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror
-                                    </td>
-                                    <td>
-                                        <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
+                                        {{-- <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id"> --}}
                                         <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
                                             <option value="">Select Lib Source</option>
                                             @foreach ( $libsources as $libsource )
@@ -289,7 +270,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
+                                        {{-- <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id"> --}}
                                         <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
                                             <option value="">Select Lib Selection</option>
                                             @foreach ( $libselections as $libselection )
@@ -298,7 +279,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
+                                        {{-- <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id"> --}}
                                         <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
                                             <option value="">Select Lib Strategy</option>
                                             @foreach ( $libstrategies as $libstrategy )
@@ -306,11 +287,9 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
+                                    {{-- <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td> --}}
                                     <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
                                     <td>
-                                        <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
-                                            <option value="0">Select Instrument</option>
                                         <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
                                             <option value="0">Select Instrument</option>
                                             @foreach ( $instruments as $instrument )
@@ -319,7 +298,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
+                                        {{-- <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id"> --}}
                                         <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
                                             <option value="">Select Lib Layout</option>
                                             @foreach ( $liblayouts as $liblayout )
@@ -329,9 +308,9 @@
                                         @error('bioexperiment_id.*.liblayout_id')
                                         <p class="text-danger">{{$message}}</p>
                                         @enderror
-                                        @error('bioexperiment_id.*.liblayout_id')
+                                        {{-- @error('bioexperiment_id.*.liblayout_id')
                                         <p class="text-danger">{{$message}}</p>
-                                        @enderror
+                                        @enderror --}}
                                     </td>
                                     <td><input onkeydown="return numbersOnly(event)" onkeyup="this.value=this.value.replace(',','.')" type="text" name="bioexperiment_id[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size" ></td>
                                     <td>

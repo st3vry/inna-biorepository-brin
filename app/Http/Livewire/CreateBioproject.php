@@ -161,7 +161,7 @@ class CreateBioproject extends Component
         'title' => 'required|min:6',
         'umbproject_id' => '',
         'organism_id' => 'required',
-        'consortium_id' => 'required',
+        'consortium_id' => '',
 
         'material_id' => 'required',
         'matdesc' => '',
@@ -220,7 +220,7 @@ class CreateBioproject extends Component
             'externallinks.*.link_description' => '',
             'externallinks.*.link_url' => '',
 
-            'consortium_id' => 'required',
+            'consortium_id' => '',
         ]);
 
         $this->currentStep = 3;

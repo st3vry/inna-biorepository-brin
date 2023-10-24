@@ -55,8 +55,8 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Consortium</td>
-                @isset($umbrella)
-                <td class="col-sm-7">{{$bioproject->consortium->name}} &mdash; <a href="https://www.{{ $umbrella->consortium->url }}">{{ $umbrella->consortium->url }}</a></td>
+                @isset($consortium)
+                <td class="col-sm-7">{{$bioproject->consortium->name}} &mdash; <a href="https://www.{{ $consortium->consortium->url }}">{{ $consortium->consortium->url }}</a></td>
                 @else
                 <td class="col-sm-7">Not Assigned</td>
                 @endisset

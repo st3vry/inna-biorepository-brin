@@ -220,6 +220,7 @@ class DashboardBioprojectController extends Controller
         $id_data_type = explode(',', $bioproject->getAttribute('data_type_id'));
         $data_types = Datatype::whereIn('id', $id_data_type)->pluck('name');
         $umbrella = Bioproject::where('id', $bioproject->umbproject_id)->first();
+        $consortium = Bioproject::where('id', $bioproject->consortium_id)->first();
         $relevanceBioproject = RelevanceBioproject::where('bioproject_id', $bioproject->id)->first();
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
@@ -238,7 +239,8 @@ class DashboardBioprojectController extends Controller
             'methodology' => $methodologyBioproject,
             'umbrella' => $umbrella,
             'externallinks' => $externallinks,
-            'histories' => $histories
+            'histories' => $histories,
+            'consortium' => $consortium
         ]);
     }
 

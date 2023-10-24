@@ -273,7 +273,7 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="consortium_id" class="form-label">Consortium <font color="red">*</font></label>
+                        <label for="consortium_id" class="form-label">Consortium</label>
                         <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
                             <option value="">Consortium</option>
                             @foreach ($consortia as $consortium )

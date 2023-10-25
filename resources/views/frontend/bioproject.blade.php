@@ -44,7 +44,7 @@
                             <p class="mb-1 d-none">{{ $bioproject->description}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readLess(this)"> Read less.</a></p>
                             <p class="fw-light mb-0">Organism: {{ $bioproject->organism->name }}</p>
                             <p class="fw-light mb-0">Scope: {{ $bioproject->samplescope->name }}</p>
-                            <p class="fw-light mb-0">{{ $bioproject->center->name }}</p>
+                            <p class="fw-light mb-0">{{ $bioproject->center_id }}</p>
                             <p class="fw-lighter mb-0">Accession: {{ $bioproject->accession }}</p>
                         </div>
                     </div>

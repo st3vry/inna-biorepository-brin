@@ -22,7 +22,7 @@ class UploaderController extends Controller
   */
  public function __construct()
  {
-     $this->middleware(['auth', 'verified']);
+     $this->middleware('auth');
  }
 
  /**
@@ -103,7 +103,7 @@ class UploaderController extends Controller
     $biorun->save();
 
     // $filePath = Storage::disk('ftp')->put("{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
-    
+
 
     // $url_base = 'storage/upload/medialibrary/'.$user_obj->id."/{$folderDATE}/".$fileName;
 
@@ -150,7 +150,7 @@ class UploaderController extends Controller
         return back()->with('success', array_reverse(explode("/",$request->file))[0]. " Deleted Successfully");
       } else {
         return back()->with('error', 'Something went wrong, please try again later!');
-      } 
+      }
     } else {
       $user_obj = auth()->user();
       $file = $request->filename;

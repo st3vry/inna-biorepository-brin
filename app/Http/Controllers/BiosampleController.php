@@ -18,8 +18,8 @@ class BiosampleController extends Controller
     {
         //
         $biosamples = Biosample::with(['organism', 'center', 'user'])->where('status', 5)->paginate(5);
-        $organisms = Biosample::leftJoin('organisms', 'organisms.id', '=', 'biosamples.organism_id')->selectRaw('organisms.name, organisms.taxon_id, count(biosamples.organism_id) as count')->groupBy('organisms.id')->orderBy('organisms.name')->get();
-        $centers = Biosample::leftJoin('centers', 'centers.id', '=', 'biosamples.center_id')->selectRaw('centers.name, count(biosamples.center_id) as count')->groupBy('centers.name')->get();
+        $organisms = Biosample::leftJoin('organisms', 'organisms.id', '=', 'biosamples.organism_id')->selectRaw('organisms.name, organisms.taxon_id, count(biosamples.organism_id) as count')->where('biosamples.status',5)->groupBy('organisms.id')->orderBy('organisms.name')->get();
+        $centers = Biosample::leftJoin('centers', 'centers.id', '=', 'biosamples.center_id')->selectRaw('centers.name, count(biosamples.center_id) as count')->where('biosamples.status',5)->groupBy('centers.name')->get();
         return view('frontend.biosample', [
             'title' => 'Biosamples',
             'biosamples' => $biosamples,

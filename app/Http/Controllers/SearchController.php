@@ -17,14 +17,24 @@ class SearchController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $bioprojects =  Bioproject::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('title')->take(3);
-        $biosamples = Biosample::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('title')->take(3);
-        // $bioarchives = Bioarchive::where('title', 'ILIKE', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('title')->take(5);
+        $biosamples = Biosample::where('id', 0)->pluck('title')->take(5);
+        $bioprojects = Bioproject::where('id', 0)->pluck('title')->take(5);
+        $bioarchives = Bioarchive::where('id', 0)->pluck('accession')->take(5);
+
+        if ($request->searchType == "biosample" || $request->searchType == "all") {
+            $biosamples = Biosample::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('title')->take(5);
+        }
+        if ($request->searchType == "bioproject" || $request->searchType == "all") {
+            $bioprojects =  Bioproject::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('title')->take(5);
+        }
+        if ($request->searchType == "bioarchive" || $request->searchType == "all") {
+            $bioarchives = Bioarchive::where('accession', 'ILIKE', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('accession')->take(5);
+        }
         return response()->json([
             'bioprojects' =>$bioprojects,
             'biosamples' => $biosamples,
-            // 'bioarchives' => $bioarchives
+            'bioarchives' => $bioarchives
         ]);
-    
+
     }
 }

@@ -15,7 +15,7 @@ class BioarchiveController extends Controller
     public function index()
     {
         $bioarchives = Bioarchive::with(['bioproject'])->where('status', 5)->paginate(5);
-        $centers = Bioproject::leftJoin('centers', 'centers.id', '=', 'bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->groupBy('centers.name')->get();
+        $centers = Bioproject::leftJoin('centers', 'centers.id', '=', 'bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->where('bioprojects.status', 5)->groupBy('centers.name')->get();
         // $biosamples = Bioarchive::leftJoin('biosamples', 'biosamples.id', '=', 'bioarchives.biosample_id')->selectRaw('count(bioarchives.biosamples_id) as count')->groupBy('biosamples.title')->get();
         // dd($biosamples);
         return view('frontend.bioarchive', [

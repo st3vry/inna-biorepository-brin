@@ -310,8 +310,8 @@
          var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
             chunking: true,
             method: "POST",
-            maxFilesize: 200000000,
-            chunkSize: 100000000,
+            maxFilesize: 2147483648, //2gb
+            chunkSize: 104857600, // 100mb
             parallelChunkUploads: true
         });
 

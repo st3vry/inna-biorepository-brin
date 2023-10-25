@@ -21,9 +21,9 @@ class BioprojectController extends Controller
     {
 
         $bioprojects = Bioproject::with(['organism', 'samplescope'])->where('status', 5)->paginate(5);
-        $organisms = Bioproject::leftJoin('organisms', 'organisms.id','=','bioprojects.organism_id')->selectRaw('organisms.name, organisms.taxon_id, count(bioprojects.organism_id) as count')->groupBy('organisms.id')->orderBy('organisms.name')->get();
-        $centers = Bioproject::leftJoin('centers', 'centers.id','=','bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->groupBy('centers.name')->get();
-        $scopes = Bioproject::leftJoin('samplescopes', 'samplescopes.id','=','bioprojects.samplescope_id')->selectRaw('samplescopes.name, count(bioprojects.samplescope_id) as count')->groupBy('samplescopes.name')->get();
+        $organisms = Bioproject::leftJoin('organisms', 'organisms.id','=','bioprojects.organism_id')->selectRaw('organisms.name, organisms.taxon_id, count(bioprojects.organism_id) as count')->where('bioprojects.status', 5)->groupBy('organisms.id')->orderBy('organisms.name')->get();
+        $centers = Bioproject::leftJoin('centers', 'centers.id','=','bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->where('bioprojects.status', 5)->groupBy('centers.name')->get();
+        $scopes = Bioproject::leftJoin('samplescopes', 'samplescopes.id','=','bioprojects.samplescope_id')->selectRaw('samplescopes.name, count(bioprojects.samplescope_id) as count')->where('bioprojects.status', 5)->groupBy('samplescopes.name')->get();
         return view('frontend.bioproject', [
             'title' => 'Bioproject',
             'bioprojects' => $bioprojects,

@@ -325,13 +325,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             async function search(searchVal) {
-                const response = await fetch('{{route('search')}}', {
+                const response = await fetch('/search', {
                     method: 'post',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ "search": searchVal, '_token': '{{ csrf_token() }}'})
+                    body: JSON.stringify({ "search": searchVal, "searchType": "all", '_token': '{{ csrf_token() }}'})
                 })
                 return await response.json();
 

@@ -142,7 +142,7 @@
                                 <tr>
                                     <td></td>
                                     <td>
-                                        {{array_reverse(explode("/",$item))[0]}} 
+                                        {{array_reverse(explode("/",$item))[0]}}
                                          <span>
                                              <form action="/dashboard/file/delete" method="post" class="d-inline">
                                                  @method('post')
@@ -162,9 +162,9 @@
                                      </td>
                                 </tr>
                                 @endforeach
-                                
+
                                 @endif
-                            @endforeach                            
+                            @endforeach
                         @endforeach
 
                         <div class="modal fade modalfile" id="modal{{ $value['alias'] }}" tabindex="-1" aria-labelledby="modal{{ $value['alias'] }}Label" aria-hidden="true">
@@ -175,7 +175,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="{{route('file-upload')}}"
+                                    <form action="/dashboard/file/upload"
                                         class="dropzone"
                                         id="form{{ $value['alias'] }}">
                                         <div class="row mt-3">
@@ -197,7 +197,7 @@
                                 </div>
                             </div>
                             </div>
-                            
+
                         @else
                         <tr>
                             <td><strong>File</strong></td>
@@ -208,7 +208,7 @@
                                 {{-- <tr> --}}
                                     {{-- <td></td> --}}
                                     <td>
-                                       {{array_reverse(explode("/",$item))[0]}} 
+                                       {{array_reverse(explode("/",$item))[0]}}
                                         <span>
                                             <form action="/dashboard/file/download" method="post" class="d-inline">
                                                 @method('post')
@@ -220,9 +220,9 @@
                                     </td>
                                 {{-- </tr> --}}
                                 @endforeach
-                                
+
                                 @endif
-                            @endforeach                            
+                            @endforeach
                         @endforeach
 
                         </tr>
@@ -305,7 +305,7 @@
 
 @push('js')
     <script>
-        
+
          @foreach ($bioexperiment as $item => $value)
          var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
             chunking: true,

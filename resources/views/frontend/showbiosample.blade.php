@@ -53,7 +53,7 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Center</td>
-                <td class="col-sm-1">{{$biosample->center->name}}
+                <td class="col-sm-1">{{$biosample->center == null ? "N/A" $biosample->center->name}}
                 </td>
             </tr>
             <tr>

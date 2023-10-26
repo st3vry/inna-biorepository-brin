@@ -21,9 +21,9 @@ class CuratorBioprojectController extends Controller
     {
         //
         $bioprojects = Bioproject::with(['organism'])
-            ->where('published_at', null)
-            ->where('draft',false)
-            ->where('status',1)
+            // ->where('published_at', null)
+            // ->where('draft',false)
+            // ->where('status',1)
             // ->where(function ($query) {
             //     $query->where('draft', false)
             //           ->orWhere('curator_id','<>', null);

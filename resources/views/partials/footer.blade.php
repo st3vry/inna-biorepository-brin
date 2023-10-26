@@ -2,8 +2,8 @@
 <footer id="footer" class="footer">
     <div class="container">
         <ul class="list-group list-group-horizontal justify-content-center border border-0">
-            <li class="list-group-item"><a href="#">Terms of service</a></li>
-            <li class="list-group-item"><a href="#">Privacy and policy</a></li>
+            <li class="list-group-item"><a href="/undev">Terms of service</a></li>
+            <li class="list-group-item"><a href="/undev">Privacy and policy</a></li>
         </ul>
         <div class="copyright">
             &copy; Copyright <strong><span>InNA</span></strong>. All Rights Reserved

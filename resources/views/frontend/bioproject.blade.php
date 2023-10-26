@@ -192,7 +192,7 @@
                     searchResult.appendChild(divider)
                     createSearchList("Bioarchives")
                     results.bioarchives.forEach(bioarchive => {
-                        createSearchList(bioarchive.accession, "/biosamples/"+accession.accession)
+                        createSearchList(bioarchive.accession, "/bioarchives/"+bioarchive.accession)
                     });
                 }
                 if (results.bioprojects.length ===0 && results.biosamples.length ===0 ) {

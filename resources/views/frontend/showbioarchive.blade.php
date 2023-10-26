@@ -5,8 +5,8 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/bioarchives">Bioarchive</a></li>
+            <li class="breadcrumb-item"><a class="text-brin" href="/">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-brin" href="/bioarchives">Bioarchive</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{$bioarchive->accession}}</li>
         </ol>
     </div>
@@ -14,7 +14,7 @@
         <table class="table table-striped table-sm">
             <tr>
                 <td class="col-sm-1">Bioproject Accession</td>
-                <td class="col-sm-1"><a href="/bioprojects/{{ $bioarchive->bioproject->accession }}">{{$bioarchive->bioproject->accession}}</a>
+                <td class="col-sm-1"><a class="text-brin" href="/bioprojects/{{ $bioarchive->bioproject->accession }}">{{$bioarchive->bioproject->accession}}</a>
                 </td>
             </tr>
             <tr>
@@ -44,7 +44,7 @@
                     @foreach ($bioexperiments as $bioexperiment)
                         <tr>
                             <td class="col-sm-1">Biosample</td>
-                            <td class="col-sm-7"><a href="/biosamples/{{$bioexperiment->biosample->accession}}">{{$bioexperiment->biosample->accession}}</a></td>
+                            <td class="col-sm-7"><a class="text-brin" href="/biosamples/{{$bioexperiment->biosample->accession}}">{{$bioexperiment->biosample->accession}}</a></td>
                         </tr>
                         <tr>
                             <td class="col-sm-1">Title</td>

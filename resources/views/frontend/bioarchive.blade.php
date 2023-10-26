@@ -19,17 +19,19 @@
 
             <strong>Center</strong>
             <ul class="ps-2" type="none">
-                @if (count($centers) > 0)
+
+                <li class="disabled">No Data</li>
+                {{-- @if (count($centers) > 0)
                     @foreach ($centers as $center)
                         <li><a href="#" class="text-sidebar">{{$center->name}} ({{$center->count}})</a></li>
                     @endforeach
                 @else
                     <li class="disabled">No Data</li>
-                @endif
+                @endif --}}
             </ul>
         </div>
         <div class="col-lg-10 col-md-8">
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <input type="text" class="form-control dropdown-toggle" id="search" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" placeholder="Search">
                 <div class="input-group-append">
                     <button class="btn btn-danger" type="button">
@@ -50,7 +52,7 @@
                             <p class="fw-lighter mb-0">Accession: {{ $bioarchive->accession }}</p>
                             <p class="fw-lighter mb-0">Bioproject: {{ $bioarchive->bioproject->accession }}</p>
                             <p class="fw-lighter mb-0">Project Title: {{ $bioarchive->bioproject->title }}</p>
-                            <p class="fw-lighter mb-0">Organization: {{ $bioarchive->bioproject->center_id }}</p>
+                            <p class="fw-lighter mb-0">Organization: {{ $bioarchive->bioproject->center_id == null ? N/A :  $bioarchive->bioproject->center_id}}</p>
                             {{-- <p class="fw-lighter mb-0">Biosample: {{ $bioarchive->biosample->accession }}</p> --}}
                         </div>
                     </div>

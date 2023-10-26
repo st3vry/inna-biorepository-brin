@@ -375,42 +375,6 @@
                         descCurator.focus()
                     })
                 }
-
-            }
-            const modalAssign = document.getElementById('modalAssign')
-            if (modalAssign !== null) {
-                $('#target').select2({
-                    theme: 'bootstrap-5',
-                    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
-                    placeholder: 'Select curator'
-                })
-                $('#target').on('change', function(e) {
-                    document.getElementById('btnModalAssign').disabled = false
-                })
-                const inputDesc = document.getElementById('desc')
-                const curatorId = document.getElementById('target')
-                const modalAssignLabel = document.getElementById('modalAssignLabel')
-
-                modalAssign.addEventListener('show.bs.modal', function () {
-                    modalAssignLabel.innerHTML = "Assign to "+ curatorId.options[curatorId.selectedIndex].text +' ?'
-                })
-                modalAssign.addEventListener('shown.bs.modal', function () {
-                    inputDesc.focus()
-                })
-            } else {
-                if ('{{!$bioproject->draft && $bioproject->published_at === null}}') {
-                    const modalActionCurator= document.getElementById('modalActionCurator')
-                    const descCurator = document.getElementById('descCurator')
-                    const action = document.getElementById('action')
-                    const modalActionCuratorLabel = document.getElementById('modalActionCuratorLabel')
-                    modalActionCurator.addEventListener('show.bs.modal', function () {
-                        modalActionCuratorLabel.innerHTML = action.options[action.selectedIndex].text + " ({{$bioproject->title}})?"
-                    })
-                    modalActionCurator.addEventListener('shown.bs.modal', function () {
-                        descCurator.focus()
-                    })
-                }
-
             }
         })
     </script>

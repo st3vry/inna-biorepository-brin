@@ -29,12 +29,12 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Center</td>
-                <td class="col-sm-1">{{$bioarchive->user->lab->center->name}}
+                <td class="col-sm-1">{{$bioarchive->user->lab == null ? "N/A" : $bioarchive->user->lab->center->name}}
                 </td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
-                <td class="col-sm-7">{{$bioarchive->user->lab->name}}</td>
+                <td class="col-sm-7">{{$bioarchive->user->lab == null ? "N/A" : $bioarchive->user->lab->name}}</td>
             </tr>
             {{-- {{ dd($bioruns) }} --}}
             <tr>

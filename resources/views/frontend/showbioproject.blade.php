@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Umbrella Projects</td>
-                <td class="col-sm-7"><a class="text-brin" href="{{ $umbrella->accession }}">{{ $umbrella->accession }}</a> &mdash; {{$umbrella->title}}</td>
+                <td class="col-sm-7">@if($umbrella) <a class="text-brin" href="{{ $umbrella->accession }}">{{ $umbrella->accession }}</a> &mdash; {{$umbrella->title}} @else N/A @endif</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Consortium</td>

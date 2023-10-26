@@ -23,9 +23,9 @@ class CuratorBioArchiveController extends Controller
     public function index()
     {
         $bioarchives = Bioarchive::with(['bioproject', 'user'])
-            ->where('published_at', null)
-            ->where('draft', false)
-            ->where('status', 1)
+            // ->where('published_at', null)
+            // ->where('draft', false)
+            // ->where('status', 1)
             // ->where(function ($query) {
             //     $query->where('draft', false)
             //         ->orWhere('curator_id', '<>', null);
@@ -205,7 +205,7 @@ class CuratorBioArchiveController extends Controller
             }
             if ($request->action === 'approved') {
 
-                
+
 
                 $action = Bioarchive::where('accession', $id)->update([
                     'published_at' => now(),
@@ -267,6 +267,6 @@ class CuratorBioArchiveController extends Controller
         } else {
             return back()->with('error', 'Something went wrong, please try again later!');
         }
-        
+
     }
 }

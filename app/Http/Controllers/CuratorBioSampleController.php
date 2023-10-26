@@ -18,9 +18,9 @@ class CuratorBioSampleController extends Controller
     public function index()
     {
         $biosamples = BioSample::with(['organism', 'center'])
-            ->where('published_at', null)
-            ->where('draft',false)
-            ->where('status',1)
+            // ->where('published_at', null)
+            // ->where('draft',false)
+            // ->where('status',1)
             // ->where(function ($query) {
             //     $query->where('draft', false)
             //           ->orWhere('curator_id','<>', null);
@@ -40,7 +40,7 @@ class CuratorBioSampleController extends Controller
             'biosamples' => $biosamples,
         ]);
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -136,7 +136,7 @@ class CuratorBioSampleController extends Controller
                 $success = 'BioSample rejected';
             }
         }
-        
+
         if ($action) {
             ActionLog::create([
                 'action' => $request->action,

@@ -115,7 +115,7 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Center</td>
-                <td class="col-sm-1">{{$bioproject->center->name}}</td>
+                <td class="col-sm-1">{{$bioproject->center == null ? "N/A" : $bioproject->center->name}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>

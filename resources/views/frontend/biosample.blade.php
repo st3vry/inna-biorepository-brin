@@ -21,7 +21,7 @@
                     <li class="disabled">No Data</li>
                 @endif
             </ul>
-            <strong>Center</strong>
+            {{-- <strong>Center</strong>
             <ul class="ps-2" type="none">
                 @if (count($centers) > 0)
                     @foreach ($centers as $center)
@@ -30,7 +30,7 @@
                 @else
                     <li class="disabled">No Data</li>
                 @endif
-            </ul>
+            </ul> --}}
         </div>
         <div class="col-lg-10 col-md-8">
             <div class="input-group mb-3">

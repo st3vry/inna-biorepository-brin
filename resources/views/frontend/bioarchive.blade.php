@@ -17,18 +17,18 @@
                 @endforeach
             </ul> --}}
 
-            <strong>Center</strong>
+            {{-- <strong>Center</strong>
             <ul class="ps-2" type="none">
 
                 <li class="disabled">No Data</li>
-                {{-- @if (count($centers) > 0)
+                @if (count($centers) > 0)
                     @foreach ($centers as $center)
                         <li><a href="#" class="text-sidebar">{{$center->name}} ({{$center->count}})</a></li>
                     @endforeach
                 @else
                     <li class="disabled">No Data</li>
-                @endif --}}
-            </ul>
+                @endif
+            </ul> --}}
         </div>
         <div class="col-lg-10 col-md-8">
             <div class="input-group mb-3">

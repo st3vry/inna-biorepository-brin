@@ -126,20 +126,30 @@
             }
 
             function appendSearchResult(results) {
+                console.log(results)
                 if (results.bioprojects.length > 0 ) {
                     createSearchList("Bioprojects")
-                    results.bioprojects.forEach(bioproject => {
-                        createSearchList(bioproject, '#')
+                    results.bioprojects.forEach(bioproject  => {
+                        createSearchList(bioproject.title, "/bioprojects/"+bioproject.accession)
                     });
                 }
                 if (results.biosamples.length > 0 ) {
                     const divider = document.createElement('li')
                     divider.innerHTML='<hr class="dropdown-divider">'
                     searchResult.appendChild(divider)
-
                     createSearchList("Biosamples")
                     results.biosamples.forEach(biosample => {
-                        createSearchList(biosample, '#')
+                        createSearchList(biosample.title, "/biosamples/"+biosample.accession)
+                    });
+                }
+
+                if (results.bioarchives.length > 0 ) {
+                    const divider = document.createElement('li')
+                    divider.innerHTML='<hr class="dropdown-divider">'
+                    searchResult.appendChild(divider)
+                    createSearchList("Bioarchives")
+                    results.bioarchives.forEach(bioarchive => {
+                        createSearchList(bioarchive.accession, "/biosamples/"+accession.accession)
                     });
                 }
                 if (results.bioprojects.length ===0 && results.biosamples.length ===0 ) {

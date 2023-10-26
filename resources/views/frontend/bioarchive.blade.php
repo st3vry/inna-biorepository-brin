@@ -152,7 +152,7 @@
                         createSearchList(bioarchive.accession, "/bioarchives/"+bioarchive.accession)
                     });
                 }
-                if (results.bioprojects.length ===0 && results.biosamples.length ===0 ) {
+                if (results.bioprojects.length ===0 && results.biosamples.length ===0 && results.bioarchives.length ===0 ) {
                     searchResult.innerHTML = '<li class="mx-3">No result found for <strong>'+searchInput.value+'</strong></li>'
                 }
             }

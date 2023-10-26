@@ -15,7 +15,7 @@
             <ul class="ps-2" type="none">
                 @if (count($organisms)>0)
                     @foreach ($organisms as $organism)
-                        <li><a href="#" class="text-sidebar">{{$organism->name}} ({{$organism->count}})</a></li>
+                        <li><a href="/biosamples?organism={{Crypt::encrypt($organism->id)}}" class="text-sidebar">{{$organism->name}} ({{$organism->count}})</a></li>
                     @endforeach
                 @else
                     <li class="disabled">No Data</li>
@@ -25,7 +25,7 @@
             <ul class="ps-2" type="none">
                 @if (count($centers) > 0)
                     @foreach ($centers as $center)
-                        <li><a href="#" class="text-sidebar">{{$center->name}} ({{$center->count}})</a></li>
+                        <li><a href="/biosamples?center={{Crypt::encrypt($center->id)}}" class="text-sidebar">{{$center->name}} ({{$center->count}})</a></li>
                     @endforeach
                 @else
                     <li class="disabled">No Data</li>
@@ -157,20 +157,30 @@
             }
 
             function appendSearchResult(results) {
+                console.log(results)
                 if (results.bioprojects.length > 0 ) {
                     createSearchList("Bioprojects")
-                    results.bioprojects.forEach(bioproject => {
-                        createSearchList(bioproject, '#')
+                    results.bioprojects.forEach(bioproject  => {
+                        createSearchList(bioproject.title, "/bioprojects/"+bioproject.accession)
                     });
                 }
                 if (results.biosamples.length > 0 ) {
                     const divider = document.createElement('li')
                     divider.innerHTML='<hr class="dropdown-divider">'
                     searchResult.appendChild(divider)
-
                     createSearchList("Biosamples")
                     results.biosamples.forEach(biosample => {
-                        createSearchList(biosample, '#')
+                        createSearchList(biosample.title, "/biosamples/"+biosample.accession)
+                    });
+                }
+
+                if (results.bioarchives.length > 0 ) {
+                    const divider = document.createElement('li')
+                    divider.innerHTML='<hr class="dropdown-divider">'
+                    searchResult.appendChild(divider)
+                    createSearchList("Bioarchives")
+                    results.bioarchives.forEach(bioarchive => {
+                        createSearchList(bioarchive.accession, "/biosamples/"+accession.accession)
                     });
                 }
                 if (results.bioprojects.length ===0 && results.biosamples.length ===0 ) {

@@ -22,13 +22,13 @@ class SearchController extends Controller
         $bioarchives = Bioarchive::where('id', 0)->pluck('accession')->take(5);
 
         if ($request->searchType == "biosample" || $request->searchType == "all") {
-            $biosamples = Biosample::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('title')->take(5);
+            $biosamples = Biosample::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('title','accession')->limit(5)->get();
         }
         if ($request->searchType == "bioproject" || $request->searchType == "all") {
-            $bioprojects =  Bioproject::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('title')->take(5);
+            $bioprojects =  Bioproject::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('title','accession')->limit(5)->get();
         }
         if ($request->searchType == "bioarchive" || $request->searchType == "all") {
-            $bioarchives = Bioarchive::where('accession', 'ILIKE', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->pluck('accession')->take(5);
+            $bioarchives = Bioarchive::where('accession', 'ILIKE', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('accession')->limit(5)->get();
         }
         return response()->json([
             'bioprojects' =>$bioprojects,

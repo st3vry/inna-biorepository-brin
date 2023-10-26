@@ -6,11 +6,13 @@
         </a>
         <nav id="navbar" class="navbar">
             <ul>
-                <li><a class="nav-link scrollto {{Request::is('/') ? 'active' : ''}} " href=" {{ str_contains($title, 'Bio') ?  '/' : "#" }}">Home </a></li>
+                <li><a class="nav-link scrollto {{Request::is('/') ? 'active' : ''}} " href=" {{ str_contains($title, 'Bio') || str_contains($title, 'Under') ?  '/' : "#" }}">Home </a></li>
                 @if(Request::is('bio*'))
                     <li><a class="nav-link {{Request::is('bioprojects*') ? 'active' : ''}}" href="/bioprojects">BioProject</a></li>
                     <li><a class="nav-link {{Request::is('biosamples*') ? 'active' : ''}}" href="/biosamples">BioSample</a></li>
                     <li><a class="nav-link {{Request::is('bioarchives*') ? 'active' : ''}}" href="/bioarchives">BioArchive</a></li>
+                @elseif(Request::is('undev'))
+
                 @else
                 <li><a class="nav-link scrollto" href="#about">About</a></li>
                 <li class="dropdown">

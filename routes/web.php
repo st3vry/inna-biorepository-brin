@@ -172,6 +172,10 @@ Route::prefix('dashboard')->group(function () {
     });
 });
 
+Route::get('/undev', function() {
+    return view('error.undev', ['title'=>'Under Development']);
+});
+
 Route::fallback(function () {
     // return "Hm, why did you land here somehow?";
     return view('error.404');

@@ -205,24 +205,24 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12" data-aos="zoom-out" data-aos-delay="300">
-                        <div class="feature-box d-flex align-items-center">
+                    {{-- <div class="col-md-12" data-aos="zoom-out" data-aos-delay="300">
+                        <div class="feature-box d-flex align-items-center" >
                             <i class="bi bi-binoculars"></i>
                             <h3>Browse</h3>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-12" data-aos="zoom-out" data-aos-delay="400">
-                        <div class="feature-box d-flex align-items-center">
+                        <div class="feature-box d-flex align-items-center" onclick="location.href='/undev';">
                             <i class="bi bi-cloud-download"></i>
                             <h3>Download</h3>
                         </div>
                     </div>
 
                     <div class="col-md-12" data-aos="zoom-out" data-aos-delay="500">
-                        <div class="feature-box d-flex align-items-center">
+                        <div class="feature-box d-flex align-items-center" onclick="location.href='/undev';">
                             <i class="bi bi-file-earmark-medical"></i>
-                            <h3>Documents</h3>
+                            <h3>Research</h3>
                         </div>
                     </div>
                 </div>

@@ -15,7 +15,7 @@
             <ul class="ps-2" type="none">
                 @if (count($organisms)>0)
                     @foreach ($organisms as $organism)
-                        <li><a href="#" class="text-sidebar">{{$organism->name}} ({{$organism->count}})</a></li>
+                        <li><a href="/bioprojects?organism={{Crypt::encrypt($organism->id)}}" class="text-sidebar">{{$organism->name}} ({{$organism->count}})</a></li>
                     @endforeach
                 @else
                     <li class="disabled">No Data</li>
@@ -25,7 +25,7 @@
             <ul class="ps-2" type="none">
                 @if (count($centers) > 0)
                     @foreach ($centers as $center)
-                        <li><a href="#" class="text-sidebar">{{$center->name}} ({{$center->count}})</a></li>
+                        <li><a href="/bioprojects?center={{Crypt::encrypt($center->id)}}" class="text-sidebar">{{$center->name}} ({{$center->count}})</a></li>
                     @endforeach
                 @else
                     <li class="disabled">No Data</li>
@@ -35,7 +35,7 @@
             <ul class="ps-2" type="none">
                 @if (count($scopes)>0)
                     @foreach ($scopes as $scope)
-                        <li><a href="#" class="text-sidebar">{{$scope->name}} ({{$scope->count}})</a></li>
+                        <li><a href="/bioprojects?center={{Crypt::encrypt($scope->id)}}" class="text-sidebar">{{$scope->name}} ({{$scope->count}})</a></li>
                     @endforeach
                 @else
                     <li class="disabled">No Data</li>
@@ -43,7 +43,7 @@
             </ul>
         </div>
         <div class="col-lg-10 col-md-8">
-            <div class="input-group">
+            <div class="input-group  mb-3">
                 <input type="text" class="form-control dropdown-toggle" id="search" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" placeholder="Search">
                 <div class="input-group-append">
                     <button class="btn btn-danger" type="button">

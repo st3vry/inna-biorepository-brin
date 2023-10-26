@@ -33,7 +33,7 @@
             </ul>
         </div>
         <div class="col-lg-10 col-md-8">
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <input type="text" class="form-control dropdown-toggle" id="search" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" placeholder="Search">
                 <div class="input-group-append">
                     <button class="btn btn-danger" type="button">

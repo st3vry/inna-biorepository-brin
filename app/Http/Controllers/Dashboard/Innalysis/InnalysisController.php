@@ -52,6 +52,17 @@ class InnalysisController extends Controller
             "parameter": "ini nnti"
         }
         */
+        $wf = ([
+            'user_id' => "test",
+            "wf_id" => "bfa3e789fd89d473",
+            "inputs" => [
+                "0" => [
+                    "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
+                    "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
+                ]
+            ],
+        ]);
+
         $data = array(
             'user_id' => auth()->user()->user_id,
             'wf_id' => $request->workflow,
@@ -64,7 +75,8 @@ class InnalysisController extends Controller
             'parameter' => '',
         );
         // dd(json_encode($data));
-        $response = Http::post('http://192.168.100.17:8080/run', [$data]);
+        // $response = Http::post('http://192.168.100.17:8080/run', [$data]);
+        $response = Http::post('http://192.168.100.17:8080/run', [$wf]);
         $json_data = $response->json();
         // dd($json_data['status']);
         if ($json_data['status'] == 200) {

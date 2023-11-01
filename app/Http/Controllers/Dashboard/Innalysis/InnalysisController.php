@@ -34,7 +34,7 @@ class InnalysisController extends Controller
     {
         //
         // $response = Http::get('http://10.10.253.7:8080/workflows');
-        $response = Http::timeout(5)->get('http://202.46.7.138:8080/workflows');
+        $response = Http::timeout(5)->get('http://192.168.100.17:8080/workflows');
         $workflows = json_decode($response);
 
         return view('dashboard.innalysis.create_galaxy', [
@@ -64,7 +64,7 @@ class InnalysisController extends Controller
             'parameter' => '',
         );
         // dd(json_encode($data));
-        $response = Http::post('http://202.46.7.138:8080/run', [$data]);
+        $response = Http::post('http://192.168.100.17:8080/run', [$data]);
         $json_data = $response->json();
         // dd($json_data['status']);
         if ($json_data['status'] == 200) {

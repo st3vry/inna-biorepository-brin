@@ -31,7 +31,7 @@ class InnalysisGalaxyController extends Controller
                 "inputs" => [
                     "0" => [
                         "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
-                        "filename" => ["run_id/exp_id/acc_id/A1_1.fq.gz", "run_id/exp_id/acc_id/A1_2.fq.gz"]
+                    "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
                     ]
                 ],
             ]);

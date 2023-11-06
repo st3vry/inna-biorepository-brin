@@ -66,6 +66,7 @@ use Illuminate\Support\Facades\Route;
 //     ]);
 // });
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('getStorageFileSizes', [SSHController::class, 'getStorageFileSizes'])->name('getStorageFileSizes');
 // Route::get('/bioprojects', [BioprojectController::class, 'index'])->name('bioprojectindex');
 // Route::get('/bioprojects/{$bioproject:alias}', [BioprojectController::class, 'show'])->name('bioprojectshow');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Ssh\Ssh;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class SSHController extends Controller
 {
@@ -26,11 +27,10 @@ class SSHController extends Controller
             ->disablePasswordAuthentication()
             ->usePrivateKey(env('SFTP_KEY'))
             ->execute("du -hs /var/innasto/files/");
-        dd($process);
         if ($process->isSuccessful()){
             return $process->getOutput();
         } else {
-            return "gagal";
+            throw new ProcessFailedException($process);
         }
     }
 }

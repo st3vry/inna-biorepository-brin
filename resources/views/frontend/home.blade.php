@@ -2,22 +2,26 @@
 @section('container')
 <!-- ======= Hero Section ======= -->
 <section id="hero" class="masthead">
-    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-start">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
         <div class="row d-flex justify-content-center">
             <div class="col-lg-7 d-flex flex-column justify-content-center">
                 <h1 data-aos="fade-up" class="text-uppercase">Indonesian Nucleotide Archive</h1>
                 <h2 data-aos="fade-up" data-aos-delay="400">A life sciences, agriculture, and bioinformatics for biodiversity data repository platform</h2>
-                <div data-aos="fade-up" data-aos-delay="600">
-                <div class="text-center text-lg-start">
-                    <a href="#features" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
-                    <span>Get Started</span>
-                    <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
+                <div data-aos="fade-right" data-aos-delay="600">
+                    <div class="text-center text-lg-start">
+                        <a href="#features" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
+                        <span>Get Started</span>
+                        <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-5 hero-img align-items-center py-md-5 ps-md-5 pe-md-1" data-aos="zoom-out" data-aos-delay="200">
-                <img src="images/inna-illustrator.svg" class="img-fluid" alt="">
+            <div class="col-lg-5 hero-img align-items-center py-md-5" >
+                <div class="d-flex align-items-center justify-content-md-end justify-content-around">
+                    <img src="images/brin.png" alt="Logo Brin" class="img-fluid m-3" width="130px" data-aos="fade-left" data-aos-delay="200">
+                    <img src="images/lpdp.png" alt="Logo LPDP" class="img-fluid m-3" width="130px" data-aos="fade-left" data-aos-delay="200">
+                </div>
+                <img src="images/inna-illustrator.svg" class="img-fluid" alt="Inna Lab" data-aos="zoom-out" data-aos-delay="200">
             </div>
         </div>
     </div>

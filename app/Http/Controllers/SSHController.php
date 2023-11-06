@@ -25,7 +25,6 @@ class SSHController extends Controller
     public function getStorageFileSizes(Request $request) {
         $process = Ssh::create(env('SFTP_USERNAME'), env('SFTP_HOST'), intval(env('SFTP_PORT')))
             ->disablePasswordAuthentication()
-            ->usePrivateKey(env('SFTP_KEY'))
             ->execute("du -hs /var/innasto/files/");
         if ($process->isSuccessful()){
             return $process->getOutput();

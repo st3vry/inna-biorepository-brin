@@ -26,6 +26,7 @@ class SSHController extends Controller
             ->disablePasswordAuthentication()
             ->usePrivateKey(env('SFTP_KEY'))
             ->execute("du -hs /var/innasto/files/");
+        dd($process);
         if ($process->isSuccessful()){
             return $process->getOutput();
         } else {

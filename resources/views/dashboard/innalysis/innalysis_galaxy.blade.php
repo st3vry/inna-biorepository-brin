@@ -24,8 +24,6 @@
             <tr>
                 <th scope="col">No.</th>
                 <th scope="col">Workflow</th>
-                <th scope="col">Input 1</th>
-                <th scope="col">Input 2</th>
                 <th scope="col">Status</th>
             </tr>
         </thead>
@@ -33,9 +31,7 @@
            @foreach ($workflows as $item)
                 <tr>
                     <td class="text-center"></td>
-                    <td>{{ $item->wf_id }}</td>
-                    <td>{{ $item->wf_id }}</td>
-                    <td>{{ $item->wf_id }}</td>
+                    <td>{{ $item->workflow_id }}</td>
                     <td>{{ $item->status }}</td>
                 </tr>
            @endforeach

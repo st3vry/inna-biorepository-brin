@@ -24,7 +24,7 @@ class InnalysisController extends Controller
         // $workflows = InnalysisGalaxy::where('user_id', auth()->user()->id)->orderBy('id')->get();
         $workflows = InnalysisGalaxy::where('user_id', auth()->user()->user_id)->get();
         // dd(auth()->user());
-        // dd($workflows);
+        dd($workflows);
         return view('dashboard.innalysis.innalysis_galaxy', [
             // 'workflows' => $workflows
             'workflows' => $workflows,
@@ -64,7 +64,7 @@ class InnalysisController extends Controller
         //     ],
         // ]);
         $wf = ([
-            'user_id' => "test",
+            'user_id' => auth()->user()->user_id,
             'wf_id' => "f2db41e1fa331b3e",
             'inputs' => (object)array(
                 (object)array(

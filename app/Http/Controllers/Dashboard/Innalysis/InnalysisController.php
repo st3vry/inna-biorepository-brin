@@ -19,6 +19,7 @@ class InnalysisController extends Controller
         //
         // $response = Http::get('http://10.10.253.7:8080/workflows');
         // $response = Http::timeout(5)->get('http://202.46.7.138:8080/workflows');
+        // $response = Http::timeout(5)->get('http://192.168.100.17:8080/workflows');
         // $workflows = json_decode($response);
         // $workflows = InnalysisGalaxy::where('user_id', auth()->user()->id)->orderBy('id')->get();
         $workflows = InnalysisGalaxy::where('user_id', auth()->user()->user_id)->get();
@@ -52,31 +53,47 @@ class InnalysisController extends Controller
             "parameter": "ini nnti"
         }
         */
+        // $wf = ([
+        //     'user_id' => "test",
+        //     "wf_id" => "bfa3e789fd89d473",
+        //     "inputs" => [
+        //         "0" => [
+        //             "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
+        //             "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
+        //         ]
+        //     ],
+        // ]);
         $wf = ([
             'user_id' => "test",
-            "wf_id" => "bfa3e789fd89d473",
-            "inputs" => [
-                "0" => [
+            'wf_id' => "f2db41e1fa331b3e",
+            'inputs' => (object)array(
+                (object)array(
                     "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
                     "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
-                ]
-            ],
+                )
+            ),
+            'paramter' => 'ini nanti'
         ]);
 
-        $data = array(
-            'user_id' => auth()->user()->user_id,
-            'wf_id' => $request->workflow,
-            'inputs' => (object)array(
-                array(
-                    'uuid' => 'bed3bd53-ffda-4d94-9ef8-59790875fcee',
-                    'filename' => array($request->input1, $request->input2),
-                ),
-            ),
-            'parameter' => '',
-        );
+        // dd(json_encode($wf));
+
+        // $data = array(
+        //     'user_id' => auth()->user()->user_id,
+        //     'wf_id' => $request->workflow,
+        //     'inputs' => (object)array(
+        //         array(
+        //             'uuid' => 'bed3bd53-ffda-4d94-9ef8-59790875fcee',
+        //             'filename' => array($request->input1, $request->input2),
+        //         ),
+        //     ),
+        //     'parameter' => '',
+        // );
         // dd(json_encode($data));
         // $response = Http::post('http://192.168.100.17:8080/run', [$data]);
-        $response = Http::post('http://192.168.100.17:8080/run', [$wf]);
+        $response = Http::post(
+            'http://192.168.100.17:8080/run',
+            $wf
+        );
         $json_data = $response->json();
         // dd($json_data['status']);
         if ($json_data['status'] == 200) {

@@ -170,16 +170,16 @@
                                         </td>
                                     </tr>
                                     @endforeach
-                                    
+
                                     @endif
-                                @endforeach                            
+                                @endforeach
                             @endforeach --}}
                         <tr>
                             <td></td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#fileCheck{{$value['alias']}}">
                                     File Check
-                                </button>                                      
+                                </button>
                             </td>
                         </tr>
                         @endif
@@ -193,7 +193,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body" style="min-height:300px">
-                                           
+
                                             <form action="{{route('updateBiorun')}}" method="post">
                                                 @csrf
                                                 <input type="hidden" name="alias" value="{{$value['alias']}}">
@@ -210,12 +210,12 @@
                                                     </div>
                                                 </div>
                                             <div id="sshRespon{{$value['alias']}}"></div>
-                                            
+
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             <button type="button" class="btn btn-primary" id="btmd5{{$value['alias']}}">MD5 Checksum</button>
-                                            
+
                                             <button disabled id="btSubmitBiorun{{$value['id']}}" type="submit" class="btn btn-primary">Save Change</button>
                                             </form>
 
@@ -227,12 +227,12 @@
                     </table>
                 </td>
             </tr>
-    
+
         </table>
     </div>
     <div class="col-md-4">
         @canany(['isSuperAdmin','isAdmin'])
-            @if ($bioarchive->status === 1)
+            {{-- @if ($bioarchive->status === 1) --}}
                 <form action="/dashboard/curator/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
                     @method('put')
                     @csrf
@@ -270,8 +270,8 @@
                         </div>
                     </div>
                 </form>
-                
-            @endif
+
+            {{-- @endif --}}
         @endcanany
         @can('isCurator')
         @if ($bioarchive->status===2)
@@ -315,7 +315,7 @@
             </div>
         </form>
         @endif
-       
+
         @endcan
         <div class="card m-2">
             <div class="card-header">
@@ -382,7 +382,7 @@
                         descCurator.focus()
                     })
                 }
-                
+
             }
             const files = @json($files, JSON_PRETTY_PRINT);
             const md5Input = document.getElementById("md5Input");
@@ -400,7 +400,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
-                    { 
+                    {
                         "id": '{{$bioarchive->accession}}',
                         "folder": folder,
                         "fileName":fileName,
@@ -415,7 +415,7 @@
                     console.log(response)
                     md5 = response.split("  ")[0]
                     md5Array.push(md5)
-                    md5Input.value = JSON.stringify(md5Array) 
+                    md5Input.value = JSON.stringify(md5Array)
                     fileNameInModal.value = fileName
                     md5InModal.value = md5
                     if (md5.length > 1) {
@@ -425,8 +425,8 @@
                 })
             }
 
-           
-            
+
+
             @foreach ($bioexperiment as $item => $value)
             const btls{{$item}} = document.getElementById('btls{{$value['alias']}}')
             const btlsltr{{$item}} = document.getElementById('btlsltr{{$value['alias']}}')

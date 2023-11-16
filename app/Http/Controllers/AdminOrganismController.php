@@ -91,11 +91,10 @@ class AdminOrganismController extends Controller
         ];
 
         if ($request->taxon_id != $organism->taxon_id) {
-            $rules['taxon_id'] = 'required|unique:organism';
+            $rules['taxon_id'] = 'required|unique:organisms';
         }
 
         $validatedData = $request->validate($rules);
-
         Organism::where('id', $organism->id)->update($validatedData);
         return redirect('/dashboard/organisms')->with('success', 'Organism has been updated!');
     }

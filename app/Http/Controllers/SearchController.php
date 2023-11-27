@@ -22,10 +22,10 @@ class SearchController extends Controller
         $bioarchives = Bioarchive::where('id', 0)->pluck('accession')->take(5);
 
         if ($request->searchType == "biosample" || $request->searchType == "all") {
-            $biosamples = Biosample::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('title','accession')->limit(5)->get();
+            $biosamples = Biosample::where('title', 'ILIKE', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('title','accession')->limit(5)->get();
         }
         if ($request->searchType == "bioproject" || $request->searchType == "all") {
-            $bioprojects =  Bioproject::where('title', 'like', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('title','accession')->limit(5)->get();
+            $bioprojects =  Bioproject::where('title', 'ILIKE', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('title','accession')->limit(5)->get();
         }
         if ($request->searchType == "bioarchive" || $request->searchType == "all") {
             $bioarchives = Bioarchive::where('accession', 'ILIKE', '%'.$request->search.'%')->whereNotNull('published_at')->orderBy('published_at','desc')->select('accession')->limit(5)->get();

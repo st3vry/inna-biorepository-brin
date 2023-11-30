@@ -59,7 +59,7 @@ class InnalysisController extends Controller
 
     public function getArchive($id)
     {
-        $results = Bioarchive::where('biosample_id', $id)->get();
+        $results = Bioarchive::whereIn('biosample_id', $id)->get();
         return response()->json($results);
     }
 

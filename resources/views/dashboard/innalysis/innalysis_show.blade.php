@@ -3,7 +3,8 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Workflows</li>
+        <li class="breadcrumb-item"><a href="/dashboard/innalysis_galaxy">Workflows</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{$detail_wf->workflow_id}}</li>
     </ol>
 </div>
 

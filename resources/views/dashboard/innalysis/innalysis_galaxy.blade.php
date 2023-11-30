@@ -23,6 +23,7 @@
         <thead>
             <tr>
                 <th scope="col">No.</th>
+                <th scope="col">ID</th>
                 <th scope="col">Workflow</th>
                 <th scope="col">Status</th>
             </tr>
@@ -31,6 +32,7 @@
            @foreach ($workflows as $item)
                 <tr>
                     <td class="text-center"></td>
+                    <td>{{ $item->_id }}</td>
                     <td>{{ $item->workflow_id }}</td>
                     <td>{{ $item->status }}</td>
                 </tr>

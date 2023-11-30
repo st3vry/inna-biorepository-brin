@@ -25,6 +25,35 @@
         </select>
     </div>
     <div class="mb-3">
+        <label for="sample" class="form-label">Choose Biosample</label>
+        <select id="sample" class="form-select" name="sample" aria-label="Sample">
+            <option selected>Choose Sample</option>
+            @foreach ($sample as $item)
+                <option value="{{ $item->id }}">{{ $item->accession }} - {{ $item->title }}</option> 
+            @endforeach
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="archive" class="form-label">Choose Bioarchive</label>
+        <select id="archive" class="form-select" name="archive" aria-label="Archive">
+            <option selected>Choose Archive</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="experiment" class="form-label">Choose Bioexperiment</label>
+        <select id="experiment" class="form-select" name="experiment" aria-label="Experiment">
+            <option selected>Choose Experiment</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="run" class="form-label">Choose Biorun</label>
+        <select id="run" class="form-select" name="run" aria-label="run">
+            <option selected>Choose Filename</option>
+        </select>
+    </div>
+
+
+    <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Input 1</label>
         <input type="input1" name="input1" class="form-control" value="A1_1.fq.gz" id="exampleFormControlInput1" placeholder="File 1">
     </div>
@@ -37,3 +66,83 @@
 </form> 
 </div>
 @endsection
+@push('js')
+<script>
+    const sample = $("#sample")
+    const archive = $("#archive")
+    const experiment = $("#experiment")
+    const run = $("#run")
+
+
+    sample.on("change",function(e) {
+            archive.empty()
+            archive.append(getArchive(sample.val()))
+    })
+    archive.on("change",function(e) {
+            experiment.empty()
+            experiment.append(getExperiment(archive.val()))
+    })
+    experiment.on("change",function(e) {
+            run.empty()
+            run.append(getRun(experiment.val()))
+    })
+
+    function getArchive(id) {
+            $.ajax({
+                url: "/dashboard/innalysis_galaxy/getArchive/"+id,
+                // type: "GET",
+                async: false,
+                success: function(response) {
+                    rowsel = '<option selected disabled value="0">Choose Archive</option>'
+                    $.each(response, function(key, value) {
+                        rowsel += '<option value="' + value['id'] + '">' + value['accession'] + '</option>';
+                        return rowsel;
+                    });
+                },
+                error: function (data) {
+                    console.log(data.status + ':' + data.statusText,data.responseText);
+                }
+            });
+            return rowsel;
+    }
+
+    function getExperiment(id) {
+            $.ajax({
+                url: "/dashboard/innalysis_galaxy/getExperiment/"+id,
+                // type: "GET",
+                async: false,
+                success: function(response) {
+                    rowsel = '<option selected disabled value="0">Choose Experiment</option>'
+                    $.each(response, function(key, value) {
+                        rowsel += '<option value="' + value['id'] + '">' + value['alias'] +' - '+ value['title'] + '</option>';
+                        return rowsel;
+                    });
+                },
+                error: function (data) {
+                    console.log(data.status + ':' + data.statusText,data.responseText);
+                }
+            });
+            return rowsel;
+    }
+    function getRun(id) {
+            $.ajax({
+                url: "/dashboard/innalysis_galaxy/getRun/"+id,
+                // type: "GET",
+                async: false,
+                success: function(response) {
+                    rowsel = '<option selected disabled value="0">Choose Run</option>'
+                    $.each(response, function(key, value) {
+                        rowsel += '<option value="' + value['id'] + '">' + value['alias'] +' - '+ value['filename'] + '</option>';
+                        return rowsel;
+                    });
+                },
+                error: function (data) {
+                    console.log(data.status + ':' + data.statusText,data.responseText);
+                }
+            });
+            return rowsel;
+    }
+    
+
+</script>
+@endpush

@@ -128,6 +128,9 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('authsso');
     Route::post('/send-workflow', [InnalysisController::class, 'send'])->middleware('authsso')->name('send.workflow');
     Route::get('/innalysis_galaxy/{innalysis_galaxy}', [InnalysisController::class, 'show'])->middleware('authsso');
+    Route::get('/innalysis_galaxy/getArchive/{id}', [InnalysisController::class, "getArchive"])->middleware('authsso');
+    Route::get('/innalysis_galaxy/getExperiment/{id}', [InnalysisController::class, "getExperiment"])->middleware('authsso');
+    Route::get('/innalysis_galaxy/getRun/{id}', [InnalysisController::class, "getRun"])->middleware('authsso');
 
     // Admin
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');

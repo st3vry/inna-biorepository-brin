@@ -14,13 +14,14 @@
                 <td class="col-sm-1">Workflow ID</td>
                 <td class="col-sm-7">{{$detail_wf->workflow_id}}</td>
             </tr>
-            @dd($detail_wf->outputs)
-            {{-- @foreach ($detail_wf->outputs as $output)
+            {{-- @dd($detail_wf->outputs) --}}
+            @foreach ($detail_wf->outputs as $output)
             <tr>
                 <td class="col-sm-1">File</td>
-                <td class="col-sm-7">{{$output->filename}}</td>
+                {{-- <td class="col-sm-7">{{$output->filename}}</td> --}}
+                @dd($output)
             </tr>
-            @endforeach --}}
+            @endforeach
         </table>
     </div>
 </div>

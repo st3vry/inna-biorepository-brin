@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Dashboard\Innalysis;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bioarchive;
+use App\Models\Bioexperiment;
+use App\Models\Biorun;
+use App\Models\Biosample;
 use App\Models\InnalysisGalaxy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -46,11 +50,31 @@ class InnalysisController extends Controller
         // $response = Http::get('http://10.10.253.7:8080/workflows');
         $response = Http::timeout(5)->get('http://192.168.100.17:8080/workflows');
         $workflows = json_decode($response);
-
+        $sample = Biosample::get();
         return view('dashboard.innalysis.create_galaxy', [
-            'workflows' => $workflows
+            'workflows' => $workflows,
+            'sample' => $sample
         ]);
     }
+
+    public function getArchive($id)
+    {
+        $results = Bioarchive::where('biosample_id', $id)->get();
+        return response()->json($results);
+    }
+
+    public function getExperiment($id)
+    {
+        $results = Bioexperiment::where('bioarchive_id', $id)->get();
+        return response()->json($results);
+    }
+
+    public function getRun($id)
+    {
+        $results = Biorun::where('bioexperiment_id', $id)->get();
+        return response()->json($results);
+    }
+
 
     public function send(Request $request)
     {

@@ -32,7 +32,7 @@
            @foreach ($workflows as $item)
                 <tr>
                     <td class="text-center"></td>
-                    <td>{{ $item->_id }}</td>
+                    <td><a href="/innalysis_galaxy/{{ $item->id }}">{{ $item->_id }} </a></td>
                     <td>{{ $item->workflow_id }}</td>
                     <td>{{ $item->status }}</td>
                 </tr>

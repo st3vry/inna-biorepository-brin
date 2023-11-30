@@ -34,6 +34,10 @@ class InnalysisController extends Controller
     {
         $detail_wf = InnalysisGalaxy::where('_id', $innalysisGalaxy->id)->first();
         dd($detail_wf->outputs);
+        return view('dashboard.innalysis.innalysis_show', [
+            // 'workflows' => $workflows
+            'detail_wf' => $detail_wf,
+        ]);
     }
 
     public function create()

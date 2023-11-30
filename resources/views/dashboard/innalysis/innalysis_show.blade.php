@@ -18,8 +18,8 @@
             @foreach ($detail_wf->outputs as $output)
             <tr>
                 <td class="col-sm-1">File</td>
-                {{-- <td class="col-sm-7">{{$output->filename}}</td> --}}
-                @dd($output['filename'])
+                <td class="col-sm-7">{{$output['filename']}}</td>
+                
             </tr>
             @endforeach
         </table>

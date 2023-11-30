@@ -19,7 +19,7 @@
             <tr>
                 <td class="col-sm-1">File</td>
                 {{-- <td class="col-sm-7">{{$output->filename}}</td> --}}
-                @dd($output)
+                @dd($output['filename'])
             </tr>
             @endforeach
         </table>

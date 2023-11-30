@@ -127,6 +127,7 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/innalysis_galaxy/create', [InnalysisController::class, 'create'])->middleware('authsso');
     Route::get('/innalysis_galaxy', [InnalysisController::class, 'index'])->middleware('authsso');
     Route::post('/send-workflow', [InnalysisController::class, 'send'])->middleware('authsso')->name('send.workflow');
+    Route::get('/innalysis_galaxy/{innalysis_galaxy}', [InnalysisController::class, 'show']);
 
     // Admin
     Route::resource('/organisms', AdminOrganismController::class)->except('show')->middleware('can:isAdmin');

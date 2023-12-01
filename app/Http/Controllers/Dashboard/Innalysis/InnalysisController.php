@@ -50,16 +50,17 @@ class InnalysisController extends Controller
         // $response = Http::get('http://10.10.253.7:8080/workflows');
         $response = Http::timeout(5)->get('http://192.168.100.17:8080/workflows');
         $workflows = json_decode($response);
-        $sample = Biosample::get();
+        // $sample = Biosample::get();
+        $archive = Bioarchive::get();
         return view('dashboard.innalysis.create_galaxy', [
             'workflows' => $workflows,
-            'sample' => $sample
+            'archive' => $archive
         ]);
     }
 
     public function getArchive($id)
     {
-        $results = Bioarchive::whereIn('biosample_id', $id)->get();
+        $results = Bioarchive::where('biosample_id', $id)->get();
         return response()->json($results);
     }
 

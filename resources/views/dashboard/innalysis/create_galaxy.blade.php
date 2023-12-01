@@ -25,18 +25,12 @@
         </select>
     </div>
     <div class="mb-3">
-        <label for="sample" class="form-label">Choose Biosample</label>
-        <select id="sample" class="form-select" name="sample" aria-label="Sample">
-            <option selected>Choose Sample</option>
-            @foreach ($sample as $item)
-                <option value="{{ $item->id }}">{{ $item->accession }} - {{ $item->title }}</option> 
-            @endforeach
-        </select>
-    </div>
-    <div class="mb-3">
         <label for="archive" class="form-label">Choose Bioarchive</label>
         <select id="archive" class="form-select" name="archive" aria-label="Archive">
             <option selected>Choose Archive</option>
+            @foreach ($archive as $item)
+                <option value="{{ $item->id }}">{{ $item->accession }}</option> 
+            @endforeach
         </select>
     </div>
     <div class="mb-3">
@@ -68,16 +62,10 @@
 @endsection
 @push('js')
 <script>
-    const sample = $("#sample")
     const archive = $("#archive")
     const experiment = $("#experiment")
     const run = $("#run")
 
-
-    sample.on("change",function(e) {
-            archive.empty()
-            archive.append(getArchive(sample.val()))
-    })
     archive.on("change",function(e) {
             experiment.empty()
             experiment.append(getExperiment(archive.val()))

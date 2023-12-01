@@ -47,14 +47,14 @@
     </div>
 
 
-    <div class="mb-3">
+    {{-- <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Input 1</label>
         <input type="input1" name="input1" class="form-control" value="A1_1.fq.gz" id="exampleFormControlInput1" placeholder="File 1">
     </div>
     <div class="mb-3">
         <label for="exampleFormControlInput2" class="form-label">Input 2</label>
         <input type="input2" name="input2" class="form-control" value="A1_2.fq.gz" id="exampleFormControlInput2" placeholder="File 2">
-    </div>
+    </div> --}}
     
     <button type="submit" class="btn btn-primary">Proceed</button>
 </form> 

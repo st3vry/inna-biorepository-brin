@@ -70,6 +70,12 @@ class InnalysisController extends Controller
         return response()->json($results);
     }
 
+    public function getExperiment2($id)
+    {
+        $results = Bioexperiment::with(['biosample'])->where('bioarchive_id', $id)->get();
+        return response()->json($results);
+    }
+
     public function getRun($id)
     {
         $results = Biorun::where('bioexperiment_id', $id)->get();

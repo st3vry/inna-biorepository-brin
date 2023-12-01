@@ -130,6 +130,7 @@ Route::prefix('dashboard')->group(function () {
     Route::get('/innalysis_galaxy/{innalysis_galaxy}', [InnalysisController::class, 'show'])->middleware('authsso');
     Route::get('/innalysis_galaxy/getArchive/{id}', [InnalysisController::class, "getArchive"])->middleware('authsso');
     Route::get('/innalysis_galaxy/getExperiment/{id}', [InnalysisController::class, "getExperiment"])->middleware('authsso');
+    Route::get('/innalysis_galaxy/getExperiment2/{id}', [InnalysisController::class, "getExperiment2"])->middleware('authsso');
     Route::get('/innalysis_galaxy/getRun/{id}', [InnalysisController::class, "getRun"])->middleware('authsso');
 
     // Admin

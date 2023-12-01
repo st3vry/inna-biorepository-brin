@@ -102,7 +102,7 @@
                 success: function(response) {
                     rowsel = '<option selected disabled value="0">Choose Experiment</option>'
                     $.each(response, function(key, value) {
-                        rowsel += '<option value="' + value['id'] + '">' + value['alias'] +' - '+ value['title'] + '</option>';
+                        rowsel += '<option value="' + value['id'] + '">' + value['alias'] +' - '+ value['title'] + ' - '+ value['biosample']['title'] +'</option>';
                         return rowsel;
                     });
                 },

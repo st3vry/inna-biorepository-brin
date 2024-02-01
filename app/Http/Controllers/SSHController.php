@@ -32,4 +32,19 @@ class SSHController extends Controller
             throw new ProcessFailedException($process);
         }
     }
+
+    public function createFtpUser(Request $request)
+    {
+        $createUser = Ssh::create(env('SFTP_USERNAME'), env('SFTP_HOST'), intval(env('SFTP_PORT')))
+        ->disablePasswordAuthentication()
+            ->execute([
+                "sudo useradd -d /var/innasto/files/{$request->id}/{$request->folder} -m {$request->ftpUserName}",
+                "echo '{$request->ftpUserName}:{$request->password}' | sudo chpasswd"
+            ]);
+        if ($createUser->isSuccessful()) {
+            return $createUser->getOutput();
+        } else {
+            throw new ProcessFailedException($createUser);
+        }
+    }
 }

@@ -95,17 +95,17 @@ class InnalysisController extends Controller
         $bioexperiment = Bioexperiment::where('id', $experiment)->get();
         $biorun = Biorun::where('id', $run)->get();
         // dd($bioarchive);
-        $file = "files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
+        $file = "/home/inna/sto/files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
 
         // $files = array();
-        if (Storage::disk('sftp')->exists($file)) {
-            // $d = Storage::disk('sftp')->files($file);
-            $obj = new \stdClass();
-            $obj = Storage::disk('sftp')->get($file);
-            // array_push($files, $obj);
-        }
+        // if (Storage::disk('sftp')->exists($file)) {
+        //     // $d = Storage::disk('sftp')->files($file);
+        //     $obj = new \stdClass();
+        //     $obj = Storage::disk('sftp')->file($file);
+        //     // array_push($files, $obj);
+        // }
 
-        dd($obj);
+        // dd($obj);
 
         $wf = ([
             'user_id' => auth()->user()->user_id,
@@ -115,7 +115,7 @@ class InnalysisController extends Controller
                 (object)array(
                     // "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
                     // "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
-                    "filename" => $obj
+                    "filename" => $file
                 )
             ),
             'paramter' => 'ini nanti'

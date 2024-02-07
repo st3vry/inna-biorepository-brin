@@ -95,6 +95,7 @@ class InnalysisController extends Controller
         $bioexperiment = Bioexperiment::where('id', $experiment)->get();
         $biorun = Biorun::where('id', $run)->get();
         $file = "files/{$bioarchive->accession}/{$bioexperiment->alias}/{$biorun->filename}";
+        dd($bioarchive);
         // $files = array();
         if (Storage::disk('sftp')->exists($file)) {
             $d = Storage::disk('sftp')->files($file);

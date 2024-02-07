@@ -85,6 +85,7 @@ class InnalysisController extends Controller
 
     public function send(Request $request)
     {
+        dd($request);
         /*
         {
             "user_id": "test",
@@ -108,7 +109,7 @@ class InnalysisController extends Controller
             'wf_id' => "f2db41e1fa331b3e",
             'inputs' => (object)array(
                 (object)array(
-                    "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
+                    // "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
                     "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
                 )
             ),

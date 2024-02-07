@@ -99,9 +99,9 @@ class InnalysisController extends Controller
 
         // $files = array();
         if (Storage::disk('sftp')->exists($file)) {
-            $d = Storage::disk('sftp')->files($file);
+            // $d = Storage::disk('sftp')->files($file);
             $obj = new \stdClass();
-            $obj = Storage::disk('sftp')->files($file);
+            $obj = Storage::disk('sftp')->get($file);
             // array_push($files, $obj);
         }
 

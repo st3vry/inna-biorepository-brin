@@ -85,7 +85,15 @@ class InnalysisController extends Controller
 
     public function send(Request $request)
     {
-        dd($request);
+        // dd($request);
+        $archive = $request->archive;
+        $experiment = $request->experiment;
+        $run = $request->run;
+        $workflow = $request->workflow;
+        print($archive);
+        print($experiment);
+        print($run);
+        print($workflow);
         /*
         {
             "user_id": "test",
@@ -106,7 +114,8 @@ class InnalysisController extends Controller
         // ]);
         $wf = ([
             'user_id' => auth()->user()->user_id,
-            'wf_id' => "f2db41e1fa331b3e",
+            // 'wf_id' => "f2db41e1fa331b3e",
+            'wf_id' => $workflow,
             'inputs' => (object)array(
                 (object)array(
                     // "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",

@@ -10,6 +10,7 @@ use App\Models\Biosample;
 use App\Models\InnalysisGalaxy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class InnalysisController extends Controller
 {
@@ -90,28 +91,20 @@ class InnalysisController extends Controller
         $experiment = $request->experiment;
         $run = $request->run;
         $workflow = $request->workflow;
-        print($archive);
-        print($experiment);
-        print($run);
-        print($workflow);
-        /*
-        {
-            "user_id": "test",
-            "wf_id": "bfa3e789fd89d473",
-            "inputs": { "0": {"uuid":"bed3bd53-ffda-4d94-9ef8-59790875fcee", "filename": ["run_id/exp_id/acc_id/A1_1.fq.gz", "run_id/exp_id/acc_id/A1_2.fq.gz"] } } ,
-            "parameter": "ini nnti"
+        $bioarchive = Bioarchive::where('id', $archive)->get();
+        $bioexperiment = Bioexperiment::where('id', $experiment)->get();
+        $biorun = Biorun::where('id', $run)->get();
+        $file = "files/{$bioarchive->accession}/{$bioexperiment->alias}/{$biorun->filename}";
+        // $files = array();
+        if (Storage::disk('sftp')->exists($file)) {
+            $d = Storage::disk('sftp')->files($file);
+            $obj = new \stdClass();
+            $obj = Storage::disk('sftp')->files($file);
+            // array_push($files, $obj);
         }
-        */
-        // $wf = ([
-        //     'user_id' => "test",
-        //     "wf_id" => "bfa3e789fd89d473",
-        //     "inputs" => [
-        //         "0" => [
-        //             "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
-        //             "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
-        //         ]
-        //     ],
-        // ]);
+
+        dd($obj);
+
         $wf = ([
             'user_id' => auth()->user()->user_id,
             // 'wf_id' => "f2db41e1fa331b3e",
@@ -119,7 +112,8 @@ class InnalysisController extends Controller
             'inputs' => (object)array(
                 (object)array(
                     // "uuid" => "bed3bd53-ffda-4d94-9ef8-59790875fcee",
-                    "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
+                    // "filename" => ["/home/inna/A1_1.fq.gz", "/home/inna/A1_2.fq.gz"]
+                    "filename" => $obj
                 )
             ),
             'paramter' => 'ini nanti'

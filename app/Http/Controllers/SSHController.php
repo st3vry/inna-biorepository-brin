@@ -52,6 +52,7 @@ class SSHController extends Controller
     {
         $createUser = Ssh::create(env('FTP_USERNAME'), env('FTP_HOST'), intval(env('FTP_PORT')))
         ->disablePasswordAuthentication()
+        ->usePrivateKey(env('SFTP_KEY'))
             ->execute([
                 "sudo useradd -d /home/innaadm/innasto/ftpdata/{$request->id}/{$request->folder} -m {$request->ftpUserName}",
                 "{$request->password}"

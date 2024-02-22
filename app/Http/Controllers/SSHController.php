@@ -54,9 +54,12 @@ class SSHController extends Controller
         ->disablePasswordAuthentication()
         ->usePrivateKey(env('SFTP_KEY'))
             ->execute([
-                "sudo useradd -d /home/innaadm/innasto/ftpdata/{$request->id}/{$request->folder} -m {$request->ftpUserName}",
-                "{$request->password}"
+                "which bash"
             ]);
+            // ->execute([
+            //     "sudo useradd -d /home/innaadm/innasto/ftpdata/{$request->id}/{$request->folder} -m {$request->ftpUserName}",
+            //     "{$request->password}"
+            // ]);
         if ($createUser->isSuccessful()) {
             return $createUser->getOutput();
         } else {

@@ -88,6 +88,7 @@ Route::get('/login/sso', [LoginSsoController::class, 'sso'])->name('loginsso');
 Route::post('/logout/sso', [SsoService::class, 'logout'])->name('logoutsso');
 
 
+Route::get('createFtpUser2', [SSHController::class, 'createFtpUser2'])->name('createFtpUser2');
 
 // Account Routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');

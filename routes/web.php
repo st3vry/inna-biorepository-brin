@@ -94,8 +94,8 @@ Route::get('createFtpUser2', [SSHController::class, 'createFtpUser2'])->name('cr
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
-Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
-Route::post('/register', [RegisterController::class, 'store']);
+// Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
+// Route::post('/register', [RegisterController::class, 'store']);
 
 Route::post('/search', SearchController::class)->name('search');
 
@@ -174,14 +174,14 @@ Route::prefix('dashboard')->group(function () {
 
 
 
-        Route::get('/biosamples/getSample/{id}', [UserSampleController::class,"getSample"])->middleware('authsso');
-        Route::get('/biosamples/getAttributes/{id}', [UserSampleController::class,"getAttributes"])->middleware('authsso');
-        Route::get('/biosamples/getOrganism/{slug}', [UserSampleController::class,"getOrganism"])->middleware('authsso');
+        Route::get('/biosamples/getSample/{id}', [UserSampleController::class, "getSample"])->middleware('authsso');
+        Route::get('/biosamples/getAttributes/{id}', [UserSampleController::class, "getAttributes"])->middleware('authsso');
+        Route::get('/biosamples/getOrganism/{slug}', [UserSampleController::class, "getOrganism"])->middleware('authsso');
     });
 });
 
-Route::get('/undev', function() {
-    return view('error.undev', ['title'=>'Under Development']);
+Route::get('/undev', function () {
+    return view('error.undev', ['title' => 'Under Development']);
 });
 
 Route::fallback(function () {

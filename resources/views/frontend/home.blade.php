@@ -238,7 +238,7 @@
 </section><!-- End Features Section -->
 
 <!-- ======= Contact Section ======= -->
-<section id="contact" class="contact">
+{{-- <section id="contact" class="contact">
 
     <div class="container" data-aos="fade-up">
 
@@ -320,7 +320,7 @@
 
     </div>
 
-</section>
+</section> --}}
 <!-- End Contact Section -->
 
 @endsection

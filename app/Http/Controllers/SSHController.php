@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Ssh\Ssh;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Str;
 
 class SSHController extends Controller
 {
@@ -33,35 +34,25 @@ class SSHController extends Controller
         }
     }
 
-    public function createFtpUser(Request $request)
+    public function createFtpUser($accession)
     {
-        $createUser = Ssh::create(env('SFTP_USERNAME'), env('SFTP_HOST'), intval(env('SFTP_PORT')))
-        ->disablePasswordAuthentication()
-            ->execute([
-                "sudo useradd -d /home/innaadm/innasto/ftpdata/{$request->id}/{$request->folder} -m {$request->ftpUserName}",
-                "echo '{$request->ftpUserName}:{$request->password}' | sudo chpasswd"
-            ]);
-        if ($createUser->isSuccessful()) {
-            return $createUser->getOutput();
-        } else {
-            throw new ProcessFailedException($createUser);
-        }
-    }
+        // cara panggil dari controller lain:
+        // $SSHController = new SSHController();
+        // $password = $SSHController->createFtpUser($accession); // $accession number atau yang akan digunakan sebagai username
+        // $password adalah return 8 karakter password yang bisa di simpan di database
+        // bisa juga pakai try/catch untuk handle kalau error
 
-    public function createFtpUser2(Request $request)
-    {
+
+        $password = Str::random(8, true, true, true, false);
+        $psw = crypt($password,"password");
         $createUser = Ssh::create(env('FTP_USERNAME'), env('FTP_HOST'), intval(env('FTP_PORT')))
         ->disablePasswordAuthentication()
         ->usePrivateKey(env('SFTP_KEY'))
-            ->execute([
-                "which bash"
+             ->execute([
+                "sudo useradd --password {$psw} --home /innasto/ftpdata/{$accession} {$accession}"
             ]);
-            // ->execute([
-            //     "sudo useradd -d /home/innaadm/innasto/ftpdata/{$request->id}/{$request->folder} -m {$request->ftpUserName}",
-            //     "{$request->password}"
-            // ]);
         if ($createUser->isSuccessful()) {
-            return $createUser->getOutput();
+            return $password;
         } else {
             throw new ProcessFailedException($createUser);
         }

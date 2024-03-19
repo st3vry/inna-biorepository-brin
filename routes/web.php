@@ -165,7 +165,7 @@ Route::prefix('dashboard')->group(function () {
     Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('authsso');
     Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('authsso');
     Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
-    Route::post('createFtpUser2', [SSHController::class, 'createFtpUser2'])->name('createFtpUser2');
+    Route::get('createFtpUser/{accession}', [SSHController::class, 'createFtpUser'])->name('createFtpUser');
 
 
 

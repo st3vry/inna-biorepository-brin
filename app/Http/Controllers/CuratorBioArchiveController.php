@@ -11,6 +11,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Biorun;
+use App\Models\FtpUser;
+use Carbon\Carbon;
 use Exception;
 
 class CuratorBioArchiveController extends Controller
@@ -147,6 +149,19 @@ class CuratorBioArchiveController extends Controller
                 ]);
                 // approving bioarchive
                 $success = 'BioArchive Approved for File Upload';
+                //crete ftp user & storing data
+                $SSHController = new SSHController();
+                $password = $SSHController->createFtpUser($id);
+                $start_day = Carbon::now();
+                $exp_date = $start_day->addWeek();
+                $ftpUserdata = array(
+                    'bioarchive_id' => $request->bioarchive_id,
+                    'username' => $id,
+                    'password' => $password,
+                    'exp_date' => $exp_date,
+                );
+                FtpUser::create($ftpUserdata);
+
                 // create directory
                 $bioexperiments = Bioexperiment::where('bioarchive_id', $request->bioarchive_id)->get();
                 foreach ($bioexperiments as $bioexperiment) {
@@ -158,7 +173,7 @@ class CuratorBioArchiveController extends Controller
 
                     try {
                         // Nama direktori yang akan dibuat
-                        $directory = '/'.$id.'/'.$bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
+                        $directory = '/' . $id . '/' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
                         // dd($directory);
                         // Buat direktori baru jika belum ada
                         if (!Storage::disk('sftp')->exists($directory)) {
@@ -267,6 +282,5 @@ class CuratorBioArchiveController extends Controller
         } else {
             return back()->with('error', 'Something went wrong, please try again later!');
         }
-
     }
 }

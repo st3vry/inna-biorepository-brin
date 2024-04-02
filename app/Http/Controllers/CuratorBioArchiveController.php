@@ -151,21 +151,22 @@ class CuratorBioArchiveController extends Controller
                 $success = 'BioArchive Approved for File Upload';
                 //crete ftp user & storing data
                 $SSHController = new SSHController();
-                $password = $SSHController->createFtpUser($id);
                 $start_day = Carbon::now();
                 $exp_date = $start_day->addWeek();
-                $ftpUserdata = array(
-                    'bioarchive_id' => $request->bioarchive_id,
-                    'username' => $id,
-                    'password' => $password,
-                    'exp_date' => $exp_date,
-                );
-                FtpUser::create($ftpUserdata);
 
                 // create directory
                 $bioexperiments = Bioexperiment::where('bioarchive_id', $request->bioarchive_id)->get();
                 foreach ($bioexperiments as $bioexperiment) {
+                    $password = $SSHController->createFtpUser($id, $bioexperiment->alias);
+                    $ftpUserdata = array(
+                        'bioarchive_id' => $request->bioarchive_id,
+                        'username' => $bioexperiment->alias,
+                        'password' => $password,
+                        'exp_date' => $exp_date,
+                    );
+                    FtpUser::create($ftpUserdata);
                     // dd($bioexperiment->alias);
+
                     $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
                     if (!File::exists($path)) {
                         File::makeDirectory($path, $mode = 0755, true, true);
@@ -184,6 +185,8 @@ class CuratorBioArchiveController extends Controller
                         // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
                         echo $e->getMessage();
                     }
+
+
                     // try {
                     //     // Konfigurasi adapter
                     //     $config = [

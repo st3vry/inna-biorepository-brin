@@ -38,7 +38,7 @@ class SSHController extends Controller
         }
     }
 
-    public function createFtpUser($accession)
+    public function createFtpUser($accession, $alias)
     {
         // cara panggil dari controller lain:
         // $SSHController = new SSHController();
@@ -53,7 +53,8 @@ class SSHController extends Controller
             ->disablePasswordAuthentication()
             ->usePrivateKey(env('SFTP_KEY'))
             ->execute([
-                "sudo useradd --password {$psw} --home /innasto/ftpdata/{$accession} {$accession}"
+                "sudo mkdir /innasto/ftpdata/{$accession}",
+                "sudo useradd --password {$psw} --home /innasto/ftpdata/{$accession}/{$alias} {$alias}"
             ]);
         if ($createUser->isSuccessful()) {
             // storing data ftp user to database

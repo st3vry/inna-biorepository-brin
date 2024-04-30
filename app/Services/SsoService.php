@@ -240,8 +240,6 @@ class SsoService
 
     public function logout(Request $request)
     {
-        $logout_link = curl_init('https://sso.brin.go.id/logout?redirect_uri=https//inna-prototype.brin.go.id/');
-        curl_exec($logout_link);
         $token = $this->token();
         // dd($token);
         // dd(session());
@@ -260,12 +258,12 @@ class SsoService
         // dd(Cache::get($token));
         // Cache::flush();
 
-        Cache::forget($token);
-        $request->session()->forget('brin_sso_access_token');
-        $request->session()->forget('is_login_inna_repo');
-        $request->session()->flush();
-        $request->session()->regenerate();
-        $request->session()->invalidate();
+        // Cache::forget($token);
+        // $request->session()->forget('brin_sso_access_token');
+        // $request->session()->forget('is_login_inna_repo');
+        // $request->session()->flush();
+        // $request->session()->regenerate();
+        // $request->session()->invalidate();
 
         //@gelar
         Session::flush();

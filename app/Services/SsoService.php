@@ -103,7 +103,7 @@ class SsoService
         $response = $provider->getParsedResponse($request);
         return $response;
     }
-    
+
     public function authorize(Request $request)
     {
 
@@ -112,7 +112,7 @@ class SsoService
         if (!isset($request->code)) {
             // dd('tidak ada code');
             $authUrl = $provider->getAuthorizationUrl();
-            
+
             session(['oauth2state' => $provider->getState()]);
             // dd($request);
             return $authUrl;
@@ -120,7 +120,7 @@ class SsoService
 
             // Check given state against previously stored one to mitigate CSRF attack
         } elseif (empty($request->state) || ($request->state !== $request->session()->get('oauth2state'))) {
-            
+
             $request->session()->forget('oauth2state');
             exit('Invalid state');
         } else {
@@ -144,8 +144,6 @@ class SsoService
                 $response = json_decode(json_encode($response));
                 // dd($response);
                 $this->loginsso($request, $response, $accessToken);
-                
-
             } catch (Exception $e) {
                 echo $e->getMessage();
                 // Failed to get user details
@@ -159,7 +157,7 @@ class SsoService
         // dd($response);
         try {
             $result = new \stdClass();
-            
+
             $tokens = $accessToken->getToken();
             $refreshtoken = $accessToken->getRefreshToken();
             if ($response->userData->active == 0) {
@@ -182,7 +180,6 @@ class SsoService
                     // do task when error
                     $e->getMessage();   // insert query
                 }
-
             } else {
                 try {
                     $newData = new User();
@@ -203,29 +200,26 @@ class SsoService
                     $newData->created_at = Carbon::now();
                     // dd($newData);
                     $newData->save();
-                     //@gelar
-                    $result=$newData;
-                     //End @gelar
+                    //@gelar
+                    $result = $newData;
+                    //End @gelar
                 } catch (\Exception $e) {
                     // do task when error
                     $e->getMessage();   // insert query
                 }
-
             }
-            
+
             Cache::add($tokens, $result, 3600);
             session(['is_login_inna_repo' => $tokens]);
             session([$tokens => $result]);
-             //@gelar      
-             Auth::login($result);
+            //@gelar      
+            Auth::login($result);
             //End @gelar
             // dd("test sso service");
             return $result;
-            
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-
     }
 
     public function getAuthUserSso($token)
@@ -246,8 +240,8 @@ class SsoService
 
     public function logout(Request $request)
     {
-        // $logout_link = curl_init('https://dev-sso.brin.go.id/logout');
-        // curl_exec($logout_link);
+        $logout_link = curl_init('https://sso.brin.go.id/logout?redirect_uri=https//inna-prototype.brin.go.id/');
+        curl_exec($logout_link);
         $token = $this->token();
         // dd($token);
         // dd(session());

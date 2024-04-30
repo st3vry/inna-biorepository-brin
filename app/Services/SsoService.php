@@ -240,7 +240,7 @@ class SsoService
 
     public function logout(Request $request)
     {
-        $token = $this->token();
+        // $token = $this->token();
         // dd($token);
         // dd(session());
 
@@ -266,8 +266,8 @@ class SsoService
         // $request->session()->invalidate();
 
         //@gelar
-        Session::flush();
         Auth::logout();
+        Session::flush();
         //End @gelar
 
         // Auth::logout();

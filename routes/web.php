@@ -93,7 +93,8 @@ Route::get('createFtpUser2', [SSHController::class, 'createFtpUser2'])->name('cr
 // Account Routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
-Route::post('/logout', [LoginController::class, 'logout']);
+// Route::post('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [SsoService::class, 'logout'])->name('logoutsso');
 // Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
 // Route::post('/register', [RegisterController::class, 'store']);
 

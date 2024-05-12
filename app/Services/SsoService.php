@@ -259,23 +259,20 @@ class SsoService
         // Cache::flush();
 
         // Cache::forget($token);
-        // $request->session()->forget('brin_sso_access_token');
-        // $request->session()->forget('is_login_inna_repo');
-        // $request->session()->flush();
-        // $request->session()->regenerate();
-        // $request->session()->invalidate();
+        $request->session()->forget('brin_sso_access_token');
+        $request->session()->forget('is_login_inna_repo');
+        $request->session()->flush();
+        $request->session()->regenerate();
+        $request->session()->invalidate();
 
         //@gelar
         Auth::logout();
         Session::flush();
         //End @gelar
 
-        // Auth::logout();
-        // request()->session()->invalidate();
-        // request()->session()->regenerateToken();
-        // return redirect('/');
-        // dd($sessFlus);
-        // return redirect(route('admin.login'));
-        return redirect('/');
+        // sso.brin.go.id/logout?redirect_uri=https://inna-prototype.brin.go.id/
+        // OAUTH2_REDIRECT_URI=https://inna-prototype.brin.go.id/
+        $home = env('OAUTH2_REDIRECT_URI');
+        return redirect('https://dev-sso.brin.go.id/logout?redirect=' . $home);
     }
 }

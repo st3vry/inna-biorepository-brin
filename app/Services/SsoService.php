@@ -273,6 +273,7 @@ class SsoService
         // sso.brin.go.id/logout?redirect_uri=https://inna-prototype.brin.go.id/
         // OAUTH2_REDIRECT_URI=https://inna-prototype.brin.go.id/
         $home = env('OAUTH2_REDIRECT_URI');
-        return redirect('https://dev-sso.brin.go.id/logout?redirect=' . $home);
+        $url = env('URL_LOGOUT');
+        return redirect($url . $home);
     }
 }

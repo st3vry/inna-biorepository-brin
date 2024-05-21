@@ -40,11 +40,11 @@ class DashboardBioarchiveController extends Controller
         // dd($filetypes);
 
         foreach ($bioexperiment as $key => $value) {
-            $directory = "files/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('sftp')->exists($directory)) {
-                $d = Storage::disk('sftp')->files($directory);
+            $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
+            if (Storage::disk('ftp')->exists($directory)) {
+                $d = Storage::disk('ftp')->files($directory);
                 $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
+                $obj->{$value['alias']} = Storage::disk('ftp')->files($directory);
                 array_push($files, $obj);
             }
 
@@ -60,7 +60,8 @@ class DashboardBioarchiveController extends Controller
             'bioexperiment' => $bioexperiment,
             'histories' => $histories,
             'files' => $files,
-            'filetypes'=>$filetypes
+            'filetypes'=>$filetypes,
+            'ftp_user'=> $ftp_users
             // 'biorun' => $biorun,
         ]);
     }

@@ -84,11 +84,11 @@ class CuratorBioArchiveController extends Controller
         $files = array();
 
         foreach ($bioexperiment as $key => $value) {
-            $directory = "files/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('sftp')->exists($directory)) {
-                $d = Storage::disk('sftp')->files($directory);
+            $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
+            if (Storage::disk('ftp')->exists($directory)) {
+                $d = Storage::disk('ftp')->files($directory);
                 $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
+                $obj->{$value['alias']} = Storage::disk('ftp')->files($directory);
                 array_push($files, $obj);
             }
         }
@@ -99,7 +99,8 @@ class CuratorBioArchiveController extends Controller
             'bioexperiment' => $bioexperiment,
             'curators' => $curators,
             'histories' => $histories,
-            'files' => $files
+            'files' => $files,
+            'ftp_user'=> $ftp_users
             // 'biorun' => $biorun,
         ]);
     }
@@ -153,38 +154,44 @@ class CuratorBioArchiveController extends Controller
                 $SSHController = new SSHController();
                 $start_day = Carbon::now();
                 $exp_date = $start_day->addWeek();
+                $password = $SSHController->createFtpUser($id);
+                $ftpUserdata = array(
+                    'bioarchive_id' => $request->bioarchive_id,
+                    'username' => $id,
+                    'password' => $password,
+                    'exp_date' => $exp_date,
+                );
+                FtpUser::create($ftpUserdata);
 
                 // create directory
                 $bioexperiments = Bioexperiment::where('bioarchive_id', $request->bioarchive_id)->get();
                 foreach ($bioexperiments as $bioexperiment) {
-                    $password = $SSHController->createFtpUser($id, $bioexperiment->alias);
-                    $ftpUserdata = array(
-                        'bioarchive_id' => $request->bioarchive_id,
-                        'username' => $bioexperiment->alias,
-                        'password' => $password,
-                        'exp_date' => $exp_date,
-                    );
-                    FtpUser::create($ftpUserdata);
+                    //$password = $SSHController->createFtpUser($id, $bioexperiment->alias);
+
                     // dd($bioexperiment->alias);
+                    $command = [
+                        "sudo mkdir /innasto/temp/{$id}/{$bioexperiment->alias}"
+                    ];
+                    $createFolder = $SSHController->customSSHCommand($id, $command);
 
-                    $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
-                    if (!File::exists($path)) {
-                        File::makeDirectory($path, $mode = 0755, true, true);
-                    }
+                    // $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
+                    // if (!File::exists($path)) {
+                    //     File::makeDirectory($path, $mode = 0755, true, true);
+                    // }
 
-                    try {
+                    // try {
                         // Nama direktori yang akan dibuat
-                        $directory = '/' . $id . '/' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
+                        // $directory = '/' . $id . '/' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
                         // dd($directory);
                         // Buat direktori baru jika belum ada
-                        if (!Storage::disk('sftp')->exists($directory)) {
-                            Storage::disk('sftp')->makeDirectory($directory);
-                        }
-                    } catch (Exception $e) {
+                        // if (!Storage::disk('sftp')->exists($directory)) {
+                        //     Storage::disk('sftp')->makeDirectory($directory);
+                        // }
+                    // } catch (Exception $e) {
                         // Tangani kesalahan
                         // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
-                        echo $e->getMessage();
-                    }
+                    //     echo $e->getMessage();
+                    // }
 
 
                     // try {
@@ -222,9 +229,6 @@ class CuratorBioArchiveController extends Controller
                 }
             }
             if ($request->action === 'approved') {
-
-
-
                 $action = Bioarchive::where('accession', $id)->update([
                     'published_at' => now(),
                     'status' => 5

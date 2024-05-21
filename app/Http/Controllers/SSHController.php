@@ -38,7 +38,7 @@ class SSHController extends Controller
         }
     }
 
-    public function createFtpUser($accession, $alias)
+    public function createFtpUser($accession)
     {
         // cara panggil dari controller lain:
         // $SSHController = new SSHController();
@@ -53,14 +53,26 @@ class SSHController extends Controller
             ->disablePasswordAuthentication()
             ->usePrivateKey(env('SFTP_KEY'))
             ->execute([
-                "sudo mkdir /innasto/ftpdata/{$accession}",
-                "sudo useradd --password {$psw} --home /innasto/ftpdata/{$accession}/{$alias} {$alias}"
+                "sudo mkdir /innasto/temp/{$accession}",
+                "sudo useradd --password {$psw} --home /innasto/temp/{$accession} {$accession}"
             ]);
         if ($createUser->isSuccessful()) {
             // storing data ftp user to database
             return $password;
         } else {
             throw new ProcessFailedException($createUser);
+        }
+    }
+
+    public function customSSHCommand($username, $command) {
+        $response = Ssh::create($username, env('FTP_HOST'), intval(env('FTP_PORT')))
+            ->disablePasswordAuthentication()
+            ->usePrivateKey(env('SFTP_KEY'))
+            ->execute($command);
+        if ($response->isSuccessful()) {
+            return $response;
+        } else {
+            throw new ProcessFailedException($response);
         }
     }
 }

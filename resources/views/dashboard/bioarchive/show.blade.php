@@ -134,6 +134,12 @@
                                 </button>
                             </td>
                         </tr>
+                        <tr>
+                            <td><strong>FTP</strong></td>
+                            <td>
+                                {{$ftp_user->username}} / {{$ftp_user->password}}
+                            </td>
+                        </tr>
 
                         @foreach ($files as $file)
                             @foreach ($file as $key => $items)

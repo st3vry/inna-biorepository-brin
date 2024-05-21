@@ -12,6 +12,7 @@ use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
 use App\Models\FileType;
+use App\Models\FtpUsers;
 use Storage;
 use Illuminate\Http\Request;
 
@@ -66,14 +67,15 @@ class BioarchiveController extends Controller
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
         $filetypes = FileType::get();
+        $ftp_users = FtpUsers::where("bioarchive_id", $bioarchive->id);
         // dd($filetypes);
 
         foreach ($bioexperiment as $key => $value) {
-            $directory = "files/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('sftp')->exists($directory)) {
-                $d = Storage::disk('sftp')->files($directory);
+            $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
+            if (Storage::disk('ftp')->exists($directory)) {
+                $d = Storage::disk('ftp')->files($directory);
                 $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
+                $obj->{$value['alias']} = Storage::disk('ftp')->files($directory);
                 array_push($files, $obj);
             }
         }
@@ -88,7 +90,8 @@ class BioarchiveController extends Controller
             'bioexperiment' => $bioexperiment,
             'histories' => $histories,
             'files' => $files,
-            'filetypes' => $filetypes
+            'filetypes' => $filetypes,
+            'ftp_user'=> $ftp_users
             // 'biorun' => $biorun,
         ]);
     }

@@ -30,6 +30,7 @@ use App\Http\Controllers\CelularityController;
 use App\Http\Controllers\CenterController;
 use App\Http\Controllers\ConsortiaController;
 use App\Http\Controllers\DiseaseController;
+use App\Http\Controllers\DataverseController;
 use App\Http\Controllers\Dashboard\User\BiosampleController as UserSampleController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
@@ -167,6 +168,7 @@ Route::prefix('dashboard')->group(function () {
     Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('authsso');
     Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
     Route::get('createFtpUser/{accession}', [SSHController::class, 'createFtpUser'])->name('createFtpUser');
+    Route::get('createDataverse', [DataverseController::class, 'createDataverse'])->name('createDataverse');
 
 
 

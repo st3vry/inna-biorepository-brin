@@ -114,7 +114,7 @@ return [
             // // 'maxTries' => 4,
             // // 'passphrase' => env('SFTP_PASSPHRASE'),
 
-            // 'root' => env('SFTP_ROOT'),
+            'root' => env('FTP_ROOT'),
             'permPublic' => 0755,
             'directoryPerm' => 0755,
             'visibility' => 'public',

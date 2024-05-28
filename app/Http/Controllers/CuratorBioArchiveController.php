@@ -82,13 +82,14 @@ class CuratorBioArchiveController extends Controller
         $curators = User::select(['id', 'name'])->where('role_id', 2)->where('is_activated', true)->orderBy('name')->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
+        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id);
 
         foreach ($bioexperiment as $key => $value) {
             $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('ftp')->exists($directory)) {
-                $d = Storage::disk('ftp')->files($directory);
+            if (Storage::disk('sftp')->exists($directory)) {
+                $d = Storage::disk('sftp')->files($directory);
                 $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('ftp')->files($directory);
+                $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
                 array_push($files, $obj);
             }
         }
@@ -100,7 +101,7 @@ class CuratorBioArchiveController extends Controller
             'curators' => $curators,
             'histories' => $histories,
             'files' => $files,
-            'ftp_user'=> $ftp_users
+            'ftp_user' => $ftp_users
             // 'biorun' => $biorun,
         ]);
     }
@@ -180,16 +181,16 @@ class CuratorBioArchiveController extends Controller
                     // }
 
                     // try {
-                        // Nama direktori yang akan dibuat
-                        // $directory = '/' . $id . '/' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
-                        // dd($directory);
-                        // Buat direktori baru jika belum ada
-                        // if (!Storage::disk('sftp')->exists($directory)) {
-                        //     Storage::disk('sftp')->makeDirectory($directory);
-                        // }
+                    // Nama direktori yang akan dibuat
+                    // $directory = '/' . $id . '/' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
+                    // dd($directory);
+                    // Buat direktori baru jika belum ada
+                    // if (!Storage::disk('sftp')->exists($directory)) {
+                    //     Storage::disk('sftp')->makeDirectory($directory);
+                    // }
                     // } catch (Exception $e) {
-                        // Tangani kesalahan
-                        // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
+                    // Tangani kesalahan
+                    // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
                     //     echo $e->getMessage();
                     // }
 

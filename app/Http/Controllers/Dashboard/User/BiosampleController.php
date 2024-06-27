@@ -78,7 +78,7 @@ class BiosampleController extends Controller
         // $biosample->sampletype_id = $validatedData['sampletype_id'];
 
         // $biosample->center_id = auth()->user()->lab->center_id;
-        $biosample->center_id = auth()->user()->administrative;
+        $biosample->center_id = auth()->user()->administrative ?? auth()->user()->lab->center_id;
         $biosample->user_id = auth()->user()->id;
         // need to change if organism table ready
         $biosample->organism_id = $request->organism;
@@ -100,7 +100,6 @@ class BiosampleController extends Controller
             $attribute_value->save();
         }
         return redirect('/dashboard/v2/biosamples')->with('success', 'New Biosample has been added!');
-
     }
 
     /**
@@ -159,12 +158,14 @@ class BiosampleController extends Controller
         return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
     }
 
-    public function getSample($id) {
+    public function getSample($id)
+    {
         $results = Sampletype::where("sampletype_package_id", $id)->get();
         return response()->json($results);
     }
 
-    public function getAttributes($id) {
+    public function getAttributes($id)
+    {
         $sampletypes = Sampletype::where('id', $id)->first();
         $attr_sample = explode(',', $sampletypes['attribute_property']);
         $attributes = Attributesample::whereIn('id', $attr_sample)->get();

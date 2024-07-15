@@ -122,10 +122,10 @@ Route::prefix('dashboard')->group(function () {
 
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('authsso');
 
-    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('authsso');
-    Route::resource('/biosamples', UserSampleController::class)->middleware('authsso');
+    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware(['authsso', 'is_labcenterexist']);
+    Route::resource('/biosamples', UserSampleController::class)->middleware(['is_labcenterexist', 'authsso']);
     // Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
-    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('authsso');
+    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware(['is_labcenterexist', 'authsso']);
 
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('authsso');

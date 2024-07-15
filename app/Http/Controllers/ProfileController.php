@@ -6,6 +6,7 @@ use App\Models\ActionLog;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Lab;
+use App\Models\Center;
 use Hash;
 use Auth;
 use Illuminate\Http\Request;
@@ -15,22 +16,25 @@ class ProfileController extends Controller
     //
     public function index()
     {
-        $role = Role::find(auth()->user()->role_id)->first();
-        $lab = Lab::find(auth()->user()->role_id)->first();
+        $roles = Role::get();
+        $labs = Lab::get();
+        $centers = Center::get();
         return view('dashboard.user.profile',[
-            'role' => $role,
-            'lab' => $lab
+            'roles' => $roles,
+            'labs' => $labs,
+            'centers' => $centers
         ]);
     }
-    
+
     public function update(Request $request, User $user)
     {
         $action = false;
         $rules = [
             'name' => 'required|max:255',
             'orcid_id' => 'max:255',
+            'lab_id'=>'required',
+            'center_id'=>'required',
         ];
-
         $validatedData = $request->validate($rules);
         $action = User::where('id', auth()->id())->update($validatedData);
         if ($action) {
@@ -56,7 +60,7 @@ class ProfileController extends Controller
         if(strcmp($request->current_password, $request->new_password) === 0){
             return back()->with("same_old_password","New Password cannot be same as your current password.");
         }
-        
+
         $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|min:6|string|same:confirm_password',

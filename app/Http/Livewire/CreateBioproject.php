@@ -270,8 +270,8 @@ class CreateBioproject extends Component
         // dd(auth()->user());
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
-        $this->submitter_lab = auth()->user()->affiliate;
-        $this->submitter_center = auth()->user()->administrative;
+        $this->submitter_lab = auth()->user()->lab_id;
+        $this->submitter_center = auth()->user()->center_id;
 
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();
@@ -476,7 +476,7 @@ class CreateBioproject extends Component
         $bioproject->description = $validatedData['description'];
         $bioproject->hold_release = $validatedData['hold_release'];
         // $bioproject->center_id = auth()->user()->lab->center_id;
-        $bioproject->center_id = auth()->user()->administrative;
+        $bioproject->center_id = auth()->user()->center_id;
         $bioproject->user_id = auth()->user()->id;
 
         $bioproject->save();

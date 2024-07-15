@@ -40,8 +40,8 @@ class BiosampleController extends Controller
         $submitter = new \stdClass();
         $submitter->name = auth()->user()->name;
         $submitter->email = auth()->user()->email;
-        $submitter->lab = auth()->user()->affiliate;
-        $submitter->center = auth()->user()->administrative;
+        $submitter->lab = auth()->user()->lab_id;
+        $submitter->center = auth()->user()->center_id;
 
         $return = [
             "submitter" => $submitter,
@@ -78,7 +78,7 @@ class BiosampleController extends Controller
         // $biosample->sampletype_id = $validatedData['sampletype_id'];
 
         // $biosample->center_id = auth()->user()->lab->center_id;
-        $biosample->center_id = auth()->user()->administrative ?? auth()->user()->lab->center_id;
+        $biosample->center_id = auth()->user()->center_id;
         $biosample->user_id = auth()->user()->id;
         // need to change if organism table ready
         $biosample->organism_id = $request->organism;

@@ -622,7 +622,7 @@ class CreateBiosample extends Component
     {
 
         $valData = [];
-        foreach ($this->attributes_M as $attr_M){
+        foreach ($this->attributes_M as $attr_M) {
             $valData[$attr_M->attr_name] = 'required';
 
             //$validatedData = $this->validate([
@@ -646,8 +646,8 @@ class CreateBiosample extends Component
         $this->submitter_email = auth()->user()->email;
         // $this->submitter_lab = auth()->user()->lab->name;
         // $this->submitter_center = auth()->user()->lab->center->name;
-        $this->submitter_lab = auth()->user()->affiliate;
-        $this->submitter_center = auth()->user()->administrative;
+        $this->submitter_lab = auth()->user()->lab_id;
+        $this->submitter_center = auth()->user()->center_id;
         //$this->biosample_links = [
         //    ['biosamplelink_id' => '', 'link_description' => '', 'link_url' => '']
         //];
@@ -663,8 +663,6 @@ class CreateBiosample extends Component
         $this->host_disease = Disease::all();
         $this->host_tissue_sampled = Tissue::all();
         $this->all_attributes = Attributesample::all();
-
-
     }
 
     public function addLink()
@@ -696,7 +694,7 @@ class CreateBiosample extends Component
         $biosample->sampletype_id = $validatedData['sampletype_id'];
 
         // $biosample->center_id = auth()->user()->lab->center_id;
-        $biosample->center_id = auth()->user()->administrative;
+        $biosample->center_id = auth()->user()->center_id;
         $biosample->user_id = auth()->user()->id;
         // need to change if organism table ready
         $biosample->organism_id = mt_rand(1, 4);
@@ -716,7 +714,7 @@ class CreateBiosample extends Component
         }
 
         // Sample Attributes
-        foreach ($this->attributes as $attr){
+        foreach ($this->attributes as $attr) {
             $attribute_value = new AttributeValue();
             $attribute_value->biosample_id = $biosample->id;
             $attribute_value->sampletype_id = $validatedData['sampletype_id'];
@@ -735,6 +733,4 @@ class CreateBiosample extends Component
         // info($this->grants);
         return view('livewire.biosample.create');
     }
-
-
 }

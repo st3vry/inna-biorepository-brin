@@ -81,6 +81,18 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/affiliates*') ? 'active' : ''}}" aria-current="page" href="/dashboard/affiliates">
+                    <span data-feather="grid"></span>
+                    Affiliate
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('dashboard/administratives*') ? 'active' : ''}}" aria-current="page" href="/dashboard/administratives">
+                    <span data-feather="grid"></span>
+                    Administrative
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {{ Request::is('dashboard/consortium*') ? 'active' : ''}}" aria-current="page" href="/dashboard/consortium">
                     <span data-feather="grid"></span>
                     Consortium

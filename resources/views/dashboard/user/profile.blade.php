@@ -15,32 +15,39 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
+@if (!isset(auth()->user()->center_id) || !isset(auth()->user()->lab_id))
+<div class="alert alert-danger alert-dismissible fade show col-lg-12" role="alert">
+    <strong>Please complete your profile!</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+@endif
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
             <div class="card-body">
-              <h5 class="card-title">User Data</h5>
+              <h5 class="card-title">User Data </h5>
                 <form method="post" action="{{route('users.profile.update')}}">
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{auth()->user()->name}}">
                         @error('name')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="username" class="form-label">User Name</label>
-                        <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" readonly value="{{auth()->user()->username}}">
-            
+                        <label for="username" class="form-label">User Name <span class="text-danger">*</span></label>
+                        <input type="text" disabled class="form-control @error('username') is-invalid @enderror" id="username" name="username" readonly value="{{auth()->user()->username}}">
+
                         @error('username')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" readonly value="{{auth()->user()->email}}">
-            
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="text" disabled class="form-control @error('email') is-invalid @enderror" id="email" name="email" readonly value="{{auth()->user()->email}}">
+
                         @error('email')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
@@ -53,18 +60,43 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="role" class="form-label">Role</label>
-                        <input type="text" class="form-control" id="role" name="role" readonly value="{{$role->name}}">
+                        <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
+                        <select class="form-select" name="role" id="role" readonly disabled>
+                            <option value="" disabled selected >Select Role</option>
+                            @foreach ($roles as $role)
+                            <option value="{{$role->id}}" {{auth()->user()->role_id == $role->id ? 'selected' : ''}}>{{$role->name}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="lab" class="form-label">Lab</label>
-                        <input type="text" class="form-control" id="lab" name="lab" readonly value="{{$lab->name}}">
+                        <label for="center_id" class="form-label">Center <span class="text-danger">*</span></label>
+                        <select class="form-select @if (!auth()->user()->center_id) is-invalid @endif" name="center_id" id="center_id">
+                            <option value="" disabled selected >Select Center</option>
+                            @foreach ($centers as $center)
+                            <option value="{{$center->id}}" {{auth()->user()->center_id == $center->id ? 'selected' : ''}}>{{$center->name}}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a Center. If your center is not listed, please contact the administrator at <a href=mailto:inna.repository@brin.go.id>inna.repository@brin.go.id</a>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lab_id" class="form-label">Lab <span class="text-danger">*</span></label>
+                        <select class="form-select @if (!auth()->user()->center_id) is-invalid @endif" name="lab_id" id="lab_id">
+                            <option value="" disabled selected >Select Lab</option>
+                            @foreach ($labs as $lab)
+                            <option value="{{$lab->id}}" {{auth()->user()->lab_id == $lab->id ? 'selected' : ''}}>{{$lab->name}}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a Lab. If your center is not listed, please contact the administrator at <a href=mailto:inna.repository@brin.go.id>inna.repository@brin.go.id</a>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-sm btn-primary float-end">Save</button>
                 </form>
             </div>
         </div>
-        
+
     </div>
     <div class="col-lg-6">
         <div class="card">

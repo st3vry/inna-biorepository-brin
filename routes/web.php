@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\ActionLogController;
+use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\AdminOrganismController;
 use App\Http\Controllers\AdminRoleController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\BioprojectController;
 use App\Http\Controllers\BiosampleController;
 use App\Http\Controllers\BioarchiveController;
@@ -120,10 +122,10 @@ Route::prefix('dashboard')->group(function () {
 
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('authsso');
 
-    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware('authsso');
-    Route::resource('/biosamples', UserSampleController::class)->middleware('authsso');
+    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware(['authsso', 'is_labcenterexist']);
+    Route::resource('/biosamples', UserSampleController::class)->middleware(['is_labcenterexist', 'authsso']);
     // Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
-    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware('authsso');
+    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware(['is_labcenterexist', 'authsso']);
 
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('authsso');
@@ -144,6 +146,8 @@ Route::prefix('dashboard')->group(function () {
     Route::resource('/captures', CaptureController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/celularities', CelularityController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/centers', CenterController::class)->except('show')->middleware('can:isAdmin');
+    Route::resource('/affiliates', AffiliateController::class)->except('show')->middleware('can:isAdmin');
+    Route::resource('/administratives', AdministrativeController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/consortium', ConsortiaController::class)->except('show')->middleware('can:isAdmin');
     Route::resource('/diseases', DiseaseController::class)->except('show')->middleware('can:isAdmin');
     // Route::post('/users', [AdminUserController::class, 'filter'])->name('users.filter')->middleware('can:isAdmin');

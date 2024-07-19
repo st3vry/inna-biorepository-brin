@@ -71,12 +71,12 @@ class CreateBioarchive extends Component
         $this->submitter_email = auth()->user()->email;
         // $this->submitter_lab = auth()->user()->lab->name;
         // $this->submitter_center = auth()->user()->lab->center->name;
-        $this->submitter_lab = auth()->user()->affiliate;
-        $this->submitter_center = auth()->user()->administrative;
+        $this->submitter_lab = auth()->user()->lab_id;
+        $this->submitter_center = auth()->user()->center_id;
         // bioproject
         // $this->bioprojects = Bioproject::get();
         $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
-        
+
         // biosample
         $this->biosamples = Biosample::where('draft', false)->get();
         // lib source 

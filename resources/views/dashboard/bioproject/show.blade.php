@@ -196,12 +196,12 @@
             <tr>
                 <td class="col-sm-1">Center</td>
                 {{-- <td class="col-sm-1">{{$bioproject->center->name}} </td>--}}
-                <td class="col-sm-1">{{auth()->user()->administrative}}</td>
+                <td class="col-sm-1">{{auth()->user()->center_id}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
                 {{-- <td class="col-sm-7">{{$bioproject->user->lab->name}}</td> --}}
-                <td class="col-sm-7">{{auth()->user()->affiliate}}</td>
+                <td class="col-sm-7">{{auth()->user()->lab_id}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Submitter</td>

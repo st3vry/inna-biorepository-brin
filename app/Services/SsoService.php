@@ -205,6 +205,7 @@ class SsoService
                     //@gelar
                     $result = $newData;
                     //End @gelar
+
                 } catch (\Exception $e) {
                     // do task when error
                     $e->getMessage();   // insert query

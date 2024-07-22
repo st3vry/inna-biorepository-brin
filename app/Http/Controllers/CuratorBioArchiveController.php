@@ -84,10 +84,19 @@ class CuratorBioArchiveController extends Controller
         $files = array();
         $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id);
 
+        // foreach ($bioexperiment as $key => $value) {
+        //     $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
+        //     if (Storage::disk('sftp')->exists($directory)) {
+        //         $d = Storage::disk('sftp')->files($directory);
+        //         $obj = new \stdClass();
+        //         $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
+        //         array_push($files, $obj);
+        //     }
+        // }
         foreach ($bioexperiment as $key => $value) {
-            $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('sftp')->exists($directory)) {
-                $d = Storage::disk('sftp')->files($directory);
+            $directory = "/mnt/innasto/files/{$bioarchive->accession}/{$value['alias']}";
+            if (Storage::disk('local')->exists($directory)) {
+                $d = Storage::disk('local')->files($directory);
                 $obj = new \stdClass();
                 $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
                 array_push($files, $obj);

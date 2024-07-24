@@ -14,22 +14,20 @@ class SSHController extends Controller
 {
     public function tesSSH(Request $request)
     {
-
-        $process = Ssh::create(env('SFTP_USERNAME'), env('SFTP_HOST'), intval(env('SFTP_PORT')))
-            ->disablePasswordAuthentication()
-            ->usePrivateKey(env('SFTP_KEY'))
-            ->execute("{$request->cmd} /var/innasto/files/{$request->id}/{$request->folder}/{$request->fileName}");
+        $process = Ssh::create(env('FTP_USERNAME'), env('FTP_HOST'),intval(env('FTP_PORT')))
+            ->usePrivateKey(env('FTP_KEY'))
+            ->execute("lsb_release -a");
         if ($process->isSuccessful()) {
             return $process->getOutput();
         } else {
-            return "gagal";
+            return new ProcessFailedException($process);
         }
     }
 
     public function getStorageFileSizes(Request $request)
     {
-        $process = Ssh::create(env('SFTP_USERNAME'), env('SFTP_HOST'), intval(env('SFTP_PORT')))
-            ->disablePasswordAuthentication()
+        $process = Ssh::create(env('FTP_USERNAME'), env('FTP_HOST'), intval(env('FTP_PORT')))
+            ->usePrivateKey(env('FTP_KEY'))
             ->execute("du -hs /var/innasto/files/");
         if ($process->isSuccessful()) {
             return $process->getOutput();
@@ -50,8 +48,7 @@ class SSHController extends Controller
         $password = Str::random(8, true, true, true, false);
         $psw = crypt($password, "password");
         $createUser = Ssh::create(env('FTP_USERNAME'), env('FTP_HOST'), intval(env('FTP_PORT')))
-            ->disablePasswordAuthentication()
-            ->usePrivateKey(env('SFTP_KEY'))
+            ->usePrivateKey(env('FTP_KEY'))
             ->execute([
                 "sudo mkdir /innasto/temp/{$accession}",
                 "sudo useradd --password {$psw} --home /innasto/temp/{$accession} {$accession}"
@@ -66,8 +63,7 @@ class SSHController extends Controller
 
     public function customSSHCommand($username, $command) {
         $response = Ssh::create($username, env('FTP_HOST'), intval(env('FTP_PORT')))
-            ->disablePasswordAuthentication()
-            ->usePrivateKey(env('SFTP_KEY'))
+            ->usePrivateKey(env('FTP_KEY'))
             ->execute($command);
         if ($response->isSuccessful()) {
             return $response;

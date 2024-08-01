@@ -44,6 +44,38 @@
             </main>
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" id="bsConfirmModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title"></h6>
+                </div>
+                <div class="modal-body d-flex flex-column justify-content-center">
+                    <div class="spinner-grow text-secondary d-none mx-auto" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h6 class="modal-text"></h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary bt-confirm">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="bsToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                Hello, world! This is a toast message.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Jquery -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -65,6 +97,25 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 
     <script type='text/javascript'>
+
+        const bsConfirmModal = new bootstrap.Modal(document.getElementById("bsConfirmModal"), {});
+        const bsToast = new bootstrap.Toast(document.querySelector('#bsToast'), {})
+        const bsConfirmModalTitle  = document.querySelector("#bsConfirmModal .modal-title")
+        const bsConfirmModalText = document.querySelector("#bsConfirmModal .modal-text")
+        const bsConfirmModalButton =  document.querySelector("#bsConfirmModal .bt-confirm")
+        const bsConfirmModalSpinner = document.querySelector("#bsConfirmModal .spinner-grow")
+        function showToast(text,cls="success") {
+            document.querySelector('#bsToast .toast-body').textContent = text
+            document.querySelector('#bsToast').classList.add(`text-bg-${cls}`)
+            bsToast.show()
+        }
+
+        document.getElementById("bsConfirmModal").addEventListener('hidden.bs.modal', () => {
+            bsConfirmModalTitle.textContent =""
+            bsConfirmModalText.textContent =""
+            bsConfirmModalSpinner.classList.add("d-none")
+        })
+
         function markReadNotification(va){
             fetch('{{route('notif.mark.as.read')}}', {
                 method: 'post',

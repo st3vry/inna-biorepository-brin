@@ -171,9 +171,10 @@ class CuratorBioArchiveController extends Controller
 
                     // dd($bioexperiment->alias);
                     $command = [
-                        "sudo mkdir /innasto/temp/{$id}/{$bioexperiment->alias}"
+                        "sudo mkdir /innasto/temp/{$id}/{$bioexperiment->alias}",
+                        "sudo chown -R {$id}:{$id} /innasto/temp/{$id}"
                     ];
-                    $createFolder = $SSHController->customSSHCommand($id, $command);
+                    $createFolder = $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
 
                     // $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
                     // if (!File::exists($path)) {

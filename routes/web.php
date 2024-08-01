@@ -175,6 +175,7 @@ Route::prefix('dashboard')->group(function () {
     Route::post('createDataverse', [DataverseController::class, 'createDataverse'])->name('createDataverse');
     Route::post('createDatasetSample', [DataverseController::class, 'createDatasetSample'])->name('createDatasetSample');
     Route::post('createDatasetArchive', [DataverseController::class, 'createDatasetArchive'])->name('createDatasetArchive');
+    Route::get('createDataFile/{type}/{accession}', [DataverseController::class, 'createDataFile'])->name('createDataFile');
 
 
 

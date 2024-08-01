@@ -82,7 +82,7 @@ class CuratorBioArchiveController extends Controller
         $curators = User::select(['id', 'name'])->where('role_id', 2)->where('is_activated', true)->orderBy('name')->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
-        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id);
+        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
 
         foreach ($bioexperiment as $key => $value) {
             $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";

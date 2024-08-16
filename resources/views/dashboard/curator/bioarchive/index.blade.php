@@ -84,10 +84,12 @@
                     @endif
                 </td>
                 <td class="text-center" id="tdDv{{$bioarchive->accession}}">
+                    @if ($bioarchive->status == 5)
                     @if($bioarchive->dv_published_at)
                     <a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>
                     @else
                     <button onclick="javscript:dataverseSync('{{ $bioarchive->accession}}')" type="button" class="btn btn-sm btn-dataverse">Sync <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></button>
+                    @endif
                     @endif
                 </td>
             </tr>

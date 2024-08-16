@@ -64,10 +64,12 @@
                     <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                 </td>
                 <td class="text-center" id="tdDv{{$bioproject->accession}}">
+                    @if ($bioproject->status == 5)
                     @if($bioproject->dv_published_at)
                     <a type="button" href="https://data.brin.go.id/dataverse/{{$bioproject->accession}}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>
                     @else
                     <button onclick="javscript:dataverseSync('{{ $bioproject->accession}}')" type="button" class="btn btn-sm btn-dataverse">Sync <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></button>
+                    @endif
                     @endif
                 </td>
             </tr>

@@ -64,10 +64,12 @@
                     <a href="/dashboard/curator/biosamples/{{ $biosample->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                 </td>
                 <td class="text-center" id="tdDv{{$biosample->accession}}">
+                    @if ($biosample->status == 5)
                     @if($biosample->dv_published_at)
                     <a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId={{$biosample->dv_persistent_id}}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>
                     @else
                     <button onclick="javscript:dataverseSync('{{ $biosample->accession}}')" type="button" class="btn btn-sm btn-dataverse">Sync <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></button>
+                    @endif
                     @endif
                 </td>
             </tr>

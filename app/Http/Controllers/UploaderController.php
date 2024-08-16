@@ -12,6 +12,7 @@ use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use App\Models\Biorun;
+use App\Models\FtpUser;
 
 class UploaderController extends Controller
 {
@@ -80,32 +81,29 @@ class UploaderController extends Controller
     $mime_original = $file->getMimeType();
     $mime = str_replace('/', '-', $mime_original);
 
-    $folderDATE = $request->dataDATE;
-
-    $folder  = $folderDATE;
-    $filePath = "public/{$request->mainFolder}/{$request->subFolder}/";
-    $finalPath = storage_path("app/".$filePath);
-
     $fileSize = $file->getSize();
+
+    $ftp_user = FtpUser::where("username", $request->mainFolder)->first();
     // move the file name
     // $file->move($finalPath, $fileName);
     try {
-        $filePath = Storage::disk('sftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
+         $disk = Storage::build([
+            'driver' => 'sftp',
+            'host' => env('FTP_HOST'),
+            'username' => "{$request->mainFolder}",
+            'password' =>  "{$ftp_user->password}",
+            'root'=> "/"
+        ]);
+        $filePath = $disk->put("/innasto/temp/{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
     } catch (\Throwable $th) {
         throw $th;
     }
-    // dd($request);
-    $biorun = new BioRun;
-    $biorun->bioexperiment_id = $request->bioexperiment_id;
-    $biorun->alias = $request->subFolder;
-    $biorun->filename = $fileName;
-    $biorun->filetype_id = $request->filetype;
-    $biorun->save();
-
-    // $filePath = Storage::disk('ftp')->put("{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
-
-
-    // $url_base = 'storage/upload/medialibrary/'.$user_obj->id."/{$folderDATE}/".$fileName;
+    // $biorun = new BioRun;
+    // $biorun->bioexperiment_id = $request->bioexperiment_id;
+    // $biorun->alias = $request->subFolder;
+    // $biorun->filename = $fileName;
+    // $biorun->filetype_id = $request->filetype;
+    // $biorun->save();
 
     return response()->json([
      'path' => $filePath,

@@ -328,16 +328,13 @@
 
          @foreach ($bioexperiment as $item => $value)
 
-        let mockFiles = {[ name: "Filename 2", size: 12345] };
-         var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
+        var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
             chunking: true,
             method: "POST",
             maxFilesize: 21474836480, //2gb
             chunkSize: 104857600, // 100mb
             parallelChunkUploads: true,
         });
-
-        myDropzone{{ $value['id']}}.displayExistingFile(mockFiles);
 
         myDropzone{{ $value['id']}}.on('sending', function (file, xhr, formData) {
             formData.append("_token", '{{ csrf_token() }}');

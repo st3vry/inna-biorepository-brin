@@ -114,6 +114,7 @@ body {
 .btn-dataverse {
     display: inline-block;
     text-align: center;
+    vertical-align: top;
     border: 1px solid transparent;
     color: #fff;
     background-color: #C55B28;
@@ -127,6 +128,7 @@ body {
 .btn-dataverse-outline {
     display: inline-block;
     text-align: center;
+    vertical-align: top;
     border: 1px solid #C55B28;
     color: #C55B28;
     background-color: transparent;

@@ -13,7 +13,7 @@
         <li class="breadcrumb-item active" aria-current="page">Curator Biosamples</li>
     </ol>
 </div>
-<div class="table-responsive col-md-11">
+<div class="table-responsive col-md-12">
     <table class="table table-striped table-sm" id="dataTable">
         <thead>
             <tr>
@@ -24,8 +24,7 @@
                 <th scope="col">Description</th>
                 <th scope="col">Center</th>
                 <th scope="col">Status</th>
-                <th scope="col">Action</th>
-                <th scope="col" class="text-center">Dataverse</th>
+                <th style="min-width: 80px" scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -36,7 +35,7 @@
                 <td>{{ $biosample->accession }}</td>
                 <td>{{ $biosample->organism->name }}</td>
                 <td>{{ $biosample->title }}</td>
-                <td>{{ $biosample->description }}</td>
+                <td>{!! Str::words($biosample->description, 20, "<a href='/dashboard/curator/biosamples/{$biosample->accession}'> read more...</a>") !!}</td>
                 {{-- <td>{{ $biosample->center->name }}</td> --}}
                 <td>{{ $biosample->center_id }}</td>
                 <td>
@@ -62,14 +61,14 @@
                 </td>
                 <td>
                     <a href="/dashboard/curator/biosamples/{{ $biosample->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                </td>
-                <td class="text-center" id="tdDv{{$biosample->accession}}">
                     @if ($biosample->status == 5)
+                    <div class="text-center" id="tdDv{{$biosample->accession}}" style="display: inline">
                     @if($biosample->dv_published_at)
-                    <a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId={{$biosample->dv_persistent_id}}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>
+                    <a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId={{$biosample->dv_persistent_id}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
                     @else
-                    <button onclick="javscript:dataverseSync('{{ $biosample->accession}}')" type="button" class="btn btn-sm btn-dataverse">Sync <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></button>
+                    <button onclick="javscript:dataverseSync('{{ $biosample->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
                     @endif
+                    </div>
                     @endif
                 </td>
             </tr>

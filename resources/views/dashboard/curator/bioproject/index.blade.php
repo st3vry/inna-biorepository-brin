@@ -26,7 +26,6 @@
                 <th scope="col">Center</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
-                <th scope="col" class="text-center">Dataverse</th>
             </tr>
         </thead>
         <tbody>
@@ -36,7 +35,7 @@
                 <td>{{ $bioproject->accession }}</td>
                 <td>{{ $bioproject->organism->name }}</td>
                 <td>{{ $bioproject->title }}</td>
-                <td>{{ $bioproject->description }}</td>
+                <td>{!! Str::words($bioproject->description, 20, "<a href='/dashboard/curator/bioprojects/{$bioproject->accession}'> read more...</a>") !!}</td>
                 {{-- <td>{{ $bioproject->center->name }}</td> --}}
                 <td>{{ $bioproject->center_id }}</td>
                 <td>
@@ -60,16 +59,16 @@
                             <span class="badge bg-secondary">Rejected</span>
                     @endswitch
                 </td>
-                <td>
+                <td style="min-width: 80px">
                     <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                </td>
-                <td class="text-center" id="tdDv{{$bioproject->accession}}">
                     @if ($bioproject->status == 5)
+                    <div id="tdDv{{$bioproject->accession}}" style="display: inline">
                     @if($bioproject->dv_published_at)
-                    <a type="button" href="https://data.brin.go.id/dataverse/{{$bioproject->accession}}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>
+                    <a type="button" href="https://data.brin.go.id/dataverse/{{$bioproject->accession}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
                     @else
-                    <button onclick="javscript:dataverseSync('{{ $bioproject->accession}}')" type="button" class="btn btn-sm btn-dataverse">Sync <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></button>
+                    <button onclick="javscript:dataverseSync('{{ $bioproject->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
                     @endif
+                    </div>
                     @endif
                 </td>
             </tr>

@@ -25,7 +25,6 @@
                 <th scope="col">Biosample</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
-                <th scope="col" class="text-center">Dataverse</th>
             </tr>
         </thead>
         <tbody>
@@ -82,14 +81,14 @@
                         <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
                     </form>
                     @endif
-                </td>
-                <td class="text-center" id="tdDv{{$bioarchive->accession}}">
                     @if ($bioarchive->status == 5)
+                    <div id="tdDv{{$bioarchive->accession}}" style="display: inline">
                     @if($bioarchive->dv_published_at)
-                    <a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>
+                    <a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
                     @else
-                    <button onclick="javscript:dataverseSync('{{ $bioarchive->accession}}')" type="button" class="btn btn-sm btn-dataverse">Sync <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></button>
+                    <button onclick="javscript:dataverseSync('{{ $bioarchive->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
                     @endif
+                    </div>
                     @endif
                 </td>
             </tr>
@@ -125,7 +124,7 @@
                     bsConfirmModalSpinner.classList.add("d-none")
                     bsConfirmModal.hide()
                     showToast("Synced with dataverse")
-                    document.querySelector(`#tdDv${accession}`).innerHTML = `<a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId=${data.data.persistentId}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>`
+                    document.querySelector(`#tdDv${accession}`).innerHTML = `<a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId=${data.data.persistentId}" target="_blank" class="badge btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>`
                 } else {
                     showToast(`${data.status} - ${data.message}`, "danger")
                     console.log(data)

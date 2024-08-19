@@ -102,18 +102,24 @@ class DataverseController extends Controller
         return json_decode($response->getBody());
     }
 
-    public function buildCsvFile($columns, $content): string {
+    public function buildCsvFile($columns, $content, $type): string {
         $file = tmpfile();
         fputcsv($file, $columns);
-        fputcsv($file, $content);
-
-        // foreach ($content as $item) {
-        //     dd($item);
-        //     $val = explode(",", $item);
-        //     fputcsv($file, $val);
-        // }
+        if ($type == "biosample") {
+            fputcsv($file, $content);
+        } else {
+            foreach ($content as $item) {
+                fputcsv($file, $item);
+            }
+        }
         $metaDatas = stream_get_meta_data($file);
         return file_get_contents($metaDatas['uri']);
+    }
+
+    public function cleanFileName( $filename ) {
+        $sanitized_filename = preg_replace( '/[^A-Za-z0-9-_\.[:blank:]]/', '', $filename );
+        $sanitized_filename = preg_replace( '/[[:blank:]]+/', '_', $sanitized_filename );
+        return $sanitized_filename;
     }
 
     public function createDataFile(Request $request,  $type, $accession) {
@@ -121,86 +127,82 @@ class DataverseController extends Controller
         $header = array();
         $data = array();
         $dataForFile = array();
+        $parent = "Biaosample";
         if ($type == "biosample") {
             $biosample = Biosample::where('accession', $accession)->first();
-            $fileName = $biosample->sampletype->name.$fileName;
-            $persistentId = $biosample->sampletype->dv_persistent_id;
+            $parent = $biosample->title;
+            $fileName =  $this->cleanFileName($biosample->sampletype->name.$fileName);
+            $persistentId = $biosample->dv_persistent_id;
             $sampleAttributes = AttributeValue::where('biosample_id', $biosample->id)->get();
+            $description = "This datafile contains {$biosample->sampletype->name} Biosample Attributes details.";
+            $directory = "INNA/{$accession}";
             foreach ($sampleAttributes as $sampleAttribute => $value) {
                 array_push($header,$value->attributesample->attr_text);
                 array_push($data,$value->value);
-                array_push($data,$value->value);
+            }
+        }
+        if ($type == "bioarchive") {
+            $bioarchive = Bioarchive::where('accession', $accession)->first();
+            $parent = $bioarchive->bioproject->accession;
+            $fileName =  $this->cleanFileName($bioarchive->submission_id.$fileName);
+            $persistentId = $bioarchive->dv_persistent_id;
+            $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
+            $description = "This datafile contains {$accession} Bioexperiments Sample details.";
+            $directory  = "INNA/{$parent}/{$accession}";
+            array_push($header,"Biosample");
+            array_push($header,"Title");
+            array_push($header,"Library Source");
+            array_push($header,"Library Selection");
+            array_push($header,"Library Strategy");
+            array_push($header,"Instrument");
+            array_push($header,"Library Layout");
+            foreach ($bioexperiments as $bioexperiment) {
+                array_push($data,$bioexperiment->biosample->accession);
+                array_push($data,$bioexperiment->title);
+                array_push($data,$bioexperiment->libsource->name);
+                array_push($data,$bioexperiment->libselection->name);
+                array_push($data,$bioexperiment->libstrategy->name);
+                array_push($data,$bioexperiment->instrument->name);
+                array_push($data,$bioexperiment->liblayout->name);
+                array_push($dataForFile, $data);
+                $data = array();
             }
         }
 
-        $cb = $this->buildCsvFile($header, $data);
-        // header('Content-Type: text/csv');
-        // header('Content-Disposition: attachment; filename="sample.csv"');
-        // $fp = fopen('php://output', 'wb');
-        // $a = fputcsv($fp, $header);
-        // foreach ( $data as $line ) {
-        //     $val = explode(",", $line);
-        //     $a = fputcsv($fp, $val);
-        // }
-
-        // foreach ( $header as $line ) {
-        //     $val = explode(",", $line);
-        //     array_push($dataForFile,$val);
-        //     // $a = fputcsv($fp, $val);
-        // }
-
-
-        // foreach ( $data as $line ) {
-        //     $val = explode(",", $line);
-        //     array_push($dataForFile,$val);
-        // }
-        // dd($dataForFile);
-
-        $tes = Storage::disk('local')->put('test.csv', $cb);
-        dd($tes);
+        $cb = $this->buildCsvFile($header, $dataForFile, $type);
+        $tes = Storage::disk('local')->put("datafile/{$fileName}", $cb);
+        if (!$tes) {
+            return "error";
+        }
         $client = new Client();
         try {
-            $response = $client->post("https://demo.dataverse.org/api/datasets/{$accession}/add?persistentId={$persistentId}", [
+            $response = $client->post("https://data.brin.go.id/api/datasets/:persistentId/add?persistentId={$persistentId}", [
             'headers' => [
                 'X-Dataverse-key' => 'a0031e48-838e-4b4a-b375-a48c597745ba',
             ],
             'multipart' => [
                 [
                     'name' => 'file',
-                    'contents' => Psr7\Utils::tryFopen(getenv('FILENAME') ?? '', 'r')
+                    'contents' => Psr7\Utils::streamFor(Psr7\Utils::tryFopen(Storage::disk('local')->path("datafile/{$fileName}"), 'r'))
                 ],
                 [
                     'name' => 'jsonData',
-                    'contents' => '{"description":"My description.","directoryLabel":"data/subdir1","categories":["Data"], "restrict":"false"}'
+                    'contents' => "{\"description\":\"{$description}\",\"directoryLabel\":\"INNA/{$accession}\",\"categories\":[\"Data\"], \"restrict\":\"false\"}"
                 ]
             ]
-            // 'body'=> Psr7\Utils::streamFor(preg_replace('!\s+!', ' ', $rawJson))
         ]);
         } catch (\Throwable $th) {
             $rawJson = "{
                 \"status\": \"ERROR\",
-                \"message\": \"Bioproject  {$parent} doesn't exist in dataverse. You must sync the Bioproject first!\"
+                \"message\": \"{$th->getMessage()}\"
             }";
             return json_decode($rawJson);
         }
 
         $jsonResponse = json_decode($response->getBody());
-        // if ($jsonResponse->status == "OK") {
-        //     $action = Bioarchive::where('accession', $accession)->update([
-        //         'dv_published_at' => NOW(),
-        //         'dv_persistent_id' => $jsonResponse->data->persistentId
-        //     ]);
-        //     if ($action) {
-        //         ActionLog::create([
-        //             'action' => "Sync Bioproject to Dataverse",
-        //             'type' => 'Bioarchive',
-        //             'item_id' => $accession,
-        //             'created_by' => auth()->id()
-        //         ]);
-        //     }
-        // }
-
-        fclose($fp);
+        if ($jsonResponse->status == "OK") {
+            Storage::delete("datafile/{$fileName}");
+        }
         return json_decode($response->getBody());
     }
 
@@ -403,11 +405,12 @@ class DataverseController extends Controller
         ]);
         $jsonResponse = json_decode($response->getBody());
         if ($jsonResponse->status == "OK") {
-            $action = Bioarchive::where('accession', $accession)->update([
+            $action = Biosample::where('accession', $accession)->update([
                 'dv_published_at' => NOW(),
                 'dv_persistent_id' => $jsonResponse->data->persistentId
             ]);
             if ($action) {
+                $this->createDataFile($request, "biosample", $accession);
                 ActionLog::create([
                     'action' => "Sync Biosample to Dataverse",
                     'type' => 'Biosample',
@@ -632,6 +635,7 @@ class DataverseController extends Controller
                 'dv_persistent_id' => $jsonResponse->data->persistentId
             ]);
             if ($action) {
+                $this->createDataFile($request, "bioarchive", $accession);
                 ActionLog::create([
                     'action' => "Sync Bioproject to Dataverse",
                     'type' => 'Bioarchive',

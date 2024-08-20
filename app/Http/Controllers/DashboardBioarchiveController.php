@@ -43,37 +43,29 @@ class DashboardBioarchiveController extends Controller
         // dd($filetypes);
 
         if ($bioarchive->status != 5) {
-            $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
-            $disk = Storage::build([
-                'driver' => 'sftp',
-                'host' => env('FTP_HOST'),
-                'username' => "{$bioarchive->accession}",
-                'password' =>  "{$ftp_user->password}",
-                'root'=> "/"
-            ]);
-            foreach ($bioexperiment as $key => $value) {
-                $directory = "/innasto/temp/{$bioarchive->accession}/{$value['alias']}";
-                try {
-                    if ($disk->exists($directory)) {
-                        $d = $disk->files($directory);
-                        $obj = new \stdClass();
-                        $obj->{$value['alias']} = $d;
-                        array_push($files, $obj);
-                    }
-                } catch (\Throwable $th) {
-                    //throw $th;
-                }
-            }
+            $dir_type = "temp";
         } else {
-            foreach ($bioexperiment as $key => $value) {
-                // $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
-                $directory = "/mnt/innasto/files/{$bioarchive->accession}/{$value['alias']}";
-                if (Storage::disk('local')->exists($directory)) {
-                    $d = Storage::disk('local')->files($directory);
+            $dir_type = "files";
+        }
+        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
+        $disk = Storage::build([
+            'driver' => 'sftp',
+            'host' => env('FTP_HOST'),
+            'username' => "{$bioarchive->accession}",
+            'password' =>  "{$ftp_user->password}",
+            'root'=> "/"
+        ]);
+        foreach ($bioexperiment as $key => $value) {
+            $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
+            try {
+                if ($disk->exists($directory)) {
+                    $d = $disk->files($directory);
                     $obj = new \stdClass();
-                    $obj->{$value['alias']} = Storage::disk('local')->files($directory);
+                    $obj->{$value['alias']} = $d;
                     array_push($files, $obj);
                 }
+            } catch (\Throwable $th) {
+                throw $th;
             }
         }
 

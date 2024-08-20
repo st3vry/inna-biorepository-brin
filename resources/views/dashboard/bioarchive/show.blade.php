@@ -161,6 +161,7 @@
                                                                 @method('post')
                                                                 @csrf
                                                                 <input type="hidden" name="source" value="sftp">
+                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
                                                                 <input type="hidden" name="alias" value="{{$key}}">
                                                                 <input type="hidden" name="file" value="{{$item}}">
                                                                 <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
@@ -169,6 +170,7 @@
                                                                 @method('post')
                                                                 @csrf
                                                                 <input type="hidden" name="file" value="{{$item}}">
+                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
                                                                 <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
                                                             </form>
                                                         </span>
@@ -339,7 +341,6 @@
         myDropzone{{ $value['id']}}.on('sending', function (file, xhr, formData) {
             formData.append("_token", '{{ csrf_token() }}');
             formData.append("mainFolder", "{{$bioarchive->accession}}")
-            formData.append("password", "{{$ftp_user->password}}")
             formData.append("bioexperiment_id", "{{$value['id']}}")
             formData.append("subFolder", "{{ $value['alias']}}")
             formData.append("filetype", document.getElementById("filetype{{ $value['alias'] }}").value)

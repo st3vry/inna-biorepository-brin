@@ -93,15 +93,13 @@ class CuratorBioArchiveController extends Controller
         $disk = Storage::build([
             'driver' => 'sftp',
             'host' => env('FTP_HOST'),
-            // 'username' => "{$bioarchive->accession}",
-            // 'password' =>  "{$ftp_user->password}",
-            'username' => "INNAAR000008",
-            'password' =>  "B1mu8lUq",
+            'username' => "{$bioarchive->accession}",
+            'password' =>  "{$ftp_user->password}",
             'root'=> "/"
         ]);
         foreach ($bioexperiment as $key => $value) {
             $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
-            $directory = "/innasto/{$dir_type}/INNAAR000008/INNAX-r9K9Do-1";
+            // $directory = "/innasto/{$dir_type}/INNAAR000008/INNAX-r9K9Do-1";
             try {
                 if ($disk->exists($directory)) {
                     $d = $disk->files($directory);

@@ -168,7 +168,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>MD5 Checksum</td>
-                                                    <td>{{ $runs[0]->md5 }}</td>
+                                                    <td>{{ $runs[0]->md5 ?? "" }}</td>
                                                 </tr>
                                                 @endforeach
                                             @endif

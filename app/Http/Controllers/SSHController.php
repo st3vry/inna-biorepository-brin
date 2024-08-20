@@ -66,7 +66,7 @@ class SSHController extends Controller
             ->usePrivateKey(env('FTP_KEY'))
             ->execute($command);
         if ($response->isSuccessful()) {
-            return $response;
+            return $response->getOutput();
         } else {
             throw new ProcessFailedException($response);
         }

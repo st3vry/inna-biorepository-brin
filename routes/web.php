@@ -166,6 +166,7 @@ Route::prefix('dashboard')->group(function () {
 
 
     Route::post('/curator/biorun', [CuratorBioArchiveController::class, 'updateBiorun'])->name('updateBiorun')->middleware(['authsso']);
+    Route::post('/curator/fileCuration', [CuratorBioArchiveController::class, 'fileCuration'])->name('fileCuration')->middleware(['authsso']);
 
     Route::post('file/upload', [UploaderController::class, 'upload'])->name('file-upload')->middleware('authsso');
     Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('authsso');

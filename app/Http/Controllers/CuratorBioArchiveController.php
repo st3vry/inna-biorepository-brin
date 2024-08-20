@@ -90,27 +90,30 @@ class CuratorBioArchiveController extends Controller
             $dir_type = "files";
         }
         $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
-        $disk = Storage::build([
-            'driver' => 'sftp',
-            'host' => env('FTP_HOST'),
-            'username' => "{$bioarchive->accession}",
-            'password' =>  "{$ftp_user->password}",
-            'root'=> "/"
-        ]);
-        foreach ($bioexperiment as $key => $value) {
-            $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
-            // $directory = "/innasto/{$dir_type}/INNAAR000008/INNAX-r9K9Do-1";
-            try {
-                if ($disk->exists($directory)) {
-                    $d = $disk->files($directory);
-                    $obj = new \stdClass();
-                    $obj->{$value['alias']} = $d;
-                    array_push($files, $obj);
+        if ($ftp_user) {
+            $disk = Storage::build([
+                'driver' => 'sftp',
+                'host' => env('FTP_HOST'),
+                'username' => "{$bioarchive->accession}",
+                'password' =>  "{$ftp_user->password}",
+                'root'=> "/"
+            ]);
+            foreach ($bioexperiment as $key => $value) {
+                $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
+                // $directory = "/innasto/{$dir_type}/INNAAR000008/INNAX-r9K9Do-1";
+                try {
+                    if ($disk->exists($directory)) {
+                        $d = $disk->files($directory);
+                        $obj = new \stdClass();
+                        $obj->{$value['alias']} = $d;
+                        array_push($files, $obj);
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
                 }
-            } catch (\Throwable $th) {
-                //throw $th;
             }
         }
+
 
         // dd($files);
         return view('dashboard.curator.bioarchive.show', [

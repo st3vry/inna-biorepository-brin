@@ -12,6 +12,7 @@ use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use App\Models\Biorun;
+use App\Models\FtpUser;
 
 class UploaderController extends Controller
 {
@@ -80,32 +81,29 @@ class UploaderController extends Controller
     $mime_original = $file->getMimeType();
     $mime = str_replace('/', '-', $mime_original);
 
-    $folderDATE = $request->dataDATE;
-
-    $folder  = $folderDATE;
-    $filePath = "public/{$request->mainFolder}/{$request->subFolder}/";
-    $finalPath = storage_path("app/".$filePath);
-
     $fileSize = $file->getSize();
+
+    $ftp_user = FtpUser::where("username", $request->mainFolder)->first();
     // move the file name
     // $file->move($finalPath, $fileName);
     try {
-        $filePath = Storage::disk('sftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
+         $disk = Storage::build([
+            'driver' => 'sftp',
+            'host' => env('FTP_HOST'),
+            'username' => "{$request->mainFolder}",
+            'password' =>  "{$ftp_user->password}",
+            'root'=> "/"
+        ]);
+        $filePath = $disk->put("/innasto/temp/{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
     } catch (\Throwable $th) {
         throw $th;
     }
-    // dd($request);
-    $biorun = new BioRun;
-    $biorun->bioexperiment_id = $request->bioexperiment_id;
-    $biorun->alias = $request->subFolder;
-    $biorun->filename = $fileName;
-    $biorun->filetype_id = $request->filetype;
-    $biorun->save();
-
-    // $filePath = Storage::disk('ftp')->put("{$request->mainFolder}/{$request->subFolder}/{$fileName}", file_get_contents($file));
-
-
-    // $url_base = 'storage/upload/medialibrary/'.$user_obj->id."/{$folderDATE}/".$fileName;
+    // $biorun = new BioRun;
+    // $biorun->bioexperiment_id = $request->bioexperiment_id;
+    // $biorun->alias = $request->subFolder;
+    // $biorun->filename = $fileName;
+    // $biorun->filetype_id = $request->filetype;
+    // $biorun->save();
 
     return response()->json([
      'path' => $filePath,
@@ -141,46 +139,77 @@ class UploaderController extends Controller
 
     if (isset($request->source) && $request->source == 'sftp') {
       // dd($request);
-      Biorun::where([
-        ['alias', $request->alias],
-        ['filename',array_reverse(explode("/",$request->file))[0]]
-      ])->delete();
-      $delete = Storage::disk('sftp')->delete($request->file);
-      if ($delete) {
-        return back()->with('success', array_reverse(explode("/",$request->file))[0]. " Deleted Successfully");
-      } else {
-        return back()->with('error', 'Something went wrong, please try again later!');
-      }
+    //   Biorun::where([
+    //     ['alias', $request->alias],
+    //     ['filename',array_reverse(explode("/",$request->file))[0]]
+    //   ])->delete();
+
+    // move the file name
+    // $file->move($finalPath, $fileName);
+        $delete = false;
+
+        $ftp_user = FtpUser::where("username", $request->accession)->first();
+        try {
+            $disk = Storage::build([
+                'driver' => 'sftp',
+                'host' => env('FTP_HOST'),
+                'username' => "{$request->accession}",
+                'password' =>  "{$ftp_user->password}",
+                'root'=> "/"
+            ]);
+            $delete = $disk->delete($request->file);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        if ($delete) {
+            return back()->with('success', array_reverse(explode("/",$request->file))[0]. " Deleted Successfully");
+        } else {
+            return back()->with('error', 'Something went wrong, please try again later!');
+        }
     } else {
-      $user_obj = auth()->user();
-      $file = $request->filename;
-      $filePath = "public/{$request->mainFolder}/{$request->subFolder}/";
-      //delete timestamp from filename
-      $temp_arr = explode('_', $file);
-      if ( isset($temp_arr[0]) ) unset($temp_arr[0]);
-      $file = implode('_', $temp_arr);
+        $user_obj = auth()->user();
+        $file = $request->filename;
+        $filePath = "public/{$request->mainFolder}/{$request->subFolder}/";
+        //delete timestamp from filename
+        $temp_arr = explode('_', $file);
+        if ( isset($temp_arr[0]) ) unset($temp_arr[0]);
+        $file = implode('_', $temp_arr);
 
-      $dir = $request->date;
+        $dir = $request->date;
 
-      $filePath = "public/upload/medialibrary/{$user_obj->id}/{$dir}/";
-      $finalPath = storage_path("app/".$filePath);
+        $filePath = "public/upload/medialibrary/{$user_obj->id}/{$dir}/";
+        $finalPath = storage_path("app/".$filePath);
 
-      if ( unlink($finalPath.$file) ){
-        return response()->json([
-          'status' => 'ok'
-        ], 200);
-      }
-      else{
-        return response()->json([
-          'status' => 'error'
-        ], 403);
-      }
+        if ( unlink($finalPath.$file) ){
+            return response()->json([
+            'status' => 'ok'
+            ], 200);
+        }
+        else{
+            return response()->json([
+            'status' => 'error'
+            ], 403);
+        }
+        }
     }
-  }
 
-  public function download(Request $request)
+    public function download(Request $request)
     {
-        return Storage::disk('sftp')->download($request->file);
+        $ftp_user = FtpUser::where("username", $request->accession)->first();
+        // move the file name
+        // $file->move($finalPath, $fileName);
+        try {
+            $disk = Storage::build([
+                'driver' => 'sftp',
+                'host' => env('FTP_HOST'),
+                'username' => "{$request->accession}",
+                'password' =>  "{$ftp_user->password}",
+                'root'=> "/"
+            ]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        return $disk->download($request->file);
     }
 
 }

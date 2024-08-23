@@ -134,27 +134,45 @@
                             <td class="col-sm-2"><strong>BioRun</strong></td>
                             <td>
                                 <table class="m-auto table table-striped table-hover table-responsive text-nowrap" >
-                                    @foreach ($runs as $item)
-                                    <tr>
-                                        <td>Alias</td>
-                                        <td>{{ $item->alias }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>File Name</td>
-                                        <td>
-                                            {{ $item->filename }}
-                                            <form action="/dashboard/file/download" method="post" class="d-inline">
-                                                @method('post')
-                                                @csrf
-                                                <input type="hidden" name="file" value="files/{{$bioarchive->accession}}/{{$item->alias}}/{{$item->filename}}">
-                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>MD5 Checksum</td>
-                                        <td>{{ $item->md5 }}</td>
-                                    </tr>
+                                    @foreach ($files as $file)
+                                        @foreach ($file as $key => $items)
+                                            @if ($key === $value['alias'])
+                                                <tr>
+                                                    <th>Alias</th>
+                                                    <td>{{ $key }}</td>
+                                                </tr>
+                                                @foreach ($items as $item)
+                                                <tr>
+                                                    <td>File Name</td>
+                                                    <td>
+                                                        {{array_reverse(explode("/",$item))[0]}}
+                                                        <span>
+                                                            <form action="/dashboard/file/delete" method="post" class="d-inline">
+                                                                @method('post')
+                                                                @csrf
+                                                                <input type="hidden" name="source" value="sftp">
+                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
+                                                                <input type="hidden" name="alias" value="{{$key}}">
+                                                                <input type="hidden" name="file" value="{{$item}}">
+                                                                <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
+                                                            </form>
+                                                            <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                                @method('post')
+                                                                @csrf
+                                                                <input type="hidden" name="file" value="{{$item}}">
+                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
+                                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                                            </form>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>MD5 Checksum</td>
+                                                    <td>{{ $runs[0]->md5 ?? "" }}</td>
+                                                </tr>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
                                     @endforeach
                                 </table>
                             </td>
@@ -197,6 +215,8 @@
                                             <form action="{{route('updateBiorun')}}" method="post">
                                                 @csrf
                                                 <input type="hidden" name="alias" value="{{$value['alias']}}">
+                                                <input type="hidden" name="bioexperiment_id" value="{{$value['id']}}">
+                                                <input type="hidden" name="filetype" value="1">
                                                 <div class="mb-1 row">
                                                     <label for="fileNameInModal{{$value['id']}}" class="col-sm-2 col-form-label">File Name</label>
                                                     <div class="col-sm-10">
@@ -204,7 +224,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mb-2 row">
-                                                    <label for="md5InModal{{$value['id']}}" class="col-sm-2 col-form-label">MD5 Checksum</label>
+                                                    <label for="md5InModal{{$value['id']}}" class="col-sm-2 col-form-label">Response:</label>
                                                     <div class="col-sm-10">
                                                     <input type="text" readonly class="form-control-plaintext" name="md5InModal" id="md5InModal{{$value['id']}}" value="-">
                                                     </div>
@@ -389,27 +409,29 @@
             let md5 = "gagal"
             const md5Array = []
             console.log(files[0])
-            function tesSSH(elem, fileNameInModal, md5InModal, cmd, folder, item, button) {
+            function fileCuration(bioexperiment_id, elem, fileNameInModal, md5InModal, cmd, folder, item, button) {
                 let fileName = files[item][folder][0].split('/').slice(-1)[0]
                 let extension = fileName.split('.').slice(-1)[0]
                 console.log(fileName, extension)
-                fetch('{{route('tesSSH')}}', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {
-                        "id": '{{$bioarchive->accession}}',
-                        "folder": folder,
-                        "fileName":fileName,
-                        "extension":extension,
-                        "cmd": cmd,
-                         '_token': '{{ csrf_token() }}'
-                    }
-                )
-            })
+                fetch('{{route('fileCuration')}}', {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(
+                        {
+                            "id": '{{$bioarchive->accession}}',
+                            "bioexperiment_id":bioexperiment_id,
+                            "folder": folder,
+                            "fileName":fileName,
+                            "extension":extension,
+                            "filetype":1,
+                            "cmd": cmd,
+                            '_token': '{{ csrf_token() }}'
+                        }
+                    )
+                })
                 .then(response => response.text())
                 .then(response => {
                     console.log(response)
@@ -437,7 +459,7 @@
             const btSubmitBiorun{{$item}} = document.getElementById('btSubmitBiorun{{$value['id']}}')
 
             btmd5{{$item}}.addEventListener("click", function() {
-                tesSSH(sshRespon{{$item}}, fileNameInModal{{$item}}, md5InModal{{$item}},  "md5sum ", '{{$value['alias']}}', '{{$item}}', btSubmitBiorun{{$item}})
+                fileCuration({{$value['id']}},sshRespon{{$item}}, fileNameInModal{{$item}}, md5InModal{{$item}},  "md5sum ", '{{$value['alias']}}', '{{$item}}', btSubmitBiorun{{$item}})
             })
 
             @endforeach

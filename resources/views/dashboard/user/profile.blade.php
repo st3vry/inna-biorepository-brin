@@ -24,7 +24,7 @@
 @endif
 <div class="row">
     <div class="col-lg-6">
-        <div class="card">
+        <div class="card shadow-sm">
             <div class="card-body">
               <h5 class="card-title">User Data </h5>
                 <form method="post" action="{{route('users.profile.update')}}">
@@ -47,7 +47,6 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                         <input type="text" disabled class="form-control @error('email') is-invalid @enderror" id="email" name="email" readonly value="{{auth()->user()->email}}">
-
                         @error('email')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
@@ -94,45 +93,6 @@
                     </div>
                     <button type="submit" class="btn btn-sm btn-primary float-end">Save</button>
                 </form>
-            </div>
-        </div>
-
-    </div>
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Update Password</h5>
-                <form class="form-horizontal" method="POST" action="{{route('users.password.update')}}">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="current_password" class="form-label">Current Password</label>
-                        <input id="current_password" type="password" class="form-control @if (session('current_password')) is-invalid @endif" name="current_password" required>
-                        @if (session('current_password'))
-                        <div class="invalid-feedback"> {{ session('current_password') }}</div>
-                        @endif
-                    </div>
-                    <div class="mb-3">
-                        <label for="new_password" class="form-label">New Password</label>
-                        <input id="new_password" type="password" class="form-control @error('new_password') is-invalid @enderror @if (session('same_old_password')) is-invalid @endif"  name="new_password" required>
-                        @if (session('same_old_password'))
-                        <div class="invalid-feedback"> {{ session('same_old_password') }}</div>
-                        @endif
-                        @error('new_password')
-                        <div class="invalid-feedback">{{$message}}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Confirm New Password</label>
-                        <input id="confirm_password" type="password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password" required>
-                        @error('confirm_password')
-                        <div class="invalid-feedback">{{$message}}</div>
-                        @enderror
-                    </div>
-
-                    <button type="submit" class="btn btn-sm btn-primary float-end">Change Password</button>
-                </form>
-
             </div>
         </div>
     </div>

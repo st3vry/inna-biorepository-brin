@@ -166,13 +166,17 @@ Route::prefix('dashboard')->group(function () {
 
 
     Route::post('/curator/biorun', [CuratorBioArchiveController::class, 'updateBiorun'])->name('updateBiorun')->middleware(['authsso']);
+    Route::post('/curator/fileCuration', [CuratorBioArchiveController::class, 'fileCuration'])->name('fileCuration')->middleware(['authsso']);
 
     Route::post('file/upload', [UploaderController::class, 'upload'])->name('file-upload')->middleware('authsso');
     Route::post('file/delete', [UploaderController::class, 'delete'])->name('file-delete')->middleware('authsso');
     Route::post('file/download', [UploaderController::class, 'download'])->name('file-download')->middleware('authsso');
-    Route::post('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
+    Route::get('ssh', [SSHController::class, 'tesSSH'])->name('tesSSH');
     Route::get('createFtpUser/{accession}', [SSHController::class, 'createFtpUser'])->name('createFtpUser');
-    Route::get('createDataverse', [DataverseController::class, 'createDataverse'])->name('createDataverse');
+    Route::post('createDataverse', [DataverseController::class, 'createDataverse'])->name('createDataverse');
+    Route::post('createDatasetSample', [DataverseController::class, 'createDatasetSample'])->name('createDatasetSample');
+    Route::post('createDatasetArchive', [DataverseController::class, 'createDatasetArchive'])->name('createDatasetArchive');
+    Route::get('createDataFile/{type}/{accession}', [DataverseController::class, 'createDataFile'])->name('createDataFile');
 
 
 

@@ -127,52 +127,67 @@
                         @if ($bioarchive->status == 4)
 
                         <tr>
-                            <td><strong>File</strong></td>
+                            <td><strong>File(s) ({{ $value['alias'] }})</strong></td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal{{ $value['alias'] }}">
-                                    Upload {{ $value['alias'] }} File(s)
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>FTP</strong></td>
-                            <td>
-                                {{$ftp_user->username}} / {{$ftp_user->password}}
-                            </td>
-                        </tr>
-
-                        @foreach ($files as $file)
-                            @foreach ($file as $key => $items)
-                                @if ($key === $value['alias'])
-                                @foreach ($items as $item)
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        {{array_reverse(explode("/",$item))[0]}}
-                                         <span>
-                                             <form action="/dashboard/file/delete" method="post" class="d-inline">
-                                                 @method('post')
-                                                 @csrf
-                                                 <input type="hidden" name="source" value="sftp">
-                                                 <input type="hidden" name="alias" value="{{$key}}">
-                                                 <input type="hidden" name="file" value="{{$item}}">
-                                                 <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
-                                             </form>
-                                             <form action="/dashboard/file/download" method="post" class="d-inline">
-                                                 @method('post')
-                                                 @csrf
-                                                 <input type="hidden" name="file" value="{{$item}}">
-                                                 <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
-                                             </form>
-                                         </span>
-                                     </td>
-                                </tr>
-                                @endforeach
-
+                                <div class="mb-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modal{{ $value['alias'] }}">
+                                        Web Upload
+                                    </button>
+                                     - or -
+                                    <button type="button" class="btn btn-sm btn-outline-success ms-1" data-bs-toggle="collapse" data-bs-target="#collapse{{ $value['alias'] }}" aria-expanded="false" aria-controls="collapse{{ $value['alias'] }}" >
+                                        FTP/SFTP Upload
+                                    </button>
+                                </div>
+                                <div class="collapse" id="collapse{{ $value['alias'] }}">
+                                    <div class="card card-body">
+                                        Username: {{$ftp_user->username}}<br>
+                                        Password: {{$ftp_user->password}}
+                                    </div>
+                                </div>
+                                <div>
+                                    <small class="text-secondary">Please use FTP/SFTP for easier uploads or for files larger than 1GB.</small>
+                                </div>
+                                @if (count($files) > 0)
+                                <table class="m-auto table table-responsive text-nowrap">
+                                    @foreach ($files as $file)
+                                        @foreach ($file as $key => $items)
+                                            @if ($key === $value['alias'])
+                                                @foreach ($items as $item)
+                                                <tr>
+                                                    <td>
+                                                        {{array_reverse(explode("/",$item))[0]}}
+                                                        <span>
+                                                            <form action="/dashboard/file/delete" method="post" class="d-inline">
+                                                                @method('post')
+                                                                @csrf
+                                                                <input type="hidden" name="source" value="sftp">
+                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
+                                                                <input type="hidden" name="alias" value="{{$key}}">
+                                                                <input type="hidden" name="file" value="{{$item}}">
+                                                                <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
+                                                            </form>
+                                                            <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                                @method('post')
+                                                                @csrf
+                                                                <input type="hidden" name="file" value="{{$item}}">
+                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
+                                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                                            </form>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                </table>
+                                @else
+                                <div class="mt-2">
+                                    No files have been uploaded yet.
+                                </div>
                                 @endif
-                            @endforeach
-                        @endforeach
-
+                            </td>
+                        </tr>
                         <div class="modal fade modalfile" id="modal{{ $value['alias'] }}" tabindex="-1" aria-labelledby="modal{{ $value['alias'] }}Label" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -312,13 +327,15 @@
 @push('js')
     <script>
 
+
          @foreach ($bioexperiment as $item => $value)
-         var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
+
+        var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
             chunking: true,
             method: "POST",
-            maxFilesize: 2147483648, //2gb
+            maxFilesize: 21474836480, //2gb
             chunkSize: 104857600, // 100mb
-            parallelChunkUploads: true
+            parallelChunkUploads: true,
         });
 
         myDropzone{{ $value['id']}}.on('sending', function (file, xhr, formData) {
@@ -327,8 +344,12 @@
             formData.append("bioexperiment_id", "{{$value['id']}}")
             formData.append("subFolder", "{{ $value['alias']}}")
             formData.append("filetype", document.getElementById("filetype{{ $value['alias'] }}").value)
-            console.log(formData,formData)
-        })
+            console.log(formData,Object.fromEntries(formData))
+        }).on("complete", function(file) {
+            console.log("complete:",file);
+        }).on('error', function(file, response) {
+            console.error("ERROR:",response)
+        });
         @endforeach
 
         $(".modalfile").on("hidden.bs.modal", function () {

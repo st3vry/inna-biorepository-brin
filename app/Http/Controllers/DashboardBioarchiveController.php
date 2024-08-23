@@ -12,6 +12,7 @@ use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
 use App\Models\FileType;
+use App\Models\FtpUser;
 use Storage;
 use Illuminate\Http\Request;
 
@@ -32,21 +33,39 @@ class DashboardBioarchiveController extends Controller
 
     public function show(Bioarchive $bioarchive)
     {
+
         $biosample_id =  explode(",", $bioarchive->biosample_id);
         $bioexperiment = $bioarchive->bioexperiment()->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
         $filetypes = FileType::get();
+        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
         // dd($filetypes);
 
+        if ($bioarchive->status != 5) {
+            $dir_type = "temp";
+        } else {
+            $dir_type = "files";
+        }
+        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
+        $disk = Storage::build([
+            'driver' => 'sftp',
+            'host' => env('FTP_HOST'),
+            'username' => "{$bioarchive->accession}",
+            'password' =>  "{$ftp_user->password}",
+            'root'=> "/"
+        ]);
         foreach ($bioexperiment as $key => $value) {
-            // $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
-            $directory = "/mnt/innasto/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('local')->exists($directory)) {
-                $d = Storage::disk('local')->files($directory);
-                $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('local')->files($directory);
-                array_push($files, $obj);
+            $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
+            try {
+                if ($disk->exists($directory)) {
+                    $d = $disk->files($directory);
+                    $obj = new \stdClass();
+                    $obj->{$value['alias']} = $d;
+                    array_push($files, $obj);
+                }
+            } catch (\Throwable $th) {
+                throw $th;
             }
         }
 
@@ -61,8 +80,7 @@ class DashboardBioarchiveController extends Controller
             'histories' => $histories,
             'files' => $files,
             'filetypes' => $filetypes,
-            // 'ftp_user'=> $ftp_users
-            // 'biorun' => $biorun,
+            'ftp_user'=> $ftp_users,
         ]);
     }
 

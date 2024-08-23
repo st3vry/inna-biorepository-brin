@@ -82,17 +82,39 @@ class CuratorBioArchiveController extends Controller
         $curators = User::select(['id', 'name'])->where('role_id', 2)->where('is_activated', true)->orderBy('name')->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
-        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id);
+        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
 
-        foreach ($bioexperiment as $key => $value) {
-            $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('sftp')->exists($directory)) {
-                $d = Storage::disk('sftp')->files($directory);
-                $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('sftp')->files($directory);
-                array_push($files, $obj);
+        if ($bioarchive->status != 5) {
+            $dir_type = "temp";
+        } else {
+            $dir_type = "files";
+        }
+        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
+        if ($ftp_user) {
+            $disk = Storage::build([
+                'driver' => 'sftp',
+                'host' => env('FTP_HOST'),
+                'username' => "{$bioarchive->accession}",
+                'password' =>  "{$ftp_user->password}",
+                'root'=> "/"
+            ]);
+            foreach ($bioexperiment as $key => $value) {
+                $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
+                // $directory = "/innasto/{$dir_type}/INNAAR000008/INNAX-r9K9Do-1";
+                try {
+                    if ($disk->exists($directory)) {
+                        $d = $disk->files($directory);
+                        $obj = new \stdClass();
+                        $obj->{$value['alias']} = $d;
+                        array_push($files, $obj);
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
             }
         }
+
+
         // dd($files);
         return view('dashboard.curator.bioarchive.show', [
             'bioarchive' => $bioarchive,
@@ -171,9 +193,10 @@ class CuratorBioArchiveController extends Controller
 
                     // dd($bioexperiment->alias);
                     $command = [
-                        "sudo mkdir /innasto/temp/{$id}/{$bioexperiment->alias}"
+                        "sudo mkdir /innasto/temp/{$id}/{$bioexperiment->alias}",
+                        "sudo chown -R {$id}:{$id} /innasto/temp/{$id}"
                     ];
-                    $createFolder = $SSHController->customSSHCommand($id, $command);
+                    $createFolder = $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
 
                     // $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
                     // if (!File::exists($path)) {
@@ -279,10 +302,17 @@ class CuratorBioArchiveController extends Controller
 
     public function updateBiorun(Request $request)
     {
-        $action = Biorun::where('alias', $request->alias)->update([
-            'filename' => $request->fileNameInModal,
-            'md5' => $request->md5InModal,
-        ]);
+        // $action = Biorun::where('alias', $request->alias)->update([
+        //     'filename' => $request->fileNameInModal,
+        //     'md5' => $request->md5InModal,
+        // ]);
+        $biorun = new BioRun;
+        $biorun->bioexperiment_id = $request->bioexperiment_id;
+        $biorun->alias = $request->alias;
+        $biorun->filename = $request->fileNameInModal;
+        $biorun->md5 = $request->md5InModal;
+        $biorun->filetype_id = $request->filetype;
+        $action = $biorun->save();
         // $action = Biorun::where('id', $request->biorun_id)->get();
         // dd($request);
         if ($action) {
@@ -290,5 +320,15 @@ class CuratorBioArchiveController extends Controller
         } else {
             return back()->with('error', 'Something went wrong, please try again later!');
         }
+    }
+
+    public function fileCuration(Request $request) {
+        $SSHController = new SSHController();
+        try {
+            $curation = $SSHController->customSSHCommand(env('FTP_USERNAME'), $request->cmd);
+        } catch (\Throwable $th) {
+            return th->getMessage();
+        }
+        return $curation;
     }
 }

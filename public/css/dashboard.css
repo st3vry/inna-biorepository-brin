@@ -13,7 +13,7 @@ body {
  */
 
 .sidebar {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   /* rtl:raw:
   right: 0;
@@ -22,7 +22,7 @@ body {
   /* rtl:remove */
   left: 0;
   z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
+  padding: 0; /* Height of navbar */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 
@@ -111,3 +111,38 @@ body {
     color: #fff;
 }
 
+.btn-dataverse {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    border: 1px solid transparent;
+    color: #fff;
+    background-color: #C55B28;
+}
+
+.btn-dataverse img {
+    -webkit-filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
+}
+
+.btn-dataverse-outline {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    border: 1px solid #C55B28;
+    color: #C55B28;
+    background-color: transparent;
+}
+
+.btn-dataverse-outline:hover img{
+    -webkit-filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
+}
+
+.btn-dataverse:hover,
+.btn-dataverse:active,
+.btn-dataverse-outline:hover,
+.btn-dataverse-outline:active {
+    background-color: #aa4d22;
+    color: #fff;
+}

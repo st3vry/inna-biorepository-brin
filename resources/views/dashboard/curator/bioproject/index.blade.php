@@ -14,7 +14,7 @@
         <li class="breadcrumb-item active" aria-current="page">Curator Bioprojects</li>
     </ol>
 </div>
-<div class="table-responsive col-md-11">
+<div class="table-responsive col-md-12">
     <table class="table table-striped table-sm" id="dataTable">
         <thead>
             <tr>
@@ -35,7 +35,7 @@
                 <td>{{ $bioproject->accession }}</td>
                 <td>{{ $bioproject->organism->name }}</td>
                 <td>{{ $bioproject->title }}</td>
-                <td>{{ $bioproject->description }}</td>
+                <td>{!! Str::words($bioproject->description, 20, "<a href='/dashboard/curator/bioprojects/{$bioproject->accession}'> read more...</a>") !!}</td>
                 {{-- <td>{{ $bioproject->center->name }}</td> --}}
                 <td>{{ $bioproject->center_id }}</td>
                 <td>
@@ -59,8 +59,17 @@
                             <span class="badge bg-secondary">Rejected</span>
                     @endswitch
                 </td>
-                <td>
+                <td style="min-width: 80px">
                     <a href="/dashboard/curator/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    @if ($bioproject->status == 5)
+                    <div id="tdDv{{$bioproject->accession}}" style="display: inline">
+                    @if($bioproject->dv_published_at)
+                    <a type="button" href="https://data.brin.go.id/dataverse/{{$bioproject->accession}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
+                    @else
+                    <button onclick="javscript:dataverseSync('{{ $bioproject->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
+                    @endif
+                    </div>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -75,6 +84,50 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script>
+        let accession = null
+        bsConfirmModalButton.addEventListener("click",()=>{
+            bsConfirmModalButton.disabled = true
+            bsConfirmModalTitle.textContent = `Syncing with dataverse...`
+            bsConfirmModalSpinner.classList.remove("d-none")
+            bsConfirmModalText.textContent = `Please do not close this window until syncing process has finished.`
+            fetch("{{route('createDataverse')}}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({'accession':accession})
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                if (data.status === "OK") {
+                    bsConfirmModalSpinner.classList.add("d-none")
+                    bsConfirmModal.hide()
+                    showToast("Synced with dataverse")
+                    document.querySelector(`#tdDv${accession}`).innerHTML = `<a type="button" href="https://data.brin.go.id/dataverse/${accession}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>`
+                } else {
+                    showToast(`Error: ${JSON.stringify(data)}`, "danger")
+                    bsConfirmModalTitle.textContent = `Something went wrong`
+                    bsConfirmModalSpinner.classList.add("d-none")
+                    bsConfirmModalText.textContent = `Error: ${error}`
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error)
+                bsConfirmModalTitle.textContent = `Something went wrong`
+                bsConfirmModalSpinner.classList.add("d-none")
+                bsConfirmModalText.textContent = `Error: ${error}`
+            });
+            bsConfirmModalButton.disabled = false
+        })
+        function dataverseSync(id) {
+            accession = id
+            bsConfirmModalTitle.textContent = `Sync ${accession} bioproject to dataverse?`
+            bsConfirmModal.show()
+
+
+        }
         $(document).ready(function () {
             const dataTable = $('#dataTable').DataTable({
                     columnDefs: [

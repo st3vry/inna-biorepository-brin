@@ -258,6 +258,12 @@ class CuratorBioArchiveController extends Controller
                     'status' => 5
                 ]);
                 $success = 'BioArchive Approved';
+                $SSHController = new SSHController();
+                $command = [
+                    "cp -r /innasto/temp/{$id}/ /innasto/files/",
+                    "sudo rm -rf /innasto/temp/{$id}"
+                ];
+                $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
             }
             if ($request->action === 'rejected') {
 

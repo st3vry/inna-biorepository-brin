@@ -140,12 +140,14 @@
                                 </div>
                                 <div class="collapse" id="collapse{{ $value['alias'] }}">
                                     <div class="card card-body">
+                                        Host: 10.28.28.210<br>
                                         Username: {{$ftp_user->username}}<br>
                                         Password: {{$ftp_user->password}}
+                                        <p>Please upload the file inside {{ $value['alias'] }} folder. You can use any ftp/sftp client such as: WinSCP, Filezille, Cyberduck, etc. </p>
                                     </div>
                                 </div>
                                 <div>
-                                    <small class="text-secondary">Please use FTP/SFTP for easier uploads or for files larger than 1GB.</small>
+                                    <small class="text-secondary">Please use FTP/SFTP for easier uploads or for files larger than 100MB.</small>
                                 </div>
                                 @if (count($files) > 0)
                                 <table class="m-auto table table-responsive text-nowrap">

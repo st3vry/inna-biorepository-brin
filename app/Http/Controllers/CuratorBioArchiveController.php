@@ -253,6 +253,56 @@ class CuratorBioArchiveController extends Controller
                 }
             }
             if ($request->action === 'approved') {
+                $bioarchive = Bioarchive::where('accession', $id)->first();
+                $bioexperiment = $bioarchive->bioexperiment()->get();
+                $files = array();
+                $ftp_user = FtpUser::where("username", $id)->first();
+
+                if ($ftp_user) {
+                    $disk = Storage::build([
+                        'driver' => 'sftp',
+                        'host' => env('FTP_HOST'),
+                        'username' => "{$bioarchive->accession}",
+                        'password' =>  "{$ftp_user->password}",
+                        'root'=> "/"
+                    ]);
+                    foreach ($bioexperiment as $key => $value) {
+                        $directory = "/innasto/temp/{$bioarchive->accession}/{$value['alias']}";
+                        // $directory = "/innasto/{$dir_type}/INNAAR000008/INNAX-r9K9Do-1";
+                        try {
+                            if ($disk->exists($directory)) {
+                                $d = $disk->files($directory);
+                                $obj = new \stdClass();
+                                $obj->{$value['alias']} = $d;
+                                array_push($files, $obj);
+                            }
+                        } catch (\Throwable $th) {
+                            throw $th;
+                        }
+                    }
+                    foreach ($files as $key => $values) {
+                        foreach ($values as $key2 => $children) {
+                            foreach ($children as $child) {
+                                $SSHController = new SSHController();
+                                try {
+                                    $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), "md5sum {$child}");
+                                } catch (\Throwable $th) {
+                                    return $th->getMessage();
+                                }
+                                list($firstWord) = explode(' ', $md5);
+                                $filename = substr($child, strrpos($child, '/') + 1);
+                                $biorun = new BioRun;
+                                $biorun->bioexperiment_id = $bioexperiment->id;
+                                $biorun->alias = $key2;
+                                $biorun->filename = $filename;
+                                $biorun->md5 = $firstWord;
+                                $biorun->filetype_id = 1;
+                                $action = $biorun->save();
+                            }
+                           
+                        }
+                    }
+                }
                 $action = Bioarchive::where('accession', $id)->update([
                     'published_at' => now(),
                     'status' => 5
@@ -333,7 +383,7 @@ class CuratorBioArchiveController extends Controller
         try {
             $curation = $SSHController->customSSHCommand(env('FTP_USERNAME'), $request->cmd);
         } catch (\Throwable $th) {
-            return th->getMessage();
+            return $th->getMessage();
         }
         return $curation;
     }

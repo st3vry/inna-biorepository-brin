@@ -27,6 +27,33 @@
         content: "";
     }
 
+    .modal-body .responses {
+        min-width: 350px;
+    }
+
+    .modal-body .responses p {
+        margin-bottom: .25rem;
+        padding-left: 50px;
+        white-space: pre-line
+    }
+
+    .modal-body .responses p.respond {
+        font-weight: bold;
+    }
+    .modal-body .responses p.cmd:before {
+        content: "CMD :";
+        position: absolute;
+        margin-left: 20px;
+        left:0
+    }
+
+    .modal-body .responses p.respond:before {
+        content: "RSP :";
+        position: absolute;
+        margin-left: 20px;
+        left:0
+    }
+
     table tr.separator { height: 15px; }
 </style>
 @endpush
@@ -126,7 +153,7 @@
                             <td>Input Size</td>
                             <td>{{ $value['input_size'] }}</td>
                         </tr>
-                        @if (count($files) > 0 && $bioarchive->status == 2 && $bioarchive->draft == false )
+                        @if (count($files) > 0 && $bioarchive->draft == false )
                         <tr>
                             @php
                                 $runs =  App\Models\Biorun::Select('*')->where('bioexperiment_id',$value['id'])->get()
@@ -192,14 +219,16 @@
                                     @endif
                                 @endforeach
                             @endforeach --}}
+                        @if ($bioarchive->status == 2)
                         <tr>
                             <td></td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#fileCheck{{$value['alias']}}">
-                                    File Check
+                                    File(s) Check
                                 </button>
                             </td>
                         </tr>
+                        @endif
                         @endif
                         <tr class="separator">
                         </tr>
@@ -210,35 +239,17 @@
                                             <h5 class="modal-title" id="fileCheck{{$value['alias']}}Label">{{$value['alias']}}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body" style="min-height:300px">
-
-                                            <form action="{{route('updateBiorun')}}" method="post">
-                                                @csrf
-                                                <input type="hidden" name="alias" value="{{$value['alias']}}">
-                                                <input type="hidden" name="bioexperiment_id" value="{{$value['id']}}">
-                                                <input type="hidden" name="filetype" value="1">
-                                                <div class="mb-1 row">
-                                                    <label for="fileNameInModal{{$value['id']}}" class="col-sm-2 col-form-label">File Name</label>
-                                                    <div class="col-sm-10">
-                                                    <input type="text" readonly class="form-control-plaintext" name="fileNameInModal" id="fileNameInModal{{$value['id']}}" value="-">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-2 row">
-                                                    <label for="md5InModal{{$value['id']}}" class="col-sm-2 col-form-label">Response:</label>
-                                                    <div class="col-sm-10">
-                                                    <input type="text" readonly class="form-control-plaintext" name="md5InModal" id="md5InModal{{$value['id']}}" value="-">
-                                                    </div>
-                                                </div>
-                                            <div id="sshRespon{{$value['alias']}}"></div>
-
+                                        <div class="modal-body" style="min-height:400px">
+                                            <div id="textResponses{{$value['alias']}}" class="responses" style="min-height: 380px">
+                                            </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" id="btmd5{{$value['alias']}}">MD5 Checksum</button>
-
-                                            <button disabled id="btSubmitBiorun{{$value['id']}}" type="submit" class="btn btn-primary">Save Change</button>
-                                            </form>
-
+                                        <div class="row g-3 m-3">
+                                            <div class="col-10">
+                                                <input type="text" class="form-control" id="command{{$value['alias']}}" placeholder="Type your command!">
+                                            </div>
+                                            <div class="col-2">
+                                                <button id="btnSendCmd{{$value['alias']}}" class="btn btn-primary w-100">Send</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -406,12 +417,23 @@
             }
             const files = @json($files, JSON_PRETTY_PRINT);
             const md5Input = document.getElementById("md5Input");
-            let md5 = "gagal"
-            const md5Array = []
-            console.log(files[0])
-            function fileCuration(bioexperiment_id, elem, fileNameInModal, md5InModal, cmd, folder, item, button) {
+            let respond = "gagal"
+
+
+            function buttonLoading(element,state,text="") {
+                if (state) {
+                    element.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span class="visually-hidden" role="status">Loading...</span>`
+                    element.disabled = true
+                } else {
+                    element.innerHTML = text
+                    element.disabled = false
+                }
+            }
+
+            function fileCuration(bioexperiment_id, elem, cmd, folder, item, button) {
                 let fileName = files[item][folder][0].split('/').slice(-1)[0]
                 let extension = fileName.split('.').slice(-1)[0]
+                elem.innerHTML +=`<p class="cmd">${cmd}</p>`
                 console.log(fileName, extension)
                 fetch('{{route('fileCuration')}}', {
                     method: 'post',
@@ -427,40 +449,56 @@
                             "fileName":fileName,
                             "extension":extension,
                             "filetype":1,
-                            "cmd": cmd,
+                            "cmd": [`cd innasto/temp/{{$bioarchive->accession}}/${folder}`,cmd],
                             '_token': '{{ csrf_token() }}'
                         }
                     )
                 })
                 .then(response => response.text())
                 .then(response => {
-                    console.log(response)
-                    md5 = response.split("  ")[0]
-                    md5Array.push(md5)
-                    md5Input.value = JSON.stringify(md5Array)
-                    fileNameInModal.value = fileName
-                    md5InModal.value = md5
-                    if (md5.length > 1) {
-                        button.disabled=false;
-                    }
-                    // elem.innerHTML += "<p> MD5 Check ("+md5+")</p>"
+                    elem.innerHTML +=`<p class="respond">${response}</p>`
+                    buttonLoading(button,false,"Send")
                 })
             }
+
+            
+
+        
 
 
 
             @foreach ($bioexperiment as $item => $value)
-            const btls{{$item}} = document.getElementById('btls{{$value['alias']}}')
-            const btlsltr{{$item}} = document.getElementById('btlsltr{{$value['alias']}}')
-            const sshRespon{{$item}} =  document.getElementById('sshRespon{{$value['alias']}}')
-            const btmd5{{$item}} = document.getElementById('btmd5{{$value['alias']}}')
-            const fileNameInModal{{$item}} = document.getElementById('fileNameInModal{{$value['id']}}')
-            const md5InModal{{$item}} = document.getElementById('md5InModal{{$value['id']}}')
-            const btSubmitBiorun{{$item}} = document.getElementById('btSubmitBiorun{{$value['id']}}')
+            const textResponses{{$item}} =  document.getElementById('textResponses{{$value['alias']}}')
+            const btnSendCmd{{$item}} = document.getElementById('btnSendCmd{{$value['alias']}}')
+            const command{{$item}} = document.getElementById('command{{$value['alias']}}')
 
-            btmd5{{$item}}.addEventListener("click", function() {
-                fileCuration({{$value['id']}},sshRespon{{$item}}, fileNameInModal{{$item}}, md5InModal{{$item}},  "md5sum ", '{{$value['alias']}}', '{{$item}}', btSubmitBiorun{{$item}})
+
+            btnSendCmd{{$item}}.addEventListener("click", function() {
+                if (command{{$item}}.value.trim().length == 0) {
+                    alert("Input Command");
+                    return false
+                }
+                fileCuration({{$value['id']}},textResponses{{$item}}, command{{$item}}.value, '{{$value['alias']}}', '{{$item}}', btnSendCmd{{$item}})
+                command{{$item}}.value = ""
+                buttonLoading(btnSendCmd{{$item}},true,"")
+
             })
+
+            command{{$item}}.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    btnSendCmd{{$item}}.click();
+                }
+            });
+
+            
+            const modalFileCheck{{$item}} = document.getElementById('fileCheck{{$value['alias']}}')
+            if (modalFileCheck{{$item}}  !== null) {
+                modalFileCheck{{$item}}.addEventListener('shown.bs.modal', function () {
+                    buttonLoading(btnSendCmd{{$item}},true,"")
+                    fileCuration({{$value['id']}},textResponses{{$item}}, "ls ", '{{$value['alias']}}', '{{$item}}', btnSendCmd{{$item}})
+                })
+            }
 
             @endforeach
 

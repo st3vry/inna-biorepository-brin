@@ -128,9 +128,32 @@ class BiosampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Biosample $biosample)
     {
         //
+        //
+        $submitter = new \stdClass();
+        $submitter->name = auth()->user()->name;
+        $submitter->email = auth()->user()->email;
+        $submitter->lab = auth()->user()->lab_id;
+        $submitter->center = auth()->user()->center_id;
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+
+        // dd($biosample->externallink());
+        $externallinks = $biosample->externallink()->get();
+        $sampletype = Sampletype::where('id', $biosample->sampletype_id)->first();
+        $organism = Organism::where('id', $biosample->organism_id)->first();
+        // dd($sampletype);
+        $return = [
+            "submitter" => $submitter,
+            "packages" => SampletypePackage::All(),
+            "biosample" => $biosample,
+            "externallinks" => $externallinks,
+            "sampletype" => $sampletype,
+            "sample_attr" => $sample_attr,
+            "organism" => $organism,
+        ];
+        return view('dashboard.v2.biosample.edit', $return);
     }
 
     /**

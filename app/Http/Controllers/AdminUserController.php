@@ -21,7 +21,7 @@ class AdminUserController extends Controller
         //
         return view('dashboard.user.index', [
 
-            'users' => User::with('role', 'lab', 'lab.center')->where('role_id', '<>',0)->get(),
+            'users' => User::with('role', 'lab', 'lab.center')->where('role_id', '<>', 0)->get(),
         ]);
     }
 
@@ -90,7 +90,7 @@ class AdminUserController extends Controller
         $action = false;
         $rules = [
             'name' => 'required|max:255',
-            'orcid_id' => 'required|max:255',
+            'orcid_id' => 'max:255',
             'lab_id' => 'required',
             'role_id' => 'required',
         ];
@@ -111,7 +111,7 @@ class AdminUserController extends Controller
                 'action' => 'updateUserDetail',
                 'type' => 'User',
                 'item_id' => $user->id,
-                'created_by' =>auth()->id(),
+                'created_by' => auth()->id(),
                 'desc' => !isset($request->comment) ? null : $request->comment
             ]);
         }
@@ -130,5 +130,4 @@ class AdminUserController extends Controller
         User::destroy($user->id);
         return redirect('/dashboard/users')->with('success', 'User has been deleted!');
     }
-
 }

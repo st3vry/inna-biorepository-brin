@@ -72,7 +72,11 @@
                         </tr>
                         <tr>
                             <td class="col-sm-1">File</td>
-                            <td class="col-sm-7">{{$bioruns[0]->filename ?? 'Not Exist'}}</td>
+                            <td class="col-sm-7">
+                                @foreach ($bioruns as $biorun)
+                                    {{$biorun->filename}}<br>
+                                @endforeach
+                            </td>
                         </tr>
                     @endforeach
 

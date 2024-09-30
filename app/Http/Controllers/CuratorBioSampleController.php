@@ -25,14 +25,14 @@ class CuratorBioSampleController extends Controller
             //     $query->where('draft', false)
             //           ->orWhere('curator_id','<>', null);
             // })
-            ->orderBy('published_at','desc')
-            ->orderBy('curator_id','asc')
+            ->orderBy('published_at', 'desc')
+            ->orderBy('curator_id', 'asc')
             ->get();
         if (auth()->user()->role_id == 2) {
             $biosamples = BioSample::with(['organism', 'center'])
                 ->where('curator_id', auth()->id())
                 ->where('status', '<>', 1)
-                ->orderBy('published_at','desc')
+                ->orderBy('published_at', 'desc')
                 ->get();
         }
         return view('dashboard.curator.biosample.index', [
@@ -72,9 +72,9 @@ class CuratorBioSampleController extends Controller
     public function show(Biosample $biosample)
     {
         // dd($biosample);
-        $curators = User::select(['id','name'])->where('role_id',2)->where('is_activated',true)->orderBy('name')->get();
+        $curators = User::select(['id', 'name'])->where('role_id', 2)->where('is_activated', true)->orderBy('name')->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
-        $histories = ActionLog::with(['creator'])->where('item_id',$biosample->accession)->orderBy('created_at', 'desc')->get();
+        $histories = ActionLog::with(['creator'])->where('item_id', $biosample->accession)->orderBy('created_at', 'desc')->get();
 
         return view('dashboard.curator.biosample.show', [
             'biosample' => $biosample,
@@ -116,7 +116,7 @@ class CuratorBioSampleController extends Controller
             if ($request->action === 'returnedToSubmitter') {
                 $action = BioSample::where('accession', $id)->update([
                     'draft' => true,
-                    'status'=>3
+                    'status' => 3
                 ]);
                 $success = 'Returned to Submitter';
             }
@@ -129,7 +129,7 @@ class CuratorBioSampleController extends Controller
             }
             if ($request->action === 'rejected') {
                 // waiting for action rules
-                dd($request->action);
+                // dd($request->action);
                 $action = BioSample::where('accession', $id)->update([
                     'status' => 0
                 ]);
@@ -142,13 +142,13 @@ class CuratorBioSampleController extends Controller
                 'action' => $request->action,
                 'type' => 'Biosample',
                 'item_id' => $id,
-                'user_target'=> $request->target,
-                'created_by' =>auth()->id(),
+                'user_target' => $request->target,
+                'created_by' => auth()->id(),
                 'desc' => !isset($request->desc) ? null : $request->desc
             ]);
-            return redirect('/dashboard/curator/biosamples/'.$id)->with('success', $success);
+            return redirect('/dashboard/curator/biosamples/' . $id)->with('success', $success);
         } else {
-            return redirect('/dashboard/curator/biosamples/'.$id)->with('error', 'Something went wrong, please try again later!');
+            return redirect('/dashboard/curator/biosamples/' . $id)->with('error', 'Something went wrong, please try again later!');
         }
     }
 

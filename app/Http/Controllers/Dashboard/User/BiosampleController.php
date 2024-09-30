@@ -128,9 +128,33 @@ class BiosampleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Biosample $biosample)
     {
         //
+        //
+        $submitter = new \stdClass();
+        $submitter->name = auth()->user()->name;
+        $submitter->email = auth()->user()->email;
+        $submitter->lab = auth()->user()->lab_id;
+        $submitter->center = auth()->user()->center_id;
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+
+        // dd($biosample->externallink());
+        $externallinks = $biosample->externallink()->get();
+        $sampletype = Sampletype::where('id', $biosample->sampletype_id)->first();
+        $organism = Organism::where('id', $biosample->organism_id)->first();
+        // dd($sampletype);
+        // dd($sample_attr[0]->value);
+        $return = [
+            "submitter" => $submitter,
+            "packages" => SampletypePackage::All(),
+            "biosample" => $biosample,
+            "externallinks" => $externallinks,
+            "sampletype" => $sampletype,
+            "sample_attr" => $sample_attr,
+            "organism" => $organism,
+        ];
+        return view('dashboard.v2.biosample.edit', $return);
     }
 
     /**
@@ -174,6 +198,14 @@ class BiosampleController extends Controller
         $results->attributesM = explode(',', $sampletypes['attribute_M']);
         $results->attributesE = explode(',', $sampletypes['attribute_E']);
         // dd($results);
+        return response()->json($results);
+    }
+
+    public function getValueAttributes(Biosample $biosample)
+    {
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        $results = new \stdClass();
+        $results->sample_attr = $sample_attr;
         return response()->json($results);
     }
 

@@ -136,7 +136,8 @@
                         targets: 0,
                     },
                 ],
-                order: [[1, 'asc']],
+                order: [[1, 'desc']],
+                pageLength: 25, // Set the number of records per page to 25
             });
             dataTable.on('order.dt search.dt', function () {
                 let i = 1;

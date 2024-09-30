@@ -187,6 +187,7 @@ Route::prefix('dashboard')->group(function () {
 
         Route::get('/biosamples/getSample/{id}', [UserSampleController::class, "getSample"])->middleware('authsso');
         Route::get('/biosamples/getAttributes/{id}', [UserSampleController::class, "getAttributes"])->middleware('authsso');
+        Route::get('/biosamples/getValueAttributes/{id}', [UserSampleController::class, "getValueAttributes"])->middleware('authsso');
         Route::get('/biosamples/getOrganism/{slug}', [UserSampleController::class, "getOrganism"])->middleware('authsso');
     });
 });

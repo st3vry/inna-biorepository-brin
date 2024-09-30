@@ -144,6 +144,7 @@ class BiosampleController extends Controller
         $sampletype = Sampletype::where('id', $biosample->sampletype_id)->first();
         $organism = Organism::where('id', $biosample->organism_id)->first();
         // dd($sampletype);
+        // dd($sample_attr[0]->value);
         $return = [
             "submitter" => $submitter,
             "packages" => SampletypePackage::All(),
@@ -197,6 +198,14 @@ class BiosampleController extends Controller
         $results->attributesM = explode(',', $sampletypes['attribute_M']);
         $results->attributesE = explode(',', $sampletypes['attribute_E']);
         // dd($results);
+        return response()->json($results);
+    }
+
+    public function getValueAttributes(Biosample $biosample)
+    {
+        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        $results = new \stdClass();
+        $results->sample_attr = $sample_attr;
         return response()->json($results);
     }
 

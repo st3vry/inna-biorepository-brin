@@ -290,10 +290,12 @@
 
 
 
-        function setAttributesInputs(attrs, name) {
+        function setAttributesInputs(attrs, name, value=null) {
+            console.log(value)
             $("#cardSampleAttributes").removeClass("d-none")
             $("#cardSampleAttributesHeader").html(`${name} Attributes `)
             formAttributes.html("")
+            // console.log(attrs["attributes"])
             let attributes = attrs["attributes"];
             let mandatories = attrs["attributesM"];
             let eithers = attrs["attributesE"];
@@ -317,12 +319,29 @@
         }
 
         function getAttributes(id, name) {
+            let attributeResponse = null;
+            let valueResponse = null;
             $.ajax({
                 url: "/dashboard/v2/biosamples/getAttributes/" + id,
                 // type: "GET",
                 async: false,
                 success: function(response) {
-                    setAttributesInputs(response, name)
+                    attributeResponse = response;
+                    // console.log(response);
+                    // setAttributesInputs(response, name)
+                    // Nested AJAX call for the second URL to fetch values
+                    $.ajax({
+                        // getValueAttributes
+                        url: "/dashboard/v2/biosamples/getValueAttributes/" + id,
+                        async: false,
+                        success: function(value){
+                            valueResponse = value;
+                            setAttributesInputs(attributeResponse, name, valueResponse);
+                        },
+                        error: function(data) {
+                            console.log("Error fetching values:", data.status + ':' + data.statusText, data.responseText);
+                        }
+                    })
                 },
                 error: function(data) {
                     console.log(data.status + ':' + data.statusText, data.responseText);
@@ -338,6 +357,7 @@
         sampleType.empty()
         sampleType.append(getSampleType(sampleTypePackages.val()))
         sampleType.val("{{$sampletype->id}}").trigger("change")
+        // const attributesVal.val("{{ $sample_attr }}")
         getAttributes(sampleType.val(), $("#sampleType option:selected").text())
         const externalLinkTable = $("#externalLinkTable");
         const btnAddExternalLink = $("#btnAddExternalLink");
@@ -387,6 +407,7 @@
 
 
         function createInput(obj, requireType, value = null) {
+            // console.log(obj.attr_name)
             let asterisk = requireType == "required" ? "<span class='text-danger'>* </span>" : requireType == "either" ? "<span class='text-danger'>** </span>" : ""
             let input = ""
             switch (obj.input_type_id) {

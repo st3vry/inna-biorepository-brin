@@ -79,7 +79,23 @@
                             </td>
                         </tr>
                     @endforeach
-
+                        
+                    </table>
+                    <table class="table table-sm">
+                        <tr>
+                            <td>
+                                <form action="{{ route('button.action') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="bioarchive_id" value="{{ $bioarchive->id }}">
+                                    <button type="submit" class="btn btn-secondary btn-sm">Request to Download</button>
+                                </form>
+                            </td>
+                            <td>
+                                @if(session('success'))
+                                    <p>{{ session('success') }}</p>
+                                @endif
+                            </td>
+                        </tr>
                     </table>
                 </td>
             </tr>

@@ -1,0 +1,67 @@
+@extends('layouts.main')
+
+@section('container')
+<div class="container  mt-5 pt-5" style="min-height: 90vh">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-brin" href="/">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-brin" href="/bioarchives">Bioarchive</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{$bioarchive}}</li>
+        </ol>
+    </div>
+    <h1 class="text-center mb-4">Request a Permission</h1>
+    @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <form action="{{ route('permission.request') }}" method="POST" class="border p-4 bg-light rounded">
+            @csrf
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" value="{{ old('username') }}" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required>
+            </div>
+
+            <!-- Permission -->
+            <div class="mb-3">
+                <label for="permission" class="form-label">Permission Requested</label>
+                <select name="permission" id="permission" class="form-select" required>
+                    <option value="admin" {{ old('permission') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="editor" {{ old('permission') == 'editor' ? 'selected' : '' }}>Editor</option>
+                    <option value="viewer" {{ old('permission') == 'viewer' ? 'selected' : '' }}>Viewer</option>
+                </select>
+            </div>
+
+            <!-- Reason -->
+            <div class="mb-3">
+                <label for="reason" class="form-label">Reason for Request</label>
+                <textarea name="reason" id="reason" rows="4" class="form-control" required>{{ old('reason') }}</textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+            </div>
+        </form>
+
+</div>
+@endsection

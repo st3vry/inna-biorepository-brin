@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bioarchive;
 use Illuminate\Http\Request;
 
 class PermissionRequestController extends Controller
@@ -10,9 +11,13 @@ class PermissionRequestController extends Controller
     public function showForm($bioarchive_id)
     {
         // dd($bioarchive_id);
-        return view('frontend.permissionrequest',[
+        $record = BioArchive::where('id', $bioarchive_id)->first();
+
+
+        return view('frontend.permissionrequest', [
             'title' => 'Bioarchive',
             'bioarchive' => $bioarchive_id,
+            'accession' => $record->accession,
             // 'centers' => $centers,
             // 'biosamples' => $biosamples,
             // 'bioprojects' => $biorpoject,
@@ -28,7 +33,7 @@ class PermissionRequestController extends Controller
         //     'permission' => 'required',
         //     'reason' => 'required',
         // ]);
-    
+
         // Store the permission request logic (optional)
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Permission request submitted successfully.');

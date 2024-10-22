@@ -7,7 +7,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a class="text-brin" href="/">Home</a></li>
             <li class="breadcrumb-item"><a class="text-brin" href="/bioarchives">Bioarchive</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$bioarchive}}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{$accession}}</li>
         </ol>
     </div>
     <h1 class="text-center mb-4">Request a Permission</h1>

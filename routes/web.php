@@ -34,6 +34,8 @@ use App\Http\Controllers\ConsortiaController;
 use App\Http\Controllers\DiseaseController;
 use App\Http\Controllers\DataverseController;
 use App\Http\Controllers\Dashboard\User\BiosampleController as UserSampleController;
+use App\Http\Controllers\DownloadRequestController;
+use App\Http\Controllers\PermissionRequestController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use App\Models\BioticRelationship;
@@ -50,6 +52,7 @@ use Illuminate\Support\Facades\Route;
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
+| https://chatgpt.com/c/671070b1-3a24-8001-b8cc-31c173af64f4
 |
 */
 
@@ -110,6 +113,12 @@ Route::get('/biosamples', [BiosampleController::class, 'index']);
 Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
 Route::get('/bioarchives', [BioarchiveController::class, 'index']);
 Route::get('/bioarchives/{bioarchive}', [BioarchiveController::class, 'show']);
+
+Route::post('/button-action', [DownloadRequestController::class, 'handleButtonClick'])->name('button.action')->middleware('authsso');
+// Route for handling the download button click and redirecting to the form
+Route::get('/permission-request/{bioarchive_id?}', [PermissionRequestController::class, 'showForm'])->name('permission.request.form')->middleware('authsso');
+// // Route to handle the submission of the permission form
+Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission.request')->middleware('authsso');
 
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {

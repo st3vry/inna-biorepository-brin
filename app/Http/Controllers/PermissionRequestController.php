@@ -11,16 +11,19 @@ class PermissionRequestController extends Controller
     public function showForm($bioarchive_id)
     {
         // dd($bioarchive_id);
-        $record = BioArchive::where('id', $bioarchive_id)->first();
-
+        $bioarchive = BioArchive::where('id', $bioarchive_id)->first();
+        $_name = auth()->user()->name;
+        $user_name = auth()->user()->username;
+        $email = auth()->user()->email;
+        // dd(auth()->user
 
         return view('frontend.permissionrequest', [
             'title' => 'Bioarchive',
             'bioarchive' => $bioarchive_id,
-            'accession' => $record->accession,
-            // 'centers' => $centers,
-            // 'biosamples' => $biosamples,
-            // 'bioprojects' => $biorpoject,
+            'accession' => $bioarchive->accession,
+            '_name' => $_name,
+            'username' => $user_name,
+            'email' => $email
         ]);
     }
 

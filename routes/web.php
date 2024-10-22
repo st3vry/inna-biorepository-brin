@@ -114,11 +114,11 @@ Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
 Route::get('/bioarchives', [BioarchiveController::class, 'index']);
 Route::get('/bioarchives/{bioarchive}', [BioarchiveController::class, 'show']);
 
-Route::post('/button-action', [DownloadRequestController::class, 'handleButtonClick'])->name('button.action');
+Route::post('/button-action', [DownloadRequestController::class, 'handleButtonClick'])->name('button.action')->middleware('authsso');
 // Route for handling the download button click and redirecting to the form
-Route::get('/permission-request/{bioarchive_id?}', [PermissionRequestController::class, 'showForm'])->name('permission.request.form');
+Route::get('/permission-request/{bioarchive_id?}', [PermissionRequestController::class, 'showForm'])->name('permission.request.form')->middleware('authsso');
 // // Route to handle the submission of the permission form
-Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission.request');
+Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission.request')->middleware('authsso');
 
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {

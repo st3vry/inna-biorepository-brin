@@ -32,24 +32,29 @@
             <!-- Username -->
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" name="username" id="username" value="{{ old('username') }}" required>
+                <input type="text" class="form-control" name="username" id="username" value="{{ old('username', $username) }}" disabled required>
+            </div>
+
+            <div class="mb-3">
+                <label for="_name" class="form-label">Name</label>
+                <input type="text" class="form-control" name="_name" id="_name" value="{{ old('_name', $_name) }}" disabled required>
             </div>
 
             <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required>
+                <input type="email" class="form-control" name="email" id="email" value="{{ old('email', $email)}}" disabled required>
             </div>
 
             <!-- Permission -->
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="permission" class="form-label">Permission Requested</label>
                 <select name="permission" id="permission" class="form-select" required>
                     <option value="admin" {{ old('permission') == 'admin' ? 'selected' : '' }}>Admin</option>
                     <option value="editor" {{ old('permission') == 'editor' ? 'selected' : '' }}>Editor</option>
                     <option value="viewer" {{ old('permission') == 'viewer' ? 'selected' : '' }}>Viewer</option>
                 </select>
-            </div>
+            </div> --}}
 
             <!-- Reason -->
             <div class="mb-3">

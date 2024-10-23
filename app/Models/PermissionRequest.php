@@ -11,7 +11,6 @@ class PermissionRequest extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'permission_type',
         'request_reason',
         'temporary_url',
         'is_agreed',

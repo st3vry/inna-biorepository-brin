@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('permission_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('permission_type');
             $table->string('request_reason');
             $table->string('temporary_url')->nullable();
             $table->boolean('is_agreed')->default(false);

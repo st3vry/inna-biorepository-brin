@@ -11,7 +11,7 @@
         </ol>
     </div>
     <h1 class="text-center mb-4">Request a Permission</h1>
-    @if(session('success'))
+        @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
@@ -26,9 +26,11 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('permission.request') }}" method="POST" class="border p-4 bg-light rounded">
+        <form action="{{ route('permission_request.store') }}" method="POST" class="border p-4 bg-light rounded">
             @csrf
-
+            <!-- Hidden Fields for user_id and bioarchive_id -->
+            <input type="hidden" name="user_id" value="{{ old('user_id', $user_id) }}">
+            <input type="hidden" name="bioarchive_id" value="{{ old('bioarchive_id', $bioarchive_id) }}">
             <!-- Username -->
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -60,6 +62,17 @@
             <div class="mb-3">
                 <label for="reason" class="form-label">Reason for Request</label>
                 <textarea name="reason" id="reason" rows="4" class="form-control" required>{{ old('reason') }}</textarea>
+            </div>
+
+            {{-- AGREEMENT --}}
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" name="is_agreed" class="form-check-input @error('is_agreed') is-invalid @enderror" id="is_agreed" value="1">
+                    <label class="form-check-label" for="is_agreed">I agree to the terms and conditions</label>
+                </div>
+                @error('is_agreed')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
 
             <!-- Submit Button -->

@@ -15,12 +15,14 @@ class PermissionRequestController extends Controller
         $_name = auth()->user()->name;
         $user_name = auth()->user()->username;
         $email = auth()->user()->email;
-        // dd(auth()->user
+        $user_int_id = auth()->user()->id;
+        // dd(auth()->user() - id);
 
         return view('frontend.permissionrequest', [
             'title' => 'Bioarchive',
-            'bioarchive' => $bioarchive_id,
+            'bioarchive_id' => $bioarchive_id,
             'accession' => $bioarchive->accession,
+            'user_id' => $user_int_id,
             '_name' => $_name,
             'username' => $user_name,
             'email' => $email
@@ -29,6 +31,7 @@ class PermissionRequestController extends Controller
 
     public function store(Request $request)
     {
+        dd($request);
         // Validate and store the request logic (if needed)
         // $request->validate([
         //     'username' => 'required',

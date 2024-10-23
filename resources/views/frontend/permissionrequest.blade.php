@@ -7,7 +7,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a class="text-brin" href="/">Home</a></li>
             <li class="breadcrumb-item"><a class="text-brin" href="/bioarchives">Bioarchive</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$accession}}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{$bioarchive_accession}}</li>
         </ol>
     </div>
     <h1 class="text-center mb-4">Request a Permission</h1>
@@ -31,6 +31,7 @@
             <!-- Hidden Fields for user_id and bioarchive_id -->
             <input type="hidden" name="user_id" value="{{ old('user_id', $user_id) }}">
             <input type="hidden" name="bioarchive_id" value="{{ old('bioarchive_id', $bioarchive_id) }}">
+            <input type="hidden" name="bioarchive_accession" value="{{ old('bioarchive_accession', $bioarchive_accession) }}">
             <!-- Username -->
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>

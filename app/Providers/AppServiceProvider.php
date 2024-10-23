@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 use App\Models\ActionLog;
 use UserService;
 
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        URL::forceScheme('https');
         Paginator::useBootstrapFive();
         view()->composer(
             'dashboard.layouts.notification',

@@ -274,6 +274,7 @@ class CuratorBioArchiveController extends Controller
                                 $d = $disk->files($directory);
                                 $obj = new \stdClass();
                                 $obj->{$value['alias']} = $d;
+                                $obj->bioexperiment_id = $value['id'];
                                 array_push($files, $obj);
                             }
                         } catch (\Throwable $th) {
@@ -291,10 +292,11 @@ class CuratorBioArchiveController extends Controller
                                 }
                                 list($firstWord) = explode(' ', $md5);
                                 $filename = substr($child, strrpos($child, '/') + 1);
+                                $rename = Helper::biorunRegex($filename,$id, $key2);
                                 $biorun = new BioRun;
-                                $biorun->bioexperiment_id = $bioexperiment->id;
+                                $biorun->bioexperiment_id = $values->bioexperiment_id;
                                 $biorun->alias = $key2;
-                                $biorun->filename = $filename;
+                                $biorun->filename = $rename;
                                 $biorun->md5 = $firstWord;
                                 $biorun->filetype_id = 1;
                                 $action = $biorun->save();

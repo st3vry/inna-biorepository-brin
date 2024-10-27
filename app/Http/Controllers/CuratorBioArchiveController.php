@@ -190,67 +190,11 @@ class CuratorBioArchiveController extends Controller
                 // create directory
                 $bioexperiments = Bioexperiment::where('bioarchive_id', $request->bioarchive_id)->get();
                 foreach ($bioexperiments as $bioexperiment) {
-                    //$password = $SSHController->createFtpUser($id, $bioexperiment->alias);
-
-                    // dd($bioexperiment->alias);
                     $command = [
                         "sudo mkdir /innasto/temp/{$id}/{$bioexperiment->alias}",
                         "sudo chown -R {$id}:{$id} /innasto/temp/{$id}"
                     ];
                     $createFolder = $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
-
-                    // $path = storage_path('app/public') . '/' . $id . '/' . $bioexperiment->alias;
-                    // if (!File::exists($path)) {
-                    //     File::makeDirectory($path, $mode = 0755, true, true);
-                    // }
-
-                    // try {
-                    // Nama direktori yang akan dibuat
-                    // $directory = '/' . $id . '/' . $bioexperiment->alias; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
-                    // dd($directory);
-                    // Buat direktori baru jika belum ada
-                    // if (!Storage::disk('sftp')->exists($directory)) {
-                    //     Storage::disk('sftp')->makeDirectory($directory);
-                    // }
-                    // } catch (Exception $e) {
-                    // Tangani kesalahan
-                    // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
-                    //     echo $e->getMessage();
-                    // }
-
-
-                    // try {
-                    //     // Konfigurasi adapter
-                    //     $config = [
-                    //         'host' => env('SFTP_HOST'), // Mengambil alamat SFTP dari file .env
-                    //         'username' => env('SFTP_USERNAME'), // Mengambil username SFTP dari file .env
-                    //         'password' => env('SFTP_PASSWORD'), // Mengambil password SFTP dari file .env
-                    //         'root' => '/', // Ganti dengan root directory pada SFTP
-                    //         'port' => 22, // Port default untuk SFTP
-                    //         'timeout' => 10, // Timeout untuk koneksi SFTP
-                    //         'directoryPerm' => 0755, // Hak akses direktori baru yang akan dibuat
-                    //     ];
-
-                    //     // Buat adapter
-                    //     $adapter = new SftpAdapter($config);
-
-                    //     // Buat instance Filesystem dengan adapter SFTP
-                    //     $filesystem = new Filesystem($adapter);
-
-                    //     // Nama direktori yang akan dibuat
-                    //     $directory = 'path/to/directory'; // Ganti dengan direktori yang ingin Anda buat pada SFTP storage
-
-                    //     // Buat direktori baru jika belum ada
-                    //     if (!$filesystem->has($directory)) {
-                    //         Storage::disk('sftp')->makeDirectory($directory);
-                    //     } else {
-                    //         echo 'Folder already exists on SFTP';
-                    //     }
-                    // } catch (Exception $e) {
-                    //     // Tangani kesalahan
-                    //     // Anda dapat menambahkan kode untuk menampilkan pesan kesalahan atau melakukan tindakan lain sesuai kebutuhan Anda
-                    //     echo $e->getMessage();
-                    // }
                 }
             }
             if ($request->action === 'approved') {
@@ -268,8 +212,8 @@ class CuratorBioArchiveController extends Controller
                         'root'=> "/"
                     ]);
                     foreach ($bioexperiment as $key => $value) {
-                        $directory = "/innasto/temp/{$bioarchive->accession}/{$value['alias']}";
-                        // $directory = "/innasto/{$dir_type}/INNAAR000008/INNAX-r9K9Do-1";
+                        $directory = "/innasto/temnp/{$bioarchive->accession}/{$value['alias']}";
+                        $target = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
                         try {
                             if ($disk->exists($directory)) {
                                 $d = $disk->files($directory);
@@ -284,25 +228,27 @@ class CuratorBioArchiveController extends Controller
                     }
                     foreach ($files as $key => $values) {
                         foreach ($values as $key2 => $children) {
-                            foreach ($children as $child) {
-                                $SSHController = new SSHController();
-                                try {
-                                    $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), "md5sum {$child}");
-                                } catch (\Throwable $th) {
-                                    return $th->getMessage();
+                            if(gettype($children) !="integer") {
+                                foreach ($children as $child) {
+                                    $SSHController = new SSHController();
+                                    $filename = substr($child, strrpos($child, '/') + 1);
+                                    $rename = Helper::biorunRegex($filename,$id, $key2);
+                                    try {
+                                        $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), 
+                                        ["mv {$child} {$target}/{$rename}", "md5sum {$target}/{$rename}"]);
+                                    } catch (\Throwable $th) {
+                                        return $th->getMessage();
+                                    }
+                                    list($firstWord) = explode(' ', $md5);
+                                    $biorun = new BioRun;
+                                    $biorun->bioexperiment_id = $values->bioexperiment_id;
+                                    $biorun->alias = $key2;
+                                    $biorun->filename = $rename;
+                                    $biorun->md5 = $firstWord;
+                                    $biorun->filetype_id = 1;
+                                    $action = $biorun->save();
                                 }
-                                list($firstWord) = explode(' ', $md5);
-                                $filename = substr($child, strrpos($child, '/') + 1);
-                                $rename = Helper::biorunRegex($filename,$id, $key2);
-                                $biorun = new BioRun;
-                                $biorun->bioexperiment_id = $values->bioexperiment_id;
-                                $biorun->alias = $key2;
-                                $biorun->filename = $rename;
-                                $biorun->md5 = $firstWord;
-                                $biorun->filetype_id = 1;
-                                $action = $biorun->save();
                             }
-                           
                         }
                     }
                 }
@@ -312,14 +258,10 @@ class CuratorBioArchiveController extends Controller
                 ]);
                 $success = 'BioArchive Approved';
                 $SSHController = new SSHController();
-                $command = [
-                    "cp -r /innasto/temp/{$id}/ /innasto/files/",
-                    "sudo rm -rf /innasto/temp/{$id}"
-                ];
+                $command = "sudo rm -rf /innasto/temp/{$id}";
                 $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
             }
             if ($request->action === 'rejected') {
-
                 $action = Bioarchive::where('accession', $id)->update([
                     'status' => 0
                 ]);

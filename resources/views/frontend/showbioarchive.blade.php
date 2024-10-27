@@ -74,7 +74,8 @@
                             <td class="col-sm-1">File</td>
                             <td class="col-sm-7">
                                 @foreach ($bioruns as $biorun)
-                                    {{Helper::biorunRegex($biorun->filename,$bioarchive->accession, $bioexperiment->alias)}}<br>
+                                    {{$biorun->filename}}<br>
+                                    {{-- {{Helper::biorunRegex($biorun->filename,$bioarchive->accession, $bioexperiment->alias)}}<br> --}}
                                 @endforeach
                             </td>
                         </tr>

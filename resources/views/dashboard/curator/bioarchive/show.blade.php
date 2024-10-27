@@ -195,7 +195,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td>MD5 Checksum</td>
-                                                    <td>{{ $runs[0]->md5 ?? "" }}</td>
+                                                    <td>
+                                                        @foreach ($runs as $biorun)
+                                                            {{ $biorun->filename == array_reverse(explode("/",$item))[0] ? $biorun->md5 : "" }}
+                                                        @endforeach
+                                                    </td>
                                                 </tr>
                                                 @endforeach
                                             @endif

@@ -252,14 +252,16 @@ class CuratorBioArchiveController extends Controller
                         }
                     }
                 }
-                $action = Bioarchive::where('accession', $id)->update([
-                    'published_at' => now(),
-                    'status' => 5
-                ]);
-                $success = 'BioArchive Approved';
-                $SSHController = new SSHController();
-                $command = "sudo rm -rf /innasto/temp/{$id}";
-                $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
+                if($action) {
+                    $action = Bioarchive::where('accession', $id)->update([
+                        'published_at' => now(),
+                        'status' => 5
+                    ]);
+                    $success = 'BioArchive Approved';
+                    $SSHController = new SSHController();
+                    $command = "sudo rm -rf /innasto/temp/{$id}";
+                    $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
+                }
             }
             if ($request->action === 'rejected') {
                 $action = Bioarchive::where('accession', $id)->update([

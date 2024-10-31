@@ -201,9 +201,9 @@ class BiosampleController extends Controller
         return response()->json($results);
     }
 
-    public function getValueAttributes(Biosample $biosample)
+    public function getValueAttributes($id)
     {
-        $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        $sample_attr = AttributeValue::where('biosample_id', $id)->get();
         $results = new \stdClass();
         $results->sample_attr = $sample_attr;
         return response()->json($results);

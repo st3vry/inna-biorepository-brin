@@ -235,7 +235,7 @@ class CuratorBioArchiveController extends Controller
                                     $rename = Helper::biorunRegex($filename,$id, $key2);
                                     try {
                                         $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), 
-                                        ["cp /{$child} {$target}/{$rename}", "md5sum {$target}/{$rename}"]);
+                                        ["cp /home/innaadm/{$child} /home/innaadm{$target}/{$rename}", "md5sum {$target}/{$rename}"]);
                                     } catch (\Throwable $th) {
                                         return $th->getMessage();
                                     }

@@ -235,7 +235,7 @@ class CuratorBioArchiveController extends Controller
                                     $rename = Helper::biorunRegex($filename,$id, $key2);
                                     try {
                                         $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), 
-                                        ["cp {$child} {$target}/{$rename}", "md5sum {$target}/{$rename}"]);
+                                        ["cp /{$child} {$target}/{$rename}", "md5sum {$target}/{$rename}"]);
                                     } catch (\Throwable $th) {
                                         return $th->getMessage();
                                     }
@@ -258,9 +258,9 @@ class CuratorBioArchiveController extends Controller
                         'status' => 5
                     ]);
                     $success = 'BioArchive Approved';
-                    $SSHController = new SSHController();
-                    $command = "sudo rm -rf /innasto/temp/{$id}";
-                    $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
+                    // $SSHController = new SSHController();
+                    // $command = "sudo rm -rf /innasto/temp/{$id}";
+                    // $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
                 }
             }
             if ($request->action === 'rejected') {

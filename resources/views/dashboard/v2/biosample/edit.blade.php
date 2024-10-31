@@ -288,8 +288,6 @@
             return rowsel;
         }
 
-
-
         function setAttributesInputs(attrs, name, value=null) {
             console.log(value)
             $("#cardSampleAttributes").removeClass("d-none")
@@ -299,22 +297,31 @@
             let attributes = attrs["attributes"];
             let mandatories = attrs["attributesM"];
             let eithers = attrs["attributesE"];
+
+            let values = value['sample_attr'];
+            let sample_attr_value = null;
+
+
             mandatories.forEach(mandatory => {
                 if (mandatory.length !== 0) {
-                    createInput(attributes.filter((attribute) => attribute.id == mandatory)[0], "required")
+                    sample_attr_value = values.filter((value) => value.attributesample_id == mandatory)[0] ? values.filter((value) => value.attributesample_id == mandatory)[0]["value"] : ""
+                    createInput(attributes.filter((attribute) => attribute.id == mandatory)[0], "required",sample_attr_value)
                 }
+                
                 attributes = attributes.filter((attribute) => attribute.id != mandatory)
             });
 
             eithers.forEach(either => {
                 if (either.length !== 0) {
-                    createInput(attributes.filter((attribute) => attribute.id == either)[0], "either")
+                    sample_attr_value = values.filter((value) => value.attributesample_id == either)[0] ? values.filter((value) => value.attributesample_id == either)[0]["value"] : ""
+                    createInput(attributes.filter((attribute) => attribute.id == either)[0], "either",sample_attr_value)
                 }
                 attributes = attributes.filter((attribute) => attribute.id != either)
             });
 
             attributes.forEach(attribute => {
-                createInput(attribute, "optional")
+                sample_attr_value = values.filter((value) => value.attributesample_id == attribute)[0] ? values.filter((value) => value.attributesample_id == attribute)[0]["value"] : ""
+                createInput(attribute, "optional",sample_attr_value)
             })
         }
 

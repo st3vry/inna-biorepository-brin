@@ -236,8 +236,8 @@ class CuratorBioArchiveController extends Controller
                                     try {
                                         $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), 
                                         [
-                                            "mkdir innasto/files/$bioarchive->accession",
-                                            "mkdir innasto/files/$bioarchive->accession/$key2",
+                                            "mkdir -p innasto/files/$bioarchive->accession",
+                                            "mkdir -p innasto/files/$bioarchive->accession/$key2",
                                             "cp {$child} {$target}/{$rename}", 
                                             "md5sum {$target}/{$rename}"
                                         ]);

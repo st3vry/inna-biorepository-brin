@@ -213,7 +213,7 @@ class CuratorBioArchiveController extends Controller
                     ]);
                     foreach ($bioexperiment as $key => $value) {
                         $directory = "/innasto/temp/{$bioarchive->accession}/{$value['alias']}";
-                        $target = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
+                        $target = "innasto/files/{$bioarchive->accession}/{$value['alias']}";
                         try {
                             if ($disk->exists($directory)) {
                                 $d = $disk->files($directory);
@@ -235,7 +235,12 @@ class CuratorBioArchiveController extends Controller
                                     $rename = Helper::biorunRegex($filename,$id, $key2);
                                     try {
                                         $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), 
-                                        ["cp /home/innaadm/{$child} /home/innaadm{$target}/{$rename}", "md5sum {$target}/{$rename}"]);
+                                        [
+                                            "mkdir innasto/files/$bioarchive->accession",
+                                            "mkdir innasto/files/$bioarchive->accession/$key2",
+                                            "cp {$child} {$target}/{$rename}", 
+                                            "md5sum {$target}/{$rename}"
+                                        ]);
                                     } catch (\Throwable $th) {
                                         return $th->getMessage();
                                     }

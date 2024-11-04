@@ -522,7 +522,11 @@
                 organismSelect.on("select2:select", function(e) {
                     $("#taxonomy_id").val(e.params.data.taxon_id)
                 });
+                if(value){
+                    $("#organism").val(value)
+                }
             }
+
         }
         const formBioSample = $('#formBioSample')
 

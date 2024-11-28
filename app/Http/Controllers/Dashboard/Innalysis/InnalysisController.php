@@ -97,8 +97,8 @@ class InnalysisController extends Controller
         // dd($bioarchive);
         // $file = "/home/inna/sto/files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
         $file = "/var/www/innalysis_ops/files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
-        $fileContent = file_get_contents($file);
-        dd($fileContent);
+        // $fileContent = file_get_contents($file);
+        // dd($fileContent);
 
 
         // $files = array();

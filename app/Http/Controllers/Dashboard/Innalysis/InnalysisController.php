@@ -96,7 +96,7 @@ class InnalysisController extends Controller
         $biorun = Biorun::where('id', $run)->get();
         // dd($bioarchive);
         // $file = "/home/inna/sto/files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
-        $file = "/mnt/innasto/files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
+        $file = "/var/www/innalysis_ops/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
         $fileContent = file_get_contents($file);
         dd($fileContent);
 

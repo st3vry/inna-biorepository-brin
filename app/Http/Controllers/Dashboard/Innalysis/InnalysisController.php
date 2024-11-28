@@ -97,6 +97,9 @@ class InnalysisController extends Controller
         // dd($bioarchive);
         // $file = "/home/inna/sto/files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
         $file = "/mnt/innasto/files/{$bioarchive[0]->accession}/{$bioexperiment[0]->alias}/{$biorun[0]->filename}";
+        $fileContent = file_get_contents($file);
+        dd($fileContent);
+
 
         // $files = array();
         // if (Storage::disk('sftp')->exists($file)) {

@@ -39,8 +39,20 @@ class PermissionRequestController extends Controller
 
         // Validate and store the request logic (if needed)
         $request->validate([
-            'reason' => 'required',
-            'is_agreed' => 'required|accepted',
+            // 'reason' => 'required',
+            // 'is_agreed' => 'required|accepted',
+            // 'user_id' => 'required|integer',
+            // 'bioarchive_id' => 'required|integer',
+            // 'bioarchive_accession' => 'required|string|max:255',
+            'reason' => 'required|string|max:1000',
+            'research_area' => 'required|string|max:255',
+            'research_title' => 'required|string|max:255',
+            'abstract' => 'required|string|max:2000',
+            'proof_of_funding' => 'required|file|mimes:pdf|max:2048',
+            'letter_of_agreement' => 'required|file|mimes:pdf|max:2048',
+            'research_proposal' => 'required|file|mimes:pdf|max:2048',
+            'cv' => 'required|file|mimes:pdf|max:2048',
+            'is_agreed' => 'required|boolean',
         ]);
 
         // Save the permission request with the generated temporary URL

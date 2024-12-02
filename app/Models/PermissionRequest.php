@@ -9,14 +9,27 @@ use Carbon\Carbon;
 class PermissionRequest extends Model
 {
     use HasFactory;
+    // protected $fillable = [
+    //     'user_id',
+    //     'request_reason',
+    //     'temporary_url',
+    //     'is_agreed',
+    //     'expires_at',
+    // ];
     protected $fillable = [
         'user_id',
-        'request_reason',
-        'temporary_url',
+        'bioarchive_id',
+        'bioarchive_accession',
+        'reason',
+        'research_area',
+        'research_title',
+        'abstract',
+        'proof_of_funding',
+        'letter_of_agreement',
+        'research_proposal',
+        'cv',
         'is_agreed',
-        'expires_at',
     ];
-
     protected $dates = [
         'expires_at',  // Tell Laravel this is a date field
     ];

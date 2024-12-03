@@ -48,10 +48,10 @@ class PermissionRequestController extends Controller
             'research_area' => 'required|string|max:255',
             'research_title' => 'required|string|max:255',
             'abstract' => 'required|string|max:2000',
-            'proof_of_funding' => 'required|file|mimes:pdf|max:2048',
-            'letter_of_agreement' => 'required|file|mimes:pdf|max:2048',
-            'research_proposal' => 'required|file|mimes:pdf|max:2048',
-            'cv' => 'required|file|mimes:pdf|max:2048',
+            'proof_of_funding' => 'required|file|mimes:pdf',
+            'letter_of_agreement' => 'required|file|mimes:pdf',
+            'research_proposal' => 'required|file|mimes:pdf',
+            'cv' => 'required|file|mimes:pdf',
             'is_agreed' => 'required|boolean',
         ]);
 

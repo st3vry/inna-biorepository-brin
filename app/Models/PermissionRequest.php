@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
 class PermissionRequest extends Model
@@ -39,6 +40,14 @@ class PermissionRequest extends Model
     // {
     //     return Storage::disk('public')->temporaryUrl($filePath, now()->addSeconds($expiration));
     // }
+    public function generateTemporaryUrl($filePath, $expiration = 3600)
+    {
+        return URL::temporarySignedRoute(
+            'file.serve',
+            now()->addSeconds($expiration),
+            ['path' => $filePath]
+        );
+    }
 
     public function user()
     {

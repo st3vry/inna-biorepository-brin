@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('research_proposal');
             $table->string('cv');
             $table->boolean('is_agreed')->default(false);
+            $table->text('temporary_url')->nullable(); // Temporary URL for file access
             $table->timestamp('expires_at');
             $table->timestamps();
         });

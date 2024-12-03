@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class PermissionRequest extends Model
@@ -29,20 +30,15 @@ class PermissionRequest extends Model
         'research_proposal',
         'cv',
         'is_agreed',
-    ];
-    protected $dates = [
-        'expires_at',  // Tell Laravel this is a date field
+        'is_approved',
+        'temporary_url',
+        'temporary_url_expiration',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Automatically set the `expires_at` to 5 days from `created_at`
-        static::creating(function ($permissionRequest) {
-            $permissionRequest->expires_at = Carbon::now()->addDays(5);
-        });
-    }
+    // public function generateTemporaryUrl($filePath, $expiration = 3600)
+    // {
+    //     return Storage::disk('public')->temporaryUrl($filePath, now()->addSeconds($expiration));
+    // }
 
     public function user()
     {

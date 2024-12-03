@@ -26,7 +26,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('permission_request.store') }}" method="POST" class="border p-4 bg-light rounded">
+        <form action="{{ route('permission_request.store') }}" method="POST" class="border p-4 bg-light rounded" enctype="multipart/form-data">
             @csrf
 
             <!-- Hidden Fields for user_id and bioarchive_id -->
@@ -85,16 +85,7 @@
                 <label for="cv" class="form-label">Curriculum Vitae (CV)</label>
                 <input type="file" class="form-control" name="cv" id="cv" accept="application/pdf" required>
             </div>
-            <!-- Agreement -->
-            <div class="form-group">
-                <div class="form-check">
-                    <input type="checkbox" name="is_agreed" class="form-check-input @error('is_agreed') is-invalid @enderror" id="is_agreed" value="1">
-                    <label class="form-check-label" for="is_agreed">I agree to the terms and conditions</label>
-                </div>
-                @error('is_agreed')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
+
             
             <!-- Permission -->
             {{-- <div class="mb-3">

@@ -41,27 +41,49 @@ class PermissionRequestController extends Controller
         $request->validate([
             // 'reason' => 'required',
             // 'is_agreed' => 'required|accepted',
-            // 'user_id' => 'required|integer',
-            // 'bioarchive_id' => 'required|integer',
-            // 'bioarchive_accession' => 'required|string|max:255',
+            'user_id' => 'required|integer',
+            'bioarchive_id' => 'required|integer',
+            'bioarchive_accession' => 'required|string|max:255',
             'reason' => 'required|string|max:1000',
             'research_area' => 'required|string|max:255',
             'research_title' => 'required|string|max:255',
             'abstract' => 'required|string|max:2000',
-            'proof_of_funding' => 'required|file|mimes:pdf|max:2048',
-            'letter_of_agreement' => 'required|file|mimes:pdf|max:2048',
-            'research_proposal' => 'required|file|mimes:pdf|max:2048',
-            'cv' => 'required|file|mimes:pdf|max:2048',
+            'proof_of_funding' => 'required|file|mimes:pdf',
+            'letter_of_agreement' => 'required|file|mimes:pdf',
+            'research_proposal' => 'required|file|mimes:pdf',
+            'cv' => 'required|file|mimes:pdf',
             'is_agreed' => 'required|boolean',
         ]);
 
+        // Process file uploads
+        $validatedData['proof_of_funding'] = $request->file('proof_of_funding')->store('proofs', 'public');
+        $validatedData['letter_of_agreement'] = $request->file('letter_of_agreement')->store('agreements', 'public');
+        $validatedData['research_proposal'] = $request->file('research_proposal')->store('proposals', 'public');
+        $validatedData['cv'] = $request->file('cv')->store('cvs', 'public');
+
+
         // Save the permission request with the generated temporary URL
-        PermissionRequest::create([
-            'user_id' => auth()->id(),
-            'request_reason' => $request->reason,
-            'temporary_url' => "http://testing",  // Use the generated temporary URL
-            'is_agreed' => $request->is_agreed,
-        ]);
+        // PermissionRequest::create([
+        //     'user_id' => auth()->id(),
+        //     'request_reason' => $request->reason,
+        //     'temporary_url' => "http://testing",  // Use the generated temporary URL
+        //     'is_agreed' => $request->is_agreed,
+        // ]);
+        // Save the validated data into the database (example)
+        $permissionRequest = new \App\Models\PermissionRequest(); // Make sure this model exists
+        $permissionRequest->user_id = auth()->id();
+        $permissionRequest->bioarchive_id = $validatedData['bioarchive_id'];
+        $permissionRequest->bioarchive_accession = $validatedData['bioarchive_accession'];
+        $permissionRequest->reason = $validatedData['reason'];
+        $permissionRequest->research_area = $validatedData['research_area'];
+        $permissionRequest->research_title = $validatedData['research_title'];
+        $permissionRequest->abstract = $validatedData['abstract'];
+        $permissionRequest->proof_of_funding = $validatedData['proof_of_funding'];
+        $permissionRequest->letter_of_agreement = $validatedData['letter_of_agreement'];
+        $permissionRequest->research_proposal = $validatedData['research_proposal'];
+        $permissionRequest->cv = $validatedData['cv'];
+        $permissionRequest->is_agreed = $validatedData['is_agreed'];
+        $permissionRequest->save();
 
         // Store the permission request logic (optional)
         // Redirect back with a success message

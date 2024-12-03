@@ -4,31 +4,49 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
 class PermissionRequest extends Model
 {
     use HasFactory;
+    // protected $fillable = [
+    //     'user_id',
+    //     'request_reason',
+    //     'temporary_url',
+    //     'is_agreed',
+    //     'expires_at',
+    // ];
     protected $fillable = [
         'user_id',
-        'request_reason',
-        'temporary_url',
+        'bioarchive_id',
+        'bioarchive_accession',
+        'reason',
+        'research_area',
+        'research_title',
+        'abstract',
+        'proof_of_funding',
+        'letter_of_agreement',
+        'research_proposal',
+        'cv',
         'is_agreed',
-        'expires_at',
+        'is_approved',
+        'temporary_url',
+        'temporary_url_expiration',
     ];
 
-    protected $dates = [
-        'expires_at',  // Tell Laravel this is a date field
-    ];
-
-    protected static function boot()
+    // public function generateTemporaryUrl($filePath, $expiration = 3600)
+    // {
+    //     return Storage::disk('public')->temporaryUrl($filePath, now()->addSeconds($expiration));
+    // }
+    public function generateTemporaryUrl($filePath, $expiration = 3600)
     {
-        parent::boot();
-
-        // Automatically set the `expires_at` to 5 days from `created_at`
-        static::creating(function ($permissionRequest) {
-            $permissionRequest->expires_at = Carbon::now()->addDays(5);
-        });
+        return URL::temporarySignedRoute(
+            'file.serve',
+            now()->addSeconds($expiration),
+            ['path' => $filePath]
+        );
     }
 
     public function user()

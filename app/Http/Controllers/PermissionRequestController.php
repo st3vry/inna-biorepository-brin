@@ -60,8 +60,13 @@ class PermissionRequestController extends Controller
         $validatedData['letter_of_agreement'] = $request->file('letter_of_agreement')->store('agreements', 'public');
         $validatedData['research_proposal'] = $request->file('research_proposal')->store('proposals', 'public');
         $validatedData['cv'] = $request->file('cv')->store('cvs', 'public');
-
-
+        $validatedData['bioarchive_id'] = $request->bioarchive_id;
+        $validatedData['bioarchive_accession'] = $request->bioarchive_accession;
+        $validatedData['reason'] = $request->reason;
+        $validatedData['research_area'] = $request->research_area;
+        $validatedData['research_title'] = $request->research_title;
+        $validatedData['abstract'] = $request->abstract;
+        $validatedData['is_agreed'] = $request->is_agreed;
         // Save the permission request with the generated temporary URL
         // PermissionRequest::create([
         //     'user_id' => auth()->id(),

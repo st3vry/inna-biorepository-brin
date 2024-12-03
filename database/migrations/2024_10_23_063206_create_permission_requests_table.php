@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('letter_of_agreement');
             $table->string('research_proposal');
             $table->string('cv');
-            $table->boolean('is_agreed');
             $table->boolean('is_agreed')->default(false);
             $table->timestamp('expires_at');
             $table->timestamps();

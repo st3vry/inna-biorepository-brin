@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('cv');
             $table->boolean('is_agreed')->default(false);
             $table->text('temporary_url')->nullable(); // Temporary URL for file access
-            $table->timestamp('expires_at');
+            $table->timestamp('temporary_url_expiration')->nullable(); // Expiration time for the URL
             $table->timestamps();
         });
     }

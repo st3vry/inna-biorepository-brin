@@ -11,6 +11,7 @@ use Carbon\Carbon;
 class PermissionRequest extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     // protected $fillable = [
     //     'user_id',
     //     'request_reason',
@@ -47,6 +48,11 @@ class PermissionRequest extends Model
             now()->addSeconds($expiration),
             ['path' => $filePath]
         );
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'id';
     }
 
     public function user()

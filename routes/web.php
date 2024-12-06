@@ -35,6 +35,7 @@ use App\Http\Controllers\DiseaseController;
 use App\Http\Controllers\DataverseController;
 use App\Http\Controllers\Dashboard\User\BiosampleController as UserSampleController;
 use App\Http\Controllers\DownloadRequestController;
+use App\Http\Controllers\PermissionApprovalController;
 use App\Http\Controllers\PermissionRequestController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
@@ -120,6 +121,8 @@ Route::get('/permission-request/{bioarchive_id?}', [PermissionRequestController:
 // // Route to handle the submission of the permission form
 // Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission.request')->middleware('authsso');
 Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission_request.store')->middleware('authsso');
+Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
+Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'show'])->middleware('authsso');
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {
     Route::get('/', [DashboardIndexController::class, 'index'])->middleware('authsso');

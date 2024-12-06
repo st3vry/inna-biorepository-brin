@@ -16,4 +16,15 @@ class PermissionApprovalController extends Controller
             'permissionReqs' => $permissionReq,
         ]);
     }
+
+    public function show($id)
+    {
+        // dd($id);
+        $permissionrequest = PermissionRequest::where('bioarchive_accession', $id)->first();
+        // dd($permissionrequest);
+        return view('dashboard.disemofficer.show', [
+            'permissionRequest' => $permissionrequest,
+        ]);
+        // $permissionReq=PermissionRequest
+    }
 }

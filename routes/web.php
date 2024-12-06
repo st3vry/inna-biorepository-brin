@@ -122,7 +122,8 @@ Route::get('/permission-request/{bioarchive_id?}', [PermissionRequestController:
 // Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission.request')->middleware('authsso');
 Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission_request.store')->middleware('authsso');
 Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
-Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'show'])->middleware('authsso');
+Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware('authsso');
+// Route::resource('/dissem/permission-approval', PermissionApprovalController::class)->middleware('authsso');
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {
     Route::get('/', [DashboardIndexController::class, 'index'])->middleware('authsso');

@@ -38,7 +38,7 @@
 
                 
                 <td class="text-center align-middle" style="white-space: nowrap">
-                    <a href="/dashboard/bioprojects/{{ $permissionReq->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    <a href="/dissem/permission-approval/{{ $permissionReq->bioarchive_accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                 </td>
             </tr>
             @endforeach

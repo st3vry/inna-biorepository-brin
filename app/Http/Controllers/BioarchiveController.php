@@ -7,6 +7,7 @@ use App\Models\Bioarchive;
 use App\Models\Bioproject;
 use App\Models\Bioexperiment;
 use App\Models\Biorun;
+use App\Models\PermissionRequest;
 use Illuminate\Http\Request;
 
 class BioarchiveController extends Controller
@@ -37,6 +38,8 @@ class BioarchiveController extends Controller
         // $biosample_links = $bioarchive->externallink()->get();
         $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
         $bioruns = Biorun::where('bioexperiment_id', $bioexperiments[0]->id)->get();
+        $get_permission_info = PermissionRequest::where('bioarchive_id', $bioarchive->id)->where('user_id', auth()->user()->id)->first();
+        // dd($get_permission_info->is_approved);
         // dd($bioruns);
         // dd($bioexperiments[0]->id);
         return view('frontend.showbioarchive', [
@@ -44,6 +47,7 @@ class BioarchiveController extends Controller
             'bioarchive' => $bioarchive,
             'bioexperiments' => $bioexperiments,
             'bioruns' => $bioruns,
+            'permission_info' => $get_permission_info
             // 'biosample_links' => $biosample_links
         ]);
     }

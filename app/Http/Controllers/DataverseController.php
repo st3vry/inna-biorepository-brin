@@ -277,7 +277,7 @@ class DataverseController extends Controller
                                                 \"typeName\": \"authorName\",
                                                 \"multiple\": false,
                                                 \"typeClass\": \"primitive\",
-                                                \"value\": \"{$userDataJson->userData->last_name}, {$userDataJson->userData->userData->first_name}\"
+                                                \"value\": \"{$userDataJson->userData->last_name}, {$userDataJson->userData->first_name}\"
                                             },
                                             \"authorAffiliation\": {
                                                 \"typeName\": \"authorAffiliation\",

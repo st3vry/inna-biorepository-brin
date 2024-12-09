@@ -48,14 +48,14 @@ class DataverseController extends Controller
             }";
         if ($userData != null) {
             $userDataJson = json_decode($userData->user_data);
-            $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->first_name;
+            $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->userData->first_name;
             $dataverseContact = "{
                 \"contactEmail\" : \"inna.repository@brin.go.id\",
                 \"contactEmail\" : \"{$userDataJson->userData->email}\"
             }";
         }
         
-        $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->first_name;
+        $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->userData->first_name;
         $description = "
             <p>{$bioproject->description}</p>
             <p><strong>Accession Number: </strong>{$bioproject->accession}</p>
@@ -215,7 +215,7 @@ class DataverseController extends Controller
         $userData = $biosample->user()->first();
         $userDataJson = json_decode($userData->user_data);
         // dd($userDataJson);
-        $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->first_name;
+        $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->userData->first_name;
         $description = "<p>This BioSample was automatically submitted from the <a href='https://inna.brin.go.id'>INNA Repository</a>. For more details about this BioSamples, please refer to the following link: <a href='https://inna.brin.go.id/biosamples/{$accession}'>https://inna.brin.go.id/biosamples/{$accession}</a></p>";
         $rawJson = "
             {
@@ -277,7 +277,7 @@ class DataverseController extends Controller
                                                 \"typeName\": \"authorName\",
                                                 \"multiple\": false,
                                                 \"typeClass\": \"primitive\",
-                                                \"value\": \"{$userDataJson->userData->last_name}, {$userDataJson->userData->first_name}\"
+                                                \"value\": \"{$userDataJson->userData->last_name}, {$userDataJson->userData->userData->first_name}\"
                                             },
                                             \"authorAffiliation\": {
                                                 \"typeName\": \"authorAffiliation\",
@@ -432,7 +432,7 @@ class DataverseController extends Controller
         $bioruns = Biorun::where('bioexperiment_id', $bioexperiments[0]->id)->get();
         $userData = $bioarchive->user()->first();
         $userDataJson = json_decode($userData->user_data);
-        $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->first_name;
+        $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->userData->first_name;
         $description = "<p>This BioArchive was automatically submitted from the <a href='https://inna.brin.go.id'>INNA Repository</a>. For more details about this BioArchive, please refer to the following link: <a href='https://inna.brin.go.id/bioarchives/{$accession}'>https://inna.brin.go.id/bioarchives/{$accession}</a></p>";
         $rawJson = "
             {

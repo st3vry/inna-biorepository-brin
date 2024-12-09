@@ -27,4 +27,41 @@ class PermissionApprovalController extends Controller
         ]);
         // $permissionReq=PermissionRequest
     }
+
+    public function proof($filename)
+    {
+        $filePath = storage_path("app/public/proofs/{$filename}");
+        if (file_exists($filePath)) {
+            return response()->file($filePath);
+        }
+
+        abort(404, 'File not found');
+    }
+    public function agreement($filename)
+    {
+        $filePath = storage_path("app/public/agreements/{$filename}");
+        if (file_exists($filePath)) {
+            return response()->file($filePath);
+        }
+
+        abort(404, 'File not found');
+    }
+    public function proposal($filename)
+    {
+        $filePath = storage_path("app/public/proposals/{$filename}");
+        if (file_exists($filePath)) {
+            return response()->file($filePath);
+        }
+
+        abort(404, 'File not found');
+    }
+    public function cv($filename)
+    {
+        $filePath = storage_path("app/public/cvs/{$filename}");
+        if (file_exists($filePath)) {
+            return response()->file($filePath);
+        }
+
+        abort(404, 'File not found');
+    }
 }

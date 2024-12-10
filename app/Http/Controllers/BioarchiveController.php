@@ -36,9 +36,16 @@ class BioarchiveController extends Controller
         }
 
         // $biosample_links = $bioarchive->externallink()->get();
+        // $user_id = auth()->user()->id;
+        if (auth()->user()) {
+            $user_id = auth()->user()->id;
+            $get_permission_info = PermissionRequest::where('bioarchive_id', $bioarchive->id)->where('user_id', $user_id)->first();
+        } else {
+            $get_permission_info = null;
+        }
         $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
         $bioruns = Biorun::where('bioexperiment_id', $bioexperiments[0]->id)->get();
-        $get_permission_info = PermissionRequest::where('bioarchive_id', $bioarchive->id)->where('user_id', auth()->user()->id)->first();
+
         // dd($get_permission_info->is_approved);
         // dd($bioruns);
         // dd($bioexperiments[0]->id);

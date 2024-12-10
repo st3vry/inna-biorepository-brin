@@ -94,4 +94,25 @@ class PermissionRequestController extends Controller
         // Redirect back with a success message
         return redirect("{$baseUrl}/bioarchives/{$request->bioarchive_accession}")->with('success', 'Permission request submitted successfully.');
     }
+
+    public function download($id)
+    {
+        // Find the bioarchive entry
+        $bioarchive = Bioarchive::findOrFail($id);
+
+        // Check if the permission is granted
+        if (!$bioarchive->permissionRequest || !$bioarchive->permissionRequest->is_agreed) {
+            abort(403, 'You are not authorized to download this file.');
+        }
+
+        // Define the file path (adjust based on your storage setup)
+        $filePath = storage_path("app/public/bioarchives/{$bioarchive->file_name}");
+
+        // Ensure the file exists before downloading
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found.');
+        }
+
+        return response()->download($filePath);
+    }
 }

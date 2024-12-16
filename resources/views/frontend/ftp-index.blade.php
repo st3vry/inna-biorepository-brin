@@ -2,12 +2,13 @@
 
 @section('container')
 <div class="container  mt-5 pt-5" style="min-height: 90vh">
-<h1>Index of Folder: {{ $currentFolder }}</h1>
+{{-- <h1>Index of Folder: {{ $currentFolder }}</h1> --}}
     
     {{-- Breadcrumb Navigation --}}
     {{-- <nav> --}}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <ol class="breadcrumb">
+            
             @php
                 $paths = explode('/', $currentFolder);
                 $accumulatedPath = '';

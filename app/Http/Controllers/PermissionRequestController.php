@@ -99,20 +99,23 @@ class PermissionRequestController extends Controller
     {
         // Find the bioarchive entry
         $bioarchive = Bioarchive::findOrFail($id);
-
+        $rootfolder = env('DOWNLOAD_PATH');
+        $rndfolder = $bioarchive->path;
         // Check if the permission is granted
         if (!$bioarchive->permissionRequest || !$bioarchive->permissionRequest->is_agreed) {
             abort(403, 'You are not authorized to download this file.');
         }
 
         // Define the file path (adjust based on your storage setup)
-        $filePath = storage_path("app/public/bioarchives/{$bioarchive->file_name}");
+        // $filePath = storage_path("app/public/bioarchives/{$bioarchive->file_name}");
+        $folderpath = $rootfolder . '/' . $rndfolder;
+
 
         // Ensure the file exists before downloading
-        if (!file_exists($filePath)) {
-            abort(404, 'File not found.');
-        }
+        // if (!file_exists($filePath)) {
+        // abort(404, 'File not found.');
+        // }
 
-        return response()->download($filePath);
+        return response()->download($folderpath);
     }
 }

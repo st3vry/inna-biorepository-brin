@@ -29,7 +29,7 @@ return new class extends Migration
             $table->boolean('is_agreed')->default(false);
             $table->boolean('is_approved')->default(false); // Admin approval status
             $table->boolean('is_declined')->default(false); // Admin approval status
-            $table->string('path');
+            $table->string('path')->nullable();
             $table->text('temporary_url')->nullable(); // Temporary URL for file access
             $table->timestamp('temporary_url_expiration')->nullable(); // Expiration time for the URL
             $table->timestamps();

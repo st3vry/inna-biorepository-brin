@@ -122,7 +122,10 @@ Route::get('/permission-request/{bioarchive_id?}', [PermissionRequestController:
 // Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission.request')->middleware('authsso');
 Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission_request.store')->middleware('authsso');
 Route::get('/download/{id}', [PermissionRequestController::class, 'download'])->name('download')->middleware('authsso');
-
+// Route for browsing folders
+Route::get('/folder/{relativePath?}', [PermissionRequestController::class, 'indexFolder'])
+    ->name('folder.index')
+    ->where('relativePath', '.*')->middleware('authsso');
 Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
 Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware('authsso');
 // Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');

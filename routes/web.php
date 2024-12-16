@@ -126,6 +126,10 @@ Route::get('/download/{id}', [PermissionRequestController::class, 'download'])->
 Route::get('/folder/{relativePath?}', [PermissionRequestController::class, 'indexFolder'])
     ->name('folder.index')
     ->where('relativePath', '.*')->middleware('authsso');
+// Route for downloading files
+Route::get('/download/{relativePath}', [PermissionRequestController::class, 'downloadFile'])
+    ->name('file.download')
+    ->where('relativePath', '.*')->middleware('authsso');
 Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
 Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware('authsso');
 // Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');

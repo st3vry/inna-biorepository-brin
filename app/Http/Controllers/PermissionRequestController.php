@@ -98,7 +98,7 @@ class PermissionRequestController extends Controller
     public function download($id)
     {
         // Find the bioarchive entry
-        $bioarchive = Bioarchive::findOrFail($id);
+        $bioarchive = PermissionRequest::findOrFail($id);
         $rootfolder = env('DOWNLOAD_PATH');
         $rndfolder = $bioarchive->path;
         // Check if the permission is granted

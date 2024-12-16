@@ -34,6 +34,7 @@ class PermissionRequest extends Model
         'is_agreed',
         'is_approved',
         'is_declined',
+        'path',
         'updated_at',
         'temporary_url',
         'temporary_url_expiration',

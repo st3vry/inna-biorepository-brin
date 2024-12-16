@@ -74,11 +74,17 @@ class PermissionApprovalController extends Controller
         $permissionRequest = PermissionRequest::findOrFail($id);
         $source = "innasto/files/{$permissionRequest->bioarchive_accession}";
         $target = "innasto/ops/";
+        $folder = env('DOWNLOAD_PATH');
+        $folderpath = $folder . '/' . $rndfolder;
+        // Generate the full URL
+        $url = url($folderpath);
 
         if ($request->action === 'approve') {
             $permissionRequest->update([
                 'is_approved' => true,
                 'is_declined' => false,
+                'path' => $rndfolder,
+                'temporary_url' => $url,
                 'updated_at' => now(),
             ]);
             $SSHController = new SSHController();

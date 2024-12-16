@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bioarchive;
+// use App\Models\Bioarchive;
 use App\Models\PermissionRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class PermissionApprovalController extends Controller
 {
@@ -68,9 +70,11 @@ class PermissionApprovalController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
+        $rndfolder = Str::random(12);
         $permissionRequest = PermissionRequest::findOrFail($id);
         $source = "innasto/files/{$permissionRequest->bioarchive_accession}";
-        $target = "innasto/ops/{$permissionRequest->bioarchive_accession}";
+        $target = "innasto/ops/";
+
         if ($request->action === 'approve') {
             $permissionRequest->update([
                 'is_approved' => true,
@@ -81,7 +85,8 @@ class PermissionApprovalController extends Controller
             try {
                 //code...
                 $SSHController->customSSHCommand(env('FTP_USERNAME'), [
-                    "cp -rf {$source}/* {$target}",
+                    "mkdir -p {$target}/{$rndfolder}",
+                    "cp -rf {$source}/* {$target}/{$rndfolder}",
                 ]);
             } catch (\Throwable $th) {
                 //throw $th;

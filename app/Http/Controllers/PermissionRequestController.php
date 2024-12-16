@@ -154,7 +154,14 @@ class PermissionRequestController extends Controller
             return abort(404, 'File not found.');
         }
 
+        // Return the file with explicit headers
+        $headers = [
+            'Content-Type' => File::mimeType($filePath),
+            'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"',
+        ];
+
         // Return the file as a download
-        return response()->download($filePath);
+        // return response()->download($filePath);
+        return response()->file($filePath, $headers);
     }
 }

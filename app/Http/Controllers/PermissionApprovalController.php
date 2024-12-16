@@ -64,4 +64,28 @@ class PermissionApprovalController extends Controller
 
         abort(404, 'File not found');
     }
+
+    public function update(Request $request, $id)
+    {
+        // dd($request);
+        $permissionRequest = PermissionRequest::findOrFail($id);
+
+        if ($request->action === 'approve') {
+            $permissionRequest->update([
+                'is_approved' => true,
+                'is_declined' => false,
+                'updated_at' => now(),
+            ]);
+            return redirect()->route('permission-approval.index')->with('success', 'Permission request ' . $permissionRequest->bioarchive_accession . ' approved successfully.');
+        } elseif ($request->action === 'decline') {
+            $permissionRequest->update([
+                'is_approved' => false,
+                'is_declined' => true,
+                'updated_at' => now(),
+            ]);
+            return redirect()->route('permission-approval.index')->with('success', 'Permission request ' . $permissionRequest->bioarchive_accession . ' declined successfully.');
+        }
+
+        return redirect()->route('permission-approval.index')->withErrors(['Invalid action.']);
+    }
 }

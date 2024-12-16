@@ -69,13 +69,24 @@ class PermissionApprovalController extends Controller
     {
         // dd($request);
         $permissionRequest = PermissionRequest::findOrFail($id);
-
+        $source = "innasto/files/{$permissionRequest->bioarchive_accession}";
+        $target = "innasto/ops/{$permissionRequest->bioarchive_accession}";
         if ($request->action === 'approve') {
             $permissionRequest->update([
                 'is_approved' => true,
                 'is_declined' => false,
                 'updated_at' => now(),
             ]);
+            $SSHController = new SSHController();
+            try {
+                //code...
+                $SSHController->customSSHCommand(env('FTP_USERNAME'), [
+                    "cp -rf {$source}/* {$target}",
+                ]);
+            } catch (\Throwable $th) {
+                //throw $th;
+                return $th->getMessage();
+            }
             return redirect()->route('permission-approval.index')->with('success', 'Permission request ' . $permissionRequest->bioarchive_accession . ' approved successfully.');
         } elseif ($request->action === 'decline') {
             $permissionRequest->update([

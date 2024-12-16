@@ -29,9 +29,9 @@ return new class extends Migration
             $table->boolean('is_agreed')->default(false);
             $table->boolean('is_approved')->default(false); // Admin approval status
             $table->boolean('is_declined')->default(false); // Admin approval status
-            $table->string('path')->default(null);
-            $table->text('temporary_url')->default(null); // Temporary URL for file access
-            $table->timestamp('temporary_url_expiration')->default(null); // Expiration time for the URL
+            $table->string('path')->nullable()->default(null);
+            $table->text('temporary_url')->nullable()->default(null); // Temporary URL for file access
+            $table->timestamp('temporary_url_expiration')->nullable()->default(null); // Expiration time for the URL
             $table->timestamps();
         });
     }

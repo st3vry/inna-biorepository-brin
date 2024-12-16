@@ -134,6 +134,7 @@ class PermissionRequestController extends Controller
         });
 
         return view('frontend.ftp-index', [
+            'title' => 'index file',
             'folders' => $folders,
             'files' => $fileUrls,
             'currentFolder' => $relativePath,

@@ -95,7 +95,8 @@
                                 <!-- Entry exists but is_agreed/is_approve is false -->
                                     <button type="button" class="btn btn-warning btn-sm" disabled>Waiting for Approval</button>
                                 @elseif($permission_info->is_approved)
-                                    <a href="{{ route('download', ['id' => $permission_info->id]) }}" class="btn btn-success btn-sm">Download</a>
+                                    {{-- <a href="{{ route('download', ['id' => $permission_info->id]) }}" class="btn btn-success btn-sm">Download</a> --}}
+                                    <a href="{{ route('folder.index', ['relativePath' => $permission_info->path]) }}" class="btn btn-success btn-sm">Download</a>
                                 @endif
                             </td>
                             <td>

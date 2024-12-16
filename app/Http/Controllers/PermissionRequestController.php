@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Bioarchive;
 use App\Models\PermissionRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
 
 class PermissionRequestController extends Controller
 {
@@ -93,6 +95,49 @@ class PermissionRequestController extends Controller
         // Store the permission request logic (optional)
         // Redirect back with a success message
         return redirect("{$baseUrl}/bioarchives/{$request->bioarchive_accession}")->with('success', 'Permission request submitted successfully.');
+    }
+
+    public function indexFolder($relativePath = '')
+    {
+        // Define the base directory
+        $basePath = env('DOWNLOAD_PATH');
+
+        // Build the absolute path for the current folder
+        $currentPath = rtrim($basePath . '/' . $relativePath, '/');
+
+        // Check if the folder exists
+        if (!File::exists($currentPath)) {
+            return abort(404, 'Folder not found.');
+        }
+
+        // Get all subfolders and files
+        $subfolders = File::directories($currentPath);
+        $files = File::files($currentPath);
+
+        // Prepare folder URLs
+        $folders = collect($subfolders)->map(function ($folder) use ($relativePath) {
+            return [
+                'name' => basename($folder),
+                'url' => route('folder.index', [
+                    'relativePath' => trim($relativePath . '/' . basename($folder), '/')
+                ]),
+            ];
+        });
+
+        // Prepare file URLs
+        $fileUrls = collect($files)->map(function ($file) use ($relativePath) {
+            $filePath = trim($relativePath . '/' . basename($file), '/');
+            return [
+                'name' => basename($file),
+                'url' => url('download/' . $filePath),
+            ];
+        });
+
+        return view('frontend.ftp-index', [
+            'folders' => $folders,
+            'files' => $fileUrls,
+            'currentFolder' => $relativePath,
+        ]);
     }
 
     public function download($id)

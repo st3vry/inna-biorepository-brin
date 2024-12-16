@@ -129,18 +129,32 @@
                 <th>Temporary URL Expiration</th>
                 <td>{{ $permissionRequest->temporary_url_expiration ?? 'Not set' }}</td>
             </tr>
-            <tr>
+            {{-- <tr>
                 <th>Created At</th>
                 <td>{{ $permissionRequest->created_at }}</td>
             </tr>
             <tr>
                 <th>Updated At</th>
                 <td>{{ $permissionRequest->updated_at }}</td>
-            </tr>
+            </tr> --}}
             
         </table>
     </div>
-    
+    <div class="d-flex justify-content-start mt-3">
+    <form action="{{ route('permission-approval.update', $permissionRequest->id) }}" method="POST">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="action" id="action">
+
+        <button type="submit" class="btn btn-success me-2" onclick="document.getElementById('action').value = 'approve'">
+            Approve
+        </button>
+        
+        <button type="submit" class="btn btn-danger" onclick="document.getElementById('action').value = 'decline'">
+            Decline
+        </button>
+    </form>
+    </div>
 </div>
 
 @endsection

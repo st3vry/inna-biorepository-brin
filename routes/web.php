@@ -125,6 +125,12 @@ Route::get('/download/{id}', [PermissionRequestController::class, 'download'])->
 
 Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
 Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware('authsso');
+// Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');
+// Route::patch('/dissem/permission-approval/{id}/decline', [PermissionApprovalController::class, 'decline'])->name('permission-approval.decline');
+Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update');
+Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware('authsso');
+
+
 Route::get('/proofs/{filename}', [PermissionApprovalController::class, 'proof'])->name('proof')->middleware('authsso');
 Route::get('/agreements/{filename}', [PermissionApprovalController::class, 'agreement'])->name('agreement')->middleware('authsso');
 Route::get('/proposals/{filename}', [PermissionApprovalController::class, 'proposal'])->name('proposal')->middleware('authsso');

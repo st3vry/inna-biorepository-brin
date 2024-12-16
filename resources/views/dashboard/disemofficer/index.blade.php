@@ -14,6 +14,26 @@
         <li class="breadcrumb-item active" aria-current="page">Permission Request List</li>
     </ol>
 </div>
+
+{{-- Flash Message Section --}}
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 {{-- <a href="/dashboard/bioprojects/create" class="btn btn-primary mb-3">Create New Bioproject</a> --}}
 <div class="table-responsive col-md-12">
     <table class="table table-striped table-sm" id="dataTable">

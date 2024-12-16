@@ -33,6 +33,8 @@ class PermissionRequest extends Model
         'cv',
         'is_agreed',
         'is_approved',
+        'is_declined',
+        'updated_at',
         'temporary_url',
         'temporary_url_expiration',
     ];

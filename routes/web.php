@@ -34,6 +34,7 @@ use App\Http\Controllers\ConsortiaController;
 use App\Http\Controllers\DiseaseController;
 use App\Http\Controllers\DataverseController;
 use App\Http\Controllers\Dashboard\User\BiosampleController as UserSampleController;
+use App\Http\Controllers\DashboardMyRequestController;
 use App\Http\Controllers\DownloadRequestController;
 use App\Http\Controllers\PermissionApprovalController;
 use App\Http\Controllers\PermissionRequestController;
@@ -160,6 +161,8 @@ Route::prefix('dashboard')->group(function () {
     // Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
     Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware(['is_labcenterexist', 'authsso']);
 
+    // MY REQUEST
+    Route::get('/myrequest', [DashboardMyRequestController::class, 'index'])->middleware('authsso');
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('authsso');
     Route::get('/innalysis_galaxy/create', [InnalysisController::class, 'create'])->middleware('authsso');

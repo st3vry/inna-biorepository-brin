@@ -228,6 +228,9 @@ Route::prefix('dashboard')->group(function () {
     });
 });
 
+Route::get('/tos', [HomeController::class, 'tos'])->name('tos');
+Route::get('/privpol', [HomeController::class, 'privpol'])->name('privpol');
+
 Route::get('/undev', function () {
     return view('error.undev', ['title' => 'Under Development']);
 });

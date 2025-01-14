@@ -238,7 +238,7 @@
 </section><!-- End Features Section -->
 
 <!-- ======= Contact Section ======= -->
-{{-- <section id="contact" class="contact">
+<section id="contact" class="contact">
 
     <div class="container" data-aos="fade-up">
 
@@ -248,7 +248,7 @@
 
     <div class="row gy-4">
 
-        <div class="col-lg-6">
+        <div class="col-lg-12">
 
         <div class="row gy-4">
             <div class="col-md-6">
@@ -283,7 +283,7 @@
 
         </div>
 
-        <div class="col-lg-6">
+        {{-- <div class="col-lg-6">
         <form action="forms/contact.php" method="post" class="php-email-form">
             <div class="row gy-4">
 
@@ -314,13 +314,13 @@
             </div>
         </form>
 
-        </div>
+        </div> --}}
 
     </div>
 
     </div>
 
-</section> --}}
+</section>
 <!-- End Contact Section -->
 
 @endsection

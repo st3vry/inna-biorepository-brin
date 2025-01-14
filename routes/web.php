@@ -34,7 +34,9 @@ use App\Http\Controllers\ConsortiaController;
 use App\Http\Controllers\DiseaseController;
 use App\Http\Controllers\DataverseController;
 use App\Http\Controllers\Dashboard\User\BiosampleController as UserSampleController;
+use App\Http\Controllers\DashboardMyRequestController;
 use App\Http\Controllers\DownloadRequestController;
+use App\Http\Controllers\PermissionApprovalController;
 use App\Http\Controllers\PermissionRequestController;
 use App\Models\Bioproject;
 use App\Models\Biosample;
@@ -120,6 +122,29 @@ Route::get('/permission-request/{bioarchive_id?}', [PermissionRequestController:
 // // Route to handle the submission of the permission form
 // Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission.request')->middleware('authsso');
 Route::post('/permission-request', [PermissionRequestController::class, 'store'])->name('permission_request.store')->middleware('authsso');
+Route::get('/download/{id}', [PermissionRequestController::class, 'download'])->name('download')->middleware('authsso');
+// Route for browsing folders
+Route::get('/folder/{relativePath?}', [PermissionRequestController::class, 'indexFolder'])
+    ->name('folder.index')
+    ->where('relativePath', '.*')->middleware('authsso');
+// Route for downloading files
+Route::get('/download/{relativePath}', [PermissionRequestController::class, 'downloadFile'])
+    ->name('file.download')
+    ->where('relativePath', '.*')->middleware('authsso');
+Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
+Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware('authsso');
+// Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');
+// Route::patch('/dissem/permission-approval/{id}/decline', [PermissionApprovalController::class, 'decline'])->name('permission-approval.decline');
+Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update');
+Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware('authsso');
+
+
+Route::get('/proofs/{filename}', [PermissionApprovalController::class, 'proof'])->name('proof')->middleware('authsso');
+Route::get('/agreements/{filename}', [PermissionApprovalController::class, 'agreement'])->name('agreement')->middleware('authsso');
+Route::get('/proposals/{filename}', [PermissionApprovalController::class, 'proposal'])->name('proposal')->middleware('authsso');
+Route::get('/cvs/{filename}', [PermissionApprovalController::class, 'cv'])->name('cv')->middleware('authsso');
+
+// Route::resource('/dissem/permission-approval', PermissionApprovalController::class)->middleware('authsso');
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {
     Route::get('/', [DashboardIndexController::class, 'index'])->middleware('authsso');
@@ -136,6 +161,8 @@ Route::prefix('dashboard')->group(function () {
     // Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
     Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware(['is_labcenterexist', 'authsso']);
 
+    // MY REQUEST
+    Route::get('/myrequest', [DashboardMyRequestController::class, 'index'])->middleware('authsso');
     // INNAlysis
     Route::get('/galaxy_workflows', [InnalysisGalaxyController::class, 'index'])->middleware('authsso');
     Route::get('/innalysis_galaxy/create', [InnalysisController::class, 'create'])->middleware('authsso');

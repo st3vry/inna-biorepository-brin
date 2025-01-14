@@ -20,6 +20,10 @@
                     <span data-feather="hard-drive"></span>
                     My BioArchive
                 </a>
+                <a class="nav-link  {{ Request::is('dashboard/myrequest*') ? 'active' : ''}}" href="/dashboard/myrequest">
+                    <span data-feather="hard-drive"></span>
+                    My Request
+                </a>
             </li>
         </ul>
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">

@@ -85,11 +85,19 @@
                     <table class="table table-sm">
                         <tr>
                             <td>
+                                @if(!$permission_info)
                                 <form action="{{ route('button.action') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="bioarchive_id" value="{{ $bioarchive->id }}">
                                     <button type="submit" class="btn btn-secondary btn-sm">Request to Download</button>
                                 </form>
+                                @elseif(!$permission_info->is_approved)
+                                <!-- Entry exists but is_agreed/is_approve is false -->
+                                    <button type="button" class="btn btn-warning btn-sm" disabled>Waiting for Approval</button>
+                                @elseif($permission_info->is_approved)
+                                    {{-- <a href="{{ route('download', ['id' => $permission_info->id]) }}" class="btn btn-success btn-sm">Download</a> --}}
+                                    <a href="{{ route('folder.index', ['relativePath' => $permission_info->path]) }}" class="btn btn-success btn-sm">Download</a>
+                                @endif
                             </td>
                             <td>
                                 @if(session('success'))

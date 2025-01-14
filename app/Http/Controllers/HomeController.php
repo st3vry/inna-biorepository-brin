@@ -17,9 +17,9 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $data_in_concerns = Datainconcern::latest()->take(4)->get();
-        $bioprojects_latest = Bioproject::where('status',5)->take(3)->orderBy('published_at')->get();
-        $biosamples_latest = Biosample::where('status',5)->take(3)->orderBy('published_at')->get();
-        $bioarchives_latest = Bioarchive::where('status',5)->take(3)->orderBy('published_at')->get();
+        $bioprojects_latest = Bioproject::where('status', 5)->take(3)->orderBy('published_at')->get();
+        $biosamples_latest = Biosample::where('status', 5)->take(3)->orderBy('published_at')->get();
+        $bioarchives_latest = Bioarchive::where('status', 5)->take(3)->orderBy('published_at')->get();
 
 
         $bioprojects_count = Bioproject::where('draft', FALSE)->whereNotNull('published_at')->count();
@@ -37,6 +37,19 @@ class HomeController extends Controller
             'biosamples_count' => $biosamples_count,
             'bioarchives_count' => $bioarchives_count,
 
+        ]);
+    }
+
+    public function tos()
+    {
+        return view('frontend.tos', [
+            'title' => "Term of Service"
+        ]);
+    }
+    public function privpol()
+    {
+        return view('frontend.privpol', [
+            'title' => "Privacy and Policy"
         ]);
     }
 }

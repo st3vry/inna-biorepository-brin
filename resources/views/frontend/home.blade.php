@@ -217,14 +217,14 @@
                     </div> --}}
 
                     <div class="col-md-12" data-aos="zoom-out" data-aos-delay="400">
-                        <div class="feature-box d-flex align-items-center" onclick="location.href='/undev';">
+                        <div class="feature-box d-flex align-items-center" onclick="location.href='/bioarchives';">
                             <i class="bi bi-cloud-download"></i>
                             <h3>Download</h3>
                         </div>
                     </div>
 
                     <div class="col-md-12" data-aos="zoom-out" data-aos-delay="500">
-                        <div class="feature-box d-flex align-items-center" onclick="location.href='/undev';">
+                        <div class="feature-box d-flex align-items-center" onclick="location.href='/bioprojects';">
                             <i class="bi bi-file-earmark-medical"></i>
                             <h3>Research</h3>
                         </div>

@@ -51,7 +51,7 @@ class BiosampleController extends Controller
 
         $biosample_links = $biosample->externallink()->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
-        dd($biosample->organism_id);
+        // dd($biosample->organism_id);
         $endpoint = '/terms/get';
         $body = [
             'ncbi_taxon_id' => [(string) $biosample->organism_id]

@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'api_innakm' => [
+        'base_url_innakm' => env('API_INNAKM_BASE_URL'),
+        'timeout_innakm' => env('API_INNAKM_TIMEOUT', 10), // Default timeout is 10 seconds
+    ],
+
 ];

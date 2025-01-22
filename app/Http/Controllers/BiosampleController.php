@@ -7,6 +7,7 @@ use App\Models\AttributeValue;
 use App\Models\Datatype;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
+use App\Helpers\InnaKmApiHelper;
 
 class BiosampleController extends Controller
 {
@@ -25,8 +26,8 @@ class BiosampleController extends Controller
         if ($request->center) {
             $biosamples = Biosample::with(['organism', 'center', 'user'])->where(['status' => 5, 'center_id' => Crypt::decrypt($request->center)])->paginate(5);
         }
-        $organisms = Biosample::leftJoin('organisms', 'organisms.id', '=', 'biosamples.organism_id')->selectRaw('organisms.name, organisms.taxon_id, organisms.id, count(biosamples.organism_id) as count')->where('biosamples.status',5)->groupBy('organisms.id')->orderBy('organisms.name')->get();
-        $centers = Biosample::leftJoin('centers', 'centers.id', '=', 'biosamples.center_id')->selectRaw('centers.name, centers.id, count(biosamples.center_id) as count')->where('biosamples.status',5)->groupBy('centers.id')->get();
+        $organisms = Biosample::leftJoin('organisms', 'organisms.id', '=', 'biosamples.organism_id')->selectRaw('organisms.name, organisms.taxon_id, organisms.id, count(biosamples.organism_id) as count')->where('biosamples.status', 5)->groupBy('organisms.id')->orderBy('organisms.name')->get();
+        $centers = Biosample::leftJoin('centers', 'centers.id', '=', 'biosamples.center_id')->selectRaw('centers.name, centers.id, count(biosamples.center_id) as count')->where('biosamples.status', 5)->groupBy('centers.id')->get();
         return view('frontend.biosample', [
             'title' => 'Biosamples',
             'biosamples' => $biosamples,
@@ -50,6 +51,15 @@ class BiosampleController extends Controller
 
         $biosample_links = $biosample->externallink()->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        // dd($biosample);
+        $endpoint = '/terms/get';
+        $body = [
+            'ncbi_taxon_id' => [$biosample->organism_id]
+        ];
+
+        $apiResponse = InnaKmApiHelper::contactApi($endpoint, $body);
+        dd($apiResponse);
+
         return view('frontend.showbiosample', [
             'title' => 'Biosample',
             'biosample' => $biosample,

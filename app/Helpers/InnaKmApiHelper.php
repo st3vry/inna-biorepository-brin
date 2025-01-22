@@ -15,8 +15,11 @@ class InnaKmApiHelper
      */
     public static function contactApi(string $endpoint, array $data)
     {
+        $baseUrl = config('services.api_innakm.base_url_innakm');
+        $timeout = config('services.api_innakm.timeout_innakm');
+
         try {
-            $response = Http::post($endpoint, $data);
+            $response = Http::timeout($timeout)->post($baseUrl . $endpoint, $data);
 
             if ($response->successful()) {
                 return [

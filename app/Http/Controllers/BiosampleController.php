@@ -51,10 +51,10 @@ class BiosampleController extends Controller
 
         $biosample_links = $biosample->externallink()->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
-        dd($biosample);
+        // dd($biosample);
         $endpoint = '/terms/get';
         $body = [
-            'ncbi_taxon_id' => [$biosample->ncbi_taxon_id]
+            'ncbi_taxon_id' => [$biosample->organism_id]
         ];
 
         $apiResponse = InnaKmApiHelper::contactApi($endpoint, $body);

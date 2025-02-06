@@ -74,7 +74,7 @@
 
         </table>
     </div>
-    <div class="col-lg-12">
+    <div class="col-lg-12 mb-3">
         <h3 class="mb-4 text-center">Other Information</h3>
                     <div class="accordion" id="dataAccordion">
             @foreach($data as $section => $details)

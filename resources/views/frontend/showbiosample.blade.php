@@ -3,7 +3,6 @@
 @section('container')
 <div class="container  mt-5 pt-5" style="min-height: 90vh">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a class="text-brin" href="/">Home</a></li>
             <li class="breadcrumb-item"><a class="text-brin" href="/biosamples">Biosample</a></li>
@@ -74,6 +73,64 @@
             </tr>
 
         </table>
+    </div>
+    <div class="col-lg-12 mb-3">
+        <h3 class="mb-4 text-center">Other Information</h3>
+                    <div class="accordion" id="dataAccordion">
+            @foreach($data as $section => $details)
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ $loop->index }}">
+                        <button class="accordion-button @if(!$loop->first) collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $loop->index }}" aria-expanded="@if($loop->first) true @else false @endif" aria-controls="collapse{{ $loop->index }}">
+                            {{ $section }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ $loop->index }}" class="accordion-collapse collapse @if($loop->first) show @endif" aria-labelledby="heading{{ $loop->index }}" data-bs-parent="#dataAccordion">
+                        <div class="accordion-body">
+                            @if(is_array($details))
+                                <ul class="list-group">
+                                    @foreach($details as $key => $value)
+                                        <li class="list-group-item">
+                                            <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> 
+                                            @if(is_array($value))
+                                                <ul>
+                                                    @foreach($value as $subKey => $subValue)
+                                                        <li><strong>{{ ucfirst(str_replace('_', ' ', $subKey)) }}:</strong> 
+                                                            @if(is_array($subValue))
+                                                                <ul>
+                                                                    @foreach($subValue as $innerKey => $innerValue)
+                                                                        <li><strong>{{ ucfirst(str_replace('_', ' ', $innerKey)) }}:</strong> 
+                                                                            @if(is_array($innerValue))
+                                                                                <ul>
+                                                                                    @foreach($innerValue as $subsubKey => $subsubValue)
+                                                                                        <li><strong>{{ ucfirst(str_replace('_', ' ', $subsubKey)) }}:</strong> {{ is_string($subsubValue) ? $subsubValue : print_r($subsubValue, true) }}</li>
+                                                                                    @endforeach
+                                                                                </ul>
+                                                                            @else
+                                                                                {{ is_string($innerValue) ? $innerValue : print_r($innerValue, true) }}
+                                                                            @endif
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            @else
+                                                                {{ is_string($subValue) ? $subValue : print_r($subValue, true) }}
+                                                            @endif
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                {{ is_string($value) ? $value : print_r($value, true) }}
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                {{ is_string($details) ? $details : print_r($details, true) }}
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 </div>
 @endsection

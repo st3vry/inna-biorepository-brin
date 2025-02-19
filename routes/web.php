@@ -205,18 +205,18 @@ Route::prefix('dashboard')->group(function () {
     Route::get('createDataFile/{type}/{accession}', [DataverseController::class, 'createDataFile'])->name('createDataFile');
 
     // permission approval
-    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware(['is_admin']);
-    Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware(['is_admin']);
+    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('can:isOfficer');
+    Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware(['can:isOfficer']);
     // Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');
     // Route::patch('/dissem/permission-approval/{id}/decline', [PermissionApprovalController::class, 'decline'])->name('permission-approval.decline');
-    Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update')->middleware(['is_admin']);
-    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware(['is_admin']);
+    Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update')->middleware('can:isOfficer');
+    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware('can:isOfficer');
 
 
-    Route::get('/proofs/{filename}', [PermissionApprovalController::class, 'proof'])->name('proof')->middleware(['is_admin']);
-    Route::get('/agreements/{filename}', [PermissionApprovalController::class, 'agreement'])->name('agreement')->middleware(['is_admin']);
-    Route::get('/proposals/{filename}', [PermissionApprovalController::class, 'proposal'])->name('proposal')->middleware(['is_admin']);
-    Route::get('/cvs/{filename}', [PermissionApprovalController::class, 'cv'])->name('cv')->middleware(['is_admin']);
+    Route::get('/proofs/{filename}', [PermissionApprovalController::class, 'proof'])->name('proof')->middleware('can:isOfficer');
+    Route::get('/agreements/{filename}', [PermissionApprovalController::class, 'agreement'])->name('agreement')->middleware('can:isOfficer');
+    Route::get('/proposals/{filename}', [PermissionApprovalController::class, 'proposal'])->name('proposal')->middleware('can:isOfficer');
+    Route::get('/cvs/{filename}', [PermissionApprovalController::class, 'cv'])->name('cv')->middleware('can:isOfficer');
 
 
     Route::prefix('v2')->group(function () {

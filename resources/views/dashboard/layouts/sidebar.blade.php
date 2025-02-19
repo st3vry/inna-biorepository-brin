@@ -131,5 +131,16 @@
             </li>
         </ul>
         @endcannot
+        @canany(['isOfficer'])
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
+            <span>Approval Request</span>
+        </h6>
+        <ul class="nav flex-column">
+            <a class="nav-link {{ Request::is('dashboard/dissem/permission-approval*') ? 'active' : ''}}" href="/dashboard/dissem/permission-approval">
+                    <span data-feather="list"></span>
+                    Download Request List
+                </a>
+        </ul>
+        @endcanany
     </div>
 </nav>

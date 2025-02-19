@@ -131,18 +131,8 @@ Route::get('/folder/{relativePath?}', [PermissionRequestController::class, 'inde
 Route::get('/download/{relativePath}', [PermissionRequestController::class, 'downloadFile'])
     ->name('file.download')
     ->where('relativePath', '.*')->middleware('authsso');
-Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
-Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware('authsso');
-// Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');
-// Route::patch('/dissem/permission-approval/{id}/decline', [PermissionApprovalController::class, 'decline'])->name('permission-approval.decline');
-Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update');
-Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware('authsso');
 
-
-Route::get('/proofs/{filename}', [PermissionApprovalController::class, 'proof'])->name('proof')->middleware('authsso');
-Route::get('/agreements/{filename}', [PermissionApprovalController::class, 'agreement'])->name('agreement')->middleware('authsso');
-Route::get('/proposals/{filename}', [PermissionApprovalController::class, 'proposal'])->name('proposal')->middleware('authsso');
-Route::get('/cvs/{filename}', [PermissionApprovalController::class, 'cv'])->name('cv')->middleware('authsso');
+// moved inside dashboard
 
 // Route::resource('/dissem/permission-approval', PermissionApprovalController::class)->middleware('authsso');
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
@@ -193,7 +183,7 @@ Route::prefix('dashboard')->group(function () {
     // Curator
     // Route::get('/curator/bioprojects', [CuratorBioprojectController::class, 'index'])->middleware(['can:isCurator',]);
     // Route::get('/curator/bioprojects/{bioproject}', [CuratorBioprojectController::class, 'edit'])->middleware(['can:isCurator']);
-
+    // is_admin == role 3 which mean curator
     Route::resource('/curator/biosamples', CuratorBioSampleController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioprojects', CuratorBioprojectController::class)->middleware(['is_admin']);
     Route::resource('/curator/bioarchives', CuratorBioArchiveController::class)->middleware(['is_admin']);
@@ -214,6 +204,19 @@ Route::prefix('dashboard')->group(function () {
     Route::post('createDatasetArchive', [DataverseController::class, 'createDatasetArchive'])->name('createDatasetArchive');
     Route::get('createDataFile/{type}/{accession}', [DataverseController::class, 'createDataFile'])->name('createDataFile');
 
+    // permission approval
+    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware(['is_admin']);
+    Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware(['is_admin']);
+    // Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');
+    // Route::patch('/dissem/permission-approval/{id}/decline', [PermissionApprovalController::class, 'decline'])->name('permission-approval.decline');
+    Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update')->middleware(['is_admin']);
+    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware(['is_admin']);
+
+
+    Route::get('/proofs/{filename}', [PermissionApprovalController::class, 'proof'])->name('proof')->middleware(['is_admin']);
+    Route::get('/agreements/{filename}', [PermissionApprovalController::class, 'agreement'])->name('agreement')->middleware(['is_admin']);
+    Route::get('/proposals/{filename}', [PermissionApprovalController::class, 'proposal'])->name('proposal')->middleware(['is_admin']);
+    Route::get('/cvs/{filename}', [PermissionApprovalController::class, 'cv'])->name('cv')->middleware(['is_admin']);
 
 
     Route::prefix('v2')->group(function () {

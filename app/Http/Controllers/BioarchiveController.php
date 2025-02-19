@@ -39,7 +39,10 @@ class BioarchiveController extends Controller
         // $user_id = auth()->user()->id;
         if (auth()->user()) {
             $user_id = auth()->user()->id;
-            $get_permission_info = PermissionRequest::where('bioarchive_id', $bioarchive->id)->where('user_id', $user_id)->first();
+            $get_permission_info = PermissionRequest::where('bioarchive_id', $bioarchive->id)
+                ->where('user_id', $user_id)
+                ->where('temporary_url_expiration', '>', now())
+                ->first();
         } else {
             $get_permission_info = null;
         }

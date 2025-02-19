@@ -85,6 +85,7 @@ class PermissionApprovalController extends Controller
                 'is_declined' => false,
                 'path' => $rndfolder,
                 'temporary_url' => $url,
+                'temporary_url_expiration' => now()->addDays(10),
                 'updated_at' => now(),
             ]);
             $SSHController = new SSHController();

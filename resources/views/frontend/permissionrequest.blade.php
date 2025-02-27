@@ -98,10 +98,10 @@
             </div> --}}
 
             <!-- Reason -->
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="reason" class="form-label">Reason for Request</label>
                 <textarea name="reason" id="reason" rows="4" class="form-control" required>{{ old('reason') }}</textarea>
-            </div>
+            </div> --}}
 
             {{-- AGREEMENT --}}
             <div class="form-group">

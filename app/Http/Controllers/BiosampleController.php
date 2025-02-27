@@ -54,12 +54,17 @@ class BiosampleController extends Controller
         // dd($biosample->organism_id);
         $endpoint = '/terms/get';
         $body = [
-            // 'ncbi_taxon_id' => [(string) $biosample->organism_id]
-            'ncbi_taxon_id' => ["644"]
+            'ncbi_taxon_id' => [(string) $biosample->organism_id]
+            // 'ncbi_taxon_id' => ["644"]
         ];
 
         $apiResponse = InnaKmApiHelper::contactApi($endpoint, $body);
-        $data = $apiResponse["data"]["data"][0]["data"];
+        if (isset($apiResponse["data"]["data"][0]["data"])) {
+            $data = $apiResponse["data"]["data"][0]["data"];
+        } else {
+            $data = "Data not available";
+        }
+        // $data = $apiResponse["data"]["data"][0]["data"];
         // dd($data = $apiResponse["data"]["data"][0]["data"]);
 
         return view('frontend.showbiosample', [

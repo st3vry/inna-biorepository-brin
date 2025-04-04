@@ -6,13 +6,20 @@ namespace App\Http\Controllers;
 use App\Models\PermissionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\DB;
 
 class PermissionApprovalController extends Controller
 {
     public function index()
     {
-        $permissionReq = PermissionRequest::where('is_approved', FALSE)->get();
+        // $permissionReq = PermissionRequest::where('is_approved', FALSE)->get();
+        $permissionReq =  DB::table('permission_requests')
+            ->join('bioarchives', 'permission_requests.bioarchive_id', '=', 'bioarchives.id')
+            ->where('bioarchives.user_id', auth()->user()->id) // filter by user
+            ->where('permission_requests.is_approved', false)  // Only unapproved requests
+            ->select('permission_requests.*', 'bioarchives.accession')
+            ->get();
+
         // dd($permissionReq);
         return view('dashboard.disemofficer.index', [
             'permissionReqs' => $permissionReq,

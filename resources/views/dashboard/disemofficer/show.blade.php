@@ -35,7 +35,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
         <li class="breadcrumb-item"><a href="/dissem/permission-approval/">Permission Approval</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{$permissionRequest->accession}}</li>
+        <li class="breadcrumb-item active" aria-current="page">{{$permissionRequest->bioarchive_accession}}</li>
     </ol>
 </div>
 <div class="row">

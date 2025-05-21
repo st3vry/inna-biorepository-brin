@@ -205,12 +205,16 @@ Route::prefix('dashboard')->group(function () {
     Route::get('createDataFile/{type}/{accession}', [DataverseController::class, 'createDataFile'])->name('createDataFile');
 
     // permission approval
-    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('can:isOfficer');
-    Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware(['can:isOfficer']);
+    // Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('can:isOfficer');
+    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->middleware('authsso');
+    // Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware(['can:isOfficer']);
+    Route::get('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'show'])->middleware('authsso');
     // Route::patch('/dissem/permission-approval/{id}/approve', [PermissionApprovalController::class, 'approve'])->name('permission-approval.approve');
     // Route::patch('/dissem/permission-approval/{id}/decline', [PermissionApprovalController::class, 'decline'])->name('permission-approval.decline');
-    Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update')->middleware('can:isOfficer');
-    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware('can:isOfficer');
+    // Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update')->middleware('can:isOfficer');
+    Route::patch('/dissem/permission-approval/{id}', [PermissionApprovalController::class, 'update'])->name('permission-approval.update')->middleware('authsso');
+    // Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware('can:isOfficer');
+    Route::get('/dissem/permission-approval', [PermissionApprovalController::class, 'index'])->name('permission-approval.index')->middleware('authsso');
 
 
     Route::get('/proofs/{filename}', [PermissionApprovalController::class, 'proof'])->name('proof')->middleware('can:isOfficer');

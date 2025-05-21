@@ -24,6 +24,10 @@
                     <span data-feather="hard-drive"></span>
                     My Request
                 </a>
+                <a class="nav-link {{ Request::is('dashboard/dissem/permission-approval*') ? 'active' : ''}}" href="/dashboard/dissem/permission-approval">
+                    <span data-feather="list"></span>
+                    Download Request List
+                </a>
             </li>
         </ul>
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-3 mb-1 text-muted">
@@ -128,6 +132,7 @@
                     <span data-feather="hard-drive"></span>
                     BioArchive
                 </a>
+                
             </li>
         </ul>
         @endcannot

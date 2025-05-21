@@ -67,9 +67,9 @@ class DashboardBioprojectController extends Controller
             'grants.*.program' => 'required',
             'grants.*.title' => 'required',
         ]);
-        $bioproject = new Bioproject;
-        $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject = new Bioproject;;
+        $bioproject->accession = 'INNAP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->submission_id = 'INNASUBP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->relevance = $data['relevance'];
         $bioproject->data_type_id = implode(",", $data['data_type_id']);
         // $bioproject->objective_id = implode(",", $data['objective_id']);
@@ -197,7 +197,7 @@ class DashboardBioprojectController extends Controller
         //     }
         // }
         // dd($bioproject);
-        
+
         // return nanti redirect ke reload halaman if else untuk check error
         // action log storing
     }
@@ -225,7 +225,7 @@ class DashboardBioprojectController extends Controller
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
-        $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
+        $histories = ActionLog::with(['creator'])->where('item_id', $bioproject->accession)->orderBy('created_at', 'desc')->get();
 
         //kirim data ke view
         return view('dashboard.bioproject.show', [

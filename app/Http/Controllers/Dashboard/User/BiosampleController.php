@@ -64,8 +64,8 @@ class BiosampleController extends Controller
 
         // dd($request);
         $biosample = new Biosample();
-        $biosample->accession = 'SAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
-        $biosample->submission_id = 'SUBSAM' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
+        $biosample->accession = 'INNAS' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
+        $biosample->submission_id = 'INNASUBS' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
         $biosample->title = $request->sample_title;
         $biosample->description = $request->description;
         $biosample->hold_release = $request->hold_release;

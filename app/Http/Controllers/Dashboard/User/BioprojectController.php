@@ -62,8 +62,8 @@ class BioprojectController extends Controller
             'grants.*.title' => 'required',
         ]);
         $bioproject = new Bioproject();
-        $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->accession = 'INNAP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->submission_id = 'INNASUBP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
         $bioproject->objective_id = implode(",", $validatedData['objective_id']);
         $bioproject->samplescope_id = $validatedData['samplescope_id'];
@@ -79,7 +79,6 @@ class BioprojectController extends Controller
         $bioproject->user_id = auth()->user()->id;
 
         $bioproject->save();
-
     }
 
     /**

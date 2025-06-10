@@ -62,6 +62,15 @@
                 <td class="text-center align-middle" style="white-space: nowrap">
                     @if ($bioproject->draft==false)
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                    @if ($bioproject->status == 5)
+                    <div id="tdDv{{$bioproject->accession}}" style="display: inline">
+                    @if($bioproject->dv_published_at)
+                    <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataverse/{{$bioproject->accession}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
+                    @else
+                    <button type="button" class="badge btn-dataverse-outline" onclick="dataverseSync('{{$bioproject->accession}}')">Sync to dataverse</button>
+                    @endif
+                    </div>
+                    @endif
                     @else
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
                     <a href="/dashboard/bioprojects/{{ $bioproject->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
@@ -85,6 +94,54 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script>
+        window.APP_CONFIG = {
+            dataverseBaseUrl: "{{ config('services.api_dataverse.base_url_dataverse') }}"
+        };
+        let accession = null
+        const baseurl = window.APP_CONFIG.dataverseBaseUrl;
+        bsConfirmModalButton.addEventListener("click",()=>{
+            bsConfirmModalButton.disabled = true
+            bsConfirmModalTitle.textContent = `Syncing with dataverse...`
+            bsConfirmModalSpinner.classList.remove("d-none")
+            bsConfirmModalText.textContent = `Please do not close this window until syncing process has finished.`
+            fetch("{{route('createDataverse')}}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({'accession':accession})
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                if (data.status === "OK") {
+                    bsConfirmModalSpinner.classList.add("d-none")
+                    bsConfirmModal.hide()
+                    showToast("Synced with dataverse")
+                    document.querySelector(`#tdDv${accession}`).innerHTML = `<a type="button" href="${baseurl}/dataverse/${accession}" target="_blank" class="btn btn-sm btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="16px"></img></a>`
+                } else {
+                    showToast(`Error: ${JSON.stringify(data)}`, "danger")
+                    bsConfirmModalTitle.textContent = `Something went wrong`
+                    bsConfirmModalSpinner.classList.add("d-none")
+                    bsConfirmModalText.textContent = `Error: ${error}`
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error)
+                bsConfirmModalTitle.textContent = `Something went wrong`
+                bsConfirmModalSpinner.classList.add("d-none")
+                bsConfirmModalText.textContent = `Error: ${error}`
+            });
+            bsConfirmModalButton.disabled = false
+        })
+        function dataverseSync(id) {
+            accession = id
+            bsConfirmModalTitle.textContent = `Sync ${accession} bioproject to dataverse?`
+            bsConfirmModal.show()
+
+
+        }
         $(document).ready(function () {
             const dataTable = $('#dataTable').DataTable({
                     columnDefs: [

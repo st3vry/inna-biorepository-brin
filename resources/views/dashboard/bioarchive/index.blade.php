@@ -85,6 +85,15 @@
                             </form>
                         @endif
                     @endif
+                    @if ($bioarchive->status == 5)
+                    <div id="tdDv{{$bioarchive->accession}}" style="display: inline">
+                    @if($bioarchive->dv_published_at)
+                    <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
+                    @else
+                    <button onclick="javscript:dataverseSync('{{ $bioarchive->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
+                    @endif
+                    </div>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -99,6 +108,53 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script>
+        let accession = null
+        window.APP_CONFIG = {
+            dataverseBaseUrl: "{{ config('services.api_dataverse.base_url_dataverse') }}"
+        };
+        const baseurl = window.APP_CONFIG.dataverseBaseUrl;
+        bsConfirmModalButton.addEventListener("click",()=>{
+            bsConfirmModalButton.disabled = true
+            bsConfirmModalTitle.textContent = `Syncing with dataverse...`
+            bsConfirmModalSpinner.classList.remove("d-none")
+            bsConfirmModalText.textContent = `Please do not close this window until syncing process has finished.`
+            fetch("{{route('createDatasetArchive')}}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({'accession':accession})
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                if (data.status === "OK") {
+                    bsConfirmModalSpinner.classList.add("d-none")
+                    bsConfirmModal.hide()
+                    showToast("Synced with dataverse")
+                    document.querySelector(`#tdDv${accession}`).innerHTML = `<a type="button" href="${baseurl}/dataset.xhtml?persistentId=${data.data.persistentId}" target="_blank" class="badge btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>`
+                } else {
+                    showToast(`${data.status} - ${data.message}`, "danger")
+                    console.log(data)
+                    bsConfirmModalTitle.textContent = `Something went wrong`
+                    bsConfirmModalSpinner.classList.add("d-none")
+                    bsConfirmModalText.textContent = `${data.status} - ${data.message}`
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error)
+                bsConfirmModalTitle.textContent = `Something went wrong`
+                bsConfirmModalSpinner.classList.add("d-none")
+                bsConfirmModalText.textContent = `Error: ${error}`
+            });
+            bsConfirmModalButton.disabled = false
+        })
+        function dataverseSync(id) {
+            accession = id
+            bsConfirmModalTitle.textContent = `Sync ${accession} bioarchive to dataverse?`
+            bsConfirmModal.show()
+        }
         $(document).ready(function () {
             const dataTable = $('#dataTable').DataTable({
                     columnDefs: [

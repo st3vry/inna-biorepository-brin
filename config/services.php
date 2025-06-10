@@ -36,4 +36,10 @@ return [
         'timeout_innakm' => env('API_INNAKM_TIMEOUT', 10), // Default timeout is 10 seconds
     ],
 
+    'api_dataverse' => [
+        'base_url_dataverse' => env('API_DATAVERSE_BASE_URL'),
+        'timeout_dataverse' => env('API_DATAVERSE_TIMEOUT', 10), // Default timeout is 10 seconds
+        'api_key_dataverse' => env('API_DATAVERSE_API_KEY')
+    ],
+
 ];

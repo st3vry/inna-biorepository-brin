@@ -5,7 +5,7 @@
     <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
         <div class="row d-flex justify-content-center">
             <div class="col-lg-7 d-flex flex-column justify-content-center">
-                <h1 data-aos="fade-up" class="text-uppercase">Indonesian Nucleotide Archives</h1>
+                <h1 data-aos="fade-up" class="text-uppercase">Indonesian Nucleotide Archive</h1>
                 <h2 data-aos="fade-up" data-aos-delay="400">A life sciences, agriculture, and bioinformatics for biodiversity data repository platform</h2>
                 <div data-aos="fade-right" data-aos-delay="600">
                     <div class="text-center text-lg-start">

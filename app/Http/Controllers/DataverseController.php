@@ -82,7 +82,7 @@ class DataverseController extends Controller
         // Use configured base URL and key
         $baseUrl = config('services.api_dataverse.base_url_dataverse');
         $apiKey  = config('services.api_dataverse.api_key_dataverse');
-        $endpoint = "{$baseUrl}/dataverses/INNA";
+        $endpoint = "{$baseUrl}/api/dataverses/INNA";
 
         $response = $client->post($endpoint, [
             'headers' => [
@@ -188,7 +188,7 @@ class DataverseController extends Controller
         // Use configured base URL and key
         $baseUrl = config('services.api_dataverse.base_url_dataverse');
         $apiKey  = config('services.api_dataverse.api_key_dataverse');
-        $endpoint = "{$baseUrl}/datasets/:persistentId/add?persistentId={$persistentId}";
+        $endpoint = "{$baseUrl}/api/datasets/:persistentId/add?persistentId={$persistentId}";
         try {
             $response = $client->post($endpoint, [
                 'headers' => [
@@ -415,7 +415,7 @@ class DataverseController extends Controller
         // Use configured base URL and key
         $baseUrl = config('services.api_dataverse.base_url_dataverse');
         $apiKey  = config('services.api_dataverse.api_key_dataverse');
-        $endpoint = "{$baseUrl}/dataverses/INNA/datasets";
+        $endpoint = "{$baseUrl}/api/dataverses/INNA/datasets";
         $response = $client->post($endpoint, [
             'headers' => [
                 'X-Dataverse-key' => $apiKey,
@@ -634,7 +634,7 @@ class DataverseController extends Controller
         $client = new Client();
         $baseUrl = config('services.api_dataverse.base_url_dataverse');
         $apiKey  = config('services.api_dataverse.api_key_dataverse');
-        $endpoint = "{$baseUrl}/dataverses/{$parent}/datasets";
+        $endpoint = "{$baseUrl}/api/dataverses/{$parent}/datasets";
         try {
             $response = $client->post($endpoint, [
                 'headers' => [

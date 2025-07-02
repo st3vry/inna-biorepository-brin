@@ -115,6 +115,7 @@ Route::get('/biosamples', [BiosampleController::class, 'index']);
 Route::get('/biosamples/{biosample}', [BiosampleController::class, 'show']);
 Route::get('/bioarchives', [BioarchiveController::class, 'index']);
 Route::get('/bioarchives/{bioarchive}', [BioarchiveController::class, 'show']);
+Route::get('/biosamples/{biosample}/fair', [BiosampleController::class, 'showFair']);
 
 Route::post('/button-action', [DownloadRequestController::class, 'handleButtonClick'])->name('button.action')->middleware('authsso');
 // Route for handling the download button click and redirecting to the form

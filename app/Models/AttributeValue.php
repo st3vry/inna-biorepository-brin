@@ -26,4 +26,13 @@ class AttributeValue extends Model
         return $this->belongsTo(Attributesample::class);
     }
 
+    public function sampletypeFAIR()
+    {
+        return $this->belongsTo(SampleType::class, 'sampletype_id');
+    }
+
+    public function attributesampleFAIR()
+    {
+        return $this->belongsTo(AttributeSample::class, 'attributesample_id');
+    }
 }

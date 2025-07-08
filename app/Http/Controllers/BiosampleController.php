@@ -113,10 +113,11 @@ class BiosampleController extends Controller
                     "submission_date" => $biosample->created_at,
                 ],
                 // Add attribute_values as detailed metadata
+                "sampletype" => $biosample->sampletype->name ?? null,
                 "attribute_values" => $sample_attr->map(function ($attr) {
                     return [
                         "id" => $attr->id,
-                        "sampletype" => $attr->sampletype->name ?? null,
+                        // "sampletype" => $attr->sampletype->name ?? null,
                         "attributesample" => $attr->attributesample->attr_text ?? null,
                         "value" => $attr->value,
                         "created_at" => $attr->created_at,

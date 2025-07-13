@@ -44,4 +44,21 @@ class Biosample extends Model
             ->orWhere('submission', 'like', '%' . $search . '%')
             ->orWhere('accession', 'like', '%' . $search . '%');
     }
+
+    // Relationship to the submitter (user)
+    public function submitter()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Relationship to the curator (user)
+    public function curator()
+    {
+        return $this->belongsTo(User::class, 'curator_id');
+    }
+
+    public function attributeValues()
+    {
+        return $this->hasMany(AttributeValue::class, 'biosample_id');
+    }
 }

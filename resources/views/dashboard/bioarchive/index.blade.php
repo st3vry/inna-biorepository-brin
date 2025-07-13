@@ -162,7 +162,6 @@
             accession = id
             bsConfirmModalTitle.textContent = `Sync ${accession} bioarchive to dataverse?`
             bsConfirmModalText.textContent = `Silakan masukkan API-Key Dataverse Anda sebelum melanjutkan.`;
-            // document.getElementById('apiKeyInput').value = '';
             bsConfirmModalSpinner.classList.add("d-none");
             bsConfirmModalButton.disabled = false;
             // Cek apakah input sudah ada, jika belum tambahkan

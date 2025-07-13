@@ -100,7 +100,6 @@
         </tbody>
     </table>
 </div>
-
 @endsection
 
 
@@ -113,7 +112,15 @@
             dataverseBaseUrl: "{{ config('services.api_dataverse.base_url_dataverse') }}"
         };
         const baseurl = window.APP_CONFIG.dataverseBaseUrl;
+        
+
         bsConfirmModalButton.addEventListener("click",()=>{
+            apiKey = document.getElementById('apiKeyInput').value;
+            if(!apiKey) {
+                showToast("API-Key tidak boleh kosong!", "danger");
+                // console.log("testing api key");
+                return;
+            }
             bsConfirmModalButton.disabled = true
             bsConfirmModalTitle.textContent = `Syncing with dataverse...`
             bsConfirmModalSpinner.classList.remove("d-none")
@@ -122,7 +129,8 @@
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "X-DATAVERSE-KEY": apiKey // Kirim API-key di header
                 },
                 body: JSON.stringify({'accession':accession})
             })
@@ -153,6 +161,33 @@
         function dataverseSync(id) {
             accession = id
             bsConfirmModalTitle.textContent = `Sync ${accession} bioarchive to dataverse?`
+            bsConfirmModalText.textContent = `Silakan masukkan API-Key Dataverse Anda sebelum melanjutkan.`;
+            // document.getElementById('apiKeyInput').value = '';
+            bsConfirmModalSpinner.classList.add("d-none");
+            bsConfirmModalButton.disabled = false;
+            // Cek apakah input sudah ada, jika belum tambahkan
+            if (!document.getElementById('apiKeyInput')) {
+                const inputDiv = document.createElement('div');
+                inputDiv.className = 'mb-3 mt-3';
+                const input = document.createElement('input');
+                input.type = 'password';
+                input.id = 'apiKeyInput';
+                input.className = 'form-control';
+                input.placeholder = 'Masukkan API-Key Dataverse';
+                input.autocomplete = 'off';
+                inputDiv.appendChild(input);
+
+                // Sisipkan input sebelum spinner (atau di akhir modal body jika tidak ada spinner)
+                const modalBody = bsConfirmModalText.parentElement;
+                if (document.getElementById('bsConfirmModalSpinner')) {
+                    modalBody.insertBefore(inputDiv, document.getElementById('bsConfirmModalSpinner'));
+                } else {
+                    modalBody.appendChild(inputDiv);
+                }
+            } else {
+                // Reset jika sudah ada
+                document.getElementById('apiKeyInput').value = '';
+            }
             bsConfirmModal.show()
         }
         $(document).ready(function () {

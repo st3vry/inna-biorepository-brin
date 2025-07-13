@@ -137,10 +137,34 @@
         })
         function dataverseSync(id) {
             accession = id
-            bsConfirmModalTitle.textContent = `Sync ${accession} bioproject to dataverse?`
+            bsConfirmModalTitle.textContent = `Sync ${accession} bioarchive to dataverse?`
+            bsConfirmModalText.textContent = `Silakan masukkan API-Key Dataverse Anda sebelum melanjutkan.`;
+            bsConfirmModalSpinner.classList.add("d-none");
+            bsConfirmModalButton.disabled = false;
+            // Cek apakah input sudah ada, jika belum tambahkan
+            if (!document.getElementById('apiKeyInput')) {
+                const inputDiv = document.createElement('div');
+                inputDiv.className = 'mb-3 mt-3';
+                const input = document.createElement('input');
+                input.type = 'password';
+                input.id = 'apiKeyInput';
+                input.className = 'form-control';
+                input.placeholder = 'Masukkan API-Key Dataverse';
+                input.autocomplete = 'off';
+                inputDiv.appendChild(input);
+
+                // Sisipkan input sebelum spinner (atau di akhir modal body jika tidak ada spinner)
+                const modalBody = bsConfirmModalText.parentElement;
+                if (document.getElementById('bsConfirmModalSpinner')) {
+                    modalBody.insertBefore(inputDiv, document.getElementById('bsConfirmModalSpinner'));
+                } else {
+                    modalBody.appendChild(inputDiv);
+                }
+            } else {
+                // Reset jika sudah ada
+                document.getElementById('apiKeyInput').value = '';
+            }
             bsConfirmModal.show()
-
-
         }
         $(document).ready(function () {
             const dataTable = $('#dataTable').DataTable({

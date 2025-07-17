@@ -25,7 +25,8 @@ use GuzzleHttp\Psr7;
 
 class DataverseController extends Controller
 {
-    public function createDataverse(Request $request) {
+    public function createDataverse(Request $request)
+    {
         $accession = $request->accession;
         $bioproject = Bioproject::where('accession', $accession)->first();
         $organism = $bioproject->organism()->first();
@@ -54,7 +55,7 @@ class DataverseController extends Controller
                 \"contactEmail\" : \"{$userDataJson->userData->email}\"
             }";
         }
-        
+
         $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->userData->first_name;
         $description = "
             <p>{$bioproject->description}</p>
@@ -78,11 +79,18 @@ class DataverseController extends Controller
             \"dataverseType\": \"RESEARCH_PROJECTS\"
         }";
         $client = new Client();
-        $response = $client->post('https://data.brin.go.id/api/dataverses/INNA', [
+        // Use configured base URL and key
+        $baseUrl = config('services.api_dataverse.base_url_dataverse');
+        // $apiKey  = config('services.api_dataverse.api_key_dataverse');
+        // Ambil API-key dari header jika ada, jika tidak pakai default config
+        $apiKey  = $request->header('X-DATAVERSE-KEY') ?? config('services.api_dataverse.api_key_dataverse');
+        $endpoint = "{$baseUrl}/api/dataverses/INNA";
+
+        $response = $client->post($endpoint, [
             'headers' => [
-                'X-Dataverse-key' => 'a0031e48-838e-4b4a-b375-a48c597745ba',
+                'X-Dataverse-key' => $apiKey,
             ],
-            'body'=> Psr7\Utils::streamFor(preg_replace('!\s+!', ' ', $rawJson))
+            'body' => Psr7\Utils::streamFor(preg_replace('!\s+!', ' ', $rawJson))
         ]);
 
         $jsonResponse = json_decode($response->getBody());
@@ -103,7 +111,8 @@ class DataverseController extends Controller
         return json_decode($response->getBody());
     }
 
-    public function buildCsvFile($columns, $content, $type): string {
+    public function buildCsvFile($columns, $content, $type): string
+    {
         $file = tmpfile();
         fputcsv($file, $columns);
         if ($type == "biosample") {
@@ -117,13 +126,15 @@ class DataverseController extends Controller
         return file_get_contents($metaDatas['uri']);
     }
 
-    public function cleanFileName( $filename ) {
-        $sanitized_filename = preg_replace( '/[^A-Za-z0-9-_\.[:blank:]]/', '', $filename );
-        $sanitized_filename = preg_replace( '/[[:blank:]]+/', '_', $sanitized_filename );
+    public function cleanFileName($filename)
+    {
+        $sanitized_filename = preg_replace('/[^A-Za-z0-9-_\.[:blank:]]/', '', $filename);
+        $sanitized_filename = preg_replace('/[[:blank:]]+/', '_', $sanitized_filename);
         return $sanitized_filename;
     }
 
-    public function createDataFile(Request $request,  $type, $accession) {
+    public function createDataFile(Request $request,  $type, $accession)
+    {
         $fileName = ".csv";
         $header = array();
         $data = array();
@@ -132,39 +143,39 @@ class DataverseController extends Controller
         if ($type == "biosample") {
             $biosample = Biosample::where('accession', $accession)->first();
             $parent = $biosample->title;
-            $fileName =  $this->cleanFileName($biosample->sampletype->name.$fileName);
+            $fileName =  $this->cleanFileName($biosample->sampletype->name . $fileName);
             $persistentId = $biosample->dv_persistent_id;
             $sampleAttributes = AttributeValue::where('biosample_id', $biosample->id)->get();
             $description = "This datafile contains {$biosample->sampletype->name} Biosample Attributes details.";
             $directory = "INNA/{$accession}";
             foreach ($sampleAttributes as $sampleAttribute => $value) {
-                array_push($header,$value->attributesample->attr_text);
-                array_push($data,$value->value);
+                array_push($header, $value->attributesample->attr_text);
+                array_push($data, $value->value);
             }
         }
         if ($type == "bioarchive") {
             $bioarchive = Bioarchive::where('accession', $accession)->first();
             $parent = $bioarchive->bioproject->accession;
-            $fileName =  $this->cleanFileName($bioarchive->submission_id.$fileName);
+            $fileName =  $this->cleanFileName($bioarchive->submission_id . $fileName);
             $persistentId = $bioarchive->dv_persistent_id;
             $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
             $description = "This datafile contains {$accession} Bioexperiments Sample details.";
             $directory  = "INNA/{$parent}/{$accession}";
-            array_push($header,"Biosample");
-            array_push($header,"Title");
-            array_push($header,"Library Source");
-            array_push($header,"Library Selection");
-            array_push($header,"Library Strategy");
-            array_push($header,"Instrument");
-            array_push($header,"Library Layout");
+            array_push($header, "Biosample");
+            array_push($header, "Title");
+            array_push($header, "Library Source");
+            array_push($header, "Library Selection");
+            array_push($header, "Library Strategy");
+            array_push($header, "Instrument");
+            array_push($header, "Library Layout");
             foreach ($bioexperiments as $bioexperiment) {
-                array_push($data,$bioexperiment->biosample->accession);
-                array_push($data,$bioexperiment->title);
-                array_push($data,$bioexperiment->libsource->name);
-                array_push($data,$bioexperiment->libselection->name);
-                array_push($data,$bioexperiment->libstrategy->name);
-                array_push($data,$bioexperiment->instrument->name);
-                array_push($data,$bioexperiment->liblayout->name);
+                array_push($data, $bioexperiment->biosample->accession);
+                array_push($data, $bioexperiment->title);
+                array_push($data, $bioexperiment->libsource->name);
+                array_push($data, $bioexperiment->libselection->name);
+                array_push($data, $bioexperiment->libstrategy->name);
+                array_push($data, $bioexperiment->instrument->name);
+                array_push($data, $bioexperiment->liblayout->name);
                 array_push($dataForFile, $data);
                 $data = array();
             }
@@ -176,22 +187,29 @@ class DataverseController extends Controller
             return "error";
         }
         $client = new Client();
+        // Use configured base URL and key
+        $baseUrl = config('services.api_dataverse.base_url_dataverse');
+        // $apiKey  = config('services.api_dataverse.api_key_dataverse');
+        // Ambil API-key dari header jika ada, jika tidak pakai default config
+        $apiKey  = $request->header('X-DATAVERSE-KEY') ?? config('services.api_dataverse.api_key_dataverse');
+
+        $endpoint = "{$baseUrl}/api/datasets/:persistentId/add?persistentId={$persistentId}";
         try {
-            $response = $client->post("https://data.brin.go.id/api/datasets/:persistentId/add?persistentId={$persistentId}", [
-            'headers' => [
-                'X-Dataverse-key' => 'a0031e48-838e-4b4a-b375-a48c597745ba',
-            ],
-            'multipart' => [
-                [
-                    'name' => 'file',
-                    'contents' => Psr7\Utils::streamFor(Psr7\Utils::tryFopen(Storage::disk('local')->path("datafile/{$fileName}"), 'r'))
+            $response = $client->post($endpoint, [
+                'headers' => [
+                    'X-Dataverse-key' => $apiKey,
                 ],
-                [
-                    'name' => 'jsonData',
-                    'contents' => "{\"description\":\"{$description}\",\"directoryLabel\":\"INNA/{$accession}\",\"categories\":[\"Data\"], \"restrict\":\"false\"}"
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => Psr7\Utils::streamFor(Psr7\Utils::tryFopen(Storage::disk('local')->path("datafile/{$fileName}"), 'r'))
+                    ],
+                    [
+                        'name' => 'jsonData',
+                        'contents' => "{\"description\":\"{$description}\",\"directoryLabel\":\"INNA/{$accession}\",\"categories\":[\"Data\"], \"restrict\":\"false\"}"
+                    ]
                 ]
-            ]
-        ]);
+            ]);
         } catch (\Throwable $th) {
             $rawJson = "{
                 \"status\": \"ERROR\",
@@ -207,7 +225,8 @@ class DataverseController extends Controller
         return json_decode($response->getBody());
     }
 
-    public function createDatasetSample(Request $request) {
+    public function createDatasetSample(Request $request)
+    {
         $accession = $request->accession;
         $biosample = Biosample::where('accession', $accession)->first();
         $biosample_links = $biosample->externallink()->get();
@@ -398,11 +417,17 @@ class DataverseController extends Controller
         ";
         // dd(preg_replace('!\s+!', ' ', $rawJson));
         $client = new Client();
-        $response = $client->post('https://data.brin.go.id/api/dataverses/INNA/datasets', [
+        // Use configured base URL and key
+        $baseUrl = config('services.api_dataverse.base_url_dataverse');
+        // $apiKey  = config('services.api_dataverse.api_key_dataverse');
+        // Ambil API-key dari header jika ada, jika tidak pakai default config
+        $apiKey  = $request->header('X-DATAVERSE-KEY') ?? config('services.api_dataverse.api_key_dataverse');
+        $endpoint = "{$baseUrl}/api/dataverses/INNA/datasets";
+        $response = $client->post($endpoint, [
             'headers' => [
-                'X-Dataverse-key' => 'a0031e48-838e-4b4a-b375-a48c597745ba',
+                'X-Dataverse-key' => $apiKey,
             ],
-            'body'=> Psr7\Utils::streamFor(preg_replace('!\s+!', ' ', $rawJson))
+            'body' => Psr7\Utils::streamFor(preg_replace('!\s+!', ' ', $rawJson))
         ]);
         $jsonResponse = json_decode($response->getBody());
         if ($jsonResponse->status == "OK") {
@@ -421,10 +446,10 @@ class DataverseController extends Controller
             }
         }
         return json_decode($response->getBody());
-
     }
 
-    public function createDatasetArchive(Request $request) {
+    public function createDatasetArchive(Request $request)
+    {
         $accession = $request->accession;
         $bioarchive = Bioarchive::where('accession', $accession)->first();
         $parent = $bioarchive->bioproject->accession;
@@ -614,13 +639,18 @@ class DataverseController extends Controller
             }
         ";
         $client = new Client();
+        $baseUrl = config('services.api_dataverse.base_url_dataverse');
+        // $apiKey  = config('services.api_dataverse.api_key_dataverse');
+        // Ambil API-key dari header jika ada, jika tidak pakai default config
+        $apiKey  = $request->header('X-DATAVERSE-KEY') ?? config('services.api_dataverse.api_key_dataverse');
+        $endpoint = "{$baseUrl}/api/dataverses/{$parent}/datasets";
         try {
-            $response = $client->post("https://data.brin.go.id/api/dataverses/{$parent}/datasets", [
-            'headers' => [
-                'X-Dataverse-key' => 'a0031e48-838e-4b4a-b375-a48c597745ba',
-            ],
-            'body'=> Psr7\Utils::streamFor(preg_replace('!\s+!', ' ', $rawJson))
-        ]);
+            $response = $client->post($endpoint, [
+                'headers' => [
+                    'X-Dataverse-key' => $apiKey,
+                ],
+                'body' => Psr7\Utils::streamFor(preg_replace('!\s+!', ' ', $rawJson))
+            ]);
         } catch (\Throwable $th) {
             $rawJson = "{
                 \"status\": \"ERROR\",

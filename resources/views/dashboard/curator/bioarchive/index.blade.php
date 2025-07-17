@@ -84,7 +84,7 @@
                     @if ($bioarchive->status == 5)
                     <div id="tdDv{{$bioarchive->accession}}" style="display: inline">
                     @if($bioarchive->dv_published_at)
-                    <a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
+                    <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
                     @else
                     <button onclick="javscript:dataverseSync('{{ $bioarchive->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
                     @endif
@@ -104,6 +104,10 @@
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script>
         let accession = null
+        window.APP_CONFIG = {
+            dataverseBaseUrl: "{{ config('services.api_dataverse.base_url_dataverse') }}"
+        };
+        const baseurl = window.APP_CONFIG.dataverseBaseUrl;
         bsConfirmModalButton.addEventListener("click",()=>{
             bsConfirmModalButton.disabled = true
             bsConfirmModalTitle.textContent = `Syncing with dataverse...`
@@ -124,7 +128,7 @@
                     bsConfirmModalSpinner.classList.add("d-none")
                     bsConfirmModal.hide()
                     showToast("Synced with dataverse")
-                    document.querySelector(`#tdDv${accession}`).innerHTML = `<a type="button" href="https://data.brin.go.id/dataset.xhtml?persistentId=${data.data.persistentId}" target="_blank" class="badge btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>`
+                    document.querySelector(`#tdDv${accession}`).innerHTML = `<a type="button" href="${baseurl}/dataset.xhtml?persistentId=${data.data.persistentId}" target="_blank" class="badge btn-dataverse-outline">View <img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>`
                 } else {
                     showToast(`${data.status} - ${data.message}`, "danger")
                     console.log(data)

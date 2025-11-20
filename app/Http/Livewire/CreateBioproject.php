@@ -38,6 +38,8 @@ use App\Models\Objective;
 use App\Models\ObjectiveBioProject;
 use App\Models\SampleBioproject;
 use App\Models\User;
+use App\Models\Lab;
+use App\Models\Center;
 use Livewire\Component;
 
 class CreateBioproject extends Component

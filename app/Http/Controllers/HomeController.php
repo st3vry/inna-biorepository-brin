@@ -52,4 +52,11 @@ class HomeController extends Controller
             'title' => "Privacy and Policy"
         ]);
     }
+
+    public function fair()
+    {
+        return view('frontend.fair', [
+            'title' => "FAIR pages"
+        ]);
+    }
 }

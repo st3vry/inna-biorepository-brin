@@ -280,23 +280,9 @@ class CreateBioproject extends Component
         $this->submitter_email = auth()->user()->email;
         $this->submitter_lab = auth()->user()->lab_id;
         $this->submitter_center = auth()->user()->center_id;
-
-        $this->labs = Lab::all();
-        $this->centers = Center::all();
-
-        foreach ($this->labs as $lab) {
-            if ($lab->id == $this->submitter_lab) {
-                $this->submitter_lab_name = $lab->name;
-                break;
-            }
-        };
-
-        foreach ($this->centers as $center) {
-            if ($center->id == $this->submitter_center) {
-                $this->submitter_center_name = $center->name;
-                break;
-            }
-        };
+        
+        $this->submitter_lab_name = Lab::where('id', $this->submitter_lab)->value('name');
+        $this->submitter_center_name = Center::where('id', $this->submitter_center)->value('name');
 
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();

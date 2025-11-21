@@ -205,12 +205,18 @@
             <tr>
                 <th class="col-sm-2">Center</th>
                 {{-- <td class="col-sm-10">{{$bioproject->center->name}}</td> --}}
-                <td class="col-sm-10">{{$bioproject->center_id}}</td>
+                
+                <td class="col-sm-10">
+                    @php
+                        $userData = json_decode(auth()->user()->user_data);
+                    @endphp
+                    {{ $bioproject->center->name ?? $userData->pegawaiData->administrative_name }}
+                </td>
             </tr>
             <tr>
                 <th class="col-sm-2">Lab</th>
                 {{-- <td class="col-sm-10">{{$bioproject->user->lab->name}}</td> --}}
-                <td class="col-sm-10">{{$bioproject->user->affiliate}}</td>
+                <td class="col-sm-10">{{$bioproject->lab->name ?? $userData->pegawaiData->affiliate_name}}</td>
             </tr>
             <tr>
                 <th class="col-sm-2">Submitter</th>

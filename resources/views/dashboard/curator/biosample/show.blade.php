@@ -75,12 +75,17 @@
             </tr>
             <tr>
                 <th class="col-sm-2">Center</th>
-                <td class="col-sm-10">{{$biosample->center->name}}</td>
+                <td class="col-sm-10">
+                    @php
+                        $userData = json_decode(auth()->user()->user_data);
+                    @endphp
+                    {{ $biosample->center->name ?? $userData->pegawaiData->administrative_name }}
+                </td>
                 {{-- <td class="col-sm-10">{{$biosample->center_id}}</td> --}}
             </tr>
             <tr>
                 <th class="col-sm-2">Lab</th>
-                <td class="col-sm-10">{{$biosample->user->lab->name}}</td>
+                <td class="col-sm-10">{{$biosample->lab->name ?? $userData->pegawaiData->affiliate_name}}</td>
                 {{-- <td class="col-sm-10">{{$biosample->user->affiliate}}</td> --}}
             </tr>
             <tr>

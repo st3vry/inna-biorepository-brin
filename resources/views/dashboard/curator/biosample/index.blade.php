@@ -40,7 +40,7 @@
                     @php
                         $userData = json_decode(auth()->user()->user_data);
                     @endphp
-                    {{ $biosample->center->name ?? $userData->pegawaiData->affiliate_name }}
+                    {{ $biosample->center->name ?? $userData->pegawaiData->administrative_name }}
                 </td>
                 {{-- <td>{{ $biosample->center_id }}</td> --}}
                 <td>

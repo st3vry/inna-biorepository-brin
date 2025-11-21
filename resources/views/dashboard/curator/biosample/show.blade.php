@@ -75,13 +75,13 @@
             </tr>
             <tr>
                 <th class="col-sm-2">Center</th>
-                {{-- <td class="col-sm-10">{{$biosample->center->name}}</td> --}}
-                <td class="col-sm-10">{{$biosample->center_id}}</td>
+                <td class="col-sm-10">{{$biosample->center->name}}</td>
+                {{-- <td class="col-sm-10">{{$biosample->center_id}}</td> --}}
             </tr>
             <tr>
                 <th class="col-sm-2">Lab</th>
-                {{-- <td class="col-sm-10">{{$biosample->user->lab->name}}</td> --}}
-                <td class="col-sm-10">{{$biosample->user->affiliate}}</td>
+                <td class="col-sm-10">{{$biosample->user->lab->name}}</td>
+                {{-- <td class="col-sm-10">{{$biosample->user->affiliate}}</td> --}}
             </tr>
             <tr>
                 <th class="col-sm-2">Submitter</th>

@@ -203,7 +203,7 @@
             <div class="card-body">
                 <h5 class="card-title mb-0">{{$submitter->name}}</h5>
                 <p class="card-text caption mb-0">{{$submitter->email}}</p>
-                <p class="card-text">{{$submitter->lab_name}} - {{$submitter->center_name}}</p>
+                <p class="card-text">{{$submitter->submitter_lab_name}} - {{$submitter->center->name}}</p>
             </div>
         </div>
     </div>
@@ -215,27 +215,6 @@
 @endsection
 @push('js')
 <script>
-
-    /* Loading overlay and alert container markup is injected in the DOM so JS can control it. */
-    (function(){
-        const overlayHtml = `
-        <div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none" style="z-index:2000; background: rgba(0,0,0,0.45);">
-            <div class="d-flex align-items-center justify-content-center h-100">
-                <div class="text-center text-white">
-                    <div class="spinner-border text-light" role="status" style="width:3rem;height:3rem">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div class="mt-2 fw-semibold">Loading attributes…</div>
-                </div>
-            </div>
-            <button id="loadingOverlayClose" type="button" class="btn-close btn-close-white position-absolute" aria-label="Close" style="top:1rem; right:1rem;" ></button>
-        </div>
-        <div id="ajaxAlertContainer" class="position-fixed" style="top:1rem; right:1rem; z-index:2100; width:360px; max-width:calc(100% - 2rem);"></div>
-        `;
-        document.addEventListener('DOMContentLoaded', function(){
-            document.body.insertAdjacentHTML('beforeend', overlayHtml);
-        });
-    })();
 
     var counterFundAgency = 0;
     var i = 0;
@@ -287,23 +266,19 @@
         }
 
         function getSampleType(id) {
-            showLoading()
             $.ajax({
                 url: "/dashboard/v2/biosamples/getSample/"+id,
                 // type: "GET",
                 async: false,
                 success: function(response) {
-                    hideLoading()
                     rowsel = '<option selected disabled value="0">Choose sample type</option>'
                     $.each(response, function(key, value) {
                         rowsel += '<option title="'+value['description']+'" value="' + value['id'] + '">' + value['name'] + '</option>';
                         return rowsel;
                     });
                 },
-                error: function (data) { 
-                    hideLoading()
+                error: function (data) {
                     console.log(data.status + ':' + data.statusText,data.responseText);
-                    showAjaxAlert(`Error fetching attributes: ${data.status} ${data.statusText}`,'danger')
                 }
             });
             return rowsel;
@@ -338,56 +313,19 @@
         }
 
         function getAttributes(id,name) {
-            showLoading()
             $.ajax({
                 url: "/dashboard/v2/biosamples/getAttributes/"+id,
                 // type: "GET",
                 async: false,
                 success: function(response) {
-                    hideLoading()
                     setAttributesInputs(response,name)
                 },
                 error: function (data) {
-                    hideLoading()
                     console.log(data.status + ':' + data.statusText,data.responseText);
-                    showAjaxAlert(`Error fetching attributes: ${data.status} ${data.statusText}`,'danger')
                 }
             });
             return rowsel;
         }
-
-        function showLoading() {
-            const overlay = document.getElementById('loadingOverlay')
-            if (!overlay) return
-            overlay.classList.remove('d-none')
-            overlay.classList.add('d-flex')
-        }
-
-        function hideLoading() {
-            const overlay = document.getElementById('loadingOverlay')
-            if (!overlay) return
-            overlay.classList.add('d-none')
-            overlay.classList.remove('d-flex')
-        }
-
-        function showAjaxAlert(message, type = 'danger') {
-            const container = document.getElementById('ajaxAlertContainer')
-            if (!container) return
-            const id = 'ajaxAlert'+Date.now()
-            const html = `\
-                <div id="${id}" class="alert alert-${type} alert-dismissible fade show shadow-sm" role="alert">\
-                    ${message}\
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\
-                </div>`
-            container.insertAdjacentHTML('beforeend', html)
-        }
-
-        // allow dismissing the overlay manually
-        document.addEventListener('click', function(e){
-            if (e.target && e.target.id === 'loadingOverlayClose') {
-                hideLoading()
-            }
-        })
 
         const sampleTypePackages = $("#sampleTypePackages")
         const sampleType = $("#sampleType")

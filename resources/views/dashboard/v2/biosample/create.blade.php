@@ -203,7 +203,7 @@
             <div class="card-body">
                 <h5 class="card-title mb-0">{{$submitter->name}}</h5>
                 <p class="card-text caption mb-0">{{$submitter->email}}</p>
-                <p class="card-text">{{$submitter->lab->name}} - {{$submitter->center->name}}</p>
+                <p class="card-text">{{$submitter->lab_name}} - {{$submitter->center_name}}</p>
             </div>
         </div>
     </div>

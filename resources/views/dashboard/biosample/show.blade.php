@@ -78,13 +78,13 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Center</td>
-                {{-- <td class="col-sm-1">{{$biosample->center->name}}</td> --}}
-                <td class="col-sm-1">{{auth()->user()->center_id}}</td>
+                <td class="col-sm-1">{{$biosample->center->name}}</td>
+                {{-- <td class="col-sm-1">{{auth()->user()->center_id}}</td> --}}
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
-                {{-- <td class="col-sm-7">{{$biosample->user->lab->name}}</td> --}}
-                <td class="col-sm-7">{{auth()->user()->lab_id}}</td>
+                <td class="col-sm-7">{{$biosample->user->lab->name}}</td>
+                {{-- <td class="col-sm-7">{{auth()->user()->lab_id}}</td> --}}
             </tr>
             <tr>
                 <td class="col-sm-1">Submitter</td>

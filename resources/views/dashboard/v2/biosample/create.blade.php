@@ -287,19 +287,23 @@
         }
 
         function getSampleType(id) {
+            showLoading()
             $.ajax({
                 url: "/dashboard/v2/biosamples/getSample/"+id,
                 // type: "GET",
                 async: false,
                 success: function(response) {
+                    hideLoading()
                     rowsel = '<option selected disabled value="0">Choose sample type</option>'
                     $.each(response, function(key, value) {
                         rowsel += '<option title="'+value['description']+'" value="' + value['id'] + '">' + value['name'] + '</option>';
                         return rowsel;
                     });
                 },
-                error: function (data) {
+                error: function (data) { 
+                    hideLoading()
                     console.log(data.status + ':' + data.statusText,data.responseText);
+                    showAjaxAlert(`Error fetching attributes: ${data.status} ${data.statusText}`,'danger')
                 }
             });
             return rowsel;

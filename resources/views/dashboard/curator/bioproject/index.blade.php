@@ -36,7 +36,7 @@
                 <td>{{ $bioproject->organism->name }}</td>
                 <td>{{ $bioproject->title }}</td>
                 <td>{!! Str::words($bioproject->description, 20, "<a href='/dashboard/curator/bioprojects/{$bioproject->accession}'> read more...</a>") !!}</td>
-                <td>{{ $bioproject->center->name }}</td>
+                <td>{{ $bioproject->center->name ?? "" : $bioproject->center->name}}</td>
                 {{-- <td>{{ $bioproject->center_id }}</td> --}}
                 <td>
                     @switch($bioproject->status)

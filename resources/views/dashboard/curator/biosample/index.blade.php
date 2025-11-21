@@ -36,7 +36,7 @@
                 <td>{{ $biosample->organism->name }}</td>
                 <td>{{ $biosample->title }}</td>
                 <td>{!! Str::words($biosample->description, 20, "<a href='/dashboard/curator/biosamples/{$biosample->accession}'> read more...</a>") !!}</td>
-                <td>{{ $bioproject->center->name ?? auth()->user()->user_data}}</td>
+                <td>{{ $bioproject->center->name ?? auth()->user()->user_data->pegawaiData->affiliate_name}}</td>
                 {{-- <td>{{ $biosample->center_id }}</td> --}}
                 <td>
                     @switch($biosample->status)

@@ -11,6 +11,8 @@ use App\Models\SampletypePackage;
 use App\Models\Sampletype;
 use App\Models\Attributesample;
 use App\Models\Organism;
+use App\Models\Lab;
+use App\Models\Center;
 
 class BiosampleController extends Controller
 {
@@ -42,6 +44,8 @@ class BiosampleController extends Controller
         $submitter->email = auth()->user()->email;
         $submitter->lab = auth()->user()->lab_id;
         $submitter->center = auth()->user()->center_id;
+        $submitter->lab_name = Lab::where('id', $submitter->lab)->value('name');
+        $submitter->center_name = Center::where('id', $submitter->center)->value('name');
 
         $return = [
             "submitter" => $submitter,

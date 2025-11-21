@@ -58,7 +58,8 @@
 
                     <div class="mb-3">
                         <label for="lab" class="form-label">Lab <font color="red">*</font></label>
-                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab_name" id="submitter_lab_name" name="submitter_lab_name`" value="{{old('submitter_lab_name')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" hidden>
                         @error('submitter_lab')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
@@ -66,7 +67,8 @@
 
                     <div class="mb-3">
                         <label for="center" class="form-label">Center <font color="red">*</font></label>
-                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center_name" id="submitter_center_name" name="submitter_center_name" value="{{old('submitter_center_name')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" hidden>
                         @error('submitter_center')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror

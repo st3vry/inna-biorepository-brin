@@ -52,9 +52,6 @@ class CreateBioproject extends Component
     public $submitter_lab;
     public $submitter_center;
 
-    public $centers = [];
-    public $labs = [];
-
     public $submitter_lab_name;
     public $submitter_center_name;
 

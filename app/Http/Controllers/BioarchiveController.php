@@ -19,7 +19,7 @@ class BioarchiveController extends Controller
     {
         // eager-load the bioproject and the bioproject's center so views can access
         // the center via $bioarchive->bioproject->center->name
-        $bioarchives = Bioarchive::with(['bioproject','bioproject.center'])->where('status', 5)->paginate(5);
+        $bioarchives = Bioarchive::with(['bioproject','bioproject.center', 'bioproject.user'])->where('status', 5)->paginate(5);
         // $centers = Bioproject::leftJoin('centers', 'centers.id', '=', 'bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->where('bioprojects.status', 5)->groupBy('centers.name')->get();
         // $biosamples = Bioarchive::leftJoin('biosamples', 'biosamples.id', '=', 'bioarchives.biosample_id')->selectRaw('count(bioarchives.biosamples_id) as count')->groupBy('biosamples.title')->get();
         // dd($biosamples);

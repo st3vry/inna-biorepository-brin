@@ -52,7 +52,11 @@
                             <p class="fw-lighter mb-0">Accession: {{ $bioarchive->accession }}</p>
                             <p class="fw-lighter mb-0">Bioproject: {{ $bioarchive->bioproject->accession }}</p>
                             <p class="fw-lighter mb-0">Project Title: {{ $bioarchive->bioproject->title }}</p>
-                            <p class="fw-lighter mb-0">Organization: {{ $bioarchive->bioproject->center->name ??  'N/A' }}</p>
+                            @php
+                                $userData = json_decode($bioarchive->bioproject->user->user_data);
+                                $centerName = $userData->pegawaiData->administrative_name;    
+                            @endphp
+                            <p class="fw-lighter mb-0">Organization: {{ $bioarchive->bioproject->center->name ??  $centerName }}</p>
                             {{-- <p class="fw-lighter mb-0">Biosample: {{ $bioarchive->biosample->accession }}</p> --}}
                         </div>
                     </div>

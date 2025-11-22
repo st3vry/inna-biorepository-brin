@@ -54,7 +54,7 @@
                             <p class="fw-lighter mb-0">Project Title: {{ $bioarchive->bioproject->title }}</p>
                             @php
                                 $userData = json_decode($bioarchive->bioproject->user->user_data);
-                                $centerName = $userData->pegawaiData->administrative_name;    
+                                $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';    
                             @endphp
                             <p class="fw-lighter mb-0">Organization: {{ $bioarchive->bioproject->center->name ??  $centerName }}</p>
                             {{-- <p class="fw-lighter mb-0">Biosample: {{ $bioarchive->biosample->accession }}</p> --}}

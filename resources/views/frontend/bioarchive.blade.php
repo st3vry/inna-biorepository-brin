@@ -52,7 +52,7 @@
                             <p class="fw-lighter mb-0">Accession: {{ $bioarchive->accession }}</p>
                             <p class="fw-lighter mb-0">Bioproject: {{ $bioarchive->bioproject->accession }}</p>
                             <p class="fw-lighter mb-0">Project Title: {{ $bioarchive->bioproject->title }}</p>
-                            <p class="fw-lighter mb-0">Organization: {{ $bioarchive->bioproject->center_id == null ? N/A :  $bioarchive->bioproject->center_id}}</p>
+                            <p class="fw-lighter mb-0">Organization: {{ $bioarchive->bioproject->center->name ??  'N/A' }}</p>
                             {{-- <p class="fw-lighter mb-0">Biosample: {{ $bioarchive->biosample->accession }}</p> --}}
                         </div>
                     </div>

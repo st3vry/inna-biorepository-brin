@@ -8,6 +8,7 @@ use App\Models\Bioproject;
 use App\Models\Bioexperiment;
 use App\Models\Biorun;
 use App\Models\PermissionRequest;
+use App\Models\Users;
 use Illuminate\Http\Request;
 
 class BioarchiveController extends Controller
@@ -15,7 +16,7 @@ class BioarchiveController extends Controller
     //
     public function index()
     {
-        $bioarchives = Bioarchive::with(['bioproject'])->where('status', 5)->paginate(5);
+        $bioarchives = Bioarchive::with(['bioproject','center'])->where('status', 5)->paginate(5);
         // $centers = Bioproject::leftJoin('centers', 'centers.id', '=', 'bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->where('bioprojects.status', 5)->groupBy('centers.name')->get();
         // $biosamples = Bioarchive::leftJoin('biosamples', 'biosamples.id', '=', 'bioarchives.biosample_id')->selectRaw('count(bioarchives.biosamples_id) as count')->groupBy('biosamples.title')->get();
         // dd($biosamples);

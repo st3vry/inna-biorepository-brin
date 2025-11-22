@@ -49,7 +49,6 @@
                 @endphp
                 <td>{{ $user->lab->name ?? $labName }}</td>
                 <td>{{ $user->center->name ?? $centerName }}</td>
-                <td>{{ $user->affiliate }}</td>
                 <td>{{ $user->role->name }}</td>
                 <td>@if ($user->is_activated) Active @else Inactive @endif</td>
                 <td>

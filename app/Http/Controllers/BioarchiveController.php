@@ -10,6 +10,7 @@ use App\Models\Biorun;
 use App\Models\PermissionRequest;
 use App\Models\Center;
 use App\Models\User;
+use App\Models\Lab;
 use Illuminate\Http\Request;
 
 class BioarchiveController extends Controller

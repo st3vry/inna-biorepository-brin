@@ -42,9 +42,13 @@
                 <td>{{ $user->username }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
-                {{-- <td>{{ $user->lab->name }}</td> --}}
-                <td>{{ $user->administrative }}</td>
-                {{-- <td>{{ $user->lab->center->name }}</td> --}}
+                @php
+                    $userData = json_decode($user->user_data);
+                    $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';
+                    $labName = $userData->pegawaiData->affiliate_name ?? 'N/A';
+                @endphp
+                <td>{{ $user->lab->name ?? $labName }}</td>
+                <td>{{ $user->center->name ?? $centerName }}</td>
                 <td>{{ $user->affiliate }}</td>
                 <td>{{ $user->role->name }}</td>
                 <td>@if ($user->is_activated) Active @else Inactive @endif</td>

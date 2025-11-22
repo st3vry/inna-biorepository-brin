@@ -56,6 +56,7 @@ class BioarchiveController extends Controller
         // dd($get_permission_info->is_approved);
         // dd($bioruns);
         // dd($bioexperiments[0]->id);
+        dd($bioarchive);
         return view('frontend.showbioarchive', [
             'title' => 'Biosample',
             'bioarchive' => $bioarchive,

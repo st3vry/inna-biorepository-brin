@@ -14,6 +14,8 @@ use App\Models\LibraryLayout;
 use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
+use App\Models\Lab;
+use App\Models\Center;
 use Illuminate\Support\Str;
 
 class CreateBioarchive extends Component
@@ -27,6 +29,9 @@ class CreateBioarchive extends Component
     public $submitter_email;
     public $submitter_lab;
     public $submitter_center;
+
+    public $submitter_lab_name;
+    public $submitter_center_name;
 
     // Filter table
     public $searchBioproject = '';
@@ -73,6 +78,10 @@ class CreateBioarchive extends Component
         // $this->submitter_center = auth()->user()->lab->center->name;
         $this->submitter_lab = auth()->user()->lab_id;
         $this->submitter_center = auth()->user()->center_id;
+
+
+        $this->submitter_lab_name = Lab::where('id', $this->submitter_lab)->value('name');
+        $this->submitter_center_name = Center::where('id', $this->submitter_center)->value('name');
         // bioproject
         // $this->bioprojects = Bioproject::get();
         $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();

@@ -8,6 +8,8 @@ use App\Models\Bioproject;
 use App\Models\Bioexperiment;
 use App\Models\Biorun;
 use App\Models\PermissionRequest;
+use App\Models\Center;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class BioarchiveController extends Controller
@@ -15,7 +17,9 @@ class BioarchiveController extends Controller
     //
     public function index()
     {
-        $bioarchives = Bioarchive::with(['bioproject'])->where('status', 5)->paginate(5);
+        // eager-load the bioproject and the bioproject's center so views can access
+        // the center via $bioarchive->bioproject->center->name
+        $bioarchives = Bioarchive::with(['bioproject','bioproject.center', 'bioproject.user'])->where('status', 5)->paginate(5);
         // $centers = Bioproject::leftJoin('centers', 'centers.id', '=', 'bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->where('bioprojects.status', 5)->groupBy('centers.name')->get();
         // $biosamples = Bioarchive::leftJoin('biosamples', 'biosamples.id', '=', 'bioarchives.biosample_id')->selectRaw('count(bioarchives.biosamples_id) as count')->groupBy('biosamples.title')->get();
         // dd($biosamples);
@@ -34,6 +38,7 @@ class BioarchiveController extends Controller
         if ($bioarchive->published_at == null) {
             return view('error.404');
         }
+        $bioarchive->load(['bioproject', 'bioproject.center', 'bioproject.user']);
 
         // $biosample_links = $bioarchive->externallink()->get();
         // $user_id = auth()->user()->id;
@@ -48,7 +53,6 @@ class BioarchiveController extends Controller
         }
         $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
         $bioruns = Biorun::where('bioexperiment_id', $bioexperiments[0]->id)->get();
-
         // dd($get_permission_info->is_approved);
         // dd($bioruns);
         // dd($bioexperiments[0]->id);

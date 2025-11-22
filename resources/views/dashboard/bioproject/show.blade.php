@@ -195,13 +195,16 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Center</td>
-                {{-- <td class="col-sm-1">{{$bioproject->center->name}} </td>--}}
-                <td class="col-sm-1">{{auth()->user()->center_id}}</td>
+                <td class="col-sm-7">
+                    @php
+                        $userData = json_decode(auth()->user()->user_data);
+                    @endphp
+                    {{ $bioproject->center->name ?? $userData->pegawaiData->administrative_name }}
+                </td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
-                {{-- <td class="col-sm-7">{{$bioproject->user->lab->name}}</td> --}}
-                <td class="col-sm-7">{{auth()->user()->lab_id}}</td>
+                <td class="col-sm-7">{{$bioproject->lab->name ?? $userData->pegawaiData->affiliate_name}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Submitter</td>

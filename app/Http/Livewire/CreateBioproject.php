@@ -38,6 +38,8 @@ use App\Models\Objective;
 use App\Models\ObjectiveBioProject;
 use App\Models\SampleBioproject;
 use App\Models\User;
+use App\Models\Lab;
+use App\Models\Center;
 use Livewire\Component;
 
 class CreateBioproject extends Component
@@ -49,9 +51,6 @@ class CreateBioproject extends Component
     public $submitter_email;
     public $submitter_lab;
     public $submitter_center;
-
-    public $centers = [];
-    public $labs = [];
 
     public $submitter_lab_name;
     public $submitter_center_name;
@@ -278,23 +277,9 @@ class CreateBioproject extends Component
         $this->submitter_email = auth()->user()->email;
         $this->submitter_lab = auth()->user()->lab_id;
         $this->submitter_center = auth()->user()->center_id;
-
-        $this->labs = Lab::all();
-        $this->centers = Center::all();
-
-        foreach ($this->labs as $lab) {
-            if ($lab->id == $this->submitter_lab) {
-                $this->submitter_lab_name = $lab->name;
-                break;
-            }
-        };
-
-        foreach ($this->centers as $center) {
-            if ($center->id == $this->submitter_center) {
-                $this->submitter_center_name = $center->name;
-                break;
-            }
-        };
+        
+        $this->submitter_lab_name = Lab::where('id', $this->submitter_lab)->value('name');
+        $this->submitter_center_name = Center::where('id', $this->submitter_center)->value('name');
 
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();

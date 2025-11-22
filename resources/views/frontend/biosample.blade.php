@@ -55,7 +55,11 @@
                             <p class="mb-1 d-none">{{ $biosample->description}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readLess(this)"> Read less.</a></p>
                             <p class="fw-light mb-0">Organism: {{ $biosample->organism->name }}</p>
                             {{-- <p class="fw-light mb-0">Scope: {{ $biosample->samplescope->name }}</p> --}}
-                            <p class="fw-light mb-0">{{ $biosample->center_id }}</p>
+                            @php
+                                $userData = json_decode($biosample->user->user_data);
+                                $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';    
+                            @endphp
+                            <p class="fw-light mb-0">Organization: {{ $biosample->center->name ??  $centerName }}</p>
                             <p class="fw-lighter mb-0">Accession: {{ $biosample->accession }}</p>
                         </div>
                     </div>

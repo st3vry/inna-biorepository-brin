@@ -36,7 +36,12 @@
                 <td>{{ $biosample->organism->name }}</td>
                 <td>{{ $biosample->title }}</td>
                 <td>{{ $biosample->description }}</td>
-                <td>{{ $biosample->center_id }}</td>
+                <td>
+                    @php
+                        $userData = json_decode(auth()->user()->user_data);
+                    @endphp
+                    {{ $biosample->center->name ?? $userData->pegawaiData->administrative_name }}    
+                </td>
                 <td class="text-center align-middle">
                     @switch($biosample->status)
                         @case(1)

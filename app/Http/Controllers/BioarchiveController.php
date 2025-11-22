@@ -10,7 +10,6 @@ use App\Models\Biorun;
 use App\Models\PermissionRequest;
 use App\Models\Center;
 use App\Models\User;
-use App\Models\Lab;
 use Illuminate\Http\Request;
 
 class BioarchiveController extends Controller
@@ -41,7 +40,7 @@ class BioarchiveController extends Controller
         }
         // eager-load the bioproject and its related center, user and lab so the
         // view has immediate access without additional queries
-        $bioarchive->load(['bioproject', 'bioproject.center', 'bioproject.user', 'bioproject.lab']);
+        $bioarchive->load(['bioproject', 'bioproject.center', 'bioproject.user']);
 
         // $biosample_links = $bioarchive->externallink()->get();
         // $user_id = auth()->user()->id;

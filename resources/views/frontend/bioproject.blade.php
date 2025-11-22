@@ -65,11 +65,11 @@
                             <p class="mb-1 d-none">{{ $bioproject->description}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readLess(this)"> Read less.</a></p>
                             <p class="fw-light mb-0">Organism: {{ $bioproject->organism->name }}</p>
                             <p class="fw-light mb-0">Scope: {{ $bioproject->samplescope->name }}</p>
-+                            @php
-+                                $userData = json_decode($bioproject->user->user_data);
-+                                $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';    
-+                            @endphp
-+                            <p class="fw-light mb-0">Organization: {{ $bioproject->center->name ??  $centerName }}</p>
+                            @php
+                                $userData = json_decode($bioproject->user->user_data);
+                                $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';    
+                            @endphp
+                            <p class="fw-light mb-0">Organization: {{ $bioproject->center->name ??  $centerName }}</p>
                             <p class="fw-lighter mb-0">Accession: {{ $bioproject->accession }}</p>
                         </div>
                     </div>

@@ -8,7 +8,8 @@ use App\Models\Bioproject;
 use App\Models\Bioexperiment;
 use App\Models\Biorun;
 use App\Models\PermissionRequest;
-use App\Models\Users;
+use App\Models\Center;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class BioarchiveController extends Controller

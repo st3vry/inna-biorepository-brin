@@ -28,13 +28,18 @@
                 </td>
             </tr>
             <tr>
+                @php
+                    $userData = json_decode($bioarchive->user->user_data);
+                    $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';
+                    $labName = $userData->pegawaiData->affiliate_name ?? 'N/A';    
+                @endphp
                 <td class="col-sm-1">Center</td>
-                <td class="col-sm-1">{{$bioarchive->user->lab == null ? "N/A" : $bioarchive->user->lab->center->name}}
+                <td class="col-sm-1">{{$bioarchive->user->center->name ?? $centerName}}
                 </td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
-                <td class="col-sm-7">{{$bioarchive->user->lab == null ? "N/A" : $bioarchive->user->lab->name}}</td>
+                <td class="col-sm-7">{{$bioarchive->user->lab->name ?? $labName}}</td>
             </tr>
             {{-- {{ dd($bioruns) }} --}}
             <tr>

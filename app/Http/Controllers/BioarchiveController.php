@@ -38,6 +38,9 @@ class BioarchiveController extends Controller
         if ($bioarchive->published_at == null) {
             return view('error.404');
         }
+        // eager-load the bioproject and its related center, user and lab so the
+        // view has immediate access without additional queries
+        $bioarchive->load(['bioproject', 'bioproject.center', 'bioproject.user', 'bioproject.lab']);
 
         // $biosample_links = $bioarchive->externallink()->get();
         // $user_id = auth()->user()->id;
@@ -52,11 +55,9 @@ class BioarchiveController extends Controller
         }
         $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
         $bioruns = Biorun::where('bioexperiment_id', $bioexperiments[0]->id)->get();
-
         // dd($get_permission_info->is_approved);
         // dd($bioruns);
         // dd($bioexperiments[0]->id);
-        dd($bioarchive);
         return view('frontend.showbioarchive', [
             'title' => 'Biosample',
             'bioarchive' => $bioarchive,

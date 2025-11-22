@@ -114,12 +114,17 @@
                 </td>
             </tr>
             <tr>
+                @php
+                    $userData = json_decode($bioproject->user->user_data);
+                    $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';
+                    $labName = $userData->pegawaiData->affiliate_name ?? 'N/A';    
+                @endphp
                 <td class="col-sm-1">Center</td>
-                <td class="col-sm-1">{{$bioproject->center == null ? "N/A" : $bioproject->center->name}}</td>
+                <td class="col-sm-1">{{$bioproject->center->name ?? $centerName}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
-                <td class="col-sm-7">{{$bioproject->user->lab == null ? "N/A" :$bioproject->user->lab->name}}</td>
+                <td class="col-sm-7">{{$bioproject->user->lab->name ?? $labName}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Submitter</td>

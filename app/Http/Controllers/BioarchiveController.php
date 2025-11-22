@@ -38,8 +38,6 @@ class BioarchiveController extends Controller
         if ($bioarchive->published_at == null) {
             return view('error.404');
         }
-        // eager-load the bioproject and its related center, user and lab so the
-        // view has immediate access without additional queries
         $bioarchive->load(['bioproject', 'bioproject.center', 'bioproject.user']);
 
         // $biosample_links = $bioarchive->externallink()->get();

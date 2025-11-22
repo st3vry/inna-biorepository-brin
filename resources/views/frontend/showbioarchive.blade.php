@@ -34,12 +34,12 @@
                     $labName = $userData->pegawaiData->affiliate_name ?? 'N/A';    
                 @endphp
                 <td class="col-sm-1">Center</td>
-                <td class="col-sm-1">{{$bioarchive->user->center->name ?? $centerName}}
+                <td class="col-sm-1">{{$bioarchive->bioproject->user->center->name ?? $centerName}}
                 </td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
-                <td class="col-sm-7">{{$bioarchive->user->lab->name ?? $labName}}</td>
+                <td class="col-sm-7">{{$bioarchive->bioproject->user->lab->name ?? $labName}}</td>
             </tr>
             {{-- {{ dd($bioruns) }} --}}
             <tr>

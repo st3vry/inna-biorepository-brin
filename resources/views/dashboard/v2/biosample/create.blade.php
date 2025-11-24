@@ -45,6 +45,12 @@
             <div class="tab-content" id="ex1-content">
                 <div class="tab-pane fade show active" id="contentGeneralInfo" role="tabpanel" aria-labelledby="contentGeneralInfo">
                     <div class="card mb-3">
+                        <div class="card-body">
+                            <label for="description" class="form-label">Description </label>
+                            <textarea class="form-control" id="description" name="description" placeholder="Biosample description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
                         <div class="card-header fw-bold fs-6">
                             Release <span class="text-danger">*</span>
                         </div>

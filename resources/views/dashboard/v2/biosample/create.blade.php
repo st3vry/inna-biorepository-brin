@@ -497,12 +497,7 @@
             if (label == "sample_description") {
                 label = "Biosample Description"
                 value = document.querySelector('textarea[name=sample_description]').value
-            }
-            if (label == "hold_release") {
-                label = "Hold/Release"
-                value = document.querySelector('input[name=hold_release]:checked').nextElementSibling.innerHTML
-            }
-            if (label == "hold_release") {
+            } else if (label == "hold_release") {
                 label = "Hold/Release"
                 value = document.querySelector('input[name=hold_release]:checked').nextElementSibling.innerHTML
             } else if (label == "external_link_description[]" || label == "external_link_url[]") {

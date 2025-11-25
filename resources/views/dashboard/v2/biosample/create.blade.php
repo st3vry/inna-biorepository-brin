@@ -46,6 +46,14 @@
                 <div class="tab-pane fade show active" id="contentGeneralInfo" role="tabpanel" aria-labelledby="contentGeneralInfo">
                     <div class="card mb-3">
                         <div class="card-header fw-bold fs-6">
+                            Description
+                        </div>
+                        <div class="card-body">
+                            <textarea class="form-control" id="sample_description" name="sample_description" placeholder="Biosample description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-header fw-bold fs-6">
                             Release <span class="text-danger">*</span>
                         </div>
                         <div class="card-body">
@@ -486,7 +494,10 @@
         const formBioSample = $('#formBioSample')
 
         function getTableRow(label, value) {
-            if (label == "hold_release") {
+            if (label == "sample_description") {
+                label = "Biosample Description"
+                value = document.querySelector('textarea[name=sample_description]').value
+            } else if (label == "hold_release") {
                 label = "Hold/Release"
                 value = document.querySelector('input[name=hold_release]:checked').nextElementSibling.innerHTML
             } else if (label == "external_link_description[]" || label == "external_link_url[]") {
@@ -514,7 +525,6 @@
                 label = "Sample Type"
                 value = document.querySelector('#sampleType option:checked').innerHTML
             } else if (label == "organism") {
-
                 label = "Organism <span class='text-danger'>*</span>"
                 value = document.querySelector('#organism option:checked').innerHTML
             } else {
@@ -527,6 +537,7 @@
                         <strong>${label}</strong>
                     </td>
                     <td>
+
                         ${value}
                     </td>
                 </tr>

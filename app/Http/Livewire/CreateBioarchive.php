@@ -277,6 +277,32 @@ class CreateBioarchive extends Component
         $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft loaded']);
     }
 
+    /**
+     * Permanently delete the current draft for this user and clear draftId.
+     */
+    public function discardDraft()
+    {
+        if (! $this->draftId) {
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'warning', 'message' => 'No draft to discard']);
+            return;
+        }
+
+        try {
+            $draft = BioarchiveDraft::where('id', $this->draftId)->where('user_id', auth()->id())->first();
+            if ($draft) {
+                $draft->delete();
+                $this->draftId = null;
+                $this->dispatchBrowserEvent('draft-discarded');
+                $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft discarded']);
+            } else {
+                $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Draft not found']);
+            }
+        } catch (\Exception $e) {
+            logger()->error('Failed to discard bioarchive draft: ' . $e->getMessage());
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Failed to discard draft']);
+        }
+    }
+
     public function bioprojectName($id)
     {
         return Bioproject::select('accession')->where('id', $id)->pluck('accession')->first();

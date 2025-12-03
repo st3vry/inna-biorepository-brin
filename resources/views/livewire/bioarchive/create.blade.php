@@ -6,7 +6,11 @@
                 <span wire:loading>Saving...</span>
             </button>
             @if($draftId)
-            <button type="button" class="btn btn-sm btn-outline-info" wire:click="loadDraft({{ $draftId }})">Reload Draft</button>
+            <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="discardDraft" wire:loading.attr="disabled">
+                <span wire:loading.remove>Discard Draft</span>
+                <span wire:loading>Discarding...</span>
+            </button>
             @endif
         </div>
         @if(!empty($successMsg))

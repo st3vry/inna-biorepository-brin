@@ -2,14 +2,18 @@
     <div>
         <div class="d-flex justify-content-end mb-2">
             <button type="button" class="btn btn-outline-secondary me-2" wire:click="saveDraft" wire:loading.attr="disabled">
-                <span wire:loading.remove>Save Draft</span>
+                <span wire:loading.remove>Save Draft 
+                    <i class="fa fa-save"></i>
+                </span>
                 <span wire:loading>Saving...</span>
             </button>
             @if($draftId)
-            <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button>
+            {{-- <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button> --}}
             <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDiscardBioprojectDraft()" wire:loading.attr="disabled">
-                <span wire:loading.remove>Discard Draft</span>
-                <span wire:loading>Discarding...</span>
+                <span wire:loading.remove>Discard Draft
+                    <i class="fa fa-trash"></i>
+                </span>
+                {{-- <span wire:loading>Discarding...</span> --}}
             </button>
             @endif
         </div>

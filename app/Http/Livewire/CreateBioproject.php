@@ -41,10 +41,12 @@ use App\Models\User;
 use App\Models\Lab;
 use App\Models\Center;
 use Livewire\Component;
+use App\Models\BioprojectDraft;
 
 class CreateBioproject extends Component
 {
     public $currentStep = 1;
+    public $draftId = null;
     public $successMsg = '';
 
     public $submitter_name;
@@ -316,6 +318,16 @@ class CreateBioproject extends Component
         // $this->externallinks = [
         //     ['link_description' => '', 'link_url' => '']
         // ];
+
+        // Auto-load latest draft for this user if present
+        try {
+            $latest = BioprojectDraft::where('user_id', auth()->id())->orderByDesc('id')->first();
+            if ($latest) {
+                $this->loadDraft($latest->id);
+            }
+        } catch (\Throwable $e) {
+            logger()->debug('bioproject draft autoload skipped: ' . $e->getMessage());
+        }
     }
     public function addGrant()
     {
@@ -582,7 +594,108 @@ class CreateBioproject extends Component
         }
 
         session()->flash('message', 'Bioproject successfully created.');
+        // delete associated draft if present
+        if ($this->draftId) {
+            try {
+                BioprojectDraft::where('id', $this->draftId)->where('user_id', auth()->id())->delete();
+            } catch (\Throwable $e) {
+                logger()->debug('Failed to delete bioproject draft after submit: ' . $e->getMessage());
+            }
+        }
         return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
+    }
+
+    /** Save current component state as a draft for the authenticated user. */
+    public function saveDraft()
+    {
+        $payload = [
+            'currentStep' => $this->currentStep,
+            'hold_release' => $this->hold_release,
+            'title' => $this->title,
+            'description' => $this->description,
+            'relevance_id' => $this->relevance_id ?? null,
+            'umbproject_id' => $this->umbproject_id ?? null,
+            'externallinks' => $this->externallinks ?? [],
+            'grants' => $this->grants ?? [],
+            'publications' => $this->publications ?? [],
+            'data_type_id' => $this->data_type_id ?? [],
+            'samplescope_id' => $this->samplescope_id ?? null,
+            'material_id' => $this->material_id ?? null,
+            'capture_id' => $this->capture_id ?? null,
+            'methodology_id' => $this->methodology_id ?? null,
+            'consortium_id' => $this->consortium_id ?? null,
+            'organism_id' => $this->organism_id ?? null,
+        ];
+
+        if ($this->draftId) {
+            $draft = BioprojectDraft::where('id', $this->draftId)->where('user_id', auth()->id())->first();
+            if ($draft) {
+                $draft->update(['data' => $payload, 'status' => 'draft']);
+            } else {
+                $draft = BioprojectDraft::create(['user_id' => auth()->id(), 'title' => 'Bioproject draft ' . now()->toDateTimeString(), 'data' => $payload, 'status' => 'draft']);
+            }
+        } else {
+            $draft = BioprojectDraft::create(['user_id' => auth()->id(), 'title' => 'Bioproject draft ' . now()->toDateTimeString(), 'data' => $payload, 'status' => 'draft']);
+        }
+
+        $this->draftId = $draft->id;
+        $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft saved']);
+    }
+
+    /** Load draft into component state (only drafts owned by user). */
+    public function loadDraft($id)
+    {
+        $draft = BioprojectDraft::where('id', $id)->where('user_id', auth()->id())->first();
+        if (! $draft) {
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Draft not found']);
+            return;
+        }
+
+        $this->draftId = $draft->id;
+        $data = $draft->data ?? [];
+        $this->currentStep = $data['currentStep'] ?? $this->currentStep;
+        $this->hold_release = $data['hold_release'] ?? $this->hold_release;
+        $this->title = $data['title'] ?? $this->title;
+        $this->description = $data['description'] ?? $this->description;
+        $this->relevance_id = $data['relevance_id'] ?? $this->relevance_id;
+        $this->umbproject_id = $data['umbproject_id'] ?? $this->umbproject_id;
+        $this->externallinks = $data['externallinks'] ?? $this->externallinks;
+        $this->grants = $data['grants'] ?? $this->grants;
+        $this->publications = $data['publications'] ?? $this->publications;
+        $this->data_type_id = $data['data_type_id'] ?? $this->data_type_id;
+        $this->samplescope_id = $data['samplescope_id'] ?? $this->samplescope_id;
+        $this->material_id = $data['material_id'] ?? $this->material_id;
+        $this->capture_id = $data['capture_id'] ?? $this->capture_id;
+        $this->methodology_id = $data['methodology_id'] ?? $this->methodology_id;
+        $this->consortium_id = $data['consortium_id'] ?? $this->consortium_id;
+        $this->organism_id = $data['organism_id'] ?? $this->organism_id;
+
+        $this->dispatchBrowserEvent('draft-loaded', ['draft' => $data]);
+        $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft loaded']);
+    }
+
+    /** Permanently delete the current draft for this user and clear draftId. */
+    public function discardDraft()
+    {
+        if (! $this->draftId) {
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'warning', 'message' => 'No draft to discard']);
+            return;
+        }
+
+        try {
+            $draft = BioprojectDraft::where('id', $this->draftId)->where('user_id', auth()->id())->first();
+            if ($draft) {
+                $draft->delete();
+                $this->draftId = null;
+                $this->dispatchBrowserEvent('draft-discarded');
+                $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft discarded']);
+            } else {
+                $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Draft not found']);
+            }
+        } catch (\Exception $e) {
+            logger()->error('Failed to discard bioproject draft: ' . $e->getMessage());
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Failed to discard draft']);
+        }
     }
 
     public function render()

@@ -1,5 +1,18 @@
 <form wire:submit.prevent="submitForm">
     <div>
+        <div class="d-flex justify-content-end mb-2">
+            <button type="button" class="btn btn-outline-secondary me-2" wire:click="saveDraft" wire:loading.attr="disabled">
+                <span wire:loading.remove>Save Draft</span>
+                <span wire:loading>Saving...</span>
+            </button>
+            @if($draftId)
+            <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDiscardBioprojectDraft()" wire:loading.attr="disabled">
+                <span wire:loading.remove>Discard Draft</span>
+                <span wire:loading>Discarding...</span>
+            </button>
+            @endif
+        </div>
         @if(!empty($successMsg))
         <div class="alert alert-success">
             {{ $successMsg }}
@@ -1182,5 +1195,33 @@
                 })
             });
         })
+
+    // listen for ajax-alert events dispatched by Livewire methods
+    document.addEventListener('ajax-alert', function(e) {
+        const detail = e.detail || {};
+        const message = detail.message || detail.msg || 'Notification';
+        const type = detail.type || 'info';
+        try {
+            if (typeof showAjaxAlert === 'function') {
+                showAjaxAlert(message, type);
+            } else {
+                alert(message);
+            }
+        } catch (err) {
+            console.debug('ajax-alert handler error', err);
+            try { alert(message); } catch (e) {}
+        }
+    })
+
+    // Simple confirmation then call Livewire discard for bioproject draft
+    function confirmDiscardBioprojectDraft() {
+        if (!confirm('Discard draft? This action cannot be undone.')) return;
+        try { @this.call('discardDraft'); } catch (e) { console.debug('Livewire discard call failed', e); }
+    }
+
+    // reload page when a draft was discarded server-side
+    document.addEventListener('draft-discarded', function() {
+        setTimeout(() => { window.location.reload(); }, 250);
+    })
     </script>
 @endpush

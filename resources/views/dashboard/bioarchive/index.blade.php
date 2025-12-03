@@ -16,17 +16,16 @@
 @if(empty($hasDraft))
     <a href="/dashboard/bioarchives/create" class="btn btn-primary mb-3">Create New Bioarchive</a>
 @else
-    <button class="btn btn-secondary mb-3" disabled title="You have an existing draft">Create New Bioarchive</button>
-    <a href="/dashboard/bioarchives/create" class="btn btn-outline-primary mb-3 ms-2">Resume Draft</a>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof showAjaxAlert === 'function') {
-                showAjaxAlert('You have an existing draft. Resume or discard it before creating a new bioarchive.', 'warning');
-            } else {
-                console.warn('Draft exists for user');
-            }
-        });
-    </script>
+    <div class="alert alert-info alert-dismissible fade show col-lg-12" role="alert">
+        <strong>
+            You have bioarchive submission draft. 
+            <a href="/dashboard/bioarchives/create" class="alert-link">Click here to complete or discard your draft before creating a new one.</a> 
+            
+        </strong>
+    </div>
+    <button type="button" class="btn btn-primary mb-3" style="cursor: pointer" disabled>
+        Create New Bioarchive
+    </button>
 @endif
 <div class="table-responsive col-md-12">
     <table class="table table-striped table-sm" id="dataTable">

@@ -155,6 +155,50 @@
             // return false;
         }
     </script>
+
+    <script>
+        // global helper to show dismissable Bootstrap alerts from JS
+        function showAjaxAlert(message, type = 'danger', options = {}) {
+            // ensure container exists
+            let container = document.getElementById('globalAjaxAlertContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'globalAjaxAlertContainer';
+                container.style.position = 'fixed';
+                container.style.top = '1rem';
+                container.style.right = '1rem';
+                container.style.zIndex = 2100;
+                container.style.width = '360px';
+                container.style.maxWidth = 'calc(100% - 2rem)';
+                document.body.appendChild(container);
+            }
+
+            const id = 'ajaxAlert' + Date.now();
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `\
+                <div id="${id}" class="alert alert-${type} alert-dismissible fade show shadow-sm" role="alert">\
+                    ${message}\
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\
+                </div>`;
+
+            const alertEl = wrapper.firstElementChild;
+            container.appendChild(alertEl);
+
+            // wire bootstrap's Alert instance so we can programmatically close it
+            const bsAlert = new bootstrap.Alert(alertEl);
+
+            // auto-dismiss non-danger alerts after a timeout (default 6s)
+            if (type !== 'danger') {
+                const timeout = options.timeout || 6000;
+                setTimeout(() => {
+                    try { bsAlert.close(); } catch (e) { alertEl.remove(); }
+                }, timeout);
+            }
+
+            return alertEl;
+        }
+    </script>
+    
     @livewireScripts
     @stack('js')
 </body>

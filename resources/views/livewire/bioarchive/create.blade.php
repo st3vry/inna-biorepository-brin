@@ -1,5 +1,14 @@
 <form wire:submit.prevent="submitForm">
     <div>
+        <div class="d-flex justify-content-end mb-2">
+            <button type="button" class="btn btn-outline-secondary me-2" wire:click="saveDraft" wire:loading.attr="disabled">
+                <span wire:loading.remove>Save Draft</span>
+                <span wire:loading>Saving...</span>
+            </button>
+            @if($draftId)
+            <button type="button" class="btn btn-sm btn-outline-info" wire:click="loadDraft({{ $draftId }})">Reload Draft</button>
+            @endif
+        </div>
         @if(!empty($successMsg))
         <div class="alert alert-success">
             {{ $successMsg }}
@@ -528,6 +537,51 @@
         var key = event.keyCode;
         return ((key >= 96 && key <= 105) || (key >= 48 && key <= 57) || key == 188 || key==46 || key==8);
     };
+
+    // Handle draft-loaded event dispatched from Livewire when a draft is restored
+    document.addEventListener('draft-loaded', function(e) {
+        const data = e.detail?.draft || {};
+
+        // restore biosample checkboxes state
+        if (data.biosample_id) {
+            document.querySelectorAll('input[type="checkbox"][name^="biosample_id"]').forEach(cb => {
+                try {
+                    const checked = (typeof data.biosample_id === 'object') ? (data.biosample_id.hasOwnProperty(cb.value) || data.biosample_id[cb.value]) : (Array.isArray(data.biosample_id) && data.biosample_id.includes(cb.value));
+                    cb.checked = !!checked;
+                    cb.dispatchEvent(new Event('change', { bubbles: true }));
+                } catch (err) {
+                    // ignore per-item errors
+                    console.debug('draft checkbox restore error', err);
+                }
+            });
+        }
+
+        // restore select/select2 values for bioexperiment rows
+        if (data.bioexperiment_id) {
+            for (const [sampleId, obj] of Object.entries(data.bioexperiment_id)) {
+                ['libsource_id','libselection_id','libstrategy_id','instrument_id','liblayout_id'].forEach(name => {
+                    try {
+                        const selector = document.querySelector(`select[name="bioexperiment_id[${sampleId}][${name}]"]`);
+                        if (!selector) return;
+                        const val = obj[name];
+                        if (val === undefined || val === null || val === '') return;
+                        // if select2 active, append option if missing then set value and trigger change
+                        if ($(selector).hasClass('select2-hidden-accessible') || $(selector).hasClass('select2')) {
+                            if (!selector.querySelector(`option[value="${val}"]`)) {
+                                const opt = document.createElement('option'); opt.value = val; opt.text = val; selector.appendChild(opt);
+                            }
+                            $(selector).val(val).trigger('change');
+                        } else {
+                            selector.value = val;
+                            selector.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    } catch (err) {
+                        console.debug('draft select restore error', err);
+                    }
+                })
+            }
+        }
+    })
 
 </script>
 @endpush

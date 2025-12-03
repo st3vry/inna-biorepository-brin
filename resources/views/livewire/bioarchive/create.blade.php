@@ -6,8 +6,8 @@
                 <span wire:loading>Saving...</span>
             </button>
             @if($draftId)
-            <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button>
-            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="discardDraft" wire:loading.attr="disabled">
+            {{-- <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button> --}}
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDiscardDraft()" wire:loading.attr="disabled">
                 <span wire:loading.remove>Discard Draft</span>
                 <span wire:loading>Discarding...</span>
             </button>
@@ -603,6 +603,40 @@
             console.debug('ajax-alert handler error', err);
             try { alert(message); } catch (e) {}
         }
+    })
+
+    // Show confirmation modal before discarding a draft
+    function confirmDiscardDraft() {
+        try {
+            bsConfirmModalTitle.textContent = 'Discard Draft';
+            bsConfirmModalText.textContent = 'Are you sure you want to discard the current draft? This action cannot be undone.';
+            bsConfirmModalSpinner.classList.add('d-none');
+            // show modal
+            bsConfirmModal.show();
+
+            const handler = function() {
+                // show spinner while Livewire processes
+                bsConfirmModalSpinner.classList.remove('d-none');
+                // call Livewire discardDraft method
+                try { @this.call('discardDraft'); } catch (e) { console.debug('Livewire call failed', e); }
+                // hide modal; actual page reload will happen when 'draft-discarded' event fires
+                bsConfirmModal.hide();
+            };
+
+            // attach one-time handler to modal confirm button
+            bsConfirmModalButton.addEventListener('click', handler, { once: true });
+        } catch (err) {
+            console.debug('confirmDiscardDraft error', err);
+            if (confirm('Discard draft?')) {
+                try { @this.call('discardDraft'); } catch (e) {}
+            }
+        }
+    }
+
+    // Reload page when draft is discarded server-side
+    document.addEventListener('draft-discarded', function() {
+        // small delay to allow alert to show briefly
+        setTimeout(() => { window.location.reload(); }, 250);
     })
 
 </script>

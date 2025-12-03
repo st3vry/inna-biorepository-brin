@@ -8,6 +8,7 @@
         <form class="needs-validation" action="/dashboard/v2/biosamples" method="POST" novalidate id="formBioSample">
             @method('post')
             @csrf
+            <input type="hidden" id="draftId" name="draft_id" value="">
             <ul class="nav nav-tabs nav-fill mb-3" id="mytabs" role="tablist">
                 <li class="nav-item " role="presentation">
                     <a class="nav-link disabled active" id="tabGeneralInformation" data-bs-toggle="tab"
@@ -117,7 +118,7 @@
                     <hr class="mb-0" >
                     <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
                     <p class="mb-3"><small><strong class="text-danger">**</strong> Required when added</small></p>
-                    <div class="d-flex align-items-center justify-content-end mb-3">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
                         <button class="btn btn-sm btn-primary btn-next-prev" id="btnNext" data-st-location="contentGeneralInfo" data-st-target="contentSampleInformation">
                             Next <i class="bi bi-chevron-right"></i>
                         </button>
@@ -204,14 +205,26 @@
         </form>
     </div>
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                Submitter Information
-            </div>
-            <div class="card-body">
-                <h5 class="card-title mb-0">{{$submitter->name}}</h5>
-                <p class="card-text caption mb-0">{{$submitter->email}}</p>
-                <p class="card-text">{{$submitter->lab_name}} - {{$submitter->center_name}}</p>
+        <div class="mb-3 d-flex justify-content-between gap-3">
+            <button id="btnSaveDraft" type="button" class="btn btn-outline-success w-100 btn-sm">
+                Save Draft <i class="bi bi-save"></i>
+            </button>
+            @isset($draft)
+            <button id="btnDiscardDraft" type="button" class="btn btn-outline-danger w-100 btn-sm">
+                Discard Draft <i class="bi bi-trash"></i>
+            </button>
+            @endisset
+        </div>
+        <div class="mb-3">
+            <div class="card">
+                <div class="card-header">
+                    Submitter Information
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-0">{{$submitter->name}}</h5>
+                    <p class="card-text caption mb-0">{{$submitter->email}}</p>
+                    <p class="card-text">{{$submitter->lab_name}} - {{$submitter->center_name}}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -273,23 +286,26 @@
             return rowsel;
         }
 
-        function getSampleType(id) {
-            $.ajax({
-                url: "/dashboard/v2/biosamples/getSample/"+id,
-                // type: "GET",
-                async: false,
-                success: function(response) {
-                    rowsel = '<option selected disabled value="0">Choose sample type</option>'
-                    $.each(response, function(key, value) {
-                        rowsel += '<option title="'+value['description']+'" value="' + value['id'] + '">' + value['name'] + '</option>';
-                        return rowsel;
-                    });
-                },
-                error: function (data) {
-                    console.log(data.status + ':' + data.statusText,data.responseText);
+        // Fetch sample types for a package and populate the `#sampleType` select.
+        // Returns the jqXHR promise so callers can chain .done/.fail.
+        function getSampleType(id, selectedId) {
+            return $.ajax({
+                url: "/dashboard/v2/biosamples/getSample/" + id,
+                method: 'GET',
+                dataType: 'json'
+            }).done(function(response) {
+                sampleType.empty();
+                sampleType.append('<option selected disabled value="">Choose sample type</option>');
+                $.each(response, function(key, value) {
+                    const $opt = $('<option>').attr('title', value['description']).val(value['id']).text(value['name']);
+                    sampleType.append($opt);
+                });
+                if (selectedId) {
+                    sampleType.val(selectedId);
                 }
+            }).fail(function(xhr) {
+                console.log('Error fetching sample types:', xhr.status, xhr.statusText);
             });
-            return rowsel;
         }
 
 
@@ -320,19 +336,18 @@
             })
         }
 
-        function getAttributes(id,name) {
-            $.ajax({
-                url: "/dashboard/v2/biosamples/getAttributes/"+id,
-                // type: "GET",
-                async: false,
-                success: function(response) {
-                    setAttributesInputs(response,name)
-                },
-                error: function (data) {
-                    console.log(data.status + ':' + data.statusText,data.responseText);
-                }
+        // Fetch attribute definitions for a sample type and populate inputs.
+        // Returns the jqXHR promise so callers can wait for completion.
+        function getAttributes(id, name) {
+            return $.ajax({
+                url: "/dashboard/v2/biosamples/getAttributes/" + id,
+                method: 'GET',
+                dataType: 'json'
+            }).done(function(response) {
+                setAttributesInputs(response, name);
+            }).fail(function(xhr) {
+                console.log('Error fetching attributes:', xhr.status, xhr.statusText);
             });
-            return rowsel;
         }
 
         const sampleTypePackages = $("#sampleTypePackages")
@@ -370,9 +385,15 @@
             });
         })
 
-        sampleTypePackages.on("change",function(e) {
-            sampleType.empty()
-            sampleType.append(getSampleType(sampleTypePackages.val()))
+        sampleTypePackages.on("change", function(e) {
+            const pkgId = sampleTypePackages.val();
+            if (!pkgId) return;
+            // populate sampleType asynchronously
+            getSampleType(pkgId).done(function() {
+                // clear attributes when switching package
+                $('#cardSampleAttributes').addClass('d-none');
+                formAttributes.html('');
+            });
         })
 
         sampleType.on("change",function(e) {
@@ -552,7 +573,7 @@
             let externalLinkUrl = document.querySelectorAll("input[name='external_link_url[]']")
 
             formData.forEach(element => {
-                if (element.name != "_method" && element.name != "_token") {
+                if (element.name != "_method" && element.name != "_token" && element.name != "draft_id") {
                     console.log(getTableRow(element.name, element.value == "" ? "-" :element.value ))
                     $("#previewTable tbody").append(getTableRow(element.name, element.value == "" ? "-" :element.value ))
                 }
@@ -631,6 +652,202 @@
 
             })
         });
+
+        $('#btnDiscardDraft').on('click', function(e) {
+            e.preventDefault();
+            if (confirm("Are you sure you want to discard the draft? This action cannot be undone.")) {
+                const draftId = $('#draftId').val();
+                if (!draftId) {
+                    showAjaxAlert("No draft to discard.", "warning");
+                    return;
+                }
+                $.ajax({
+                    url: "/dashboard/v2/biosamples/draft/" + draftId + "/discard",
+                    method: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(res) {
+                        if (res.status === "OK") {
+                            $('#draftId').val('');
+                            showAjaxAlert("Draft discarded", "success");
+                            location.reload();
+                        } else {
+                            showAjaxAlert("Unable to discard draft: " + (res.message || 'error'), "danger");
+                        }
+                    },
+                    error: function(xhr) {
+                        showAjaxAlert("Error discarding draft: " + xhr.statusText, "danger");
+                    }
+                });
+            }
+        });
+
+        $('#btnSaveDraft').on('click', function(e) {
+            e.preventDefault();
+            const form = $('#formBioSample');
+            const formData = form.serializeArray();
+            // convert to object
+            const payload = {};
+            formData.forEach(item => {
+                const rawName = item.name;
+                const value = item.value;
+                // support inputs named like `field[]` -> store under `field` as an array
+                const arrayMatch = rawName.match(/(.+)\[\]$/);
+                if (arrayMatch) {
+                    const base = arrayMatch[1];
+                    if (!payload[base]) payload[base] = [];
+                    payload[base].push(value);
+                    return;
+                }
+
+                // fallback: multiple inputs with same name (without []), e.g. repeated names
+                if (payload[rawName] !== undefined) {
+                    if (!Array.isArray(payload[rawName])) payload[rawName] = [payload[rawName]];
+                    payload[rawName].push(value);
+                } else {
+                    payload[rawName] = value;
+                }
+            });
+
+            const draftId = $('#draftId').val();
+
+            $.ajax({
+                // use a same-origin relative path to avoid protocol/host mismatches (https vs http)
+                
+                //url: "{{ route('biosamples.draft.save') }}",
+                url: "/dashboard/v2/biosamples/draft",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    draft_id: draftId,
+                    title: payload.title || '',
+                    data: payload
+                },
+                success: function(res) {
+                    if (res.status === "OK") {
+                        $('#draftId').val(res.draft_id);
+                        showAjaxAlert("Draft saved", "success");
+                    } else {
+                        showAjaxAlert("Unable to save draft: " + (res.message || 'error'), "danger");
+                    }
+                },
+                error: function(xhr) {
+                    showAjaxAlert("Error saving draft: " + xhr.statusText, "danger");
+                }
+            })
+        });
+        @if(!empty($draft))
+            // Load draft data
+            const draftData = {!! json_encode($draft->data) !!};
+
+            // helper to populate non-dependent fields (will be called after attributes are ready)
+            function populateDraftFields() {
+                for (const [key, value] of Object.entries(draftData)) {
+                    if (['sample_type_packages_select','sample_type_select'].includes(key)) {
+                        // skip package/sample type here (handled separately)
+                        continue;
+                    }
+                    // handle external link arrays (descriptions and urls)
+                    if (key === "external_link_description" && Array.isArray(value)) {
+                        // ensure enough rows exist
+                        const existingDesc = document.querySelectorAll("input[name='external_link_description[]']").length;
+                        for (let i = existingDesc; i < value.length; i++) {
+                            $("#btnAddExternalLink").click();
+                        }
+                        // populate descriptions
+                        const descInputs = document.querySelectorAll("input[name='external_link_description[]']");
+                        for (let i = 0; i < value.length; i++) {
+                            if (descInputs[i]) descInputs[i].value = value[i];
+                        }
+                        continue;
+                    }
+                    if (key === "external_link_url" && Array.isArray(value)) {
+                        const urlInputs = document.querySelectorAll("input[name='external_link_url[]']");
+                        for (let i = 0; i < value.length; i++) {
+                            if (urlInputs[i]) urlInputs[i].value = value[i];
+                        }
+                        continue;
+                    }
+                    const field = document.querySelector(`[name="${key}"]`);
+                    if (field) {
+                        // If this is a Select2 field that loads options via AJAX (e.g. organism),
+                        // the saved value may not have an <option> in the DOM. Handle that
+                        // by trying to fetch the display text and appending a new option.
+                        if ($(field).hasClass('select2-hidden-accessible')) {
+                            console.log("select2 field", key, value);
+                            const $f = $(field);
+                            const val = value;
+                            // if option already exists, just set it
+                            if ($f.find(`option[value="${val}"]`).length) {
+                                $f.val(val).trigger('change');
+                            } else {
+                                // attempt to fetch the display text from server (best-effort)
+                                // Many Select2 AJAX endpoints accept the id as a term and return the matching record.
+                                // We'll try the organism endpoint first (used by this form). If it fails,
+                                // fall back to adding the raw id as text.
+                                $.ajax({
+                                    url: "/dashboard/v2/biosamples/getOrganism/" + encodeURIComponent(val),
+                                    method: 'GET',
+                                    dataType: 'json'
+                                }).done(function(resp) {
+                                    let text = val;
+                                    let taxon = null;
+                                    if (Array.isArray(resp) && resp.length > 0) {
+                                        // prefer returned text fields
+                                        text = resp[0].text || resp[0].name || text;
+                                        taxon = resp[0].taxon_id || null;
+                                    }
+                                    const newOption = new Option(text, val, true, true);
+                                    $f.append(newOption).trigger('change');
+                                    // if an associated taxonomy id was returned, set it
+                                    if (taxon) {
+                                        $('#taxonomy_id').val(taxon);
+                                    }
+                                }).fail(function() {
+                                    // fallback: create an option with the id as label
+                                    const newOption = new Option(val, val, true, true);
+                                    $f.append(newOption).trigger('change');
+                                });
+                            }
+                        } else {
+                            if (field.tagName === 'SELECT') {
+                                field.value = ` ${value}`;
+                            } else {
+                                field.value = value;
+                            }
+                        }
+                    }
+                }
+                // finally set draft id
+                $('#draftId').val("{{ $draft->id }}");
+            }
+
+            // after setting simple fields, ensure sample type package and selected sample type are populated
+            if (draftData.sample_type_packages_select) {
+                sampleTypePackages.val(draftData.sample_type_packages_select);
+                console.log("package", draftData.sample_type_packages_select)
+                // sampleTypePackages.trigger('change');
+                // fetch sample types and select the saved value (if any)
+                getSampleType(draftData.sample_type_packages_select, draftData.sample_type_select).done(function() {
+                    if (draftData.sample_type_select) {
+                        sampleType.val(draftData.sample_type_select);
+                        // populate attributes for selected sample type and then populate other fields
+                        getAttributes(sampleType.val(), $("#sampleType option:selected").text()).done(function() {
+                            populateDraftFields();
+                            
+                        });
+                    } else {
+                        // attributes not dependent on sample type, populate fields now
+                        populateDraftFields();
+                    }
+                });
+            } else {
+                // no package/sample-type dependency: populate immediately
+                populateDraftFields();
+            }
+            
+        @endif
     });
 </script>
 

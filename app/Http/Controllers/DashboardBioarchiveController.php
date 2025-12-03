@@ -13,6 +13,7 @@ use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
 use App\Models\FileType;
 use App\Models\FtpUser;
+use App\Models\BioarchiveDraft;
 use Storage;
 use Illuminate\Http\Request;
 
@@ -21,8 +22,19 @@ class DashboardBioarchiveController extends Controller
     //
     public function index()
     {
+        $bioarchives = Bioarchive::with(['bioproject', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->get();
+
+        $hasDraft = false;
+        try {
+            $hasDraft = BioarchiveDraft::where('user_id', auth()->id())->where('status', 'draft')->exists();
+        } catch (\Throwable $e) {
+            // ignore if drafts table/model not available
+            logger()->debug('Could not check bioarchive drafts: ' . $e->getMessage());
+        }
+
         return view('dashboard.bioarchive.index', [
-            'bioarchives' => Bioarchive::with(['bioproject', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
+            'bioarchives' => $bioarchives,
+            'hasDraft' => $hasDraft,
         ]);
     }
 

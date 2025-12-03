@@ -1,8 +1,8 @@
 <form wire:submit.prevent="submitForm">
     <div>
         <div class="d-flex justify-content-end mb-2">
-            <button type="button" class="btn btn-outline-secondary me-2" wire:click="saveDraft" wire:loading.attr="disabled">
-                <span wire:loading.remove>Save Draft</span>
+            <button type="button" class="btn btn-outline-success me-2" wire:click="saveDraft" wire:loading.attr="disabled">
+                <span wire:loading.remove>Save Draft <i class="bi bi-save"></i></span>
                 <span wire:loading>Saving...</span>
             </button>
             @if($draftId)
@@ -584,6 +584,24 @@
                     }
                 })
             }
+        }
+    })
+
+    // listen for ajax-alert events dispatched by Livewire methods
+    document.addEventListener('ajax-alert', function(e) {
+        const detail = e.detail || {};
+        const message = detail.message || detail.msg || 'Notification';
+        const type = detail.type || 'info';
+        try {
+            if (typeof showAjaxAlert === 'function') {
+                showAjaxAlert(message, type);
+            } else {
+                // fallback toast
+                alert(message);
+            }
+        } catch (err) {
+            console.debug('ajax-alert handler error', err);
+            try { alert(message); } catch (e) {}
         }
     })
 

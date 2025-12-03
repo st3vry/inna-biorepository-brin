@@ -187,9 +187,9 @@
             // wire bootstrap's Alert instance so we can programmatically close it
             const bsAlert = new bootstrap.Alert(alertEl);
 
-            // auto-dismiss non-danger alerts after a timeout (default 6s)
+            // auto-dismiss non-danger alerts after a timeout (default 10s)
             if (type !== 'danger') {
-                const timeout = options.timeout || 6000;
+                const timeout = options.timeout || 10000;
                 setTimeout(() => {
                     try { bsAlert.close(); } catch (e) { alertEl.remove(); }
                 }, timeout);

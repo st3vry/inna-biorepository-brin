@@ -104,6 +104,17 @@ class CreateBioarchive extends Component
         $this->filetypes = FileType::all();
         // generate alias
         $this->alias = Str::random(6);
+
+        // Auto-load the latest draft for this user (if any)
+        try {
+            $latest = BioarchiveDraft::where('user_id', auth()->id())->where('status', 'draft')->first();
+            if ($latest) {
+                $this->loadDraft($latest->id);
+            }
+        } catch (\Exception $e) {
+            // don't break mounting if drafts table/migration doesn't exist yet
+            logger()->debug('bioarchive draft autoload skipped: ' . $e->getMessage());
+        }
     }
 
     // Submitter form

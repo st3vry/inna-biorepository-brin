@@ -203,7 +203,15 @@ class CreateBioarchive extends Component
             $bioexp = Bioexperiment::create($dataExp);
         }
         session()->flash('message', 'Bioarchive successfully created.');
-        // return redirect()->to('/dashboard/bioarchives/' . $bioarchive->accession);
+        // delete associated draft if present
+        if ($this->draftId) {
+            try {
+                BioarchiveDraft::where('id', $this->draftId)->where('user_id', auth()->id())->delete();
+            } catch (\Throwable $e) {
+                logger()->debug('Failed to delete bioarchive draft after submit: ' . $e->getMessage());
+            }
+        }
+
         return redirect()->to('/dashboard/bioarchives');
     }
 

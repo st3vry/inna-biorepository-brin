@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('bioarchive_drafts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('bioarchive_id')->nullable(); // optional link to published record
             $table->string('title')->nullable();
             $table->json('data')->nullable();

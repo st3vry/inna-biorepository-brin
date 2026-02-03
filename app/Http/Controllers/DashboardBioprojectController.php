@@ -15,6 +15,7 @@ use App\Models\Publication;
 use App\Models\SampleBioproject;
 use App\Models\DatatypeBioproject;
 use App\Models\BioProjectExternalLink;
+use App\Models\BioprojectDraft;
 use App\Models\ObjectiveBioProject;
 
 use Illuminate\Http\Request;
@@ -29,8 +30,18 @@ class DashboardBioprojectController extends Controller
     public function index()
     {
         //
+        $bioproject = Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->get();
+
+        $hasDraft = false;
+        try {
+            $hasDraft = BioprojectDraft::where('user_id', auth()->id())->where('status', 'draft')->exists();
+        } catch (\Throwable $e) {
+            // ignore if drafts table/model not available
+            logger()->debug('Could not check bioarchive drafts: ' . $e->getMessage());
+        }
         return view('dashboard.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
+            'bioprojects' => $bioproject
+            ,'hasDraft' => $hasDraft,
         ]);
     }
 

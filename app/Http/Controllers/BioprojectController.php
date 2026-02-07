@@ -8,7 +8,10 @@ use App\Models\Datatype;
 use App\Models\MaterialBioproject;
 use App\Models\MethodologyBioproject;
 use App\Models\Objective;
+use App\Models\SampleBioproject;
 use App\Models\RelevanceBioproject;
+use App\Models\BioprojectTarget;
+use App\Models\OrganismReplicon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
 
@@ -68,6 +71,28 @@ class BioprojectController extends Controller
         $materialBioproject = MaterialBioproject::where('bioproject_id', $bioproject->id)->first();
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
+
+        $sampleScopeBioproject = SampleBioproject::where('bioproject_id', $bioproject->id)->first();
+
+        $target = BioprojectTarget::with([
+            'celularity',
+            'reproduction',
+            'ploidy',
+            'genomeSize',
+            'bioticRelationship',
+            'trophicLevel',
+            'habitat',
+            'salinity',
+            'oxygenReq',
+            'tempRange',
+        ])->where('bioproject_id', $bioproject->id)->first();
+
+        $replicons = OrganismReplicon::with([
+            'replType',
+            'replLocation',
+            'genomeSize',
+        ])->where('bioproject_id', $bioproject->id)->get();
+
         return view('frontend.showbioproject', [
             'title' => 'Bioproject',
             'bioproject' => $bioproject,
@@ -80,7 +105,10 @@ class BioprojectController extends Controller
             'capture' => $captureBioproject,
             'methodology' => $methodologyBioproject,
             'umbrella' => $umbrella,
-            'externallinks' => $externallinks
+            'externallinks' => $externallinks,
+            'sampleScopeBioproject' => $sampleScopeBioproject,
+            'target' => $target,
+            'replicons' => $replicons,
         ]);
     }
 }

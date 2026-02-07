@@ -10,6 +10,9 @@ use App\Models\MaterialBioproject;
 use App\Models\CaptureBioproject;
 use App\Models\MethodologyBioproject;
 use App\Models\ActionLog;
+use App\Models\BioprojectTarget;
+use App\Models\OrganismReplicon;
+use App\Models\SampleBioproject;
 use Illuminate\Http\Request;
 
 class BioprojectController extends Controller
@@ -103,6 +106,27 @@ class BioprojectController extends Controller
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioproject->accession)->orderBy('created_at', 'desc')->get();
 
+        $sampleScopeBioproject = SampleBioproject::where('bioproject_id', $bioproject->id)->first();
+
+        $target = BioprojectTarget::with([
+            'celularity',
+            'reproduction',
+            'ploidy',
+            'genomeSize',
+            'bioticRelationship',
+            'trophicLevel',
+            'habitat',
+            'salinity',
+            'oxygenReq',
+            'tempRange',
+        ])->where('bioproject_id', $bioproject->id)->first();
+
+        $replicons = OrganismReplicon::with([
+            'replType',
+            'replLocation',
+            'genomeSize',
+        ])->where('bioproject_id', $bioproject->id)->get();
+
         //kirim data ke view
         return view('dashboard.bioproject.show', [
             'bioproject' => $bioproject,
@@ -115,7 +139,10 @@ class BioprojectController extends Controller
             'methodology' => $methodologyBioproject,
             'umbrella' => $umbrella,
             'externallinks' => $externallinks,
-            'histories' => $histories
+            'histories' => $histories,
+            'target' => $target,
+            'replicons' => $replicons,
+            'sampleScopeBioproject' => $sampleScopeBioproject,
         ]);
     }
 

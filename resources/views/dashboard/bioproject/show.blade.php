@@ -45,36 +45,106 @@
                 <td class="col-sm-1">Title</td>
                 <td class="col-sm-7">{{$bioproject->title}}</td>
             </tr>
-            <tr>
-                <td class="col-sm-1">Umbrella Projects</td>
-                @isset($umbrella)
-                <td class="col-sm-7"><a href="{{ $umbrella->accession }}">{{ $umbrella->accession }}</a> &mdash; {{$umbrella->title}}</td>
-                @else
-                <td class="col-sm-7">Not Assigned</td>
-                @endisset
-            </tr>
-            <tr>
-                <td class="col-sm-1">Consortium</td>
-                @isset($consortium)
-                <td class="col-sm-7">{{$bioproject->consortium->name}} &mdash; <a href="https://www.{{ $consortium->consortium->url }}">{{ $consortium->consortium->url }}</a></td>
-                @else
-                <td class="col-sm-7">Not Assigned</td>
-                @endisset
-            </tr>
-            <tr>
-                <td class="col-sm-1">Organism</td>
-                <td class="col-sm-7">{{$bioproject->organism->name}}</td>
-            </tr>
+
             <tr>
                 <td class="col-sm-1">Description</td>
                 <td class="col-sm-7">{{$bioproject->description}}</td>
             </tr>
+            
             <tr>
                 <td class="col-sm-1">Relevance</td>
                 <td class="col-sm-7">{{$relevance->relevance->name}}
                     @if ($relevance->relevance->id == 7)
                     &mdash; {{$relevance->description}}
                     @endif </td>
+            </tr>
+
+            <tr>
+                <td class="col-sm-1">Umbrella Projects</td>
+                @isset($umbrella)
+                <td class="col-sm-7"><a href="{{ $umbrella->accession }}">{{ $umbrella->accession }}</a> &mdash; {{$umbrella->title}}</td>
+                @else
+                <td class="col-sm-7">N/A</td>
+                @endisset
+            </tr>
+
+            <tr>
+                <td class="col-sm-1">External Link</td>
+                <td class="col-sm-7">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <th>Link</th>
+                                    <th>Description</th>
+                                </thead>
+                                @forelse ( $externallinks as $externallink )
+                                <tr>
+                                    <td class="col-sm-3"><a href="{{$externallink->link_url}}" target=_blank>{{$externallink->link_url}}</td>
+                                    <td class="col-sm-3">{{$externallink->link_description}}</td>
+                                </tr>
+                                @empty
+                                N/A
+                                @endforelse
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-sm-1">Grant</td>
+                <td class="col-sm-7">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <th>Grant Title</th>
+                                    <th>Grant Program</th>
+                                    <th>Funding Agency</th>
+                                </thead>
+                                @forelse ( $grants as $grant )
+                                <tr>
+                                    <td class="col-sm-3">{{$grant->grant_title}}</td>
+                                    <td class="col-sm-3">{{$grant->grant_program}}</td>
+                                    <td class="col-sm-3">{{$grant->fundagency->name}}</td>
+                                </tr>
+                                @empty
+                                N/A
+                                @endforelse
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-sm-1">Consortium</td>
+                @isset($consortium)
+                <td class="col-sm-7">{{$bioproject->consortium->name}} &mdash; <a href="https://www.{{ $bioproject->consortium->url }}">{{ $bioproject->consortium->url }}</a></td>
+                @else
+                <td class="col-sm-7">N/A</td>
+                @endisset
+            </tr>
+
+            <tr>
+                <td class="col-sm-1">Data Type</td>
+                <td class="col-sm-7">
+                    <ul>
+                        @foreach ( $data_types as $key => $value )
+                        <li>{{$value}}</li>
+                        @endforeach
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-sm-1">Sample Scope</td>
+                <td class="col-sm-7">{{$bioproject->samplescope->name}}
+                    @if ($bioproject->samplescope->id == 7)
+                    &mdash; {{$sampleScopeBioproject?->description ?? 'N/A'}}
+                    @endif 
+                </td>
             </tr>
             <tr>
                 <td class="col-sm-1">Material</td>
@@ -97,7 +167,137 @@
                     &mdash; {{$methodology->description}}
                     @endif </td>
             </tr>
-    
+            <tr>
+                <td class="col-sm-1">Organism</td>
+                <td class="col-sm-7">{{$bioproject->organism->name}}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">Novel organism</td>
+                <td class="col-sm-9">
+                    @if(is_null($target?->organism_novel))
+                        N/A
+                    @else
+                        {{ $target->organism_novel == 1 ? 'Yes' : 'No' }}
+                    @endif
+                    @if(filled($target?->organism_novel_description))
+                        &mdash; {{ $target->organism_novel_description }}
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td>Single biological cell</td>
+                <td>{{ $target?->organism_sbc ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Isolate</td>
+                <td>{{ $target?->organism_isolate ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>{{ $target?->organism_desc ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Celularity</td>
+                <td>{{ $target?->celularity?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Reproduction</td>
+                <td>{{ $target?->reproduction?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Ploidy</td>
+                <td>
+                    {{ $target?->ploidy?->name ?? 'N/A' }}
+                    @if(filled($target?->ploidy_description))
+                        &mdash; {{ $target->ploidy_description }}
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td>Haploid genome size</td>
+                <td>
+                    @if(filled($target?->haploid_genome_size))
+                        {{ $target->haploid_genome_size }}
+                        @if($target?->genomeSize)
+                            {{ $target->genomeSize->name }}
+                        @endif
+                    @else
+                        N/A
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td>Disease</td>
+                <td>{{ $target?->phenotypes_disease ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Biotic relationship</td>
+                <td>{{ $target?->bioticRelationship?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Trophic level</td>
+                <td>{{ $target?->trophicLevel?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Prokaryote morphology</td>
+                <td>
+                    <div>Gram: {{ is_null($target?->prokaryote_morphology_gram) ? 'N/A' : ($target->prokaryote_morphology_gram == 1 ? 'Positive' : 'Negative') }}</div>
+                    <div>Motility: {{ is_null($target?->prokaryote_morphology_motility) ? 'N/A' : ($target->prokaryote_morphology_motility == 1 ? 'Yes' : 'No') }}</div>
+                    <div>Enveloped: {{ is_null($target?->prokaryote_morphology_enveloped) ? 'N/A' : ($target->prokaryote_morphology_enveloped == 1 ? 'Yes' : 'No') }}</div>
+                    <div>Endospores: {{ is_null($target?->prokaryote_morphology_endospores) ? 'N/A' : ($target->prokaryote_morphology_endospores == 1 ? 'Yes' : 'No') }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td>Habitat</td>
+                <td>{{ $target?->habitat?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Salinity</td>
+                <td>{{ $target?->salinity?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Oxygen requirement</td>
+                <td>{{ $target?->oxygenReq?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Temperature range</td>
+                <td>{{ $target?->tempRange?->name ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td>Optimum temperature</td>
+                <td>{{ $target?->optimum_temp ?? 'N/A' }}</td>
+            </tr>
+            <tr>
+                <td class="col-sm-1">Organism Replicon</td>
+                <td class="col-sm-7">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm mb-0">
+                                <thead>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Location</th>
+                                    <th>Size</th>
+                                    <th>Unit</th>
+                                </thead>
+                                @forelse ($replicons as $replicon)
+                                    <tr>
+                                        <td class="col-sm-3">{{ $replicon->name ?? 'N/A' }}</td>
+                                        <td class="col-sm-2">{{ $replicon->replType?->name ?? 'N/A' }}</td>
+                                        <td class="col-sm-2">{{ $replicon->replLocation?->name ?? 'N/A' }}</td>
+                                        <td class="col-sm-2">{{ $replicon->size ?? 'N/A' }}</td>
+                                        <td class="col-sm-3">{{ $replicon->genomeSize?->name ?? 'N/A' }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5">N/A</td>
+                                    </tr>
+                                @endforelse
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <td class="col-sm-1">Publication</td>
                 <td class="col-sm-7">
@@ -121,7 +321,7 @@
                                     </td>
                                 </tr>
                                 @empty
-                                None
+                                N/A
                                 @endforelse
                             </table>
                         </div>
@@ -129,70 +329,8 @@
                 </td>
             </tr>
             
-            <tr>
-                <td class="col-sm-1">Grant</td>
-                <td class="col-sm-7">
-                    <div class="card shadow-sm mb-2">
-                        <div class="card-body">
-                            <table class="table table-striped table-sm">
-                                <thead>
-                                    <th>Grant Title</th>
-                                    <th>Grant Program</th>
-                                    <th>Funding Agency</th>
-                                </thead>
-                                @forelse ( $grants as $grant )
-                                <tr>
-                                    <td class="col-sm-3">{{$grant->grant_title}}</td>
-                                    <td class="col-sm-3">{{$grant->grant_program}}</td>
-                                    <td class="col-sm-3">{{$grant->fundagency->name}}</td>
-                                </tr>
-                                @empty
-                                None
-                                @endforelse
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
     
-            <tr>
-                <td class="col-sm-1">External Link</td>
-                <td class="col-sm-7">
-                    <div class="card shadow-sm mb-2">
-                        <div class="card-body">
-                            <table class="table table-striped table-sm">
-                                <thead>
-                                    <th>Link</th>
-                                    <th>Description</th>
-                                </thead>
-                                @forelse ( $externallinks as $externallink )
-                                <tr>
-                                    <td class="col-sm-3"><a href="{{$externallink->link_url}}" target=_blank>{{$externallink->link_url}}</td>
-                                    <td class="col-sm-3">{{$externallink->link_description}}</td>
-                                </tr>
-                                @empty
-                                None
-                                @endforelse
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-    
-            <tr>
-                <td class="col-sm-1">Sample Scope</td>
-                <td class="col-sm-7">{{$bioproject->samplescope->name}}</td>
-            </tr>
-            <tr>
-                <td class="col-sm-1">Data Type</td>
-                <td class="col-sm-7">
-                    <ul>
-                        @foreach ( $data_types as $key => $value )
-                        <li>{{$value}}</li>
-                        @endforeach
-                    </ul>
-                </td>
-            </tr>
+            
             <tr>
                 <td class="col-sm-1">Center</td>
                 <td class="col-sm-7">
@@ -216,7 +354,7 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Published at</td>
-                <td class="col-sm-7">{{$bioproject->published_at === null ? 'None' : $bioproject->published_at->format('d-m-Y')}}</td>
+                <td class="col-sm-7">{{$bioproject->published_at === null ? 'N/A' : $bioproject->published_at->format('d-m-Y')}}</td>
             </tr>
     
         </table>

@@ -11,6 +11,9 @@ use App\Models\MaterialBioproject;
 use App\Models\CaptureBioproject;
 use App\Models\RelevanceBioproject;
 use App\Models\MethodologyBioproject;
+use App\Models\SampleBioproject;
+use App\Models\BioprojectTarget;
+use App\Models\OrganismReplicon;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -60,6 +63,27 @@ class CuratorBioprojectController extends Controller
         $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
         $histories = ActionLog::with(['creator'])->where('item_id',$bioproject->accession)->orderBy('created_at', 'desc')->get();
 
+        $sampleScopeBioproject = SampleBioproject::where('bioproject_id', $bioproject->id)->first();
+
+        $target = BioprojectTarget::with([
+            'celularity',
+            'reproduction',
+            'ploidy',
+            'genomeSize',
+            'bioticRelationship',
+            'trophicLevel',
+            'habitat',
+            'salinity',
+            'oxygenReq',
+            'tempRange',
+        ])->where('bioproject_id', $bioproject->id)->first();
+
+        $replicons = OrganismReplicon::with([
+            'replType',
+            'replLocation',
+            'genomeSize',
+        ])->where('bioproject_id', $bioproject->id)->get();
+
         return view('dashboard.curator.bioproject.show', [
             'bioproject' => $bioproject,
             'pubs' => $pubs,
@@ -72,7 +96,10 @@ class CuratorBioprojectController extends Controller
             'umbrella' => $umbrella,
             'externallinks' => $externallinks,
             'curators' => $curators,
-            'histories' => $histories
+            'histories' => $histories,
+            'sampleScopeBioproject' => $sampleScopeBioproject,
+            'target' => $target,
+            'replicons' => $replicons,
         ]);
     }
     public function edit(Bioproject $bioproject)

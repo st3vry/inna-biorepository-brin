@@ -58,6 +58,16 @@ class Bioproject extends Model
         return $this->hasMany(BioProjectExternalLink::class);
     }
 
+    public function target()
+    {
+        return $this->hasOne(BioprojectTarget::class, 'bioproject_id');
+    }
+
+    public function organismReplicons()
+    {
+        return $this->hasMany(OrganismReplicon::class, 'bioproject_id');
+    }
+
     public function getRouteKeyName()
     {
         return 'accession';

@@ -16,8 +16,7 @@ return new class extends Migration
         Schema::create('bio_project_targets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bioproject_id');
-            $table->string('target_name');
-            $table->string('organism_novel')->nullable();
+            $table->boolean('organism_novel')->nullable();
             $table->string('organism_novel_description')->nullable();
             $table->string('organism_sbc')->nullable();
             $table->string('organism_isolate')->nullable();
@@ -25,7 +24,7 @@ return new class extends Migration
             $table->foreignId('celularity_id')->nullable();
             $table->foreignId('reproduction_id')->nullable();
             $table->foreignId('ploidy_id')->nullable();
-            $table->foreignId('metabolism_id')->nullable();
+            $table->string('ploidy_description')->nullable();
             $table->string('haploid_genome_size')->nullable();
             $table->foreignId('genome_size_id')->nullable();
             $table->string('phenotypes_disease')->nullable();

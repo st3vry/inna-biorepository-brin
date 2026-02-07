@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('bio_project_targets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bioproject_id');
-            $table->boolean('organism_novel')->nullable();
+            $table->string('organism_novel')->nullable();
             $table->string('organism_novel_description')->nullable();
             $table->string('organism_sbc')->nullable();
             $table->string('organism_isolate')->nullable();
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('prokaryote_morphology_motility')->nullable();
             $table->string('prokaryote_morphology_enveloped')->nullable();
             $table->string('prokaryote_morphology_endospores')->nullable();
-            $table->foreignId('habitats_id')->nullable();
+            $table->foreignId('habitat_id')->nullable();
             $table->foreignId('salinity_id')->nullable();
             $table->foreignId('oxygen_req_id')->nullable();
             $table->foreignId('temp_range_id')->nullable();

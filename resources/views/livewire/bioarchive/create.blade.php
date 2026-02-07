@@ -1,5 +1,18 @@
 <form wire:submit.prevent="submitForm">
     <div>
+        <div class="d-flex justify-content-end mb-2">
+            <button type="button" class="btn btn-outline-success me-2" wire:click="saveDraft" wire:loading.attr="disabled">
+                <span wire:loading.remove>Save Draft <i class="bi bi-save"></i></span>
+                <span wire:loading>Saving...</span>
+            </button>
+            @if($draftId)
+            {{-- <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button> --}}
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDiscardDraft()" wire:loading.attr="disabled">
+                <span wire:loading.remove>Discard Draft</span>
+                {{-- <span wire:loading>Discarding...</span> --}}
+            </button>
+            @endif
+        </div>
         @if(!empty($successMsg))
         <div class="alert alert-success">
             {{ $successMsg }}
@@ -58,7 +71,8 @@
 
                     <div class="mb-3">
                         <label for="lab" class="form-label">Lab <font color="red">*</font></label>
-                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab_name" id="submitter_lab_name" name="submitter_lab_name`" value="{{old('submitter_lab_name')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" hidden>
                         @error('submitter_lab')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
@@ -66,7 +80,8 @@
 
                     <div class="mb-3">
                         <label for="center" class="form-label">Center <font color="red">*</font></label>
-                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center_name" id="submitter_center_name" name="submitter_center_name" value="{{old('submitter_center_name')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" hidden>
                         @error('submitter_center')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
@@ -526,6 +541,103 @@
         var key = event.keyCode;
         return ((key >= 96 && key <= 105) || (key >= 48 && key <= 57) || key == 188 || key==46 || key==8);
     };
+
+    // Handle draft-loaded event dispatched from Livewire when a draft is restored
+    document.addEventListener('draft-loaded', function(e) {
+        const data = e.detail?.draft || {};
+
+        // restore biosample checkboxes state
+        if (data.biosample_id) {
+            document.querySelectorAll('input[type="checkbox"][name^="biosample_id"]').forEach(cb => {
+                try {
+                    const checked = (typeof data.biosample_id === 'object') ? (data.biosample_id.hasOwnProperty(cb.value) || data.biosample_id[cb.value]) : (Array.isArray(data.biosample_id) && data.biosample_id.includes(cb.value));
+                    cb.checked = !!checked;
+                    cb.dispatchEvent(new Event('change', { bubbles: true }));
+                } catch (err) {
+                    // ignore per-item errors
+                    console.debug('draft checkbox restore error', err);
+                }
+            });
+        }
+
+        // restore select/select2 values for bioexperiment rows
+        if (data.bioexperiment_id) {
+            for (const [sampleId, obj] of Object.entries(data.bioexperiment_id)) {
+                ['libsource_id','libselection_id','libstrategy_id','instrument_id','liblayout_id'].forEach(name => {
+                    try {
+                        const selector = document.querySelector(`select[name="bioexperiment_id[${sampleId}][${name}]"]`);
+                        if (!selector) return;
+                        const val = obj[name];
+                        if (val === undefined || val === null || val === '') return;
+                        // if select2 active, append option if missing then set value and trigger change
+                        if ($(selector).hasClass('select2-hidden-accessible') || $(selector).hasClass('select2')) {
+                            if (!selector.querySelector(`option[value="${val}"]`)) {
+                                const opt = document.createElement('option'); opt.value = val; opt.text = val; selector.appendChild(opt);
+                            }
+                            $(selector).val(val).trigger('change');
+                        } else {
+                            selector.value = val;
+                            selector.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    } catch (err) {
+                        console.debug('draft select restore error', err);
+                    }
+                })
+            }
+        }
+    })
+
+    // listen for ajax-alert events dispatched by Livewire methods
+    document.addEventListener('ajax-alert', function(e) {
+        const detail = e.detail || {};
+        const message = detail.message || detail.msg || 'Notification';
+        const type = detail.type || 'info';
+        try {
+            if (typeof showAjaxAlert === 'function') {
+                showAjaxAlert(message, type);
+            } else {
+                // fallback toast
+                alert(message);
+            }
+        } catch (err) {
+            console.debug('ajax-alert handler error', err);
+            try { alert(message); } catch (e) {}
+        }
+    })
+
+    // Show confirmation modal before discarding a draft
+    function confirmDiscardDraft() {
+        try {
+            bsConfirmModalTitle.textContent = 'Discard Draft';
+            bsConfirmModalText.textContent = 'Are you sure you want to discard the current draft? This action cannot be undone.';
+            bsConfirmModalSpinner.classList.add('d-none');
+            // show modal
+            bsConfirmModal.show();
+
+            const handler = function() {
+                // show spinner while Livewire processes
+                bsConfirmModalSpinner.classList.remove('d-none');
+                // call Livewire discardDraft method
+                try { @this.call('discardDraft'); } catch (e) { console.debug('Livewire call failed', e); }
+                // hide modal; actual page reload will happen when 'draft-discarded' event fires
+                bsConfirmModal.hide();
+            };
+
+            // attach one-time handler to modal confirm button
+            bsConfirmModalButton.addEventListener('click', handler, { once: true });
+        } catch (err) {
+            console.debug('confirmDiscardDraft error', err);
+            if (confirm('Discard draft?')) {
+                try { @this.call('discardDraft'); } catch (e) {}
+            }
+        }
+    }
+
+    // Reload page when draft is discarded server-side
+    document.addEventListener('draft-discarded', function() {
+        // small delay to allow alert to show briefly
+        setTimeout(() => { window.location.reload(); }, 250);
+    })
 
 </script>
 @endpush

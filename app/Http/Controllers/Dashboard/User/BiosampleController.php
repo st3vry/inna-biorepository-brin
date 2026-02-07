@@ -11,6 +11,9 @@ use App\Models\SampletypePackage;
 use App\Models\Sampletype;
 use App\Models\Attributesample;
 use App\Models\Organism;
+use App\Models\Lab;
+use App\Models\Center;
+use App\Models\BiosampleDraft;
 
 class BiosampleController extends Controller
 {
@@ -22,7 +25,9 @@ class BiosampleController extends Controller
     public function index()
     {
         //
+        $draft = BiosampleDraft::where('user_id', auth()->id())->where('status', 0)->count();
         return view('dashboard.biosample.index', [
+            'draft' => $draft,
             // 'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->where('status', 1)->where('published_at', '<>', null)->orderBy('published_at', 'desc')->orderBy('id')->paginate(5),
             'biosamples' => Biosample::with(['organism', 'center'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
 
@@ -42,12 +47,16 @@ class BiosampleController extends Controller
         $submitter->email = auth()->user()->email;
         $submitter->lab = auth()->user()->lab_id;
         $submitter->center = auth()->user()->center_id;
-
+        $submitter->lab_name = Lab::where('id', $submitter->lab)->value('name');
+        $submitter->center_name = Center::where('id', $submitter->center)->value('name');
+        $draft = BiosampleDraft::where('user_id', auth()->id())->where('status', 0)->first();
         $return = [
+            "draft" => $draft,
             "submitter" => $submitter,
             "packages" => SampletypePackage::All()
         ];
 
+        
 
 
         return view('dashboard.v2.biosample.create', $return);
@@ -63,6 +72,10 @@ class BiosampleController extends Controller
     {
 
         // dd($request);
+        if ($request->draft_id) {
+            // delete draft after submit
+            BiosampleDraft::destroy($request->draft_id);
+        }
         $biosample = new Biosample();
         $biosample->accession = 'INNAS' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
         $biosample->submission_id = 'INNASUBS' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
@@ -72,7 +85,7 @@ class BiosampleController extends Controller
         $biosample->sampletype_id = $request->sample_type_select;
 
         // $biosample->comments = $request->comments;
-        $biosample->description = $request->description;
+        $biosample->description = $request->sample_description;
         // $biosample->hold_release = $validatedData['hold_release'];
         // $biosample->comments = $validatedData['comments'];
         // $biosample->sampletype_id = $validatedData['sampletype_id'];
@@ -213,5 +226,69 @@ class BiosampleController extends Controller
     {
         $organism =  Organism::where('name', 'ilike', '%' . $slug . '%')->select("name as text", "id", "taxon_id")->take(10)->get();
         return response()->json($organism);
+    }
+
+    public function saveDraft(Request $request)
+    {
+        try {
+            $user = $request->user();
+            if (!$user) return response()->json(['status'=>'error','message'=>'Unauthenticated'], 401);
+
+            // accept the full serialized form as JSON (or pick fields)
+            $payload = $request->input('data', []);
+            // if payload was sent as JSON string, decode it
+            if (is_string($payload)) {
+                $decoded = json_decode($payload, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $payload = $decoded;
+                }
+            }
+
+            $title = $request->input('title') ?? ($payload['title'] ?? null);
+            $draftId = $request->input('draft_id');
+
+            if ($draftId) {
+                $draft = BiosampleDraft::where('id', $draftId)->where('user_id', $user->id)->first();
+                if (!$draft) return response()->json(['status'=>'error','message'=>'Draft not found'], 404);
+                $draft->update([
+                    'data' => $payload,
+                    'title' => $title,
+                ]);
+            } else {
+                $draft = BiosampleDraft::create([
+                    'user_id' => $user->id,
+                    'title' => $title,
+                    'data' => $payload,
+                ]);
+            }
+
+            return response()->json(['status' => 'OK', 'draft_id' => $draft->id]);
+        } catch (\Throwable $e) {
+            // log details for debugging
+            \Log::error('Error saving biosample draft: ' . $e->getMessage(), [
+                'user_id' => $request->user() ? $request->user()->id : null,
+                'payload_keys' => is_array($request->input('data', [])) ? array_keys($request->input('data', [])) : null,
+            ]);
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function loadDraft(BiosampleDraft $draft, Request $request)
+    {
+        $user = $request->user();
+        if (!$user || $draft->user_id !== $user->id) {
+            abort(403);
+        }
+        return response()->json(['status' => 'OK', 'data' => $draft->data]);
+    }
+
+    public function discardDraft(BiosampleDraft $draft, Request $request)
+    {
+        $user = $request->user();
+        if (!$user || $draft->user_id !== $user->id) {
+            abort(403);
+        }
+        $draft->delete();
+        return response()->json(['status' => 'OK']);
     }
 }

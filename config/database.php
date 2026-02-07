@@ -95,12 +95,21 @@ return [
 
         'mongodb' => [
             'driver'   => 'mongodb',
+            'dsn'      => env('DB_DSN'), // Use DSN from .env for more flexible configuration
             'host'     => env('DB_MONGO_HOST', 'localhost'),
             'port'     => env('DB_MONGO_PORT', 27017),
             'database' => env('DB_MONGO_DATABASE'),
             // 'username' => env('MONGO_DB_USERNAME'),
             // 'password' => env('MONGO_DB_PASSWORD'),
-            'options'  => []
+            'options'  => [
+                'connectTimeoutMS' => 60000,           // 60 seconds
+                'serverSelectionTimeoutMS' => 60000,  // 60 seconds  
+                'socketTimeoutMS' => 60000,           // 60 seconds
+                'serverSelectionTryOnce' => false,    // Allow multiple attempts
+                'ssl' => false,                       // Disable SSL if not needed
+                'retryWrites' => false,
+                'retryReads' => false,
+            ]
         ],
 
     ],
@@ -135,7 +144,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

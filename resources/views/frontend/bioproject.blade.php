@@ -21,7 +21,7 @@
                     <li class="disabled">No Data</li>
                 @endif
             </ul>
-            <strong>Centers</strong>
+            {{-- <strong>Centers</strong>
             <ul class="ps-2" type="none">
                 @if (count($centers) > 0)
                     @foreach ($centers as $center)
@@ -30,7 +30,7 @@
                 @else
                     <li class="disabled">No Data</li>
                 @endif
-            </ul>
+            </ul> --}}
             <strong>Scope</strong>
             <ul class="ps-2" type="none">
                 @if (count($scopes)>0)
@@ -65,7 +65,11 @@
                             <p class="mb-1 d-none">{{ $bioproject->description}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readLess(this)"> Read less.</a></p>
                             <p class="fw-light mb-0">Organism: {{ $bioproject->organism->name }}</p>
                             <p class="fw-light mb-0">Scope: {{ $bioproject->samplescope->name }}</p>
-                            <p class="fw-light mb-0">{{ $bioproject->center_id }}</p>
+                            @php
+                                $userData = json_decode($bioproject->user->user_data);
+                                $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';    
+                            @endphp
+                            <p class="fw-light mb-0">Organization: {{ $bioproject->center->name ??  $centerName }}</p>
                             <p class="fw-lighter mb-0">Accession: {{ $bioproject->accession }}</p>
                         </div>
                     </div>

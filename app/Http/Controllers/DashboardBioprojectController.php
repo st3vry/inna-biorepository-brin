@@ -15,7 +15,10 @@ use App\Models\Publication;
 use App\Models\SampleBioproject;
 use App\Models\DatatypeBioproject;
 use App\Models\BioProjectExternalLink;
+use App\Models\BioprojectDraft;
 use App\Models\ObjectiveBioProject;
+use App\Models\BioprojectTarget;
+use App\Models\OrganismReplicon;
 
 use Illuminate\Http\Request;
 
@@ -29,8 +32,18 @@ class DashboardBioprojectController extends Controller
     public function index()
     {
         //
+        $bioproject = Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->get();
+
+        $hasDraft = false;
+        try {
+            $hasDraft = BioprojectDraft::where('user_id', auth()->id())->where('status', 'draft')->exists();
+        } catch (\Throwable $e) {
+            // ignore if drafts table/model not available
+            logger()->debug('Could not check bioarchive drafts: ' . $e->getMessage());
+        }
         return view('dashboard.bioproject.index', [
-            'bioprojects' => Bioproject::with(['organism', 'center', 'user'])->where('user_id', auth()->user()->id)->orderBy('id')->get(),
+            'bioprojects' => $bioproject
+            ,'hasDraft' => $hasDraft,
         ]);
     }
 
@@ -226,6 +239,26 @@ class DashboardBioprojectController extends Controller
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
         $histories = ActionLog::with(['creator'])->where('item_id', $bioproject->accession)->orderBy('created_at', 'desc')->get();
+        $sampleScopeBioproject = SampleBioproject::where('bioproject_id', $bioproject->id)->first();
+
+        $target = BioprojectTarget::with([
+            'celularity',
+            'reproduction',
+            'ploidy',
+            'genomeSize',
+            'bioticRelationship',
+            'trophicLevel',
+            'habitat',
+            'salinity',
+            'oxygenReq',
+            'tempRange',
+        ])->where('bioproject_id', $bioproject->id)->first();
+
+        $replicons = OrganismReplicon::with([
+            'replType',
+            'replLocation',
+            'genomeSize',
+        ])->where('bioproject_id', $bioproject->id)->get();
 
         //kirim data ke view
         return view('dashboard.bioproject.show', [
@@ -240,7 +273,10 @@ class DashboardBioprojectController extends Controller
             'umbrella' => $umbrella,
             'externallinks' => $externallinks,
             'histories' => $histories,
-            'consortium' => $consortium
+            'consortium' => $consortium,
+            'target' => $target,
+            'replicons' => $replicons,
+            'sampleScopeBioproject' => $sampleScopeBioproject,
         ]);
     }
 

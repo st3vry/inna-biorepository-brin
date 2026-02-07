@@ -14,19 +14,26 @@ use App\Models\LibraryLayout;
 use App\Models\LibrarySelection;
 use App\Models\LibrarySource;
 use App\Models\LibraryStrategy;
+use App\Models\Lab;
+use App\Models\Center;
 use Illuminate\Support\Str;
+use App\Models\BioarchiveDraft;
 
 class CreateBioarchive extends Component
 {
 
 
     public $currentStep = 1;
+    public $draftId = null;
 
     // submitter 
     public $submitter_name;
     public $submitter_email;
     public $submitter_lab;
     public $submitter_center;
+
+    public $submitter_lab_name;
+    public $submitter_center_name;
 
     // Filter table
     public $searchBioproject = '';
@@ -73,6 +80,10 @@ class CreateBioarchive extends Component
         // $this->submitter_center = auth()->user()->lab->center->name;
         $this->submitter_lab = auth()->user()->lab_id;
         $this->submitter_center = auth()->user()->center_id;
+
+
+        $this->submitter_lab_name = Lab::where('id', $this->submitter_lab)->value('name');
+        $this->submitter_center_name = Center::where('id', $this->submitter_center)->value('name');
         // bioproject
         // $this->bioprojects = Bioproject::get();
         $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
@@ -93,6 +104,17 @@ class CreateBioarchive extends Component
         $this->filetypes = FileType::all();
         // generate alias
         $this->alias = Str::random(6);
+
+        // Auto-load the latest draft for this user (if any)
+        try {
+            $latest = BioarchiveDraft::where('user_id', auth()->id())->where('status', 'draft')->first();
+            if ($latest) {
+                $this->loadDraft($latest->id);
+            }
+        } catch (\Exception $e) {
+            // don't break mounting if drafts table/migration doesn't exist yet
+            logger()->debug('bioarchive draft autoload skipped: ' . $e->getMessage());
+        }
     }
 
     // Submitter form
@@ -181,8 +203,112 @@ class CreateBioarchive extends Component
             $bioexp = Bioexperiment::create($dataExp);
         }
         session()->flash('message', 'Bioarchive successfully created.');
-        // return redirect()->to('/dashboard/bioarchives/' . $bioarchive->accession);
+        // delete associated draft if present
+        if ($this->draftId) {
+            try {
+                BioarchiveDraft::where('id', $this->draftId)->where('user_id', auth()->id())->delete();
+            } catch (\Throwable $e) {
+                logger()->debug('Failed to delete bioarchive draft after submit: ' . $e->getMessage());
+            }
+        }
+
         return redirect()->to('/dashboard/bioarchives');
+    }
+
+    /**
+     * Save current component state as a draft for the authenticated user.
+     */
+    public function saveDraft()
+    {
+        $payload = [
+            'currentStep' => $this->currentStep,
+            'hold_release' => $this->hold_release,
+            'bioproject_id' => $this->bioproject_id,
+            'biosample_id' => $this->biosample_id,
+            'bioexperiment_id' => $this->bioexperiment_id,
+            'alias' => $this->alias,
+        ];
+
+        if ($this->draftId) {
+            $draft = BioarchiveDraft::where('id', $this->draftId)->where('user_id', auth()->id())->first();
+            if ($draft) {
+                $draft->update([
+                    'data' => $payload,
+                    'status' => 'draft',
+                    'title' => $draft->title ?? 'Bioarchive draft ' . now()->toDateTimeString(),
+                ]);
+            } else {
+                $draft = BioarchiveDraft::create([
+                    'user_id' => auth()->id(),
+                    'title' => 'Bioarchive draft ' . now()->toDateTimeString(),
+                    'data' => $payload,
+                    'status' => 'draft',
+                ]);
+            }
+        } else {
+            $draft = BioarchiveDraft::create([
+                'user_id' => auth()->id(),
+                'title' => 'Bioarchive draft ' . now()->toDateTimeString(),
+                'data' => $payload,
+                'status' => 'draft',
+            ]);
+        }
+
+        $this->draftId = $draft->id;
+
+        $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft saved']);
+    }
+
+    /**
+     * Load a draft into the component state. Only loads drafts owned by the user.
+     */
+    public function loadDraft($id)
+    {
+        $draft = BioarchiveDraft::where('id', $id)->where('user_id', auth()->id())->first();
+        if (! $draft) {
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Draft not found']);
+            return;
+        }
+
+        $this->draftId = $draft->id;
+        $data = $draft->data ?? [];
+        // restore basic fields (guarded with null coalescing)
+        $this->currentStep = $data['currentStep'] ?? $this->currentStep;
+        $this->hold_release = $data['hold_release'] ?? $this->hold_release;
+        $this->bioproject_id = $data['bioproject_id'] ?? $this->bioproject_id;
+        $this->biosample_id = $data['biosample_id'] ?? $this->biosample_id;
+        $this->bioexperiment_id = $data['bioexperiment_id'] ?? $this->bioexperiment_id;
+        $this->alias = $data['alias'] ?? $this->alias;
+
+        // notify front-end in case client-side JS needs to adjust dynamic controls
+        $this->dispatchBrowserEvent('draft-loaded', ['draft' => $data]);
+        $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft loaded']);
+    }
+
+    /**
+     * Permanently delete the current draft for this user and clear draftId.
+     */
+    public function discardDraft()
+    {
+        if (! $this->draftId) {
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'warning', 'message' => 'No draft to discard']);
+            return;
+        }
+
+        try {
+            $draft = BioarchiveDraft::where('id', $this->draftId)->where('user_id', auth()->id())->first();
+            if ($draft) {
+                $draft->delete();
+                $this->draftId = null;
+                $this->dispatchBrowserEvent('draft-discarded');
+                $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Draft discarded']);
+            } else {
+                $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Draft not found']);
+            }
+        } catch (\Exception $e) {
+            logger()->error('Failed to discard bioarchive draft: ' . $e->getMessage());
+            $this->dispatchBrowserEvent('ajax-alert', ['type' => 'danger', 'message' => 'Failed to discard draft']);
+        }
     }
 
     public function bioprojectName($id)

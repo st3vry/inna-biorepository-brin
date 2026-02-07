@@ -51,13 +51,18 @@
                 </td>
             </tr>
             <tr>
+                @php
+                    $userData = json_decode($biosample->user->user_data);
+                    $centerName = $userData->pegawaiData->administrative_name ?? 'N/A';
+                    $labName = $userData->pegawaiData->affiliate_name ?? 'N/A';    
+                @endphp
                 <td class="col-sm-1">Center</td>
-                <td class="col-sm-1">{{$biosample->center == null ? "N/A" : $biosample->center->name}}
+                <td class="col-sm-1">{{$biosample->center->name ?? $centerName}}
                 </td>
             </tr>
             <tr>
                 <td class="col-sm-1">Lab</td>
-                <td class="col-sm-7">{{$biosample->user->lab == null ? "N/A" :$biosample->user->lab->name}}</td>
+                <td class="col-sm-7">{{$biosample->user->lab->name ?? $labName}}</td>
             </tr>
             <tr>
                 <td class="col-sm-1">Submitter</td>

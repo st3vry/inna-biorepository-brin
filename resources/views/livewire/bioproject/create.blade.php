@@ -1,5 +1,22 @@
 <form wire:submit.prevent="submitForm">
     <div>
+        <div class="d-flex justify-content-end mb-2">
+            <button type="button" class="btn btn-outline-secondary me-2" wire:click="saveDraft" wire:loading.attr="disabled">
+                <span wire:loading.remove>Save Draft 
+                    <i class="fa fa-save"></i>
+                </span>
+                <span wire:loading>Saving...</span>
+            </button>
+            @if($draftId)
+            {{-- <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button> --}}
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDiscardBioprojectDraft()" wire:loading.attr="disabled">
+                <span wire:loading.remove>Discard Draft
+                    <i class="fa fa-trash"></i>
+                </span>
+                {{-- <span wire:loading>Discarding...</span> --}}
+            </button>
+            @endif
+        </div>
         @if(!empty($successMsg))
         <div class="alert alert-success">
             {{ $successMsg }}
@@ -54,7 +71,8 @@
 
                     <div class="mb-3">
                         <label for="lab" class="form-label">Lab <font color="red">*</font></label>
-                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab_name" id="submitter_lab_name" name="submitter_lab_name`" value="{{old('submitter_lab_name')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_lab') is-invalid @enderror" wire:model="submitter_lab" id="submitter_lab" name="submitter_lab" value="{{old('submitter_lab')}}" hidden>
                         @error('submitter_lab')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
@@ -62,7 +80,8 @@
 
                     <div class="mb-3">
                         <label for="center" class="form-label">Center <font color="red">*</font></label>
-                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center_name" id="submitter_center_name" name="submitter_center_name" value="{{old('submitter_center_name')}}" disabled>
+                        <input type="text" class="form-control @error('submitter_center') is-invalid @enderror" wire:model="submitter_center" id="submitter_center" name="submitter_center" value="{{old('submitter_center')}}" hidden>
                         @error('submitter_center')
                         <div class="invalid-feedback">{{$message}}</div>
                         @enderror
@@ -274,7 +293,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="consortium_id" class="form-label">Consortium</label>
-                        <select class="form-select" name="consortium_id" id="consortium_id" wire:model="consortium_id">
+                        <select class="form-select select2" name="consortium_id" id="consortium_id" wire:model="consortium_id">
                             <option value="">Consortium</option>
                             @foreach ($consortia as $consortium )
                             <option value="{{$consortium->id}}" @if (old('consortium_id')==$consortium->id) selected @endif>{{$consortium->name}}</option>
@@ -334,7 +353,7 @@
                     <!-- sample scope -->
                     <div class="mb-3">
                         <label for="samplescope" class="form-label">Sample scope <font color="red">*</font></label>
-                        <select class="form-select" name="samplescope_id" id="samplescope_id" wire:model="samplescope_id">
+                        <select class="form-select select2" name="samplescope_id" id="samplescope_id" wire:model="samplescope_id">
                             <option value="">Sample scope</option>
                             @foreach ($samplescopes as $samplescope )
                             <option value="{{$samplescope->id}}" @if (old('samplescope_id')==$samplescope->id) selected @endif>{{$samplescope->name}}</option>
@@ -358,7 +377,7 @@
                     <!-- material -->
                     <div class="mb-3">
                         <label for="material" class="form-label">Material <font color="red">*</font></label>
-                        <select class="form-select" name="material_id" id="material_id" wire:model="material_id">
+                        <select class="form-select select2" name="material_id" id="material_id" wire:model="material_id">
                             <option value="">Material</option>
                             @foreach ($materials as $material )
                             <option value="{{$material->id}}" @if (old('material_id')==$material->id) selected @endif>{{$material->name}}</option>
@@ -380,7 +399,7 @@
                     <!-- capture -->
                     <div class="mb-3">
                         <label for="capture" class="form-label">Capture <font color="red">*</font></label>
-                        <select class="form-select" name="capture_id" id="capture_id" wire:model="capture_id">
+                        <select class="form-select select2" name="capture_id" id="capture_id" wire:model="capture_id">
                             <option value="">Capture</option>
                             @foreach ($captures as $capture )
                             <option value="{{$capture->id}}" @if (old('capture_id')==$capture->id) selected @endif>{{$capture->name}}</option>
@@ -402,7 +421,7 @@
                     <!-- methodology -->
                     <div class="mb-3">
                         <label for="methodology" class="form-label">Methodology <font color="red">*</font></label>
-                        <select class="form-select" name="methodology_id" id="methodology_id" wire:model="methodology_id">
+                        <select class="form-select select2" name="methodology_id" id="methodology_id" wire:model="methodology_id">
                             <option value="">Methodology</option>
                             @foreach ($methodologies as $methodology )
                             <option value="{{$methodology->id}}" @if (old('methodology_id')==$methodology->id) selected @endif>{{$methodology->name}}</option>
@@ -467,7 +486,7 @@
                 <div class="card-body mb-3">
                     <div class="mb-3">
                         <label for="organism_id" class="form-label">Organism <font color="red">*</font></label>
-                        <select class="form-select" name="organism_id" id="organism_id" wire:model="organism_id">
+                        <select class="form-select select2" name="organism_id" id="organism_id" wire:model="organism_id">
                             <option value="">Organism</option>
                             @foreach ($organisms as $organism )
                             <option value="{{$organism->id}}" @if (old('organism_id')==$organism->id) selected @endif>{{$organism->name}}</option>
@@ -521,7 +540,7 @@
                 <div class="card-body mb-3">
                     <div class="mb-3">
                         <label for="celularity_id" class="form-label">Celularity</label>
-                        <select class="form-select" name="celularity_id" id="celularity_id" wire:model="celularity_id">
+                        <select class="form-select select2" name="celularity_id" id="celularity_id" wire:model="celularity_id">
                             <option value="">Celularity</option>
                             @foreach ($celularities as $celularity )
                             <option value="{{$celularity->id}}" @if (old('celularity_id')==$celularity->id) selected @endif>{{$celularity->name}}</option>
@@ -534,7 +553,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="reproduction_id" class="form-label">Reproduction</label>
-                        <select class="form-select" name="reproduction_id" id="reproduction_id" wire:model="reproduction_id">
+                        <select class="form-select select2" name="reproduction_id" id="reproduction_id" wire:model="reproduction_id">
                             <option value="">Reproduction</option>
                             @foreach ($reproductions as $reproduction )
                             <option value="{{$reproduction->id}}" @if (old('reproduction_id')==$reproduction->id) selected @endif>{{$reproduction->name}}</option>
@@ -547,7 +566,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="ploidy_id" class="form-label">Ploidy</label>
-                        <select class="form-select" name="ploidy_id" id="ploidy_id" wire:model="ploidy_id">
+                        <select class="form-select select2" name="ploidy_id" id="ploidy_id" wire:model="ploidy_id">
                             <option value="">Ploidy</option>
                             @foreach ($ploidies as $ploidy )
                             <option value="{{$ploidy->id}}" @if (old('ploidy_id')==$ploidy->id) selected @endif>{{$ploidy->name}}</option>
@@ -583,12 +602,15 @@
                                 @enderror
                             </div>
                             <div class="col-md-2">
-                                <select class="form-select" name="genome_size_id" id="genome_size_id" wire:model="genome_size_id">
+                                <select class="form-select select2" name="genome_size_id" id="genome_size_id" wire:model="genome_size_id">
                                     <option value="">Genome Sizes</option>
                                     @foreach ($genome_sizes as $genome_size )
                                     <option value="{{$genome_size->id}}" @if (old('genome_size_id')==$genome_size->id) selected @endif>{{$genome_size->name}}</option>
                                     @endforeach
                                 </select>
+                                @error('genome_size_id')
+                                    <p class="text-danger">{{$message}}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -605,7 +627,7 @@
                                 <th scope="col">Name</th>
                                 <th scope="col">Type</th>
                                 <th scope="col">Location</th>
-                                <th scope="col">Size</th>
+                                <th scope="col">Size (Units)</th>
                                 <th scope="col">Description</th>
                             </tr>
                         </thead>
@@ -613,13 +635,13 @@
                             @foreach ($repls as $index => $repl)
                             <tr>
                                 <td>
-                                    <input type="text" name="repl[{{$index}}][repl_name]" class="form-control" value="{{$repl['repl_name']}}" wire:model="repls.{{$index}}.repl_name">
+                                    <input type="text" name="repls[{{$index}}][repl_name]" class="form-control" value="{{$repl['repl_name']}}" wire:model="repls.{{$index}}.repl_name">
                                     @error('repls.*.repl_name')
                                     <p class="text-danger">{{$message}}</p>
                                     @enderror
                                 </td>
                                 <td>
-                                    <select class="form-select" name="repls[{{$index}}][repl_type_id]" wire:model="repls.{{$index}}.repl_type_id">
+                                    <select class="form-select select2" name="repls[{{$index}}][repl_type_id]" wire:model="repls.{{$index}}.repl_type_id">
                                         <option value="0">Replicon Type</option>
                                         @foreach ($repl_types as $repl_type )
                                         <option value="{{$repl_type->id}}">{{$repl_type->name}}</option>
@@ -630,7 +652,7 @@
                                     @enderror
                                 </td>
                                 <td>
-                                    <select class="form-select" name="repls[{{$index}}][repl_loc_id]" wire:model="repls.{{$index}}.repl_loc_id">
+                                    <select class="form-select select2" name="repls[{{$index}}][repl_loc_id]" wire:model="repls.{{$index}}.repl_loc_id">
                                         <option value="0">Replicon Location</option>
                                         @foreach ($repl_locs as $repl_loc )
                                         <option value="{{$repl_loc->id}}">{{$repl_loc->name}}</option>
@@ -643,13 +665,13 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-md-2">
-                                            <input type="text" name="repl[{{$index}}][repl_size]" class="form-control" value="{{$repl['repl_size']}}" wire:model="repls.{{$index}}.repl_size">
+                                            <input type="text" name="repls[{{$index}}][repl_size]" class="form-control" value="{{$repl['repl_size']}}" wire:model="repls.{{$index}}.repl_size">
                                             @error('repls.*.repl_size')
                                             <p class="text-danger">{{$message}}</p>
                                             @enderror
                                         </div>
                                         <div class="col-md-4">
-                                            <select class="form-select" name="genome_size2_id" id="genome2_size_id" wire:model="genome2_size_id">
+                                            <select class="form-select select2" name="repls[{{$index}}][genome_size2_id]" id="genome_size2_id" wire:model="repls.{{$index}}.genome_size2_id">
                                                 <option value="">Genome Sizes</option>
                                                 @foreach ($genome_sizes2 as $genome_size )
                                                 <option value="{{$genome_size->id}}" @if (old('genome2_size_id')==$genome_size->id) selected @endif>{{$genome_size->name}}</option>
@@ -686,7 +708,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="bio_rel_id" class="form-label">Biotic Relationship</label>
-                        <select class="form-select" name="bio_rel_id" id="bio_rel_id" wire:model="bio_rel_id">
+                        <select class="form-select select2" name="bio_rel_id" id="bio_rel_id" wire:model="bio_rel_id">
                             <option value="">Biotic Relationship</option>
                             @foreach ($bio_rels as $bio_rel )
                             <option value="{{$bio_rel->id}}" @if (old('bio_rel_id')==$bio_rel->id) selected @endif>{{$bio_rel->name}}</option>
@@ -699,7 +721,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="trop_level_id" class="form-label">Trophic Level</label>
-                        <select class="form-select" name="trop_level_id" id="trop_level_id" wire:model="trop_level_id">
+                        <select class="form-select select2" name="trop_level_id" id="trop_level_id" wire:model="trop_level_id">
                             <option value="">Trophic Level</option>
                             @foreach ($trop_levels as $trop_level )
                             <option value="{{$trop_level->id}}" @if (old('trop_level_id')==$trop_level->id) selected @endif>{{$trop_level->name}}</option>
@@ -742,7 +764,7 @@
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" name="gram" id="gram" wire:model="gram">
-                                    <option value="">--Gram--</option>
+                                    <option value="">Select</option>
                                     <option value="1" @if (old('gram')==1) selected @endif>Positive</option>
                                     <option value="0" @if (old('gram')==0) selected @endif>Negative</option>
                                 </select>
@@ -755,9 +777,9 @@
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" name="motility" id="motility" wire:model="motility">
-                                    <option value="">--Motility--</option>
-                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
-                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                    <option value="">Select</option>
+                                    <option value="1" @if (old('motility')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('motility')==0) selected @endif>No</option>
                                 </select>
                             </div>
                             @error('motility')
@@ -768,9 +790,9 @@
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" name="enveloped" id="enveloped" wire:model="enveloped">
-                                    <option value="">--Enveloped--</option>
-                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
-                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                    <option value="">Select</option>
+                                    <option value="1" @if (old('enveloped')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('enveloped')==0) selected @endif>No</option>
                                 </select>
                             </div>
                             @error('enveloped')
@@ -781,9 +803,9 @@
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" name="endospores" id="endospores" wire:model="endospores">
-                                    <option value="">--Endospores--</option>
-                                    <option value="1" @if (old('gram')==1) selected @endif>Yes</option>
-                                    <option value="0" @if (old('gram')==0) selected @endif>No</option>
+                                    <option value="">Select</option>
+                                    <option value="1" @if (old('endospores')==1) selected @endif>Yes</option>
+                                    <option value="0" @if (old('endospores')==0) selected @endif>No</option>
                                 </select>
                             </div>
                             @error('endospores')
@@ -800,7 +822,7 @@
                 <div class="card-body mb-3">
                     <div class="mb-3">
                         <label for="habitat_id" class="form-label">Habitat</label>
-                        <select class="form-select" name="habitat_id" id="habitat_id" wire:model="habitat_id">
+                        <select class="form-select select2" name="habitat_id" id="habitat_id" wire:model="habitat_id">
                             <option value="">--Habitat--</option>
                             @foreach ($habitats as $habitat )
                             <option value="{{$habitat->id}}" @if (old('habitat_id')==$habitat->id) selected @endif>{{$habitat->name}}</option>
@@ -813,7 +835,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="salinity_id" class="form-label">Salinity</label>
-                        <select class="form-select" name="salinity_id" id="salinity_id" wire:model="salinity_id">
+                        <select class="form-select select2" name="salinity_id" id="salinity_id" wire:model="salinity_id">
                             <option value="">--Salinity--</option>
                             @foreach ($salinities as $salinity )
                             <option value="{{$salinity->id}}" @if (old('salinity_id')==$salinity->id) selected @endif>{{$salinity->name}}</option>
@@ -826,7 +848,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="oxygen_id" class="form-label">Oxygen Requirement</label>
-                        <select class="form-select" name="oxygen_id" id="oxygen_id" wire:model="oxygen_id">
+                        <select class="form-select select2" name="oxygen_id" id="oxygen_id" wire:model="oxygen_id">
                             <option value="">--Oxygen Requirement--</option>
                             @foreach ($oxygens as $oxygen )
                             <option value="{{$oxygen->id}}" @if (old('oxygen_id')==$oxygen->id) selected @endif>{{$oxygen->name}}</option>
@@ -839,7 +861,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="temp_range_id" class="form-label">Temperature Range</label>
-                        <select class="form-select" name="temp_range_id" id="temp_range_id" wire:model="temp_range_id">
+                        <select class="form-select select2" name="temp_range_id" id="temp_range_id" wire:model="temp_range_id">
                             <option value="">--Temperature Range--</option>
                             @foreach ($temp_ranges as $temp_range )
                             <option value="{{$temp_range->id}}" @if (old('temp_range_id')==$temp_range->id) selected @endif>{{$temp_range->name}}</option>
@@ -893,8 +915,8 @@
                             @foreach ($publications as $index => $publication)
                             <tr>
                                 <td>
-                                    <select class="form-select" name="publications[{{$index}}][pub_identifier_id]" wire:model="publications.{{$index}}.pub_identifier_id">
-                                        <option value="0">PubMed / DOI</option>
+                                    <select class="form-select select2" name="publications[{{$index}}][pub_identifier_id]" wire:model="publications.{{$index}}.pub_identifier_id">
+                                        <option value="">PubMed / DOI</option>
                                         @foreach ($pub_identifiers as $pub_identifier )
                                         <option value="{{$pub_identifier->id}}">{{$pub_identifier->name}}</option>
                                         @endforeach
@@ -994,7 +1016,7 @@
                     <tr>
                         <td class="col-md-3">Fund Agency Description</td>
                         <td class="col-md-1">:</td>
-                        <td>{{ $this->grants[$item]['fundagency_id'] }}</td>
+                        <td>{{ $this->fundagencyName($this->grants[$item]['fundagency_id']) }}</td>
                     </tr>
                     <tr>
                         <td class="col-md-3">Grant Title</td>
@@ -1040,22 +1062,22 @@
                 <tr>
                     <td class="col-md-3">Sample Scope</td>
                     <td class="col-md-1">:</td>
-                    <td class="align-left">{{ $this->sampleScopeName($this->samplescope_id) }}</td>
+                    <td class="align-left">{{ $this->sampleScopeName($this->samplescope_id) }} {{ $this->samplescopedesc == 7 ? '('.$this->samplescopedesc.')' : ''}}</td>
                 </tr>
                 <tr>
                     <td class="col-md-3">Sample Material</td>
                     <td class="col-md-1">:</td>
-                    <td class="align-left">{{ $this->sampleMaterialName($this->material_id) }}</td>
+                    <td class="align-left">{{ $this->sampleMaterialName($this->material_id) }} {{ $this->matdesc == 7 ? '('.$this->matdesc.')' : ''}}</td>
                 </tr>
                 <tr>    
                     <td class="col-md-3">Sample Capture</td>
                     <td class="col-md-1">:</td>
-                    <td class="align-left">{{ $this->sampleCaptureName($this->capture_id) }}</td>
+                    <td class="align-left">{{ $this->sampleCaptureName($this->capture_id) }} {{ $this->capdesc == 7 ? '('.$this->capdesc.')' : ''}}</td>
                 </tr>
                 <tr>
                     <td class="col-md-3">Sample Methodology</td>
                     <td class="col-md-1">:</td>
-                    <td class="align-left">{{ $this->sampleMethodologyName($this->methodology_id) }}</td>
+                    <td class="align-left">{{ $this->sampleMethodologyName($this->methodology_id) }} {{ $this->metdesc == 7 ? '('.$this->metdesc.')' : ''}}</td>
                 </tr>
             </table>
 
@@ -1133,6 +1155,100 @@
                 </tr>
             </table>
 
+            <table class="table">
+                <h3>Organism Replicons</h3>
+                @forelse ( $this->repls as $item => $value )
+                    <tr>
+                        <td class="col-md-3">Name</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->repls[$item]['repl_name'] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Type</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->replTypeName($this->repls[$item]['repl_type_id']) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Location</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->replLocationName($this->repls[$item]['repl_loc_id']) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Size</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->repls[$item]['repl_size'] }} {{$this->genomeSizeName($this->repls[$item]['genome_size2_id']) }}</td>
+                    </tr>
+                @empty
+                    <td class="col-md-12">There is no Organism Replicons data</td>   
+                @endforelse
+            </table>
+
+            <table class="table">
+                <h3>Phenotypes</h3>
+                <tr>
+                    <td class="col-md-3">Disease</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->disease }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Biotic Relationship</td>
+                    <td class="col-md-1">:</td>
+                    <td> {{ $this->bioticRelName($this->bio_rel_id) }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Trophic Level</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->trophicLevelName($this->trop_level_id) }}</td>
+                </tr>
+            </table>
+
+            <table class="table">
+                <h3>Prokaryote morphology</h3>
+                <tr>
+                    <td class="col-md-3">Gram</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->gram > 0 ? "Positive" : "Negative" }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Motility</td>
+                    <td class="col-md-1">:</td>
+                    <td> {{ $this->motility > 0 ? "Yes" : "No" }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Enveloped</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->enveloped  > 0 ? "Yes" : "No" }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-3">Endospores</td>
+                    <td class="col-md-1">:</td>
+                    <td>{{ $this->endospores  > 0 ? "Yes" : "No" }}</td>
+                </tr>
+            </table>
+
+            <table class="table">
+                <h3>Publication</h3>
+                @forelse ( $this->publications as $item => $value )
+                    <tr>
+                        <td class="col-md-3">DOI/Pubmed</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->pubIdentifierName($this->publications[$item]['pub_identifier_id']) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Publication ID</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->publications[$item]['pub_id'] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Article Title</td>
+                        <td class="col-md-1">:</td>
+                        <td>{{ $this->publications[$item]['article_title'] }}</td>
+                    </tr>
+                @empty
+                    <td class="col-md-12">There is no publications data</td>   
+                @endforelse
+            </table>
+
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
             <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
         </div>
@@ -1180,5 +1296,33 @@
                 })
             });
         })
+
+    // listen for ajax-alert events dispatched by Livewire methods
+    document.addEventListener('ajax-alert', function(e) {
+        const detail = e.detail || {};
+        const message = detail.message || detail.msg || 'Notification';
+        const type = detail.type || 'info';
+        try {
+            if (typeof showAjaxAlert === 'function') {
+                showAjaxAlert(message, type);
+            } else {
+                alert(message);
+            }
+        } catch (err) {
+            console.debug('ajax-alert handler error', err);
+            try { alert(message); } catch (e) {}
+        }
+    })
+
+    // Simple confirmation then call Livewire discard for bioproject draft
+    function confirmDiscardBioprojectDraft() {
+        if (!confirm('Discard draft? This action cannot be undone.')) return;
+        try { @this.call('discardDraft'); } catch (e) { console.debug('Livewire discard call failed', e); }
+    }
+
+    // reload page when a draft was discarded server-side
+    document.addEventListener('draft-discarded', function() {
+        setTimeout(() => { window.location.reload(); }, 250);
+    })
     </script>
 @endpush

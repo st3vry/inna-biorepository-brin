@@ -13,7 +13,20 @@
         <li class="breadcrumb-item active" aria-current="page">My Bioarchives</li>
     </ol>
 </div>
-<a href="/dashboard/bioarchives/create" class="btn btn-primary mb-3">Create New Bioarchive</a>
+@if(empty($hasDraft))
+    <a href="/dashboard/bioarchives/create" class="btn btn-primary mb-3">Create New Bioarchive</a>
+@else
+    <div class="alert alert-info alert-dismissible fade show col-lg-12" role="alert">
+        <strong>
+            You have bioarchive submission draft. 
+            <a href="/dashboard/bioarchives/create" class="alert-link">Click here to complete or discard your draft before creating a new one.</a> 
+            
+        </strong>
+    </div>
+    <button type="button" class="btn btn-primary mb-3" style="cursor: pointer" disabled>
+        Create New Bioarchive
+    </button>
+@endif
 <div class="table-responsive col-md-12">
     <table class="table table-striped table-sm" id="dataTable">
         <thead>

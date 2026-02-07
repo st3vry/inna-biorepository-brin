@@ -36,8 +36,13 @@
                 <td>{{ $biosample->organism->name }}</td>
                 <td>{{ $biosample->title }}</td>
                 <td>{!! Str::words($biosample->description, 20, "<a href='/dashboard/curator/biosamples/{$biosample->accession}'> read more...</a>") !!}</td>
-                {{-- <td>{{ $biosample->center->name }}</td> --}}
-                <td>{{ $biosample->center_id }}</td>
+                <td>
+                    @php
+                        $userData = json_decode(auth()->user()->user_data);
+                    @endphp
+                    {{ $biosample->center->name ?? $userData->pegawaiData->administrative_name }}
+                </td>
+                {{-- <td>{{ $biosample->center_id }}</td> --}}
                 <td>
                     @switch($biosample->status)
                         @case(1)

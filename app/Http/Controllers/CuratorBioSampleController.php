@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActionLog;
 use App\Models\User;
 use App\Models\Biosample;
+use App\Models\BioSampleExternalLink;
 use App\Models\AttributeValue;
 use Illuminate\Http\Request;
 
@@ -76,10 +77,12 @@ class CuratorBioSampleController extends Controller
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $biosample->accession)->orderBy('created_at', 'desc')->get();
 
+        $externallinks = $biosample->externallink()->get();
         return view('dashboard.curator.biosample.show', [
             'biosample' => $biosample,
             'curators' => $curators,
             'histories' => $histories,
+            'externallinks' => $externallinks,
             'sample_attr' => $sample_attr,
         ]);
     }

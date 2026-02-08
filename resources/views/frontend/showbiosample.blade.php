@@ -12,6 +12,9 @@
     <div class="table-responsive col-lg-12">
         <table class="table table-striped table-sm">
             <tr>
+                <th colspan="2"><h4>General Information</h4></th>
+            <tr>
+            <tr>
                 <td class="col-sm-1">Title</td>
                 <td class="col-sm-7">{{$biosample->title}}</td>
             </tr>
@@ -28,9 +31,43 @@
                 <td class="col-sm-7">{{$biosample->description}}</td>
             </tr>
             <tr>
-                <td class="col-sm-1">Sample Type</td>
-                <td class="col-sm-7">{{$biosample->sampletype->name}}</td>
+                <td class="col-sm-1">External Links</td>
+                <td class="col-sm-7">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-8">Description</th>
+                                        <th class="col-sm-4">URL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($externallinks as $link)
+                                        <tr>
+                                            <td class="col-sm-8">{{$link->link_description ?? 'None'}}</td>
+                                            <td class="col-sm-4">
+                                                @if(!empty($link->link_url))
+                                                    <a href="{{$link->link_url}}" target="_blank" rel="noopener noreferrer">{{$link->link_url}}</a>
+                                                @else
+                                                    None
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="2">None</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </td>
             </tr>
+            <tr>
+                <th colspan="2"><br><h4>Sample Information</h4></th>
+            <tr>
             <tr>
                 <td class="col-sm-1">Sample Attribute</td>
                 <td class="col-sm-7">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\User;
 
 use App\Models\Biosample;
+use App\Models\BioSampleExternalLink;
 use App\Models\ActionLog;
 use App\Models\AttributeValue;
 use App\Http\Controllers\Controller;
@@ -71,7 +72,7 @@ class BiosampleController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request);
+        dd($request);
         if ($request->draft_id) {
             // delete draft after submit
             BiosampleDraft::destroy($request->draft_id);
@@ -80,25 +81,31 @@ class BiosampleController extends Controller
         $biosample->accession = 'INNAS' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
         $biosample->submission_id = 'INNASUBS' . sprintf('%06d', intval($biosample->query()->max("id")) + 1);
         $biosample->title = $request->sample_title;
-        $biosample->description = $request->description;
+        // $biosample->description = $request->description;
         $biosample->hold_release = $request->hold_release;
         $biosample->sampletype_id = $request->sample_type_select;
-
-        // $biosample->comments = $request->comments;
+        $biosample->comments = $request->comments;
         $biosample->description = $request->sample_description;
-        // $biosample->hold_release = $validatedData['hold_release'];
-        // $biosample->comments = $validatedData['comments'];
-        // $biosample->sampletype_id = $validatedData['sampletype_id'];
-
-        // $biosample->center_id = auth()->user()->lab->center_id;
         $biosample->center_id = auth()->user()->center_id;
         $biosample->user_id = auth()->user()->id;
+
         // need to change if organism table ready
         $biosample->organism_id = $request->organism;
         // $biosample->organism_name = $request->organism;
         // $biosample->organism_name = $validatedData['organism'];
         //
         $biosample->save();
+
+        // External Links
+        if ($request->has('external_link_description')) {
+            for ($i = 0; $i < count($request->external_link_description); $i++) {
+                $externalLink = new BioSampleExternalLink();
+                $externalLink->biosample_id = $biosample->id;
+                $externalLink->link_description = $request->external_link_description[$i];;
+                $externalLink->link_url = $request->external_link_url[$i];;
+                $externalLink->save();
+            }
+        } 
 
         $sample_types = Sampletype::where('id', $request->sample_type_select)->first();
         $attr_arr = explode(',', $sample_types['attribute_property']);
@@ -112,6 +119,7 @@ class BiosampleController extends Controller
             // dd($request[$attr->attr_name]);
             $attribute_value->save();
         }
+        
         return redirect('/dashboard/v2/biosamples')->with('success', 'New Biosample has been added!');
     }
 
@@ -126,11 +134,13 @@ class BiosampleController extends Controller
         //
         $histories = ActionLog::with(['creator'])->where('item_id', $biosample->accession)->orderBy('created_at', 'desc')->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
+        $externallinks = $biosample->externallink()->get();
         $organism = Organism::where('id', $biosample->organism_id)->first();
         return view('dashboard.biosample.show', [
             'biosample' => $biosample,
             'histories' => $histories,
             'sample_attr' => $sample_attr,
+            'externallinks' => $externallinks,
             'organism' => $organism,
         ]);
     }
@@ -143,13 +153,18 @@ class BiosampleController extends Controller
      */
     public function edit(Biosample $biosample)
     {
+        //  
         //
-        //
+        if ($biosample->draft == false) {
+            return view('error.404');
+        }
         $submitter = new \stdClass();
         $submitter->name = auth()->user()->name;
         $submitter->email = auth()->user()->email;
         $submitter->lab = auth()->user()->lab_id;
         $submitter->center = auth()->user()->center_id;
+        $submitter->lab_name = Lab::where('id', $submitter->lab)->value('name');
+        $submitter->center_name = Center::where('id', $submitter->center)->value('name');
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
 
         // dd($biosample->externallink());
@@ -174,12 +189,94 @@ class BiosampleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Biosample  $biosample
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Biosample $biosample)
     {
-        //
+        if ($biosample->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Update main biosample fields that exist in the v2 edit form
+        $biosample->hold_release = $request->input('hold_release', $biosample->hold_release);
+        $biosample->comments = $request->input('comments', $biosample->comments);
+
+        if ($request->filled('sample_type_select')) {
+            $biosample->sampletype_id = $request->input('sample_type_select');
+        }
+
+        // Optional fields (only update if present in request)
+        if ($request->filled('sample_title')) {
+            $biosample->title = $request->input('sample_title');
+        }
+        if ($request->filled('sample_description')) {
+            $biosample->description = $request->input('sample_description');
+        }
+
+        // organism comes from the dynamic formAttributes inputs (select2)
+        if ($request->filled('organism')) {
+            $biosample->organism_id = $request->input('organism');
+        }
+        $biosample->draft = false;
+        $biosample->status = 2; //submitted back after edit
+        $biosample->save();
+
+        // Replace external links
+        BioSampleExternalLink::where('biosample_id', $biosample->id)->delete();
+        $descriptions = $request->input('external_link_description', []);
+        $urls = $request->input('external_link_url', []);
+        if (is_string($descriptions)) {
+            $descriptions = [$descriptions];
+        }
+        if (is_string($urls)) {
+            $urls = [$urls];
+        }
+        $max = max(count($descriptions), count($urls));
+        for ($i = 0; $i < $max; $i++) {
+            $description = trim((string) ($descriptions[$i] ?? ''));
+            $url = trim((string) ($urls[$i] ?? ''));
+            if ($description === '' && $url === '') {
+                continue;
+            }
+            BioSampleExternalLink::create([
+                'biosample_id' => $biosample->id,
+                'link_description' => $description,
+                'link_url' => $url,
+            ]);
+        }
+
+        // Replace attribute values for the selected sample type (the dynamic inputs in #formAttributes)
+        $sampletypeId = $biosample->sampletype_id;
+        $sampletype = Sampletype::where('id', $sampletypeId)->first();
+        if ($sampletype) {
+            AttributeValue::where('biosample_id', $biosample->id)->delete();
+
+            $attrIds = array_filter(explode(',', (string) $sampletype->attribute_property));
+            $attrSamples = Attributesample::whereIn('id', $attrIds)->get();
+
+            foreach ($attrSamples as $attr) {
+                $rawValue = $request->input($attr->attr_name);
+                $value = ($rawValue === '' || $rawValue === null) ? null : $rawValue;
+
+                AttributeValue::create([
+                    'biosample_id' => $biosample->id,
+                    'sampletype_id' => $sampletypeId,
+                    'attributesample_id' => $attr->id,
+                    'value' => $value,
+                ]);
+            }
+        }
+        ActionLog::create([
+            'action' => "biosampleEdited",
+            'type' => 'Biosample',
+            'item_id' => $biosample->accession,
+            'user_target'=> $biosample->curator_id,
+            'created_by' =>auth()->id(),
+            'desc' => null,
+        ]);
+
+        return redirect('/dashboard/v2/biosamples')->with('success', 'Biosample has been updated!');
     }
 
     /**
@@ -192,7 +289,7 @@ class BiosampleController extends Controller
     {
         //
         Biosample::destroy($biosample->id);
-        return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
+        return redirect('/dashboard/v2/biosamples')->with('success', 'Biosamples has been deleted!');
     }
 
     public function getSample($id)
@@ -225,6 +322,19 @@ class BiosampleController extends Controller
     public function getOrganism($slug)
     {
         $organism =  Organism::where('name', 'ilike', '%' . $slug . '%')->select("name as text", "id", "taxon_id")->take(10)->get();
+        return response()->json($organism);
+    }
+
+    public function getOrganismById($id)
+    {
+        $organism = Organism::where('id', $id)
+            ->select('name as text', 'id', 'taxon_id')
+            ->first();
+
+        if (!$organism) {
+            return response()->json(null, 404);
+        }
+
         return response()->json($organism);
     }
 

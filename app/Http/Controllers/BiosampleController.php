@@ -49,7 +49,7 @@ class BiosampleController extends Controller
             return view('error.404');
         }
 
-        $biosample_links = $biosample->externallink()->get();
+        $externallinks = $biosample->externallink()->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
         // dd($sample_attr[3]->value);
 
@@ -71,7 +71,7 @@ class BiosampleController extends Controller
         return view('frontend.showbiosample', [
             'title' => 'Biosample',
             'biosample' => $biosample,
-            'biosample_links' => $biosample_links,
+            'externallinks' => $externallinks,
             'sample_attr' => $sample_attr,
             'data' => $data
         ]);

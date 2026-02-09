@@ -84,7 +84,7 @@
                                     <td class="col-sm-3">{{$externallink->link_description}}</td>
                                 </tr>
                                 @empty
-                                N/A
+                                <tr><td colspan="2">N/A</td></tr>
                                 @endforelse
                             </table>
                         </div>
@@ -110,7 +110,7 @@
                                     <td class="col-sm-3">{{$grant->fundagency->name}}</td>
                                 </tr>
                                 @empty
-                                N/A
+                                <tr><td colspan="3">N/A</td></tr>
                                 @endforelse
                             </table>
                         </div>
@@ -321,7 +321,7 @@
                                     </td>
                                 </tr>
                                 @empty
-                                N/A
+                                <tr><td colspan="2">N/A</td></tr>
                                 @endforelse
                             </table>
                         </div>

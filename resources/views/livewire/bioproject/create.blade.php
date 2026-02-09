@@ -960,6 +960,16 @@
     </div>
     <div class="row setup-content {{ $currentStep != 6 ? 'display-none' : '' }}" id="step-6">
         <div class="col-md-12">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Cannot submit yet.</strong>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <h3>Project Description</h3>
             <table class="table">
                 <tr>
@@ -1084,16 +1094,18 @@
             <table class="table">
                 <h3>Objectives</h3>
                 @if ($this->objective_id > 0)
-                @foreach ( $this->objective_id as $item => $value )
-                <tr>
-                @if ($item == 11)
-                    <td class="align-left">{{ $this->objectiveName($item) }} , {{ $this->objdesc }}</td>    
+                    @foreach ( $this->objective_id as $item => $value )
+                    <tr>
+                    @if ($item == 11)
+                        <td class="align-left">{{ $this->objectiveName($item) }} , {{ $this->objdesc }}</td>    
+                    @else
+                        <td class="align-left">{{ $this->objectiveName($item) }}</td>
+                    @endif 
+                    </tr>  
+                    @endforeach
                 @else
-                    <td class="align-left">{{ $this->objectiveName($item) }}</td>
-                @endif 
-                </tr>  
-                @endforeach
-            @endif
+                    <td class="col-md-12">There is no Objectives data</td> 
+                @endif
             </table>
 
             <table class="table">
@@ -1250,7 +1262,10 @@
             </table>
 
             <button class="btn btn-danger nextBtn pull-right" type="button" wire:click="back(5)">Back</button>
-            <button class="btn btn-success pull-right" wire:click="submitForm" type="button">Finish!</button>
+            <button class="btn btn-success pull-right" wire:click="submitForm" wire:loading.attr="disabled" wire:target="submitForm" type="button">
+                <span wire:loading.remove wire:target="submitForm">Finish!</span>
+                <span wire:loading wire:target="submitForm">Submitting...</span>
+            </button>
         </div>
     </div>
 

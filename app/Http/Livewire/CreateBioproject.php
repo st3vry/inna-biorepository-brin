@@ -652,20 +652,6 @@ class CreateBioproject extends Component
             BioprojectTarget::create($targetPayload);
         }
 
-        // Store Organism Replicons (optional)
-        if (is_array($this->repls) && count($this->repls) > 0) {
-            foreach ($this->repls as $repl) {
-                OrganismReplicon::create([
-                    'bioproject_id' => $bioproject->id,
-                    'name' => $repl['repl_name'] ?? null,
-                    'repl_type_id' => $repl['repl_type_id'] ?? null,
-                    'repl_location_id' => $repl['repl_loc_id'] ?? null,
-                    'size' => $repl['repl_size'] ?? null,
-                    'genome_size_id' => $repl['genome_size2_id'] ?? null,
-                ]);
-            }
-        }
-
         $relevanceData = [
             'bioproject_id' => $bioproject->id,
             'relevance_id' => $validatedData['relevance_id'],
@@ -701,52 +687,25 @@ class CreateBioproject extends Component
         ];
         SampleBioproject::create($samplescopeData);
 
-        $targetData = [
-            'bioproject_id' => $bioproject->id,
-            'organism_novel' => $validatedData['novel_org'],
-            'organism_novel_description' => $validatedData['novel_desc'],
-            'organism_sbc' => $validatedData['sbc'],
-            'organism_isolate' => $validatedData['isolate'],
-            'organism_desc' => $validatedData['org_desc'],
-            'celularity_id' => $validatedData['celularity_id'],
-            'reproduction_id' => $validatedData['reproduction_id'],
-            'ploidy_id' => $validatedData['ploidy_id'],
-            'ploidy_description' => $validatedData['plodesc'],
-            'haploid_genome_size' => $validatedData['haploid_size'],
-            'genome_size_id' => $validatedData['genome_size_id'],
-            'phenotypes_disease' => $validatedData['disease'],
-            'biotic_relationship_id' => $validatedData['bio_rel_id'],
-            'trophic_level_id' => $validatedData['trop_level_id'],
-            'prokaryote_morphology_gram' => $validatedData['gram'],
-            'prokaryote_morphology_enveloped' => $validatedData['enveloped'],
-            'prokaryote_morphology_motility' => $validatedData['motility'],
-            'prokaryote_morphology_endospores' => $validatedData['endospores'],
-            'habitat_id' => $validatedData['habitat_id'],
-            'salinity_id' => $validatedData['salinity_id'],
-            'oxygen_req_id' => $validatedData['oxygen_id'],
-            'temp_range_id' => $validatedData['temp_range_id'],
-            'optimum_temp' => $validatedData['optimum_temp'],
-        ];
-        // $bioproject->target()->create($targetData);
-        BioprojectTarget::create($targetData);
-
-        if (count($validatedData['repls']) > 0) {
-            foreach ($validatedData['repls'] as  $item => $value) {
-                $data1 = array(
+        // Store Organism Replicons (optional)
+        $repls = $validatedData['repls'] ?? [];
+        if (is_array($repls) && count($repls) > 0) {
+            foreach ($repls as $repl) {
+                OrganismReplicon::create([
                     'bioproject_id' => $bioproject->id,
-                    'repl_type_id' => $validatedData['repls'][$item]['repl_type_id'],
-                    'repl_name' => $validatedData['repls'][$item]['repl_name'],
-                    'repl_loc_id' => $validatedData['repls'][$item]['repl_loc_id'],
-                    'repl_size' => $validatedData['repls'][$item]['repl_size'],
-                    'genome_size2_id' => $validatedData['repls'][$item]['genome_size2_id'],
-                );
-                OrganismReplicon::create($data1);
+                    'repl_type_id' => $repl['repl_type_id'] ?? null,
+                    'name' => $repl['repl_name'] ?? null,
+                    'repl_location_id' => $repl['repl_loc_id'] ?? null,
+                    'size' => $repl['repl_size'] ?? null,
+                    'genome_size_id' => $repl['genome_size2_id'] ?? null,
+                ]);
             }
         }
 
 
-        if (count($validatedData['grants']) > 0) {
-            foreach ($validatedData['grants'] as  $item => $value) {
+        $grants = $validatedData['grants'] ?? [];
+        if (is_array($grants) && count($grants) > 0) {
+            foreach ($grants as $item => $value) {
                 $data2 = array(
                     'bioproject_id' => $bioproject->id,
                     'fundagency_id' => $validatedData['grants'][$item]['fundagency_id'],
@@ -756,8 +715,10 @@ class CreateBioproject extends Component
                 Grant::create($data2);
             }
         }
-        if (count($validatedData['publications']) > 0) {
-            foreach ($validatedData['publications'] as  $item => $value) {
+
+        $publications = $validatedData['publications'] ?? [];
+        if (is_array($publications) && count($publications) > 0) {
+            foreach ($publications as  $item => $value) {
                 $data3 = array(
                     'bioproject_id' => $bioproject->id,
                     'pub_identifier_id' => $validatedData['publications'][$item]['pub_identifier_id'],
@@ -779,8 +740,9 @@ class CreateBioproject extends Component
             }
         }
 
-        if (count($validatedData['externallinks']) > 0) {
-            foreach ($validatedData['externallinks'] as  $item => $value) {
+        $externallinks = $validatedData['externallinks'] ?? [];
+        if (is_array($externallinks) && count($externallinks) > 0) {
+            foreach ($externallinks as  $item => $value) {
                 $data5 = array(
                     'bioproject_id' => $bioproject->id,
                     'link_description' => $validatedData['externallinks'][$item]['link_description'],
@@ -822,6 +784,8 @@ class CreateBioproject extends Component
             'title' => $this->title,
             'description' => $this->description,
             'relevance_id' => $this->relevance_id ?? null,
+            'objective_id' => $this->objective_id ?? [],
+            'objdesc' => $this->objdesc ?? null,
             'umbproject_id' => $this->umbproject_id ?? null,
             'externallinks' => $this->externallinks ?? [],
             'grants' => $this->grants ?? [],
@@ -892,6 +856,8 @@ class CreateBioproject extends Component
         $this->title = $data['title'] ?? $this->title;
         $this->description = $data['description'] ?? $this->description;
         $this->relevance_id = $data['relevance_id'] ?? $this->relevance_id;
+        $this->objective_id = $data['objective_id'] ?? $this->objective_id;
+        $this->objdesc = $data['objdesc'] ?? $this->objdesc;
         $this->umbproject_id = $data['umbproject_id'] ?? $this->umbproject_id;
         $this->externallinks = $data['externallinks'] ?? $this->externallinks;
         $this->grants = $data['grants'] ?? $this->grants;

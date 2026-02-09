@@ -76,6 +76,10 @@
                             <td class="col-sm-7">{{$bioexperiment->liblayout->name}}</td>
                         </tr>
                         <tr>
+                            <td class="col-sm-1">Input Size</td>
+                            <td class="col-sm-7">{{$bioexperiment->input_size}}</td>
+                        </tr>
+                        <tr>
                             <td class="col-sm-1">File</td>
                             <td class="col-sm-7">
                                 @foreach ($bioruns as $biorun)

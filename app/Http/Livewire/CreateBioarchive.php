@@ -140,17 +140,76 @@ class CreateBioarchive extends Component
         $validatedData = $this->validate([
             'biosample_id' => 'required',
         ]);
-        // dd($this->biosample_id);
-        // dd($this->searchBioproject);
+
+        // Normalize biosample selection to an associative array keyed by biosample id,
+        // then initialize empty experiment rows so validation errors can attach to each field.
+        $normalizedBiosampleIds = [];
+        foreach (($this->biosample_id ?? []) as $key => $value) {
+            if (is_numeric($value)) {
+                $id = (int) $value;
+                $normalizedBiosampleIds[$id] = $id;
+                continue;
+            }
+            if (is_numeric($key)) {
+                $id = (int) $key;
+                $normalizedBiosampleIds[$id] = $id;
+            }
+        }
+        $this->biosample_id = $normalizedBiosampleIds;
+
+        foreach (array_keys($this->biosample_id) as $biosampleId) {
+            if (!isset($this->bioexperiment_id[$biosampleId]) || !is_array($this->bioexperiment_id[$biosampleId])) {
+                $this->bioexperiment_id[$biosampleId] = [];
+            }
+
+            $this->bioexperiment_id[$biosampleId] = array_merge([
+                'title' => '',
+                'libname' => '',
+                'libsource_id' => '',
+                'libselection_id' => '',
+                'libstrategy_id' => '',
+                'libconsprot' => '',
+                'instrument_id' => 0,
+                'liblayout_id' => '',
+                'inp_size' => '',
+            ], $this->bioexperiment_id[$biosampleId]);
+        }
+
         $this->currentStep = 4;
     }
     // Run form
     public function fourthStepSubmit()
     {
-        $validatedData = $this->validate([
-            'bioexperiment_id' => 'required',
+        $rules = [
+            'bioexperiment_id' => 'array',
+            'bioexperiment_id.*.title' => 'required|string',
+            'bioexperiment_id.*.libname' => 'required|string',
+            'bioexperiment_id.*.libsource_id' => 'required',
+            'bioexperiment_id.*.libselection_id' => 'required',
+            'bioexperiment_id.*.libstrategy_id' => 'required',
+            'bioexperiment_id.*.libconsprot' => 'required|string',
+            'bioexperiment_id.*.instrument_id' => 'required|not_in:0',
             'bioexperiment_id.*.liblayout_id' => 'required',
-        ]);
+            'bioexperiment_id.*.inp_size' => 'required',
+        ];
+
+        $messages = [
+            'bioexperiment_id.*.instrument_id.not_in' => 'Instrument is required.',
+        ];
+
+        $attributes = [
+            'bioexperiment_id.*.title' => 'Title',
+            'bioexperiment_id.*.libname' => 'Library Name',
+            'bioexperiment_id.*.libsource_id' => 'Library Source',
+            'bioexperiment_id.*.libselection_id' => 'Library Selection',
+            'bioexperiment_id.*.libstrategy_id' => 'Library Strategy',
+            'bioexperiment_id.*.libconsprot' => 'Library Construction Protocol',
+            'bioexperiment_id.*.instrument_id' => 'Instrument',
+            'bioexperiment_id.*.liblayout_id' => 'Library Layout',
+            'bioexperiment_id.*.inp_size' => 'Insert Size',
+        ];
+
+        $validatedData = $this->validate($rules, $messages, $attributes);
         // foreach ($this->biosample_id as $key => $value) {
         //     $this->biorun_id['sample_id'] = $value;
         // }

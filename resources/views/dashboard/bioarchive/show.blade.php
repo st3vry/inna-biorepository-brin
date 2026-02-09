@@ -125,129 +125,133 @@
                             <td>{{ $value['input_size'] }}</td>
                         </tr>
                         @if ($bioarchive->status == 4)
-
-                        <tr>
-                            <td><strong>File(s) ({{ $value['alias'] }})</strong></td>
-                            <td>
-                                <div class="mb-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modal{{ $value['alias'] }}">
-                                        Web Upload
-                                    </button>
-                                     - or -
-                                    <button type="button" class="btn btn-sm btn-outline-success ms-1" data-bs-toggle="collapse" data-bs-target="#collapse{{ $value['alias'] }}" aria-expanded="false" aria-controls="collapse{{ $value['alias'] }}" >
-                                        FTP/SFTP Upload
-                                    </button>
-                                </div>
-                                <div class="collapse" id="collapse{{ $value['alias'] }}">
-                                    <div class="card card-body">
-                                        Host: 10.28.28.210<br>
-                                        Username: {{$ftp_user->username}}<br>
-                                        Password: {{$ftp_user->password}}
-                                        <p>Please upload the file inside {{ $value['alias'] }} folder. You can use any ftp/sftp client such as: WinSCP, Filezille, Cyberduck, etc. </p>
+                            <tr>
+                                <td><strong>File(s) ({{ $value['alias'] }})</strong></td>
+                                <td>
+                                    <div class="mb-2">
+                                        <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modal{{ $value['alias'] }}">
+                                            Web Upload
+                                        </button>
+                                        - or -
+                                        <button type="button" class="btn btn-sm btn-outline-success ms-1" data-bs-toggle="collapse" data-bs-target="#collapse{{ $value['alias'] }}" aria-expanded="false" aria-controls="collapse{{ $value['alias'] }}" >
+                                            FTP/SFTP Upload
+                                        </button>
+                                    </div>
+                                    <div class="collapse" id="collapse{{ $value['alias'] }}">
+                                        <div class="card card-body">
+                                            Host: 10.28.28.210<br>
+                                            Username: {{$ftp_user->username}}<br>
+                                            Password: {{$ftp_user->password}}
+                                            <p>Please upload the file inside {{ $value['alias'] }} folder. You can use any ftp/sftp client such as: WinSCP, Filezille, Cyberduck, etc. </p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <small class="text-secondary">Please use FTP/SFTP for easier uploads or for files larger than 100MB.</small>
+                                    </div>
+                                    @if (count($files) > 0)
+                                    <table class="m-auto table table-responsive text-nowrap">
+                                        @foreach ($files as $file)
+                                            @foreach ($file as $key => $items)
+                                                @if ($key === $value['alias'])
+                                                    @foreach ($items as $item)
+                                                    <tr>
+                                                        <td>
+                                                            {{array_reverse(explode("/",$item))[0]}}
+                                                            <span>
+                                                                <form action="/dashboard/file/delete" method="post" class="d-inline">
+                                                                    @method('post')
+                                                                    @csrf
+                                                                    <input type="hidden" name="source" value="sftp">
+                                                                    <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
+                                                                    <input type="hidden" name="alias" value="{{$key}}">
+                                                                    <input type="hidden" name="file" value="{{$item}}">
+                                                                    <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
+                                                                </form>
+                                                                @if ($item == "Failed to read file(s)")
+                                                                    @continue
+                                                                @endif
+                                                                <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                                    @method('post')
+                                                                    @csrf
+                                                                    <input type="hidden" name="file" value="{{$item}}">
+                                                                    <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
+                                                                    <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                                                </form>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+                                    </table>
+                                    @else
+                                    <div class="mt-2">
+                                        No files have been uploaded yet.
+                                    </div>
+                                    @endif
+                                </td>
+                            </tr>
+                            <div class="modal fade modalfile" id="modal{{ $value['alias'] }}" tabindex="-1" aria-labelledby="modal{{ $value['alias'] }}Label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modal{{ $value['alias'] }}Label">Upload {{ $value['alias'] }} File(s) </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/dashboard/file/upload"
+                                            class="dropzone"
+                                            id="form{{ $value['alias'] }}">
+                                            <div class="row mt-3">
+                                                <label for="filetype{{ $value['alias'] }}" class="col-sm-2 col-form-label col-form-label-sm form-label">File Type</label>
+                                                <div class="col-sm-10">
+                                                    <select name="filetype" id="filetype{{ $value['alias'] }}" class="form-select" aria-label="Default select example">
+                                                        @foreach ($filetypes as $filetype)
+                                                            <option value="{{$filetype->id}}">{{$filetype->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                                    </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <small class="text-secondary">Please use FTP/SFTP for easier uploads or for files larger than 100MB.</small>
-                                </div>
-                                @if (count($files) > 0)
-                                <table class="m-auto table table-responsive text-nowrap">
-                                    @foreach ($files as $file)
-                                        @foreach ($file as $key => $items)
-                                            @if ($key === $value['alias'])
-                                                @foreach ($items as $item)
-                                                <tr>
-                                                    <td>
-                                                        {{array_reverse(explode("/",$item))[0]}}
-                                                        <span>
-                                                            <form action="/dashboard/file/delete" method="post" class="d-inline">
-                                                                @method('post')
-                                                                @csrf
-                                                                <input type="hidden" name="source" value="sftp">
-                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
-                                                                <input type="hidden" name="alias" value="{{$key}}">
-                                                                <input type="hidden" name="file" value="{{$item}}">
-                                                                <button class="btn btn-sm btn-danger float-end" onclick="return confirm('Are you sure ?')" ><span data-feather="x-circle" title="Delete"></span></button>
-                                                            </form>
-                                                            <form action="/dashboard/file/download" method="post" class="d-inline">
-                                                                @method('post')
-                                                                @csrf
-                                                                <input type="hidden" name="file" value="{{$item}}">
-                                                                <input type="hidden" name="accession" value="{{$bioarchive->accession}}">
-                                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
-                                                            </form>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endforeach
-                                </table>
-                                @else
-                                <div class="mt-2">
-                                    No files have been uploaded yet.
-                                </div>
-                                @endif
-                            </td>
-                        </tr>
-                        <div class="modal fade modalfile" id="modal{{ $value['alias'] }}" tabindex="-1" aria-labelledby="modal{{ $value['alias'] }}Label" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modal{{ $value['alias'] }}Label">Upload {{ $value['alias'] }} File(s) </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="/dashboard/file/upload"
-                                        class="dropzone"
-                                        id="form{{ $value['alias'] }}">
-                                        <div class="row mt-3">
-                                            <label for="filetype{{ $value['alias'] }}" class="col-sm-2 col-form-label col-form-label-sm form-label">File Type</label>
-                                            <div class="col-sm-10">
-                                                <select name="filetype" id="filetype{{ $value['alias'] }}" class="form-select" aria-label="Default select example">
-                                                    @foreach ($filetypes as $filetype)
-                                                        <option value="{{$filetype->id}}">{{$filetype->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                          </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
-                                </div>
-                                </div>
-                            </div>
                             </div>
 
                         @else
                         <tr>
                             <td><strong>File</strong></td>
-                        @foreach ($files as $file)
-                            @foreach ($file as $key => $items)
-                                @if ($key === $value['alias'])
-                                @foreach ($items as $item)
-                                {{-- <tr> --}}
-                                    {{-- <td></td> --}}
-                                    <td>
-                                       {{array_reverse(explode("/",$item))[0]}}
-                                        <span>
-                                            <form action="/dashboard/file/download" method="post" class="d-inline">
-                                                @method('post')
-                                                @csrf
-                                                <input type="hidden" name="file" value="{{$item}}">
-                                                <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
-                                            </form>
-                                        </span>
-                                    </td>
-                                {{-- </tr> --}}
+                            @foreach ($files as $file)
+                                @foreach ($file as $key => $items)
+                                    @if ($key === $value['alias'])
+                                    @foreach ($items as $item)
+                                    {{-- <tr> --}}
+                                        {{-- <td></td> --}}
+                                        <td>
+                                        {{array_reverse(explode("/",$item))[0]}}
+                                            <span>
+                                                <form action="/dashboard/file/download" method="post" class="d-inline">
+                                                    @method('post')
+                                                    @csrf
+                                                    <input type="hidden" name="file" value="{{$item}}">
+                                                    @if ($item == "Failed to read file(s)")
+                                                        @continue
+                                                    @endif
+                                                    <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
+                                                </form>
+                                            </span>
+                                        </td>
+                                    {{-- </tr> --}}
+                                    @endforeach
+
+                                    @endif
                                 @endforeach
-
-                                @endif
                             @endforeach
-                        @endforeach
-
                         </tr>
                         @endif
                         @endforeach

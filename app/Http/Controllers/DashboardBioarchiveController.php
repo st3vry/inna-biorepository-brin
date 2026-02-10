@@ -43,6 +43,17 @@ class DashboardBioarchiveController extends Controller
         return view('dashboard.bioarchive.create');
     }
 
+    public function edit($id)
+    {
+        $bioarchive = Bioarchive::where('accession', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('dashboard.bioarchive.edit', [
+            'bioarchive' => $bioarchive,
+        ]);
+    }
+
     public function show(Bioarchive $bioarchive)
     {
 

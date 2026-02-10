@@ -98,13 +98,13 @@
                         <!-- <label for="hold_release" class="form-label">-</label> -->
                         <!-- <div class="row"> -->
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="true" @if (old('hold_release')==true) ) checked @endif>
+                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="1" @if (old('hold_release')==true) ) checked @endif>
                             <label class="form-check-label">Hold (not viewable until the release of linked data)</label>
                         </div>
 
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="false" @if (old('hold_release')==false) ) checked @endif>
+                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="0" @if (old('hold_release')==false) ) checked @endif>
                             <label class="form-check-label">Release immediately (After the approval is passed, release immediately following curation) </label>
                         </div>
                         <!-- </div> -->
@@ -224,7 +224,7 @@
                     <h5>Experiment</h5>
                 </div>
                 <div class="card-body">
-                    <div class="overflow-auto" style="width:100%;max-width: 100%; height: 550px;">
+                    <div class="overflow-auto" style="width:100%;max-width: 100%;">
                         @php
                             $no = 1;
                             $alias = $this->alias;
@@ -251,7 +251,7 @@
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-12 col-lg-6">
-                                            <label class="form-label">Title <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Title <span class="text-danger">*</span></label>
                                             <input class="form-control" type="text" name="bioexperiment_id[{{ $id }}][title]" wire:model="bioexperiment_id.{{ $id }}.title">
                                             @error('bioexperiment_id.' . $id . '.title')
                                             <p class="text-danger mb-0">{{ $message }}</p>
@@ -259,7 +259,7 @@
                                         </div>
 
                                         <div class="col-12 col-lg-6">
-                                            <label class="form-label">Library Name <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Library Name <span class="text-danger">*</span></label>
                                             <input class="form-control" type="text" name="bioexperiment_id[{{ $id }}][libname]" wire:model="bioexperiment_id.{{ $id }}.libname">
                                             @error('bioexperiment_id.' . $id . '.libname')
                                             <p class="text-danger mb-0">{{ $message }}</p>
@@ -267,7 +267,7 @@
                                         </div>
 
                                         <div class="col-12 col-lg-4">
-                                            <label class="form-label">Library Source <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Library Source <span class="text-danger">*</span></label>
                                             <select class="form-select" name="bioexperiment_id[{{ $id }}][libsource_id]" wire:model="bioexperiment_id.{{ $id }}.libsource_id">
                                                 <option value="">Select Lib Source</option>
                                                 @foreach ( $libsources as $libsource )
@@ -280,7 +280,7 @@
                                         </div>
 
                                         <div class="col-12 col-lg-4">
-                                            <label class="form-label">Library Selection <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Library Selection <span class="text-danger">*</span></label>
                                             <select class="form-select" name="bioexperiment_id[{{ $id }}][libselection_id]" wire:model="bioexperiment_id.{{ $id }}.libselection_id">
                                                 <option value="">Select Lib Selection</option>
                                                 @foreach ( $libselections as $libselection )
@@ -293,7 +293,7 @@
                                         </div>
 
                                         <div class="col-12 col-lg-4">
-                                            <label class="form-label">Library Strategy <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Library Strategy <span class="text-danger">*</span></label>
                                             <select class="form-select" name="bioexperiment_id[{{ $id }}][libstrategy_id]" wire:model="bioexperiment_id.{{ $id }}.libstrategy_id">
                                                 <option value="">Select Lib Strategy</option>
                                                 @foreach ( $libstrategies as $libstrategy )
@@ -306,7 +306,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <label class="form-label">Library Construction Protocol <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Library Construction Protocol <span class="text-danger">*</span></label>
                                             <input class="form-control" type="text" name="bioexperiment_id[{{ $id }}][libconsprot]" wire:model="bioexperiment_id.{{ $id }}.libconsprot">
                                             @error('bioexperiment_id.' . $id . '.libconsprot')
                                             <p class="text-danger mb-0">{{ $message }}</p>
@@ -314,7 +314,7 @@
                                         </div>
 
                                         <div class="col-12 col-lg-4">
-                                            <label class="form-label">Instrument <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Instrument <span class="text-danger">*</span></label>
                                             <select class="form-select" name="bioexperiment_id[{{ $id }}][instrument_id]" wire:model="bioexperiment_id.{{ $id }}.instrument_id">
                                                 <option value="0">Select Instrument</option>
                                                 @foreach ( $instruments as $instrument )
@@ -327,7 +327,7 @@
                                         </div>
 
                                         <div class="col-12 col-lg-4">
-                                            <label class="form-label">Library Layout <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Library Layout <span class="text-danger">*</span></label>
                                             <select class="form-select" name="bioexperiment_id[{{ $id }}][liblayout_id]" wire:model="bioexperiment_id.{{ $id }}.liblayout_id">
                                                 <option value="">Select Lib Layout</option>
                                                 @foreach ( $liblayouts as $liblayout )
@@ -340,7 +340,7 @@
                                         </div>
 
                                         <div class="col-12 col-lg-4">
-                                            <label class="form-label">Insert Size <span class="text-danger">*</span></label>
+                                            <label class="form-label fw-bold">Insert Size (bp) <span class="text-danger">*</span></label>
                                             <input class="form-control" onkeydown="return numbersOnly(event)" onkeyup="this.value=this.value.replace(',','.')" type="text" name="bioexperiment_id[{{ $id }}][inp_size]" wire:model="bioexperiment_id.{{ $id }}.inp_size">
                                             @error('bioexperiment_id.' . $id . '.inp_size')
                                             <p class="text-danger mb-0">{{ $message }}</p>

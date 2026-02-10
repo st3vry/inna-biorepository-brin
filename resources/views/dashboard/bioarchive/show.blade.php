@@ -31,6 +31,47 @@
 </style>
 @endpush
 @section('container')
+@php
+    $formatBp = function ($bp) {
+        if ($bp === null || $bp === '') {
+            return '';
+        }
+        if (!is_numeric($bp)) {
+            return (string) $bp;
+        }
+
+        $bp = (float) $bp;
+        $abs = abs($bp);
+
+        $units = [
+            ['Gbp', 1000000000],
+            ['Mbp', 1000000],
+            ['kbp', 1000],
+            ['bp', 1],
+        ];
+
+        foreach ($units as $u) {
+            [$unit, $factor] = $u;
+            if ($abs >= $factor || $factor === 1) {
+                $value = $bp / $factor;
+                if ($factor === 1) {
+                    $decimals = 0;
+                } else {
+                    $scaled = $abs / $factor;
+                    $decimals = $scaled >= 100 ? 0 : ($scaled >= 10 ? 1 : 2);
+                }
+
+                $formatted = number_format($value, $decimals, '.', ',');
+                if ($decimals > 0) {
+                    $formatted = rtrim(rtrim($formatted, '0'), '.');
+                }
+                return $formatted . ' ' . $unit;
+            }
+        }
+
+        return (string) $bp . ' bp';
+    };
+@endphp
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <!-- <h1 class="h2"> Accession : {{$bioarchive->alias}}</h1> -->
     <ol class="breadcrumb">
@@ -122,7 +163,7 @@
                         </tr>
                         <tr>
                             <td>Input Size</td>
-                            <td>{{ $value['input_size'] }}</td>
+                            <td>{{ $formatBp($value['input_size']) }}</td>
                         </tr>
                         @if ($bioarchive->status == 4)
                             <tr>

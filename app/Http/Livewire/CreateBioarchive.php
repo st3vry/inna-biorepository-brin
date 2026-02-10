@@ -71,6 +71,17 @@ class CreateBioarchive extends Component
     // Alias number
     public $alias;
 
+    private function normalizeHoldRelease($value): bool
+    {
+        if (is_bool($value)) return $value;
+        if (is_int($value)) return $value === 1;
+        if (is_string($value)) {
+            $v = strtolower(trim($value));
+            return in_array($v, ['1', 'true', 'yes', 'on'], true);
+        }
+        return false;
+    }
+
     public function mount()
     {
         // submitter 
@@ -137,20 +148,92 @@ class CreateBioarchive extends Component
     // Biosample form
     public function thirdStepSubmit()
     {
-        $validatedData = $this->validate([
-            'biosample_id' => 'required',
+        // Normalize biosample selection (Livewire checkbox binding can leave false/null entries)
+        // to an associative array keyed by biosample id.
+        $normalizedBiosampleIds = [];
+        foreach (($this->biosample_id ?? []) as $key => $value) {
+            // most common shape: biosample_id.{id} => "{id}" when checked, false/null when unchecked
+            if (is_numeric($key)) {
+                if ($value === false || $value === null || $value === '' || $value === 0 || $value === '0') {
+                    continue;
+                }
+                $id = (int) $key;
+                $normalizedBiosampleIds[$id] = $id;
+                continue;
+            }
+
+            // fallback shape: a numeric list of IDs
+            if (is_numeric($value)) {
+                $id = (int) $value;
+                $normalizedBiosampleIds[$id] = $id;
+            }
+        }
+        $this->biosample_id = $normalizedBiosampleIds;
+
+        $this->validate([
+            'biosample_id' => 'required|array|min:1',
         ]);
-        // dd($this->biosample_id);
-        // dd($this->searchBioproject);
+
+        // prune any stale experiment rows from previously-selected biosamples
+        foreach (array_keys($this->bioexperiment_id ?? []) as $biosampleId) {
+            if (!isset($this->biosample_id[(int) $biosampleId])) {
+                unset($this->bioexperiment_id[$biosampleId]);
+            }
+        }
+
+        foreach (array_keys($this->biosample_id) as $biosampleId) {
+            if (!isset($this->bioexperiment_id[$biosampleId]) || !is_array($this->bioexperiment_id[$biosampleId])) {
+                $this->bioexperiment_id[$biosampleId] = [];
+            }
+
+            $this->bioexperiment_id[$biosampleId] = array_merge([
+                'title' => '',
+                'libname' => '',
+                'libsource_id' => '',
+                'libselection_id' => '',
+                'libstrategy_id' => '',
+                'libconsprot' => '',
+                'instrument_id' => 0,
+                'liblayout_id' => '',
+                'inp_size' => '',
+            ], $this->bioexperiment_id[$biosampleId]);
+        }
+
         $this->currentStep = 4;
     }
     // Run form
     public function fourthStepSubmit()
     {
-        $validatedData = $this->validate([
-            'bioexperiment_id' => 'required',
+        $rules = [
+            'bioexperiment_id' => 'array',
+            'bioexperiment_id.*.title' => 'required|string',
+            'bioexperiment_id.*.libname' => 'required|string',
+            'bioexperiment_id.*.libsource_id' => 'required',
+            'bioexperiment_id.*.libselection_id' => 'required',
+            'bioexperiment_id.*.libstrategy_id' => 'required',
+            'bioexperiment_id.*.libconsprot' => 'required|string',
+            'bioexperiment_id.*.instrument_id' => 'required|not_in:0',
             'bioexperiment_id.*.liblayout_id' => 'required',
-        ]);
+            'bioexperiment_id.*.inp_size' => 'required',
+        ];
+
+        $messages = [
+            'bioexperiment_id.*.instrument_id.not_in' => 'Instrument is required.',
+        ];
+
+        $attributes = [
+            'bioexperiment_id.*.title' => 'Title',
+            'bioexperiment_id.*.libname' => 'Library Name',
+            'bioexperiment_id.*.libsource_id' => 'Library Source',
+            'bioexperiment_id.*.libselection_id' => 'Library Selection',
+            'bioexperiment_id.*.libstrategy_id' => 'Library Strategy',
+            'bioexperiment_id.*.libconsprot' => 'Library Construction Protocol',
+            'bioexperiment_id.*.instrument_id' => 'Instrument',
+            'bioexperiment_id.*.liblayout_id' => 'Library Layout',
+            'bioexperiment_id.*.inp_size' => 'Insert Size',
+        ];
+
+        $validatedData = $this->validate($rules, $messages, $attributes);
         // foreach ($this->biosample_id as $key => $value) {
         //     $this->biorun_id['sample_id'] = $value;
         // }
@@ -178,7 +261,7 @@ class CreateBioarchive extends Component
         $bioarchive->bioproject_id = $this->bioproject_id;
         $bioarchive->biosample_id = implode(",", $this->biosample_id);
         $bioarchive->user_id = auth()->user()->id;
-        $bioarchive->hold_release = $this->hold_release;
+        $bioarchive->hold_release = $this->normalizeHoldRelease($this->hold_release);
         // $bioarchive->draft = true;
         $bioarchive->save();
         // dd($bioarchive);
@@ -222,7 +305,7 @@ class CreateBioarchive extends Component
     {
         $payload = [
             'currentStep' => $this->currentStep,
-            'hold_release' => $this->hold_release,
+            'hold_release' => $this->normalizeHoldRelease($this->hold_release) ? '1' : '0',
             'bioproject_id' => $this->bioproject_id,
             'biosample_id' => $this->biosample_id,
             'bioexperiment_id' => $this->bioexperiment_id,
@@ -274,7 +357,9 @@ class CreateBioarchive extends Component
         $data = $draft->data ?? [];
         // restore basic fields (guarded with null coalescing)
         $this->currentStep = $data['currentStep'] ?? $this->currentStep;
-        $this->hold_release = $data['hold_release'] ?? $this->hold_release;
+        if (array_key_exists('hold_release', $data)) {
+            $this->hold_release = $this->normalizeHoldRelease($data['hold_release']) ? '1' : '0';
+        }
         $this->bioproject_id = $data['bioproject_id'] ?? $this->bioproject_id;
         $this->biosample_id = $data['biosample_id'] ?? $this->biosample_id;
         $this->bioexperiment_id = $data['bioexperiment_id'] ?? $this->bioexperiment_id;
@@ -328,27 +413,45 @@ class CreateBioarchive extends Component
 
     public function libsourceName($id)
     {
+        if (!is_numeric($id) || (int) $id <= 0) {
+            return '';
+        }
         return LibrarySource::select('name')->where('id', $id)->pluck('name')->first();
     }
 
     public function libselectionName($id)
     {
+        if (!is_numeric($id) || (int) $id <= 0) {
+            return '';
+        }
         return LibrarySelection::select('name')->where('id', $id)->pluck('name')->first();
     }
     public function libstrategyName($id)
     {
+        if (!is_numeric($id) || (int) $id <= 0) {
+            return '';
+        }
         return LibraryStrategy::select('name')->where('id', $id)->pluck('name')->first();
     }
     public function instrumentName($id)
     {
+        if (!is_numeric($id) || (int) $id <= 0) {
+            return '';
+        }
         return Instrument::select('name')->where('id', $id)->pluck('name')->first();
     }
     public function liblayoutName($id)
     {
+        if (!is_numeric($id) || (int) $id <= 0) {
+            return '';
+        }
         return LibraryLayout::select('name')->where('id', $id)->pluck('name')->first();
     }
     public function filetypeName($id)
     {
+        if (!is_numeric($id) || (int) $id <= 0) {
+            return '';
+        }
         return FileType::select('name')->where('id', $id)->pluck('name')->first();
     }
 

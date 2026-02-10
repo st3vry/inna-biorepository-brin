@@ -262,14 +262,14 @@
             <div class="info-box">
                 <i class="bi bi-telephone"></i>
                 <h3>Call Us</h3>
-                <p>+62 811 111 111 <br>+62 812 2222 2222 </p>
+                <p><a href="tel:+6281119333635">+62 811 1933 3635</a></p>
             </div>
             </div>
             <div class="col-md-6">
             <div class="info-box">
                 <i class="bi bi-envelope"></i>
                 <h3>Email Us</h3>
-                <p>inna@brin.go.id <br>admin_inna@brin.go.id </p>
+                <p> <a href="mailto:inna.repository@brin.go.id">inna.repository@brin.go.id</a> </p>
             </div>
             </div>
             <div class="col-md-6">

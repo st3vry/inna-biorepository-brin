@@ -72,7 +72,6 @@ class BiosampleController extends Controller
     public function store(Request $request)
     {
 
-        dd($request);
         if ($request->draft_id) {
             // delete draft after submit
             BiosampleDraft::destroy($request->draft_id);

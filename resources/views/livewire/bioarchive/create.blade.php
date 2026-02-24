@@ -1,5 +1,5 @@
 <form wire:submit.prevent="submitForm">
-    <div>
+    <div class="pb-4">
         <div class="d-flex justify-content-end mb-2">
             <button type="button" class="btn btn-outline-success me-2" wire:click="saveDraft" wire:loading.attr="disabled">
                 <span wire:loading.remove>Save Draft <i class="bi bi-save"></i></span>
@@ -98,13 +98,13 @@
                         <!-- <label for="hold_release" class="form-label">-</label> -->
                         <!-- <div class="row"> -->
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="true" @if (old('hold_release')==true) ) checked @endif>
+                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="1" @if (old('hold_release')==true) ) checked @endif>
                             <label class="form-check-label">Hold (not viewable until the release of linked data)</label>
                         </div>
 
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="false" @if (old('hold_release')==false) ) checked @endif>
+                            <input class="form-check-input" type="radio" name="hold_release" wire:model="hold_release" value="0" @if (old('hold_release')==false) ) checked @endif>
                             <label class="form-check-label">Release immediately (After the approval is passed, release immediately following curation) </label>
                         </div>
                         <!-- </div> -->
@@ -118,7 +118,6 @@
         </div>
     </div>
 
-
     <div class="row setup-content {{ $currentStep != 2 ? 'display-none' : '' }}" id="step-2">
         <div class="col-md-12">
             <!-- <h4>Bioproject</h4> -->
@@ -129,10 +128,10 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <input type="text" id='searchBioproject' wire:model="searchBioproject" class="form-control" placeholder="Search Bioproject here">
+                            <input type="text" id='searchBioproject' wire:model="searchBioproject" class="form-control" placeholder="Search by title">
                         </div>
                     </div>
-                    <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
+                    <div class="overflow-auto" style="width:100%;max-width: 100%; height: 500px;">
                         <table class="m-auto table table-striped table-hover table-responsive ">
                             <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
@@ -167,6 +166,7 @@
             <button class="btn btn-primary pull-right" type="button" wire:click="secondStepSubmit">Next</button>
         </div>
     </div>
+
     <div class="row setup-content {{ $currentStep != 3 ? 'display-none' : '' }}" id="step-3">
         <div class="col-md-12">
             <!-- <h4>Bioproject</h4> -->
@@ -177,10 +177,10 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <input type="text" id='searchBiosample' wire:model="searchBiosample" class="form-control" placeholder="Search here">
+                            <input type="text" id='searchBiosample' wire:model="searchBiosample" class="form-control" placeholder="Search by title">
                         </div>
                     </div>
-                    <div class="overflow-scroll p-3 bg-light" style="width: 100%; height: 500px;">
+                    <div class="overflow-auto" style="width:100%;max-width: 100%; height: 500px;">
                         <table class="m-auto table table-striped table-hover table-responsive ">
                             <thead style="position: sticky;top: 0" class="table-secondary">
                                 <tr>
@@ -215,6 +215,7 @@
             <button class="btn btn-primary pull-right" type="button" wire:click="thirdStepSubmit">Next</button>
         </div>
     </div>
+
     <div class="row setup-content {{ $currentStep != 4 ? 'display-none' : '' }}" id="step-4">
         <div class="col-md-12">
             <!-- <h4>Bioproject</h4> -->
@@ -223,120 +224,138 @@
                     <h5>Experiment</h5>
                 </div>
                 <div class="card-body">
-                    <div class="overflow-scroll p-3 bg-light" style="width:100%;max-width: 100%; height: 500px; overflow-x:scroll;">
-                        <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
-                            <thead style="position: sticky;top: 0" class="table-secondary">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Alias</th>
-                                    <th scope="col">Biosample Used</th>
-                                    <th scope="col">Title <font color="red">*</font></th>
-                                    <th scope="col">Library Name <font color="red">*</font></th>
-                                    <th scope="col">Library Source <font color="red">*</font></th>
-                                    <th scope="col">Library Selection <font color="red">*</font></th>
-                                    <th scope="col">Library Strategy <font color="red">*</font></th>
-                                    <th scope="col">Library Construction Protocol <font color="red">*</font></th>
-                                    <th scope="col">Instrument <font color="red">*</font></th>
-                                    <th scope="col">Library Layout <font color="red">*</font></th>
-                                    <th scope="col">Insert Size <font color="red">*</font></th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                $no = 1;
-                                $alias = $this->alias;
-                                @endphp
-                                @php
-                                $no = 1;
-                                $alias = $this->alias;
-                                @endphp
-                                @foreach ($biosample_id as $id => $experiment)
-                                <tr>
-                                    <!-- {{$id}} -->
-                                    <td>{{$no}}</td>
-                                    <td>
-                                        {{$alias_exp[$id] = "INNAX-".$alias."-".$no }}
-                                        {{-- <input type="text" name="bioexperiment_id[{{$id}}][alias_exp]" wire:model="bioexperiment_id.{{$id}}.alias_exp" value="{{$alias}}" disabled>
-                                        @error('bioexperiment_id.*.alias_exp')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror --}}
-                                    </td>
-                                    <td>{{$this->biosampleSubmission($id)}} : {{$this->biosampleName($id)}}</td>
-                                    <td>
-                                        <input type="text" name="bioexperiment_id[{{$id}}][title]" wire:model="bioexperiment_id.{{$id}}.title">
-                                        @error('bioexperiment_id.*.title')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror
-                                    </td>
-                                    <td>
-                                        <input type="text" name="bioexperiment_id[{{$id}}][libname]" wire:model="bioexperiment_id.{{$id}}.libname">
-                                        @error('bioexperiment_id.*.libname')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror
-                                    </td>
-                                    <td>
-                                        {{-- <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id"> --}}
-                                        <select name="bioexperiment_id[{{$id}}][libsource_id]" wire:model="bioexperiment_id.{{$id}}.libsource_id">
-                                            <option value="">Select Lib Source</option>
-                                            @foreach ( $libsources as $libsource )
-                                            <option value="{{$libsource->id}}" @if (old('libsource_id')==$libsource->id) selected @endif>{{$libsource->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        {{-- <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id"> --}}
-                                        <select name="bioexperiment_id[{{$id}}][libselection_id]" wire:model="bioexperiment_id.{{$id}}.libselection_id">
-                                            <option value="">Select Lib Selection</option>
-                                            @foreach ( $libselections as $libselection )
-                                            <option value="{{$libselection->id}}" @if (old('libselection_id')==$libselection->id) selected @endif>{{$libselection->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        {{-- <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id"> --}}
-                                        <select name="bioexperiment_id[{{$id}}][libstrategy_id]" wire:model="bioexperiment_id.{{$id}}.libstrategy_id">
-                                            <option value="">Select Lib Strategy</option>
-                                            @foreach ( $libstrategies as $libstrategy )
-                                            <option value="{{$libstrategy->id}}" @if (old('libstrategy_id')==$libstrategy->id) selected @endif>{{$libstrategy->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    {{-- <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td> --}}
-                                    <td><input type="text" name="bioexperiment_id[{{$id}}][libconsprot]" wire:model="bioexperiment_id.{{$id}}.libconsprot"></td>
-                                    <td>
-                                        <select name="bioexperiment_id[{{$id}}][instrument_id]" wire:model="bioexperiment_id.{{$id}}.instrument_id">
-                                            <option value="0">Select Instrument</option>
-                                            @foreach ( $instruments as $instrument )
-                                            <option value="{{$instrument->id}}" @if (old('instrument_id')==$instrument->id) selected @endif>{{$instrument->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        {{-- <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id"> --}}
-                                        <select name="bioexperiment_id[{{$id}}][liblayout_id]" wire:model="bioexperiment_id.{{$id}}.liblayout_id">
-                                            <option value="">Select Lib Layout</option>
-                                            @foreach ( $liblayouts as $liblayout )
-                                            <option value="{{$liblayout->id}}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{$liblayout->name}}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('bioexperiment_id.*.liblayout_id')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror
-                                        {{-- @error('bioexperiment_id.*.liblayout_id')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror --}}
-                                    </td>
-                                    <td><input onkeydown="return numbersOnly(event)" onkeyup="this.value=this.value.replace(',','.')" type="text" name="bioexperiment_id[{{$id}}][inp_size]" wire:model="bioexperiment_id.{{$id}}.inp_size" ></td>
-                                    <td>
-                                        <button class="btn btn-danger delete_row" wire:click.prevent="removeBiosample({{$id}})"><i class="bi bi-trash3-fill"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php $no++; ?>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="overflow-auto" style="width:100%;max-width: 100%;">
+                        @php
+                            $no = 1;
+                            $alias = $this->alias;
+                        @endphp
+
+                        @forelse ($biosample_id as $id => $experiment)
+                            @php
+                                $alias_exp[$id] = "INNAX-" . $alias . "-" . $no;
+                            @endphp
+
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-header d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                    <div>
+                                        <div class="fw-bold">#{{ $no }} — {{ $alias_exp[$id] }}</div>
+                                        <div class="text-muted small">
+                                            Biosample: {{ $this->biosampleSubmission($id) }} : {{ $this->biosampleName($id) }}
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-danger btn-sm" wire:click.prevent="removeBiosample({{ $id }})" title="Remove">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-12 col-lg-6">
+                                            <label class="form-label fw-bold">Title <span class="text-danger">*</span></label>
+                                            <input class="form-control" type="text" name="bioexperiment_id[{{ $id }}][title]" wire:model="bioexperiment_id.{{ $id }}.title">
+                                            @error('bioexperiment_id.' . $id . '.title')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12 col-lg-6">
+                                            <label class="form-label fw-bold">Library Name <span class="text-danger">*</span></label>
+                                            <input class="form-control" type="text" name="bioexperiment_id[{{ $id }}][libname]" wire:model="bioexperiment_id.{{ $id }}.libname">
+                                            @error('bioexperiment_id.' . $id . '.libname')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <label class="form-label fw-bold">Library Source <span class="text-danger">*</span></label>
+                                            <select class="form-select" name="bioexperiment_id[{{ $id }}][libsource_id]" wire:model="bioexperiment_id.{{ $id }}.libsource_id">
+                                                <option value="">Select Lib Source</option>
+                                                @foreach ( $libsources as $libsource )
+                                                    <option value="{{ $libsource->id }}" @if (old('libsource_id')==$libsource->id) selected @endif>{{ $libsource->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('bioexperiment_id.' . $id . '.libsource_id')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <label class="form-label fw-bold">Library Selection <span class="text-danger">*</span></label>
+                                            <select class="form-select" name="bioexperiment_id[{{ $id }}][libselection_id]" wire:model="bioexperiment_id.{{ $id }}.libselection_id">
+                                                <option value="">Select Lib Selection</option>
+                                                @foreach ( $libselections as $libselection )
+                                                    <option value="{{ $libselection->id }}" @if (old('libselection_id')==$libselection->id) selected @endif>{{ $libselection->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('bioexperiment_id.' . $id . '.libselection_id')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <label class="form-label fw-bold">Library Strategy <span class="text-danger">*</span></label>
+                                            <select class="form-select" name="bioexperiment_id[{{ $id }}][libstrategy_id]" wire:model="bioexperiment_id.{{ $id }}.libstrategy_id">
+                                                <option value="">Select Lib Strategy</option>
+                                                @foreach ( $libstrategies as $libstrategy )
+                                                    <option value="{{ $libstrategy->id }}" @if (old('libstrategy_id')==$libstrategy->id) selected @endif>{{ $libstrategy->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('bioexperiment_id.' . $id . '.libstrategy_id')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label fw-bold">Library Construction Protocol <span class="text-danger">*</span></label>
+                                            <input class="form-control" type="text" name="bioexperiment_id[{{ $id }}][libconsprot]" wire:model="bioexperiment_id.{{ $id }}.libconsprot">
+                                            @error('bioexperiment_id.' . $id . '.libconsprot')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <label class="form-label fw-bold">Instrument <span class="text-danger">*</span></label>
+                                            <select class="form-select" name="bioexperiment_id[{{ $id }}][instrument_id]" wire:model="bioexperiment_id.{{ $id }}.instrument_id">
+                                                <option value="0">Select Instrument</option>
+                                                @foreach ( $instruments as $instrument )
+                                                    <option value="{{ $instrument->id }}" @if (old('instrument_id')==$instrument->id) selected @endif>{{ $instrument->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('bioexperiment_id.' . $id . '.instrument_id')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <label class="form-label fw-bold">Library Layout <span class="text-danger">*</span></label>
+                                            <select class="form-select" name="bioexperiment_id[{{ $id }}][liblayout_id]" wire:model="bioexperiment_id.{{ $id }}.liblayout_id">
+                                                <option value="">Select Lib Layout</option>
+                                                @foreach ( $liblayouts as $liblayout )
+                                                    <option value="{{ $liblayout->id }}" @if (old('liblayout_id')==$liblayout->id) selected @endif>{{ $liblayout->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('bioexperiment_id.' . $id . '.liblayout_id')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <label class="form-label fw-bold">Insert Size (bp) <span class="text-danger">*</span></label>
+                                            <input class="form-control" onkeydown="return numbersOnly(event)" onkeyup="this.value=this.value.replace(',','.')" type="text" name="bioexperiment_id[{{ $id }}][inp_size]" wire:model="bioexperiment_id.{{ $id }}.inp_size">
+                                            @error('bioexperiment_id.' . $id . '.inp_size')
+                                            <p class="text-danger mb-0">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @php $no++; @endphp
+                        @empty
+                            <div class="alert alert-info mb-0">
+                                No biosamples selected yet. Go back and select at least one biosample.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -344,7 +363,6 @@
             <button class="btn btn-primary pull-right" type="button" wire:click="fourthStepSubmit">Next</button>
         </div>
     </div>
-
 
     <div class="row setup-content {{ $currentStep != 5 ? 'display-none' : '' }}" id="step-5">
         <div class="col-md-12">

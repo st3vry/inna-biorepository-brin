@@ -43,6 +43,17 @@ class DashboardBioarchiveController extends Controller
         return view('dashboard.bioarchive.create');
     }
 
+    public function edit($id)
+    {
+        $bioarchive = Bioarchive::where('accession', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('dashboard.bioarchive.edit', [
+            'bioarchive' => $bioarchive,
+        ]);
+    }
+
     public function show(Bioarchive $bioarchive)
     {
 
@@ -60,13 +71,15 @@ class DashboardBioarchiveController extends Controller
             $dir_type = "files";
         }
         $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
-        $disk = Storage::build([
-            'driver' => 'sftp',
-            'host' => env('FTP_HOST'),
-            'username' => "{$bioarchive->accession}",
-            'password' =>  "{$ftp_user->password}",
-            'root'=> "/"
-        ]);
+        if ($bioarchive->status == 4 ) {
+            $disk = Storage::build([
+                'driver' => 'sftp',
+                'host' => env('FTP_HOST'),
+                'username' => "{$bioarchive->accession}",
+                'password' =>  "{$ftp_user->password}",
+                'root'=> "/"
+            ]);
+        }
         foreach ($bioexperiment as $key => $value) {
             $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
             try {
@@ -77,7 +90,12 @@ class DashboardBioarchiveController extends Controller
                     array_push($files, $obj);
                 }
             } catch (\Throwable $th) {
-                throw $th;
+                $obj = new \stdClass();
+                $item = array();
+                $item[] = "Failed to read file(s)";
+                $obj->{$value['alias']} = $item;
+                array_push($files, $obj);
+                // throw $th;
             }
         }
 

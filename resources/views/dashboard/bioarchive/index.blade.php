@@ -90,7 +90,7 @@
                             <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="upload"></span></a>
                         @else
                             <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                            {{-- <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a> --}}
+                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
                             <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" method="post" class="d-inline">
                                 @method('delete')
                                 @csrf

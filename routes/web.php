@@ -233,6 +233,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/biosamples/getAttributes/{id}', [UserSampleController::class, "getAttributes"])->middleware('authsso');
         Route::get('/biosamples/getValueAttributes/{id}', [UserSampleController::class, "getValueAttributes"])->middleware('authsso');
         Route::get('/biosamples/getOrganism/{slug}', [UserSampleController::class, "getOrganism"])->middleware('authsso');
+        Route::get('/biosamples/getOrganismById/{id}', [UserSampleController::class, "getOrganismById"])->middleware('authsso');
         Route::get('/biosamples/draft/{draft}/load', [UserSampleController::class, 'loadDraft'])->name('biosamples.draft.load')->middleware('authsso');
         Route::post('/biosamples/draft', [UserSampleController::class, 'saveDraft'])->name('biosamples.draft.save')->middleware('authsso');
         Route::post('/biosamples/draft/{draft}/discard', [UserSampleController::class, 'discardDraft'])->name('biosamples.draft.discard')->middleware('authsso');

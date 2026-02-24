@@ -85,7 +85,7 @@
                     @if($bioproject->dv_published_at)
                     <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataverse/{{$bioproject->accession}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
                     @else
-                    <button type="button" class="badge btn-dataverse-outline" onclick="dataverseSync('{{$bioproject->accession}}')">Sync to dataverse</button>
+                    <button type="button" class="badge btn-dataverse-outline" onclick="dataverseSync('{{$bioproject->accession}}')" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
                     @endif
                     </div>
                     @endif

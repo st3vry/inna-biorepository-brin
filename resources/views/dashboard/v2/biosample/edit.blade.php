@@ -5,8 +5,9 @@
 </div>
 <div class="row">
     <div class="col-md-8">
-        <form class="needs-validation" action="/dashboard/v2/biosamples" method="POST" novalidate id="formBioSample">
-            @method('post')
+        <form class="needs-validation" action="{{ url('/dashboard/v2/biosamples/'.$biosample->accession) }}" method="POST" novalidate id="formBioSample">
+            {{-- <form class="needs-validation" action="http://127.0.0.1:8000/dashboard/v2/biosamples/INNAS000309" method="POST" novalidate id="formBioSample"> --}}
+            @method('put')
             @csrf
             <ul class="nav nav-tabs nav-fill mb-3" id="mytabs" role="tablist">
                 <li class="nav-item " role="presentation">
@@ -38,12 +39,20 @@
                         role="tab"
                         aria-controls="contentPreview"
                         aria-selected="false">
-                        Sample Attributes
+                        Preview
                     </a>
                 </li>
             </ul>
             <div class="tab-content" id="ex1-content">
                 <div class="tab-pane fade show active" id="contentGeneralInfo" role="tabpanel" aria-labelledby="contentGeneralInfo">
+                    <div class="card mb-3">
+                        <div class="card-header fw-bold fs-6">
+                            Description
+                        </div>
+                        <div class="card-body">
+                            <textarea class="form-control" id="sample_description" name="sample_description" placeholder="Biosample description" rows="3">{{ old('sample_description', $biosample->description) }}</textarea>
+                        </div>
+                    </div>
                     <div class="card mb-3">
                         <div class="card-header fw-bold fs-6">
                             Release <span class="text-danger">*</span>
@@ -87,7 +96,7 @@
                                             <input class="form-control" type="text" value="{{ $ext_link->link_url }}" name="external_link_url[]">
                                         </td>
                                         <td>
-                                            <button class="btn btn-danger delete-row" title="Delete"><i class="bi bi-trash"></i></button>
+                                            <button type="button" class="btn btn-danger delete-row" title="Delete"><i class="bi bi-trash"></i></button>
                                         </td>
                                     </tr>
 
@@ -95,7 +104,7 @@
 
                                 </tbody>
                             </table>
-                            <button id="btnAddExternalLink" class="btn btn-primary btn-sm">Add another link</button>
+                            <button type="button" id="btnAddExternalLink" class="btn btn-primary btn-sm">Add another link</button>
                         </div>
                     </div>
                     <div class="card mb-3">
@@ -115,7 +124,7 @@
                     <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
                     <p class="mb-3"><small><strong class="text-danger">**</strong> Required when added</small></p>
                     <div class="d-flex align-items-center justify-content-end mb-3">
-                        <button class="btn btn-sm btn-primary btn-next-prev" id="btnNext" data-st-location="contentGeneralInfo" data-st-target="contentSampleInformation">
+                        <button type="button" class="btn btn-sm btn-primary btn-next-prev" id="btnNext" data-st-location="contentGeneralInfo" data-st-target="contentSampleInformation">
                             Next <i class="bi bi-chevron-right"></i>
                         </button>
                     </div>
@@ -165,10 +174,10 @@
                     <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
                     <p class="mb-3"><small><strong class="text-danger">**</strong> At least one field required</small></p>
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <button class="btn btn-sm btn-danger btn-next-prev" data-st-target="contentGeneralInfo">
+                        <button type="button" class="btn btn-sm btn-danger btn-next-prev" data-st-target="contentGeneralInfo">
                             <i class="bi bi-chevron-left"></i> Back
                         </button>
-                        <button class="btn btn-sm btn-primary btn-next-prev" data-st-location="contentSampleInformation" data-st-target="contentPreview">
+                        <button type="button" class="btn btn-sm btn-primary btn-next-prev" data-st-location="contentSampleInformation" data-st-target="contentPreview">
                             Next <i class="bi bi-chevron-right"></i>
                         </button>
                     </div>
@@ -189,7 +198,7 @@
                     </div>
                     <hr class="mb-3">
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <button class="btn btn-sm btn-danger btn-next-prev " data-st-target="contentSampleInformation">
+                        <button type="button" class="btn btn-sm btn-danger btn-next-prev " data-st-target="contentSampleInformation">
                             <i class="bi bi-chevron-left"></i> Back
                         </button>
                         <button id="btnSubmit" type="submit" class="btn btn-sm btn-primary">
@@ -208,7 +217,7 @@
             <div class="card-body">
                 <h5 class="card-title mb-0">{{$submitter->name}}</h5>
                 <p class="card-text caption mb-0">{{$submitter->email}}</p>
-                <p class="card-text">{{$submitter->lab}} - {{$submitter->center}}</p>
+                <p class="card-text">{{$submitter->lab_name}} - {{$submitter->center_name}}</p>
             </div>
         </div>
     </div>
@@ -223,6 +232,7 @@
     var counterFundAgency = 0;
     var i = 0;
     let GLOBAL_ORGANISM = []
+    let ORGANISM_PENDING_ID = null;
     $(document).ready(function() {
         $(".delete-row").on('click', function(e) {
             e.preventDefault()
@@ -238,7 +248,7 @@
             rowsel = getFundAgency();
             row += rowsel
             row += '</select></td><td><input type="text" name ="grant_program[' + i + ']" class="form-control" ></td></td><td><input type="text" name ="grant_title[' + i + ']" class="form-control" ></td>';
-            row += '<td><button class="btn btn-danger delete_row">remove</button></td></tr>';
+            row += '<td><button type="button" class="btn btn-danger delete_row">remove</button></td></tr>';
             $("#fundagency").append(row);
             $('#id_fundagency' + counterFundAgency).select2({
                 placeholder: "Fund Agency",
@@ -298,7 +308,7 @@
             let mandatories = attrs["attributesM"];
             let eithers = attrs["attributesE"];
 
-            let values = value['sample_attr'];
+            let values = (value && value['sample_attr']) ? value['sample_attr'] : [];
             let sample_attr_value = null;
 
 
@@ -320,7 +330,7 @@
             });
 
             attributes.forEach(attribute => {
-                sample_attr_value = values.filter((value) => value.attributesample_id == attribute)[0] ? values.filter((value) => value.attributesample_id == attribute)[0]["value"] : ""
+                sample_attr_value = values.filter((value) => value.attributesample_id == attribute.id)[0] ? values.filter((value) => value.attributesample_id == attribute.id)[0]["value"] : ""
                 createInput(attribute, "optional",sample_attr_value)
             })
         }
@@ -339,7 +349,7 @@
                     // Nested AJAX call for the second URL to fetch values
                     $.ajax({
                         // getValueAttributes
-                        url: "/dashboard/v2/biosamples/getValueAttributes/" + id,
+                        url: "/dashboard/v2/biosamples/getValueAttributes/" + BIOSAMPLE_ID,
                         async: false,
                         success: function(value){
                             valueResponse = value;
@@ -358,6 +368,7 @@
         }
 
         const formAttributes = $("#formAttributes");
+        const BIOSAMPLE_ID = @json($biosample->id);
         const sampleTypePackages = $("#sampleTypePackages")
         sampleTypePackages.val("{{$sampletype->sampletype_package_id}}")
         const sampleType = $("#sampleType")
@@ -387,7 +398,7 @@
                             </div>
                         </td>
                         <td>
-                            <button class="btn btn-danger delete-row" title="Delete"><i class="bi bi-trash"></i></button>
+                            <button type="button" class="btn btn-danger delete-row" title="Delete"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 `
@@ -415,18 +426,20 @@
 
         function createInput(obj, requireType, value = null) {
             // console.log(obj.attr_name)
+            const normalizedValue = (value === null || value === undefined) ? "" : value;
             let asterisk = requireType == "required" ? "<span class='text-danger'>* </span>" : requireType == "either" ? "<span class='text-danger'>** </span>" : ""
             let input = ""
             switch (obj.input_type_id) {
                 case 1:
-                    input = `<input data-st-require="${requireType}" value="${value}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                    input = `<input data-st-require="${requireType}" value="${normalizedValue}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
                     break;
                 case 2:
-                    input = `<textarea data-st-require="${requireType}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">${value}</textarea>`
+                    input = `<textarea data-st-require="${requireType}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">${normalizedValue}</textarea>`
                     break;
                 case 3:
                     let options = ""
-                    obj.list_value.split(",").forEach(element => {
+                    const rawListValue = (obj.list_value === null || obj.list_value === undefined) ? "" : String(obj.list_value);
+                    rawListValue.split(",").filter(v => v !== "").forEach(element => {
                         options += `<option value="${element}" style="text-transform: capitalize;">${element.replace(/\b\w/g, function(l){ return l.toUpperCase() })}</option>`
                     });
                     input = `
@@ -436,18 +449,18 @@
                     `
                     break;
                 case 4:
-                    input = `<input data-st-require="${requireType}" type="date" value="${value}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                    input = `<input data-st-require="${requireType}" type="date" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
 
                     break;
                 case 5:
-                    input = `<input data-st-require="${requireType}" type="text" value="${value}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                    input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
                     break;
                 case 6:
-                    input = `<input data-st-require="${requireType}" type="text" value="${value}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                    input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
                     break;
 
                 default:
-                    input = `<input data-st-require="${requireType}" type="text" value="${value}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                    input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
                     break;
             }
             if (requireType == "required") {
@@ -479,59 +492,103 @@
                 </div>
                 `
             )
+
+            // Preselect value for normal <select> inputs
+            if (obj.input_type_id == 3 && normalizedValue !== "") {
+                $("#" + obj.attr_name).val(normalizedValue);
+            }
             let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
             let popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
             if (obj.attr_name == "taxonomy_id") {
                 $("#taxonomy_id").prop("readonly", true);
             }
             if (obj.attr_name == "organism") {
-                let organismSelect = $('#organism').select2({
-                    placeholder: "Select Organism",
-                    theme: "bootstrap-5",
-                    width: '100%',
-                    ajax: {
-                        url: function(params) {
-                            console.log("params", params)
-                            return '/dashboard/v2/biosamples/getOrganism/' + params.term;
-                        },
-                        dataType: 'json',
-                        type: "GET",
-                        quietMillis: 50,
-                        data: function(term) {
-                            console.log("term", term)
-                            return {
-                                term: term
-                            };
-                        },
-                        processResults: function(data) {
-                            GLOBAL_ORGANISM = data
-                            console.log("DATA", GLOBAL_ORGANISM)
-                            return {
-                                results: $.map(data, function(obj) {
-                                    return {
-                                        id: obj.id,
-                                        text: obj.text,
-                                        taxon_id: obj.taxon_id
-                                    };
-                                })
-                            };
-                        },
-                    }
-                });
+                ORGANISM_PENDING_ID = normalizedValue || null;
 
-                organismSelect.on("select2:select", function(e) {
-                    $("#taxonomy_id").val(e.params.data.taxon_id)
-                });
-                if(value){
-                    $("#organism").val(value)
+                // If this tab is currently visible, initialize immediately.
+                // If it's hidden (Bootstrap tabs), Select2 may compute width=0 and look like it disappeared.
+                if ($('#contentSampleInformation').hasClass('show') && $('#contentSampleInformation').hasClass('active')) {
+                    ensureOrganismSelect2();
                 }
             }
 
         }
+
+        function ensureOrganismSelect2() {
+            const $organism = $('#organism');
+            if ($organism.length === 0) return;
+
+            // Preserve current value if any
+            const currentValue = $organism.val() || ORGANISM_PENDING_ID;
+
+            // Re-init to fix width/visibility glitches when switching tabs
+            if ($organism.hasClass('select2-hidden-accessible')) {
+                $organism.select2('destroy');
+            }
+
+            $organism.select2({
+                placeholder: "Select Organism",
+                theme: "bootstrap-5",
+                width: '100%',
+                ajax: {
+                    url: function(params) {
+                        return '/dashboard/v2/biosamples/getOrganism/' + (params.term || '');
+                    },
+                    dataType: 'json',
+                    type: "GET",
+                    quietMillis: 50,
+                    data: function(term) {
+                        return {
+                            term: term
+                        };
+                    },
+                    processResults: function(data) {
+                        GLOBAL_ORGANISM = data
+                        return {
+                            results: $.map(data, function(obj) {
+                                return {
+                                    id: obj.id,
+                                    text: obj.text,
+                                    taxon_id: obj.taxon_id
+                                };
+                            })
+                        };
+                    },
+                }
+            });
+
+            $organism.off('select2:select.organism').on("select2:select.organism", function(e) {
+                $("#taxonomy_id").val(e.params.data.taxon_id)
+            });
+
+            if (currentValue) {
+                $.ajax({
+                    url: "/dashboard/v2/biosamples/getOrganismById/" + currentValue,
+                    type: "GET",
+                    success: function(data) {
+                        if (!data) return;
+                        const option = new Option(data.text, data.id, true, true);
+                        $organism.append(option).trigger('change');
+                        if (data.taxon_id) {
+                            $("#taxonomy_id").val(data.taxon_id)
+                        }
+                    },
+                    error: function() {
+                        // leave blank if organism id no longer exists
+                    }
+                });
+            }
+
+            // Hard-set container width in case Bootstrap tabs caused 0-width calc
+            $organism.next('.select2-container').css('width', '100%');
+        }
         const formBioSample = $('#formBioSample')
 
         function getTableRow(label, value) {
-            if (label == "hold_release") {
+            if (label == "sample_description") {
+                label = "Biosample Description"
+                value = document.querySelector('textarea[name=sample_description]').value
+            } else if (label == "hold_release") {
                 label = "Hold/Release"
                 value = document.querySelector('input[name=hold_release]:checked').nextElementSibling.innerHTML
             } else if (label == "external_link_description[]" || label == "external_link_url[]") {
@@ -591,6 +648,7 @@
                     $("#previewTable tbody").append(getTableRow(element.name, element.value == "" ? "-" : element.value))
                 }
             });
+            console.log("formData", formData)
         }
 
 
@@ -653,6 +711,11 @@
 
         $('#tabPreview').on('shown.bs.tab', function(e) {
             serializeForm()
+        });
+
+        // When user navigates back to Sample Information, Select2 needs a refresh
+        $('#tabSampleInformation').on('shown.bs.tab', function() {
+            ensureOrganismSelect2();
         });
 
         let btnPrevNext = document.querySelectorAll(".btn-next-prev")

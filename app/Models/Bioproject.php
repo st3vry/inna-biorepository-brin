@@ -58,6 +58,11 @@ class Bioproject extends Model
         return $this->hasMany(BioProjectExternalLink::class);
     }
 
+    public function biosamples()
+    {
+        return $this->hasMany(Biosample::class, 'bioproject_id');
+    }
+
     public function target()
     {
         return $this->hasOne(BioprojectTarget::class, 'bioproject_id');

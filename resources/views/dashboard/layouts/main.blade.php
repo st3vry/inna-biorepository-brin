@@ -4,11 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BioRepository | Dashboard</title>
+    <title>@yield('title', 'BioRepository') | Dashboard</title>
 
     <!-- Bootstrap core CSS -->
     {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/materialdesignicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Custom styles for this template -->
     <link href="/css/dashboard.css" rel="stylesheet">
@@ -29,22 +32,58 @@
 
 </head>
 
-<body>
+<body data-menu-color="light" data-sidebar="default">
+    <div id="app-layout">
 
-    @include('dashboard.layouts.header')
+        @include('dashboard.layouts.header')
 
-    <div class="container-fluid">
-        <div class="row">
-            @include('dashboard.layouts.sidebar')
-            @include('dashboard.layouts.notification')
-            @include('dashboard.layouts.notification')
+        <div class="container-fluid">
+            <div class="row">
+                @include('dashboard.layouts.sidebar')
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                @yield('container')
-            </main>
+                @include('dashboard.layouts.notification')
+
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+                    <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
+                        <div class="flex-grow-1">
+                            <h4 class="fs-18 fw-semibold m-0">@yield('title', 'BioRepository')</h4>
+                        </div>
+
+                        <div class="text-end">
+                            <ol class="breadcrumb m-0 py-0">
+                                @hasSection('breadcrumb')
+                                    @yield('breadcrumb')
+                                @else
+                                    @php $segments = request()->segments(); @endphp
+                                    @foreach($segments as $key => $segment)
+                                        @php
+                                            $isLast = $key === count($segments) - 1;
+                                            $path = implode('/', array_slice($segments, 0, $key + 1));
+                                            $url = url($path);
+                                            $name = ucwords(str_replace(['-', '_'], ' ', $segment));
+                                        @endphp
+                                        <li class="breadcrumb-item {{ $isLast ? 'active' : '' }}" @if($isLast) aria-current="page" @endif>
+                                            @if(!$isLast)
+                                                <a href="{{ $url }}">{{ $name }}</a>
+                                            @else
+                                                {{ $name }}
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                @endif
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="content">
+                        @yield('container')
+                    </div>
+
+                </main>
+            </div>
         </div>
-    </div>
 
+    </div>
     <div class="modal" tabindex="-1" id="bsConfirmModal">
         <div class="modal-dialog">
             <div class="modal-content">

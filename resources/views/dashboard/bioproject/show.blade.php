@@ -1,4 +1,5 @@
 @extends('dashboard.layouts.main')
+@section('title', 'Bioproject - ' . $bioproject->accession)
 
 @push('css')
 <style>

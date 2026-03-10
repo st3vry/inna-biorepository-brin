@@ -1,227 +1,231 @@
 @extends('dashboard.layouts.main')
+@section('title', 'Edit Biosample ' . $biosample->accession)
 @section('container')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1>Input Biosample Data</h1>
-</div>
-<div class="row">
-    <div class="col-md-8">
-        <form class="needs-validation" action="{{ url('/dashboard/v2/biosamples/'.$biosample->accession) }}" method="POST" novalidate id="formBioSample">
-            {{-- <form class="needs-validation" action="http://127.0.0.1:8000/dashboard/v2/biosamples/INNAS000309" method="POST" novalidate id="formBioSample"> --}}
-            @method('put')
-            @csrf
-            <ul class="nav nav-tabs nav-fill mb-3" id="mytabs" role="tablist">
-                <li class="nav-item " role="presentation">
-                    <a class="nav-link disabled active" id="tabGeneralInformation" data-bs-toggle="tab"
-                        href="#contentGeneralInfo"
-                        role="tab"
-                        aria-controls="contentGeneralInfo"
-                        aria-selected="true">
-                        General Infrormation
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link disabled"
-                        aria-disabled="true"
-                        id="tabSampleInformation"
-                        data-bs-toggle="tab"
-                        href="#contentSampleInformation"
-                        role="tab"
-                        aria-controls="contentSampleInformation"
-                        aria-selected="false">
-                        Sample Information
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link disabled"
-                        id="tabPreview"
-                        data-bs-toggle="tab"
-                        href="#contentPreview"
-                        role="tab"
-                        aria-controls="contentPreview"
-                        aria-selected="false">
-                        Preview
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content" id="ex1-content">
-                <div class="tab-pane fade show active" id="contentGeneralInfo" role="tabpanel" aria-labelledby="contentGeneralInfo">
-                    <div class="card mb-3">
-                        <div class="card-header fw-bold fs-6">
-                            Description
-                        </div>
-                        <div class="card-body">
-                            <textarea class="form-control" id="sample_description" name="sample_description" placeholder="Biosample description" rows="3">{{ old('sample_description', $biosample->description) }}</textarea>
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <div class="card-header fw-bold fs-6">
-                            Release <span class="text-danger">*</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="hold_release" id="exampleRadios1" value="true" @if ($biosample->hold_release) checked @endif>
-                                <label class="form-check-label" for="exampleRadios1">
-                                    Hold (not viewable until the release of linked data)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="hold_release" id="exampleRadios2" value="false" @if (!$biosample->hold_release) checked @endif>
-                                <label class="form-check-label" for="exampleRadios2">
-                                    After the approval is passed, release immediately following curation
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <div class="card-header fw-bold fs-6">
-                            External Link <span class="text-danger"> **</span>
-                        </div>
-                        <div class="card-body">
-                            <table id="externalLinkTable" class="table w-100" data-toggle="table" data-mobile-responsive="true">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" style="width: 50%">Link Description</th>
-                                        <th scope="col" style="width: 45%">URL</th>
-                                        <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($externallinks as $ext_link)
-                                    {{-- {{ $ext_link->link_url }} --}}
-                                    <tr>
-                                        <td>
-                                            <input class="form-control" type="text" value="{{ $ext_link->link_description }}" name="external_link_description[]">
-                                        </td>
-                                        <td>
-                                            <input class="form-control" type="text" value="{{ $ext_link->link_url }}" name="external_link_url[]">
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-danger delete-row" title="Delete"><i class="bi bi-trash"></i></button>
-                                        </td>
-                                    </tr>
 
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                            <button type="button" id="btnAddExternalLink" class="btn btn-primary btn-sm">Add another link</button>
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <div class="card-header fw-bold fs-6">
-                            Comments
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <textarea class="form-control" id="comments" name="comments" rows="3">{{ $biosample->comments }}</textarea>
-                                <div id="commentsHelpBlock" class="form-text">
-                                    Private comments to staff
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="mb-0">
-                    <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
-                    <p class="mb-3"><small><strong class="text-danger">**</strong> Required when added</small></p>
-                    <div class="d-flex align-items-center justify-content-end mb-3">
-                        <button type="button" class="btn btn-sm btn-primary btn-next-prev" id="btnNext" data-st-location="contentGeneralInfo" data-st-target="contentSampleInformation">
-                            Next <i class="bi bi-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="contentSampleInformation" role="tabpanel" aria-labelledby="contentSampleInformation">
-                    <div class="card mb-3">
-                        <div class="card-header fw-bold fs-6">
-                            Sample Type <span class="text-danger">*</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    {{-- <label for="sampleTypePackages" class="form-label fw-bold">Package</label> --}}
-                                    <select id="sampleTypePackages" name="sample_type_packages_select" class="form-select" aria-label="Package" data-st-require="required">
-                                        <option selected disabled value="">Choose package</option>
-                                        @foreach ($packages as $package)
-                                        <option value="{{$package->id}}">{{$package->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        This field is required!
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form class="needs-validation" action="{{ url('/dashboard/v2/biosamples/'.$biosample->accession) }}" method="POST" novalidate id="formBioSample">
+                        {{-- <form class="needs-validation" action="http://127.0.0.1:8000/dashboard/v2/biosamples/INNAS000309" method="POST" novalidate id="formBioSample"> --}}
+                        @method('put')
+                        @csrf
+                        <ul class="nav nav-tabs nav-fill mb-3" id="mytabs" role="tablist">
+                            <li class="nav-item " role="presentation">
+                                <a class="nav-link disabled active" id="tabGeneralInformation" data-bs-toggle="tab"
+                                    href="#contentGeneralInfo"
+                                    role="tab"
+                                    aria-controls="contentGeneralInfo"
+                                    aria-selected="true">
+                                    General Infrormation
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link disabled"
+                                    aria-disabled="true"
+                                    id="tabSampleInformation"
+                                    data-bs-toggle="tab"
+                                    href="#contentSampleInformation"
+                                    role="tab"
+                                    aria-controls="contentSampleInformation"
+                                    aria-selected="false">
+                                    Sample Information
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link disabled"
+                                    id="tabPreview"
+                                    data-bs-toggle="tab"
+                                    href="#contentPreview"
+                                    role="tab"
+                                    aria-controls="contentPreview"
+                                    aria-selected="false">
+                                    Preview
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="ex1-content">
+                            <div class="tab-pane fade show active" id="contentGeneralInfo" role="tabpanel" aria-labelledby="contentGeneralInfo">
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
+                                        Description
                                     </div>
-
-                                </div>
-                                <div class="col-12">
-                                    {{-- <label for="sampleType" class="form-label fw-bold">Sample Type</label> --}}
-                                    <select id="sampleType" name="sample_type_select" class="form-select" aria-label="Sample Type" data-st-require="required">
-                                        <option selected disabled value="">Choose sample type</option>
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        This field is required!
+                                    <div class="card-body">
+                                        <textarea class="form-control" id="sample_description" name="sample_description" placeholder="Biosample description" rows="3">{{ old('sample_description', $biosample->description) }}</textarea>
                                     </div>
                                 </div>
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
+                                        Release <span class="text-danger">*</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="hold_release" id="exampleRadios1" value="true" @if ($biosample->hold_release) checked @endif>
+                                            <label class="form-check-label" for="exampleRadios1">
+                                                Hold (not viewable until the release of linked data)
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="hold_release" id="exampleRadios2" value="false" @if (!$biosample->hold_release) checked @endif>
+                                            <label class="form-check-label" for="exampleRadios2">
+                                                After the approval is passed, release immediately following curation
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
+                                        External Link <span class="text-danger"> **</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="externalLinkTable" class="table w-100" data-toggle="table" data-mobile-responsive="true">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="width: 50%">Link Description</th>
+                                                    <th scope="col" style="width: 45%">URL</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($externallinks as $ext_link)
+                                                {{-- {{ $ext_link->link_url }} --}}
+                                                <tr>
+                                                    <td>
+                                                        <input class="form-control" type="text" value="{{ $ext_link->link_description }}" name="external_link_description[]">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" value="{{ $ext_link->link_url }}" name="external_link_url[]">
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger delete-row" title="Delete"><i class="bi bi-trash"></i></button>
+                                                    </td>
+                                                </tr>
+
+                                                @endforeach
+
+                                            </tbody>
+                                        </table>
+                                        <button type="button" id="btnAddExternalLink" class="btn btn-primary btn-sm">Add another link</button>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
+                                        Comments
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <textarea class="form-control" id="comments" name="comments" rows="3">{{ $biosample->comments }}</textarea>
+                                            <div id="commentsHelpBlock" class="form-text">
+                                                Private comments to staff
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mb-0">
+                                <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
+                                <p class="mb-3"><small><strong class="text-danger">**</strong> Required when added</small></p>
+                                <div class="d-flex align-items-center justify-content-end mb-3">
+                                    <button type="button" class="btn btn-sm btn-primary btn-next-prev" id="btnNext" data-st-location="contentGeneralInfo" data-st-target="contentSampleInformation">
+                                        Next <i class="bi bi-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="contentSampleInformation" role="tabpanel" aria-labelledby="contentSampleInformation">
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
+                                        Sample Type <span class="text-danger">*</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                {{-- <label for="sampleTypePackages" class="form-label fw-bold">Package</label> --}}
+                                                <select id="sampleTypePackages" name="sample_type_packages_select" class="form-select" aria-label="Package" data-st-require="required">
+                                                    <option selected disabled value="">Choose package</option>
+                                                    @foreach ($packages as $package)
+                                                    <option value="{{$package->id}}">{{$package->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    This field is required!
+                                                </div>
+
+                                            </div>
+                                            <div class="col-12">
+                                                {{-- <label for="sampleType" class="form-label fw-bold">Sample Type</label> --}}
+                                                <select id="sampleType" name="sample_type_select" class="form-select" aria-label="Sample Type" data-st-require="required">
+                                                    <option selected disabled value="">Choose sample type</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    This field is required!
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3 d-none" id="cardSampleAttributes">
+                                    <div class="card-header fs-6 fw-bold" id="cardSampleAttributesHeader">
+
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="formAttributes" class="row">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mb-0">
+                                <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
+                                <p class="mb-3"><small><strong class="text-danger">**</strong> At least one field required</small></p>
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <button type="button" class="btn btn-sm btn-danger btn-next-prev" data-st-target="contentGeneralInfo">
+                                        <i class="bi bi-chevron-left"></i> Back
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary btn-next-prev" data-st-location="contentSampleInformation" data-st-target="contentPreview">
+                                        Next <i class="bi bi-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="contentPreview" role="tabpanel" aria-labelledby="contentPreview">
+                                <div class="card">
+                                    <div class="card-header fw-bold fs-6">
+                                        Review Data
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="previewTable" class="table w-100" data-toggle="table" data-mobile-responsive="true">
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                                <hr class="mb-3">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <button type="button" class="btn btn-sm btn-danger btn-next-prev " data-st-target="contentSampleInformation">
+                                        <i class="bi bi-chevron-left"></i> Back
+                                    </button>
+                                    <button id="btnSubmit" type="submit" class="btn btn-sm btn-primary">
+                                        Submit <i class="bi bi-floppy-fill"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card mb-3 d-none" id="cardSampleAttributes">
-                        <div class="card-header fs-6 fw-bold" id="cardSampleAttributesHeader">
-
-                        </div>
-                        <div class="card-body">
-                            <div id="formAttributes" class="row">
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="mb-0">
-                    <p class="mb-0"><small><strong class="text-danger">*</strong> Required field </small></p>
-                    <p class="mb-3"><small><strong class="text-danger">**</strong> At least one field required</small></p>
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <button type="button" class="btn btn-sm btn-danger btn-next-prev" data-st-target="contentGeneralInfo">
-                            <i class="bi bi-chevron-left"></i> Back
-                        </button>
-                        <button type="button" class="btn btn-sm btn-primary btn-next-prev" data-st-location="contentSampleInformation" data-st-target="contentPreview">
-                            Next <i class="bi bi-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="contentPreview" role="tabpanel" aria-labelledby="contentPreview">
-                    <div class="card">
-                        <div class="card-header fw-bold fs-6">
-                            Review Data
-                        </div>
-                        <div class="card-body">
-                            <table id="previewTable" class="table w-100" data-toggle="table" data-mobile-responsive="true">
-                                <tbody>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    <hr class="mb-3">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <button type="button" class="btn btn-sm btn-danger btn-next-prev " data-st-target="contentSampleInformation">
-                            <i class="bi bi-chevron-left"></i> Back
-                        </button>
-                        <button id="btnSubmit" type="submit" class="btn btn-sm btn-primary">
-                            Submit <i class="bi bi-floppy-fill"></i>
-                        </button>
-                    </div>
+                    </form>
                 </div>
             </div>
-        </form>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                Submitter Information
-            </div>
-            <div class="card-body">
-                <h5 class="card-title mb-0">{{$submitter->name}}</h5>
-                <p class="card-text caption mb-0">{{$submitter->email}}</p>
-                <p class="card-text">{{$submitter->lab_name}} - {{$submitter->center_name}}</p>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Submitter Information</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-0">{{$submitter->name}}</h5>
+                    <p class="card-text caption mb-0">{{$submitter->email}}</p>
+                    <p class="card-text">{{$submitter->lab_name}} - {{$submitter->center_name}}</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {{-- <div class="col-lg-8">
 
     @livewire('create-biosample')

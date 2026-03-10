@@ -18,9 +18,9 @@ File: Main Css File
   --bs-topbar-bg: #fff;
   --bs-footer-bg: #fff;
   --bs-sidebar-item: #2f384f;
-  --bs-sidebar-item-hover: #1627a7;
-  --bs-sidebar-item-active: #1627a7;
-  --bs-sidebar-item-active-bg: #1627a71a;
+  --bs-sidebar-item-hover: #EC2425;
+  --bs-sidebar-item-active: #EC2425;
+  --bs-sidebar-item-active-bg: #EC24251a;
   --bs-main-nav-item-color: #2f384f;
   --bs-topbar-menu-nav-link-color: #4a5a6b;
   --bs-topbar-search-bg: #F6F8FB;
@@ -35,6 +35,8 @@ File: Main Css File
   --bs-gray-400: #ced4da;
   --bs-heading-color: inherit;
   --bs-chart-border-color: #f1f1f1;
+  --brin-red: #EC2425;
+  --brin-hover: #ca1313;
 }
 
 html[data-bs-theme=dark] {
@@ -46,9 +48,9 @@ html[data-bs-theme=dark] {
   --bs-topbar-bg: #1f2028;
   --bs-footer-bg: #1f2028;
   --bs-sidebar-item: #ced4da;
-  --bs-sidebar-item-hover: #ffffff;
-  --bs-sidebar-item-active: #ffffff;
-  --bs-sidebar-item-active-bg: #2a2c33;
+  --bs-sidebar-item-hover: #EC2425;
+  --bs-sidebar-item-active: #EC2425;
+  --bs-sidebar-item-active-bg: #EC24251a;
   --bs-main-nav-item-color: #adb5bd;
   --bs-topbar-menu-nav-link-color: #ced4da;
   --bs-topbar-search-bg: #2a2b34;
@@ -3043,6 +3045,23 @@ textarea.form-control-lg {
   background-color: var(--bs-btn-disabled-bg);
   border-color: var(--bs-btn-disabled-border-color);
   opacity: var(--bs-btn-disabled-opacity);
+}
+
+.btn-brin {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #EC2425;
+  --bs-btn-border-color: #EC2425;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #ca1313;
+  --bs-btn-hover-border-color: #ca1313;
+  --bs-btn-focus-shadow-rgb: 57, 71, 180;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #ca1313;
+  --bs-btn-active-border-color: #ca1313;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #EC2425;
+  --bs-btn-disabled-border-color: #EC2425;
 }
 
 .btn-primary {
@@ -16031,5 +16050,9 @@ html[data-bs-theme=dark] .table-light {
 }
 .simple-timeline .timeline-dot-purple {
   background-color: #5F01B9 !important;
+  outline: 3px solid var(--bs-border-color);
+}
+.simple-timeline .timeline-dot-success {
+  background-color: var(--bs-success) !important;
   outline: 3px solid var(--bs-border-color);
 }

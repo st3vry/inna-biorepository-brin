@@ -332,4 +332,19 @@ class DashboardBioprojectController extends Controller
         $fundagencies = Fundagency::All();
         return response()->json($fundagencies);
     }
+
+    /**
+     * Unhold a published bioproject by clearing the hold_release flag.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Bioproject  $bioproject
+     * @return \Illuminate\Http\Response
+     */
+    public function release(Request $request, Bioproject $bioproject)
+    {
+        $bioproject->hold_release = false;
+        $bioproject->save();
+
+        return response()->json([ 'status' => 'OK' ]);
+    }
 }

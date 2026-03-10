@@ -97,4 +97,19 @@ class DashboardBiosampleController extends Controller
         Biosample::destroy($biosample->id);
         return redirect('/dashboard/biosamples')->with('success', 'Biosamples has been deleted!');
     }
+
+    /**
+     * Release a published biosample by clearing the hold_release flag.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Biosample  $biosample
+     * @return \Illuminate\Http\Response
+     */
+    public function release(Request $request, Biosample $biosample)
+    {
+        $biosample->hold_release = false;
+        $biosample->save();
+
+        return response()->json(['status' => 'OK']);
+    }
 }

@@ -1,9 +1,7 @@
 @extends('dashboard.layouts.main')
+@section('title', "Welcome, " . (str_word_count(auth()->user()->name) > 1 ? explode(' ', trim(auth()->user()->name))[0] . ' ' . last(explode(' ', trim(auth()->user()->name))) : auth()->user()->name) . "!")
 
 @section('container')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Welcome, {{ $nama }}</h1>
-</div>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <style>
 body{
@@ -66,41 +64,100 @@ a:hover {
 } 
 </style>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 col-xl-3">
-            <div class="card bg-c-blue order-card">
-                <div class="card-block">
-                    <h6 class="m-b-20">BioProjects</h6>
-                    <h2 class="text-right"><i data-feather="list" style="width:32px;height:32px;"class="f-left"></i><span>{{ $bioproject_count }} Projects</span> </h2>
-                    <p class="m-b-0">Published<span class="f-right">{{ $bioproject_pub_count }} Projects</span> </p>
-                    <a href="/dashboard/bioprojects" class="stretched-link">Bioprojects Page</a>
+<div class="row">
+        <div class="col-md-6 col-xxl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="widget-first">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-secondary-subtle p-2 me-2">
+                                <iconify-icon icon="tabler:list" class="align-middle text-dark fs-26 mb-0"></iconify-icon>
+                            </div>
+                            <a class="mb-0 text-dark fs-16 stretched-link" href="/dashboard/bioprojects">BioProjects</a>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h3 class="fs-24 fw-medium text-dark mb-0 me-3">{{ $bioproject_pub_count }} of {{ $bioproject_count }} <small class="fs-12">Projects Published</small></h3>
+                            
+                            <div class="d-flex align-items-center">
+                                <span class="me-2 rounded-2 badge fs-12 {{number_format(($bioproject_pub_count / $bioproject_count) * 100, 2) > 50 ? 'badge-soft-success' : 'badge-soft-danger'}} fw-medium">{{ number_format(($bioproject_pub_count / $bioproject_count) * 100, 2) }}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-4 col-xl-3">
-            <div class="card bg-c-green order-card">
-                <div class="card-block">
-                    <h6 class="m-b-20">BioSamples</h6>
-                    <h2 class="text-right"><i data-feather="layers" style="width:32px;height:32px;"class="f-left"></i><span>{{ $biosample_count }} Samples</span></h2>
-                    <p class="m-b-0">Published<span class="f-right">{{ $biosample_pub_count }} Samples</span></p>
-                    <a href="/dashboard/biosamples" class="stretched-link">Biosamples Page</a>
+
+        <div class="col-md-6 col-xxl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="widget-first">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-primary-subtle p-2 me-2">
+                                <iconify-icon icon="tabler:layers-subtract" class="align-middle text-dark fs-26 mb-0"></iconify-icon>
+                            </div>
+                            <a class="mb-0 text-dark fs-16 stretched-link" href="/dashboard/biosamples">BioSamples</a>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h3 class="fs-24 fw-medium text-dark mb-0 me-3">{{ $biosample_pub_count }} of {{ $biosample_count }} <small class="fs-12">Samples Published</small></h3>
+
+                            <div class="d-flex align-items-center">
+                                <span class="me-2 rounded-2 badge fs-12 {{number_format(($biosample_pub_count / $biosample_count) * 100, 2) > 50 ? 'badge-soft-success' : 'badge-soft-danger'}} fw-medium">{{ number_format(($biosample_pub_count / $biosample_count) * 100, 2) }}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-4 col-xl-3">
-            <div class="card bg-c-yellow order-card">
-                <div class="card-block">
-                    <h6 class="m-b-20">BioArchives</h6>
-                    <h2 class="text-right"><i data-feather="hard-drive" style="width:32px;height:32px;"class="f-left"></i><span>{{ $bioarchive_count }} Archives</span></h2>
-                    <p class="m-b-0">Published<span class="f-right">{{ $bioarchive_pub_count }} Archives</span></p>
-                    <a href="/dashboard/bioarchives" class="stretched-link">Bioarchives Page</a>
+
+        <div class="col-md-6 col-xxl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="widget-first">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-success-subtle p-2 me-2">
+                                <iconify-icon icon="tabler:server" class="align-middle text-dark fs-26 mb-0"></iconify-icon>
+                            </div>
+                            <a class="mb-0 text-dark fs-16 stretched-link" href="/dashboard/bioarchives">BioArchives</a>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h3 class="fs-24 fw-medium text-dark mb-0 me-3">{{ $bioarchive_pub_count }} of {{ $bioarchive_count }} <small class="fs-12">Archives Published</small></h3>
+
+                            <div class="d-flex align-items-center">
+                                <span class="me-2 rounded-2 badge fs-12 {{number_format(($bioarchive_pub_count / $bioarchive_count) * 100, 2) > 50 ? 'badge-soft-success' : 'badge-soft-danger'}} fw-medium">{{ number_format(($bioarchive_pub_count / $bioarchive_count) * 100, 2) }}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-	</div>
-</div>
+
+        <div class="col-md-6 col-xxl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="widget-first">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-danger-subtle p-2 me-2">
+                                <iconify-icon icon="tabler:circle-check" class="align-middle text-dark fs-26 mb-0"></iconify-icon>
+                            </div>
+                            <p class="mb-0 text-dark fs-16">Total Published</p>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h3 class="fs-24 fw-medium text-dark mb-0 me-3">{{$bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count}} of {{$bioproject_count + $biosample_count + $bioarchive_count}} <small class="fs-12">Published</small></h3>
+                            
+                            <div class="d-flex align-items-center">
+                                <span class="me-2 rounded-2 badge fs-12 {{number_format((($bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count) / ($bioproject_count + $biosample_count + $bioarchive_count)) * 100, 2) > 50 ? 'badge-soft-success' : 'badge-soft-danger'}} fw-medium">{{ number_format((($bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count) / ($bioproject_count + $biosample_count + $bioarchive_count)) * 100, 2) }}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

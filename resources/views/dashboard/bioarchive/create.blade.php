@@ -1,10 +1,5 @@
 @extends('dashboard.layouts.main')
+@section('title', 'Input Bioarchive Data')
 @section('container')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1>Input Bioarchive Data</h1>
-</div>
-<div class="col-lg-12">
-    @livewire('create-bioarchive')
-
-</div>
+@livewire('create-bioarchive')
 @endsection

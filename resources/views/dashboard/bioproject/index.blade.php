@@ -2,8 +2,13 @@
 @section('title', 'My Bioproject')
 
 @push('css')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-keytable-bs5/css/keyTable.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+{{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> --}}
 @endpush
 
 
@@ -59,46 +64,54 @@
                                     {{ $bioproject->center->name ?? $userData->pegawaiData->administrative_name }}
                                 </td>
                                 <td class="text-center align-middle">
-                                    @switch($bioproject->status)
-                                        @case(1)
-                                            <span class="badge bg-danger">Unassigned</span>
-                                            @break
-                                        @case(2)
-                                            <span class="badge bg-info">On review</span>
-                                            @break
-                                        @case(3)
-                                            <span class="badge bg-warning">Returned to submitter</span>
-                                            @break
-                                        @case(4)
-                                            <span class="badge bg-warning">Waiting for File upload</span>
-                                            @break
-                                        @case(5)
-                                            <span class="badge bg-success">Published</span>
-                                            @break
-                                        @default
-                                            <span class="badge bg-secondary">Rejected</span>
-                                    @endswitch
+                                        @if($bioproject->status == 5 && $bioproject->hold_release)
+                                            <span class="badge bg-primary">On Hold</span>
+                                        @else
+                                            @switch($bioproject->status)
+                                                @case(1)
+                                                    <span class="badge bg-danger">Unassigned</span>
+                                                    @break
+                                                @case(2)
+                                                    <span class="badge bg-info">On review</span>
+                                                    @break
+                                                @case(3)
+                                                    <span class="badge bg-warning">Returned to submitter</span>
+                                                    @break
+                                                @case(4)
+                                                    <span class="badge bg-warning">Waiting for File upload</span>
+                                                    @break
+                                                @case(5)
+                                                    <span class="badge bg-success">Published</span>
+                                                    @break
+                                                @default
+                                                    <span class="badge bg-secondary">Rejected</span>
+                                            @endswitch
+                                        @endif
                                 </td>
                                 <td class="text-center align-middle" style="white-space: nowrap">
                                     @if ($bioproject->draft==false)
-                                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                                    @if ($bioproject->status == 5)
-                                    <div id="tdDv{{$bioproject->accession}}" style="display: inline">
-                                    @if($bioproject->dv_published_at)
-                                    <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataverse/{{$bioproject->accession}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
+                                        <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                                        @if ($bioproject->status == 5)
+                                            @if ($bioproject->hold_release)
+                                                <button type="button" class="badge bg-primary" onclick="openReleaseModal('{{ $bioproject->accession }}')" title="Release"><span data-feather="unlock"></span></button>
+                                            @else
+                                                <div id="tdDv{{$bioproject->accession}}" style="display: inline"> 
+                                                    @if($bioproject->dv_published_at)
+                                                        <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataverse/{{$bioproject->accession}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
+                                                    @else
+                                                        <button type="button" class="badge btn-dataverse-outline" onclick="dataverseSync('{{$bioproject->accession}}')" title="Sync to dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        @endif
                                     @else
-                                    <button type="button" class="badge btn-dataverse-outline" onclick="dataverseSync('{{$bioproject->accession}}')" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
-                                    @endif
-                                    </div>
-                                    @endif
-                                    @else
-                                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                                    <a href="/dashboard/bioprojects/{{ $bioproject->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                                    <form action="/dashboard/bioprojects/{{$bioproject->accession}}" method="post" class="d-inline">
-                                        @method('delete')
-                                        @csrf
-                                        <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
-                                    </form>
+                                        <a href="/dashboard/bioprojects/{{ $bioproject->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                                        <a href="/dashboard/bioprojects/{{ $bioproject->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                                        <form action="/dashboard/bioprojects/{{$bioproject->accession}}" method="post" class="d-inline">
+                                            @method('delete')
+                                            @csrf
+                                            <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
+                                        </form>
                                     @endif
                                 </td>
                             </tr>
@@ -117,8 +130,35 @@
 
 
 @push('js')
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script> --}}
+    <!-- Datatables js -->
+        <script src="/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+
+        <!-- dataTables.bootstrap5 -->
+        <script src="/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+        <script src="/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+
+        <!-- buttons.colVis -->
+        <script src="/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+        <script src="/libs/datatables.net-buttons/js/buttons.flash.min.js"></script>
+        <script src="/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+        <script src="/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+
+        <!-- buttons.bootstrap5 -->
+        <script src="/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+
+        <!-- dataTables.keyTable -->
+        <script src="/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+        <script src="/libs/datatables.net-keytable-bs5/js/keyTable.bootstrap5.min.js"></script>
+
+        <!-- dataTable.responsive -->
+        <script src="/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+
+        <!-- dataTables.select -->
+        <script src="/libs/datatables.net-select/js/dataTables.select.min.js"></script>
+        <script src="/libs/datatables.net-select-bs5/js/select.bootstrap5.min.js"></script>
     <script>
         window.APP_CONFIG = {
             dataverseBaseUrl: "{{ config('services.api_dataverse.base_url_dataverse') }}"
@@ -200,6 +240,10 @@
                         orderable: false,
                         targets: 0,
                     },
+                    {
+                        width: '120px',
+                        targets: 1, // Accession is column index 1
+                    },
                 ],
                 order: [[1, 'asc']],
             });
@@ -211,6 +255,63 @@
                 });
             }).draw();
         });
+
+                // Release modal logic
+                let releaseAccession = null;
+                function openReleaseModal(accession) {
+                        releaseAccession = accession;
+                        // create modal if not exists
+                        if (!document.getElementById('releaseConfirmModal')) {
+                                const modalHtml = `
+                                <div class="modal fade" id="releaseConfirmModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Confirm Release</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p id="releaseModalText"></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" id="confirmReleaseButton" class="btn btn-primary">Yes, Release</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                        }
+                        document.getElementById('releaseModalText').textContent = `Are you sure want to release ${accession}?`;
+                        const modal = new bootstrap.Modal(document.getElementById('releaseConfirmModal'));
+                        modal.show();
+                        // attach handler
+                        const btn = document.getElementById('confirmReleaseButton');
+                        btn.onclick = function () {
+                                btn.disabled = true;
+                                fetch(`/dashboard/bioprojects/${releaseAccession}/release`, {
+                                        method: 'POST',
+                                        headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        body: JSON.stringify({})
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                        if (data.status && data.status === 'OK') {
+                                                location.reload();
+                                        } else {
+                                                alert('Failed to release');
+                                                btn.disabled = false;
+                                        }
+                                })
+                                .catch(() => {
+                                        alert('Failed to release');
+                                        btn.disabled = false;
+                                });
+                        };
+                }
 
     </script>
 

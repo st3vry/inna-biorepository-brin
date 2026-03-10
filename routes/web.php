@@ -147,6 +147,10 @@ Route::prefix('dashboard')->group(function () {
 
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('authsso');
 
+    Route::post('/bioprojects/{bioproject}/release', [DashboardBioprojectController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
+    Route::post('/bioarchives/{bioarchive}/release', [DashboardBioarchiveController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
+    Route::post('/biosamples/{biosample}/release', [DashboardBiosampleController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
+
     Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware(['authsso', 'is_labcenterexist']);
     Route::resource('/biosamples', UserSampleController::class)->middleware(['is_labcenterexist', 'authsso']);
     // Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');

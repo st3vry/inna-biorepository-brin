@@ -1,4 +1,5 @@
 @extends('dashboard.layouts.main')
+@section('title', 'Bioarchive - ' . $bioarchive->accession)
 
 @push('css')
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
@@ -72,14 +73,6 @@
         return (string) $bp . ' bp';
     };
 @endphp
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <!-- <h1 class="h2"> Accession : {{$bioarchive->alias}}</h1> -->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/dashboard/bioarchives">Bioarchives</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{$bioarchive->accession}}</li>
-    </ol>
-</div>
 @if (session()->has('success'))
 <div class="alert alert-success alert-dismissible fade show col-lg-12" role="alert">
     <strong> {{session('success')}}</strong>
@@ -92,17 +85,19 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
-<div class="row">
-    <div class="table-responsive col-md-8">
-        <table class="table table-sm">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <tr>
+                                <th>Bioproject Accession</th>
+                                <td class="col-sm-10"><strong>{{$bioarchive->bioproject->accession}}</strong></td>
+                            </tr>
             <tr>
-                <td>Bioproject Accession </td>
-                <td>:</td>
-                <td class="col-sm-10"><strong>{{$bioarchive->bioproject->accession}}</strong></td>
-            </tr>
-            <tr>
-                <td>Biosample Accession </td>
-                <td>:</td>
+                <th>Biosample Accession</th>
                 <td class="col-sm-10">
                     <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                         @foreach ($biosample_id as $item => $value)
@@ -116,8 +111,7 @@
                </td>
             </tr>
             <tr>
-                <td>Bioexperiment </td>
-                <td>:</td>
+                <th>Bioexperiment</th>
                 <td class="col-sm-10">
                     <table class="m-auto table table-striped table-hover table-responsive text-nowrap">
                         @foreach ($bioexperiment as $item => $value)
@@ -300,9 +294,12 @@
                 </td>
             </tr>
         </table>
-    </div>
-    <div class="col-md-4">
-        @if ($bioarchive->status===4)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-12 col-lg-12 col-xl-4">
+            @if ($bioarchive->status===4)
         <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" class="row p-2" method="post" class="d-inline">
             @method('put')
             @csrf
@@ -335,35 +332,54 @@
             </div>
         </form>
         @endif
-        <div class="card m-2">
-            <div class="card-header">
-                <h6>History</h6>
-            </div>
-            <div class="card-body">
-                <section>
-                    <ul class="timeline">
-
+            <div class="card">
+                <div class="card-header">
+                    <h5>History</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="simple-timeline mb-0">
                         @if ($bioarchive->published_at !== null)
-                        <li class="timeline-item mb-5">
-                            <strong class="fw-bolder">Published</strong>
-                            <p class="fw-lighter mb-1">{{$bioarchive->published_at->format('j F Y H:i')}}</p>
+                        <li class="timeline-item timeline-item-transparent">
+                            <span class="timeline-dot timeline-dot-success"></span>
+                            <div class="timeline-time">
+                                <div class="timeline-header-section mb-2">
+                                    <h6 class="mb-0">Published</h6>
+                                    <small class="fw-light">{{$bioarchive->published_at->format('j F Y H:i')}}</small>
+                                </div>
+                                <p class="text-muted mb-2">
+                                    This bioarchive has been published and is now publicly accessible.
+                                </p>
+                            </div>
                         </li>
                         @endif
                         @foreach ($histories as $history)
-                        <li class="timeline-item mb-5">
-                            <strong class="fw-bolder">{{preg_replace('/(?<!\ )[A-Z]/', ' $0', ucfirst($history->action))}} by {{explode(' ', trim($history->creator->name))[0]}}</strong>
-                            <p class="fw-lighter mb-1">{{$history->created_at->format('j F Y H:i')}}</p>
-                            <p class="text-muted">
-                                {{$history->desc}}
-                            </p>
+                        <li class="timeline-item timeline-item-transparent">
+                            <span class="timeline-dot timeline-dot-primary"></span>
+                            <div class="timeline-time">
+                                <div class="timeline-header-section mb-2">
+                                    <h6 class="mb-0">{{preg_replace('/(?<!\ )[A-Z]/', ' $0', ucfirst($history->action))}} by {{explode(' ', trim($history->creator->name))[0]}}</h6>
+                                    <small class="fw-light">{{$history->created_at->format('j F Y H:i')}}</small>
+                                </div>
+                                <p class="text-muted mb-2">
+                                {{$history->desc ?? 'No additional description provided.'}}
+                                </p>
+                            </div>
                         </li>
                         @endforeach
-                        <li class="timeline-item mb-5">
-                            <strong class="fw-bolder">Bioarchive Created </strong>
-                            <p class="fw-lighter mb-1">{{$bioarchive->created_at->format('j F Y H:i')}}</p>
+                        <li class="timeline-item timeline-item-transparent">
+                            <span class="timeline-dot timeline-dot-info"></span>
+                            <div class="timeline-time">
+                                <div class="timeline-header-section mb-2">
+                                    <h6 class="mb-0">Created</h6>
+                                    <small class="fw-light">{{$bioarchive->created_at->format('j F Y H:i')}}</small>
+                                </div>
+                                <p class="text-muted mb-2">
+                                    Bioarchive submitted successfully.
+                                </p>
+                            </div>
                         </li>
                     </ul>
-                </section>
+                </div>
             </div>
         </div>
     </div>

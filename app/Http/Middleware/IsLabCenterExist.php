@@ -16,7 +16,7 @@ class IsLabCenterExist
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!isset(auth()->user()->center_id) || !isset(auth()->user()->lab_id)) {
+        if (auth()->user()->external_account && (!isset(auth()->user()->center_id) || !isset(auth()->user()->lab_id))) {
             // abort(403);
             return redirect("/dashboard/profile");
         }

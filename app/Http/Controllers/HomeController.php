@@ -17,14 +17,14 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $data_in_concerns = Datainconcern::latest()->take(4)->get();
-        $bioprojects_latest = Bioproject::where('status', 5)->take(3)->orderBy('published_at')->get();
-        $biosamples_latest = Biosample::where('status', 5)->take(3)->orderBy('published_at')->get();
-        $bioarchives_latest = Bioarchive::where('status', 5)->take(3)->orderBy('published_at')->get();
+        $bioprojects_latest = Bioproject::where(['status' => 5, 'hold_release' => false])->take(3)->orderBy('published_at')->get();
+        $biosamples_latest = Biosample::where(['status' => 5, 'hold_release' => false])->take(3)->orderBy('published_at')->get();
+        $bioarchives_latest = Bioarchive::where(['status' => 5, 'hold_release' => false])->take(3)->orderBy('published_at')->get();
 
 
-        $bioprojects_count = Bioproject::where('draft', FALSE)->whereNotNull('published_at')->count();
-        $biosamples_count = Biosample::where('draft', FALSE)->whereNotNull('published_at')->count();
-        $bioarchives_count = Bioarchive::where('draft', FALSE)->count();
+        $bioprojects_count = Bioproject::where(['draft' => FALSE, 'hold_release' => false])->whereNotNull('published_at')->count();
+        $biosamples_count = Biosample::where(['draft' => FALSE, 'hold_release' => false])->whereNotNull('published_at')->count();
+        $bioarchives_count = Bioarchive::where(['draft' => FALSE, 'hold_release' => false])->count();
 
 
         return view('frontend.home', [

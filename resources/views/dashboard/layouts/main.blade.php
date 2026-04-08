@@ -43,7 +43,7 @@
     <div id="app-layout">
         @include('dashboard.layouts.notification')
         @include('dashboard.layouts.header')
-        @include('dashboard.layouts.sidebar2')
+        @include('dashboard.layouts.sidebar')
         <div class="content-page">
             <div class="content">
                 <div class="container-fluid">

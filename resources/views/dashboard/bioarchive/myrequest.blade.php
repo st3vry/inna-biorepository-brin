@@ -4,15 +4,16 @@
 
 @push('css')
 <link href="{{ asset('libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-keytable-bs5/css/keyTable.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<link href="/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css" rel="stylesheet" type="text/css" />
 @endpush
 
 @section('container')
 
 <div class="card">
-    <div class="card-header">
-        <h4 class="card-title mb-0">My Requests</h4>
-    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-striped table-sm" id="dataTable">
@@ -51,8 +52,32 @@
 
 
 @push('js')
-    <script src="{{ asset('libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+
+    <!-- dataTables.bootstrap5 -->
+    <script src="/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+
+    <!-- buttons.colVis -->
+    <script src="/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+
+    <!-- buttons.bootstrap5 -->
+    <script src="/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+
+    <!-- dataTables.keyTable -->
+    <script src="/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/libs/datatables.net-keytable-bs5/js/keyTable.bootstrap5.min.js"></script>
+
+    <!-- dataTable.responsive -->
+    <script src="/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+
+    <!-- dataTables.select -->
+    <script src="/libs/datatables.net-select/js/dataTables.select.min.js"></script>
+    <script src="/libs/datatables.net-select-bs5/js/select.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function () {
             const dataTable = $('#dataTable').DataTable({

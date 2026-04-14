@@ -11,7 +11,6 @@
 
 
 @section('container')
-<!-- Start Content-->
 <div class="container-fluid">
     <div class="row">
         <div class="card">
@@ -128,35 +127,32 @@
 
 
 @push('js')
-    {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script> --}}
-    <!-- Datatables js -->
-        <script src="/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/libs/datatables.net/js/jquery.dataTables.min.js"></script>
 
-        <!-- dataTables.bootstrap5 -->
-        <script src="/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
-        <script src="/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <!-- dataTables.bootstrap5 -->
+    <script src="/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 
-        <!-- buttons.colVis -->
-        <script src="/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-        <script src="/libs/datatables.net-buttons/js/buttons.flash.min.js"></script>
-        <script src="/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
-        <script src="/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <!-- buttons.colVis -->
+    <script src="/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
 
-        <!-- buttons.bootstrap5 -->
-        <script src="/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
+    <!-- buttons.bootstrap5 -->
+    <script src="/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js"></script>
 
-        <!-- dataTables.keyTable -->
-        <script src="/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-        <script src="/libs/datatables.net-keytable-bs5/js/keyTable.bootstrap5.min.js"></script>
+    <!-- dataTables.keyTable -->
+    <script src="/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/libs/datatables.net-keytable-bs5/js/keyTable.bootstrap5.min.js"></script>
 
-        <!-- dataTable.responsive -->
-        <script src="/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <!-- dataTable.responsive -->
+    <script src="/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
 
-        <!-- dataTables.select -->
-        <script src="/libs/datatables.net-select/js/dataTables.select.min.js"></script>
-        <script src="/libs/datatables.net-select-bs5/js/select.bootstrap5.min.js"></script>
+    <!-- dataTables.select -->
+    <script src="/libs/datatables.net-select/js/dataTables.select.min.js"></script>
+    <script src="/libs/datatables.net-select-bs5/js/select.bootstrap5.min.js"></script>
     <script>
         window.APP_CONFIG = {
             dataverseBaseUrl: "{{ config('services.api_dataverse.base_url_dataverse') }}"

@@ -3,7 +3,7 @@
 @section('container')
 <div class="container-fluid">
     <div class="row">
-        <div class="card col-lg-8">
+        <div class="card">
             <div class="card-body">
                 <form method="post" action="/dashboard/roles">
                     @csrf

@@ -29,6 +29,7 @@ class AffiliateController extends Controller
     public function create()
     {
         //
+        return view('dashboard.affiliate.create');
     }
 
     /**
@@ -40,6 +41,14 @@ class AffiliateController extends Controller
     public function store(Request $request)
     {
         //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'website' => ''
+        ]);
+
+        Affiliate::create($validatedData);
+        return redirect('/dashboard/affiliates')->with('success', 'Affiliate created successfully!');
     }
 
     /**
@@ -50,7 +59,9 @@ class AffiliateController extends Controller
      */
     public function show(Affiliate $affiliate)
     {
-        //
+        return view('dashboard.affiliate.show', [
+            'affiliate' => $affiliate
+        ]); 
     }
 
     /**
@@ -61,7 +72,9 @@ class AffiliateController extends Controller
      */
     public function edit(Affiliate $affiliate)
     {
-        //
+        return view('dashboard.affiliate.edit', [
+            'affiliate' => $affiliate
+        ]);
     }
 
     /**
@@ -73,7 +86,14 @@ class AffiliateController extends Controller
      */
     public function update(Request $request, Affiliate $affiliate)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'website' => ''
+        ]);
+
+        Affiliate::where('id', $affiliate->id)->update($validatedData);
+        return redirect('/dashboard/affiliates')->with('success', 'Affiliate updated successfully!');
     }
 
     /**
@@ -84,6 +104,7 @@ class AffiliateController extends Controller
      */
     public function destroy(Affiliate $affiliate)
     {
-        //
+        Affiliate::destroy($affiliate->id);
+        return redirect('/dashboard/affiliates')->with('success', 'Affiliate deleted successfully!');
     }
 }

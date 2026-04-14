@@ -45,85 +45,85 @@
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
-        <tbody>
-            @foreach ( $bioarchives as $bioarchive )
-            <tr>
-                <td class="text-center"></td>
-                <td>{{ $bioarchive->accession }}</td>
-                <td>{{ $bioarchive->submission_id }}</td>
-                <td>{{ $bioarchive->bioproject->accession }}</td>
-                <td>
-                    @foreach (explode(',', $bioarchive->biosample_id) as $biosample )
-                        <table>
-                            @php
-                                $samples = DB::table('biosamples')->where('id', $biosample)->get();
-                            @endphp
+                        <tbody>
+                            @foreach ( $bioarchives as $bioarchive )
                             <tr>
-                                @foreach ($samples as $smp)
-                                <td>{{ $smp->accession }}</td>
-                                @endforeach
+                                <td class="text-center"></td>
+                                <td>{{ $bioarchive->accession }}</td>
+                                <td>{{ $bioarchive->submission_id }}</td>
+                                <td>{{ $bioarchive->bioproject->accession }}</td>
+                                <td>
+                                    @foreach (explode(',', $bioarchive->biosample_id) as $biosample )
+                                        <table>
+                                            @php
+                                                $samples = DB::table('biosamples')->where('id', $biosample)->get();
+                                            @endphp
+                                            <tr>
+                                                @foreach ($samples as $smp)
+                                                <td>{{ $smp->accession }}</td>
+                                                @endforeach
+                                            </tr>
+                                        </table>
+                                    @endforeach
+                                </td>
+                                <td class="text-center align-middle">
+                                    @if($bioarchive->status == 5 && $bioarchive->hold_release)
+                                        <span class="badge bg-primary">On Hold</span>
+                                    @else
+                                        @switch($bioarchive->status)
+                                            @case(1)
+                                                <span class="badge bg-danger">Unassigned</span>
+                                                @break
+                                            @case(2)
+                                                <span class="badge bg-info">On review</span>
+                                                @break
+                                            @case(3)
+                                                <span class="badge bg-warning">Returned to submitter</span>
+                                                @break
+                                            @case(4)
+                                                <span class="button badge bg-warning">Waiting for File upload</span>
+                                                @break
+                                            @case(5)
+                                                <span class="badge bg-success">Published</span>
+                                                @break
+                                            @default
+                                                <span class="badge bg-secondary">Rejected</span>
+                                        @endswitch
+                                    @endif
+                                </td>
+                                <td class="text-center align-middle" style="white-space: nowrap">
+                                    @if (!$bioarchive->draft)
+                                        <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                                    @else
+                                        @if ($bioarchive->status==4)
+                                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="upload"></span></a>
+                                        @else
+                                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
+                                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
+                                            <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" method="post" class="d-inline">
+                                                @method('delete')
+                                                @csrf
+                                                <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
+                                            </form>
+                                        @endif
+                                    @endif
+                                    @if ($bioarchive->status == 5)
+                                        @if ($bioarchive->hold_release)
+                                            <button type="button" class="badge bg-primary" onclick="openReleaseModal('{{ $bioarchive->accession }}')" title="Release"><span data-feather="unlock"></span></button>
+                                        @else
+                                            <div id="tdDv{{$bioarchive->accession}}" style="display: inline">
+                                                @if($bioarchive->dv_persistent_id)
+                                                    <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
+                                                @else
+                                                    <button onclick="dataverseSync('{{ $bioarchive->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    @endif
+                                </td>
                             </tr>
-                        </table>
-                    @endforeach
-                </td>
-                <td class="text-center align-middle">
-                    @if($bioarchive->status == 5 && $bioarchive->hold_release)
-                        <span class="badge bg-primary">On Hold</span>
-                    @else
-                        @switch($bioarchive->status)
-                            @case(1)
-                                <span class="badge bg-danger">Unassigned</span>
-                                @break
-                            @case(2)
-                                <span class="badge bg-info">On review</span>
-                                @break
-                            @case(3)
-                                <span class="badge bg-warning">Returned to submitter</span>
-                                @break
-                            @case(4)
-                                <span class="button badge bg-warning">Waiting for File upload</span>
-                                @break
-                            @case(5)
-                                <span class="badge bg-success">Published</span>
-                                @break
-                            @default
-                                <span class="badge bg-secondary">Rejected</span>
-                        @endswitch
-                    @endif
-                </td>
-                <td class="text-center align-middle" style="white-space: nowrap">
-                    @if (!$bioarchive->draft)
-                        <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                    @else
-                        @if ($bioarchive->status==4)
-                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="upload"></span></a>
-                        @else
-                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}" class="badge bg-info"><span data-feather="eye"></span></a>
-                            <a href="/dashboard/bioarchives/{{ $bioarchive->accession}}/edit" class="badge bg-warning"><span data-feather="edit"></span></a>
-                            <form action="/dashboard/bioarchives/{{$bioarchive->accession}}" method="post" class="d-inline">
-                                @method('delete')
-                                @csrf
-                                <button class="badge bg-danger border-0" onclick="return confirm('Are you sure ?')"><span data-feather="x-circle"></span></button>
-                            </form>
-                        @endif
-                    @endif
-                    @if ($bioarchive->status == 5)
-                        @if ($bioarchive->hold_release)
-                            <button type="button" class="badge bg-primary" onclick="openReleaseModal('{{ $bioarchive->accession }}')" title="Release"><span data-feather="unlock"></span></button>
-                        @else
-                            <div id="tdDv{{$bioarchive->accession}}" style="display: inline">
-                                @if($bioarchive->dv_persistent_id)
-                                    <a type="button" href="{{config('services.api_dataverse.base_url_dataverse') }}/dataset.xhtml?persistentId={{$bioarchive->dv_persistent_id}}" target="_blank" title="View in dataverse" class="badge btn-dataverse"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></a>
-                                @else
-                                    <button onclick="dataverseSync('{{ $bioarchive->accession}}')" type="button" title="Sync to dataverse" class="badge btn-dataverse-outline"><img alt="dv-logo" src="/images/dv-icon.png" height="15px"></img></button>
-                                @endif
-                            </div>
-                        @endif
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>

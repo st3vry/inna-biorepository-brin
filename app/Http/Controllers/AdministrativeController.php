@@ -27,7 +27,7 @@ class AdministrativeController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.administrative.create');
     }
 
     /**
@@ -38,7 +38,14 @@ class AdministrativeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'website' => ''
+        ]);
+
+        Administrative::create($validatedData);
+        return redirect('/dashboard/administratives')->with('success', 'New Administrative has been added!');
     }
 
     /**
@@ -49,7 +56,9 @@ class AdministrativeController extends Controller
      */
     public function show(Administrative $administrative)
     {
-        //
+        return view('dashboard.administrative.show', [
+            'administrative' => $administrative
+        ]);
     }
 
     /**
@@ -60,7 +69,9 @@ class AdministrativeController extends Controller
      */
     public function edit(Administrative $administrative)
     {
-        //
+        return view('dashboard.administrative.edit', [
+            'administrative' => $administrative
+        ]);
     }
 
     /**
@@ -72,7 +83,14 @@ class AdministrativeController extends Controller
      */
     public function update(Request $request, Administrative $administrative)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'website' => ''
+        ]);
+
+        Administrative::where('id', $administrative->id)->update($validatedData);
+        return redirect('/dashboard/administratives')->with('success', 'Administrative updated successfully!');
     }
 
     /**
@@ -83,6 +101,7 @@ class AdministrativeController extends Controller
      */
     public function destroy(Administrative $administrative)
     {
-        //
+        Administrative::destroy($administrative->id);
+        return redirect('/dashboard/administratives')->with('success', 'Administrative deleted successfully!');
     }
 }

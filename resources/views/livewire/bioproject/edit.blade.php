@@ -469,17 +469,12 @@
                                 </div>
                                 <div class="card-body mb-3">
                                     <div class="mb-3">
-                                        <label for="organism_id" class="form-label">Organism <font color="red">*</font></label>
-                                        <select class="form-select select2" name="organism_id" id="organism_id" wire:model="organism_id">
-                                            <option value="">Organism</option>
-                                            @foreach ($organisms as $organism )
-                                            <option value="{{$organism->id}}" @if (old('organism_id')==$organism->id) selected @endif>{{$organism->name}}</option>
-                                            @endforeach
-                                        </select>
-
-                                        @error('organism_id')
-                                        <p class="text-danger">{{$message}}</p>
-                                        @enderror
+                                        <label for="center" class="form-label">Organism <font color="red">*</font></label>
+                                        <input class="form-control" type="text" name="organism_data" readonly wire:model="organism_data" id="organism_data"
+                                            data-bs-toggle="modal" data-bs-target="#taxonModal"
+                                            value="{{old('organism_data')}}"
+                                            placeholder="Click to search organism..." style="cursor: pointer;">
+                                        <input type="hidden" name="organism_detail" wire:model="organism_detail" value="{{old('organism_detail')}}">
                                     </div>
                                     <div class="mb-3">
                                         <input class="form-check-input" type="checkbox" name="novel_org" wire:model="novel_org" value="novel_org">
@@ -1244,6 +1239,9 @@
             </div>
             <!-- <button type="submit" class="btn btn-primary">Create Bioproject</button> -->
         </form>
+
+@include('dashboard.layouts.taxonmodal')
+
 @push('js')
     <script>
         document.addEventListener('livewire:load', function () {

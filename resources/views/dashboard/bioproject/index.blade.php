@@ -51,7 +51,7 @@
                             <tr>
                                 <td class="text-center"></td>
                                 <td>{{ $bioproject->accession }}</td>
-                                <td>{{ $bioproject->organism->name }}</td>
+                                <td>{{ $bioproject->organism->name ?? $bioproject->organism_detail['current_scientific_name']['name']}}</td>
                                 <td>{{ $bioproject->title }}</td>
                                 <td>{{ $bioproject->description }}</td>
                                 <td>

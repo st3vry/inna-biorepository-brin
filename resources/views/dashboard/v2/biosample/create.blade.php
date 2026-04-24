@@ -128,6 +128,33 @@
                             <div class="tab-pane fade" id="contentSampleInformation" role="tabpanel" aria-labelledby="contentSampleInformation">
                                 <div class="card mb-3">
                                     <div class="card-header fw-bold fs-6">
+                                        Bioproject <span class="text-danger">*</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <select class="form-control select2" id="bioproject_id" name="bioproject_id" required>
+                                            <option value="">Select a Bioproject</option>
+                                            @foreach($bioprojects as $bioproject)
+                                                <option value="{{ $bioproject->id }}">{{ $bioproject->title }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
+                                        Organism <span class="text-danger">*</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <input class="form-control" type="text" name="organism_data" readonly id="organism_data"
+                                        data-bs-toggle="modal" data-bs-target="#taxonModal"
+                                        placeholder="Click to search organism..." style="cursor: pointer;">
+                                    <input type="hidden" name="organism_detail">
+                                    <input type="hidden" name="organism_name">
+                                    <input type="hidden" name="taxonomy_id">
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
                                         Sample Type <span class="text-danger">*</span>
                                     </div>
                                     <div class="card-body">
@@ -237,9 +264,19 @@
 
     @livewire('create-biosample')
 </div> --}}
+
+@include('dashboard.layouts.taxonmodal')
 @endsection
+
+
+
 @push('js')
 <script>
+    $('#bioproject_id').select2({
+        placeholder: "Select a Bioproject",
+        theme: "bootstrap-5",
+        width: '100%'
+    });
 
     var counterFundAgency = 0;
     var i = 0;
@@ -413,108 +450,111 @@
         function createInput(obj, requireType) {
             let asterisk = requireType == "required" ? "<span class='text-danger'>* </span>" : requireType == "either" ? "<span class='text-danger'>** </span>" : ""
             let input = ""
-            switch (obj.input_type_id) {
-                case 1:
-                    input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
-                case 2:
-                    input = `<textarea data-st-require="${requireType}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}"></textarea>`
-                    break;
-                case 3:
-                    let options = ""
-                    obj.list_value.split(",").forEach(element => {
-                        options += `<option value="${element}" style="text-transform: capitalize;">${element.replace(/\b\w/g, function(l){ return l.toUpperCase() })}</option>`
-                    });
-                    input = `
-                        <select class="form-select mb-3" data-st-require="${requireType}" id="${obj.attr_name}" name="${obj.attr_name}" aria-label="${obj.attr_text}">
-                           ${options}
-                        </select>
-                    `
-                    break;
-                case 4:
-                    input = `<input data-st-require="${requireType}" type="date" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+            if (obj.attr_name != "organism" && obj.attr_name != "taxonomy_id" && obj.attr_name != "bioproject_id") {
+                switch (obj.input_type_id) {
+                    case 1:
+                        input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
+                    case 2:
+                        input = `<textarea data-st-require="${requireType}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}"></textarea>`
+                        break;
+                    case 3:
+                        let options = ""
+                        obj.list_value.split(",").forEach(element => {
+                            options += `<option value="${element}" style="text-transform: capitalize;">${element.replace(/\b\w/g, function(l){ return l.toUpperCase() })}</option>`
+                        });
+                        input = `
+                            <select class="form-select mb-3" data-st-require="${requireType}" id="${obj.attr_name}" name="${obj.attr_name}" aria-label="${obj.attr_text}">
+                            ${options}
+                            </select>
+                        `
+                        break;
+                    case 4:
+                        input = `<input data-st-require="${requireType}" type="date" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
 
-                    break;
-                case 5:
-                    input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
-                case 6:
-                    input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
+                        break;
+                    case 5:
+                        input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
+                    case 6:
+                        input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
 
-                default:
-                    input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
-            }
-            if (requireType == "required") {
-                input +=
+                    default:
+                        input = `<input data-st-require="${requireType}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
+                }
+                if (requireType == "required") {
+                    input +=
+                        `
+                        <div class="invalid-feedback">
+                            This field cannot be empty!
+                        </div>
+                        `
+                }
+
+                if (requireType == "either") {
+                    input +=
+                        `
+                        <div class="invalid-feedback">
+                            At least one field required!
+                        </div>
+                        `
+                }
+
+                formAttributes.append(
                     `
-                    <div class="invalid-feedback">
-                        This field cannot be empty!
+                    <div class="col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label for="${obj.attr_name}" class="form-label fw-bold">${obj.attr_text+asterisk}</label>
+                            <i class="bi bi-question-circle ms-1" tabindex="-1" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-custom-class="custom-popover" data-bs-html="true" data-bs-placement="right" data-bs-content="${decodeHTMLEntities(obj.description)}"></i>
+                            ${input}
+                        </div>
                     </div>
                     `
-            }
+                )
+                let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+                let popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+                // if (obj.attr_name == "taxonomy_id")  {
+                //     $("#taxonomy_id").prop( "readonly", true );
+                // }
+                // if (obj.attr_name == "organism") {
+                //     let organismSelect = $('#organism').select2({
+                //         placeholder:"Select Organism",
+                //         theme: "bootstrap-5",
+                //         width: '100%',
+                //         ajax: {
+                //             url: function (params) {
+                //                 console.log("params",params)
+                //                 return '/dashboard/v2/biosamples/getOrganism/' + params.term;
+                //             },
+                //             dataType: 'json',
+                //             type: "GET",
+                //             quietMillis: 50,
+                //             data: function (term) {
+                //                 console.log("term",term)
+                //                 return {
+                //                     term: term
+                //                 };
+                //             },
+                //             processResults: function (data) {
+                //                 GLOBAL_ORGANISM = data
+                //                 console.log("DATA", GLOBAL_ORGANISM)
+                //                 return {
+                //                     results:$.map(data, function(obj) {
+                //                         return { id: obj.id, text: obj.text, taxon_id: obj.taxon_id };
+                //                     })
+                //                 };
+                //             },
+                //         }
+                //     });
 
-            if (requireType == "either") {
-                input +=
-                    `
-                    <div class="invalid-feedback">
-                        At least one field required!
-                    </div>
-                    `
+                //     organismSelect.on("select2:select", function (e) {
+                //         $("#taxonomy_id").val( e.params.data.taxon_id)
+                //     });
+                // }
             }
-
-            formAttributes.append(
-                `
-                <div class="col-md-6 col-sm-12">
-                    <div class="mb-3">
-                        <label for="${obj.attr_name}" class="form-label fw-bold">${obj.attr_text+asterisk}</label>
-                        <i class="bi bi-question-circle ms-1" tabindex="-1" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-custom-class="custom-popover" data-bs-html="true" data-bs-placement="right" data-bs-content="${decodeHTMLEntities(obj.description)}"></i>
-                        ${input}
-                    </div>
-                </div>
-                `
-            )
-            let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-            let popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-            if (obj.attr_name == "taxonomy_id")  {
-                $("#taxonomy_id").prop( "readonly", true );
-            }
-            if (obj.attr_name == "organism") {
-                let organismSelect = $('#organism').select2({
-                    placeholder:"Select Organism",
-                    theme: "bootstrap-5",
-                    width: '100%',
-                    ajax: {
-                        url: function (params) {
-                            console.log("params",params)
-                            return '/dashboard/v2/biosamples/getOrganism/' + params.term;
-                        },
-                        dataType: 'json',
-                        type: "GET",
-                        quietMillis: 50,
-                        data: function (term) {
-                            console.log("term",term)
-                            return {
-                                term: term
-                            };
-                        },
-                        processResults: function (data) {
-                            GLOBAL_ORGANISM = data
-                            console.log("DATA", GLOBAL_ORGANISM)
-                            return {
-                                results:$.map(data, function(obj) {
-                                    return { id: obj.id, text: obj.text, taxon_id: obj.taxon_id };
-                                })
-                            };
-                        },
-                    }
-                });
-
-                organismSelect.on("select2:select", function (e) {
-                    $("#taxonomy_id").val( e.params.data.taxon_id)
-                });
-            }
+            
         }
         const formBioSample = $('#formBioSample')
 

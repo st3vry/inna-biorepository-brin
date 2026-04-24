@@ -95,12 +95,13 @@ class CreateBioarchive extends Component
 
         $this->submitter_lab_name = Lab::where('id', $this->submitter_lab)->value('name');
         $this->submitter_center_name = Center::where('id', $this->submitter_center)->value('name');
-        // bioproject
-        // $this->bioprojects = Bioproject::get();
-        $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
+        // bioproject - load published projects matching search, excluding held projects
+        // unless they belong to the current user
+        $this->loadBioprojects($this->searchBioproject);
 
         // biosample
-        $this->biosamples = Biosample::where('draft', false)->get();
+        // start with empty list; will load when a bioproject is selected
+        $this->biosamples = collect();
         // lib source 
         $this->libsources = LibrarySource::all();
         // lib selection
@@ -126,6 +127,66 @@ class CreateBioarchive extends Component
             // don't break mounting if drafts table/migration doesn't exist yet
             logger()->debug('bioarchive draft autoload skipped: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Load bioprojects matching the search term. Only include published
+     * projects and exclude projects with hold_release == true unless owned by
+     * the current user.
+     */
+    protected function loadBioprojects($search = '')
+    {
+        $this->bioprojects = Bioproject::where('title', 'like', '%' . $search . '%')
+            ->whereNotNull('published_at')
+            ->where(function ($q) {
+                $q->where('hold_release', false)
+                  ->orWhere('user_id', auth()->id());
+            })
+            ->orderBy('id')
+            ->get();
+    }
+
+    /**
+     * Livewire hook: refresh bioproject list when search term changes.
+     */
+    public function updatedSearchBioproject($value)
+    {
+        $this->loadBioprojects($value);
+    }
+
+    /**
+     * Load biosamples that belong to the given bioproject id.
+     */
+    protected function loadBiosamplesForBioproject($bioprojectId)
+    {
+        if (empty($bioprojectId)) {
+            $this->biosamples = collect();
+            return;
+        }
+
+        // Get published biosamples for the bioproject. Exclude samples that
+        // are individually held (hold_release == true) unless the current
+        // user is the owner of the biosample.
+        $this->biosamples = Biosample::whereNotNull('published_at')
+            ->where('bioproject_id', $bioprojectId)
+            ->where(function ($q) {
+                $q->where('hold_release', false)
+                  ->orWhere('user_id', auth()->id());
+            })
+            ->orderBy('id')
+            ->get();
+    }
+
+    /**
+     * Livewire hook: when `bioproject_id` is updated from the frontend,
+     * refresh the biosamples list and clear previous sample selections.
+     */
+    public function updatedBioprojectId($value)
+    {
+        // clear previously selected biosamples/experiments
+        $this->biosample_id = [];
+        $this->bioexperiment_id = [];
+        $this->loadBiosamplesForBioproject($value);
     }
 
     // Submitter form
@@ -361,6 +422,10 @@ class CreateBioarchive extends Component
             $this->hold_release = $this->normalizeHoldRelease($data['hold_release']) ? '1' : '0';
         }
         $this->bioproject_id = $data['bioproject_id'] ?? $this->bioproject_id;
+        // ensure biosamples list matches restored bioproject selection
+        if (!empty($this->bioproject_id)) {
+            $this->loadBiosamplesForBioproject($this->bioproject_id);
+        }
         $this->biosample_id = $data['biosample_id'] ?? $this->biosample_id;
         $this->bioexperiment_id = $data['bioexperiment_id'] ?? $this->bioexperiment_id;
         $this->alias = $data['alias'] ?? $this->alias;

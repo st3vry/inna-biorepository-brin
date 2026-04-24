@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InnalysisGalaxyController;
+use App\Http\Controllers\TaxonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Whoops\Run;
@@ -23,3 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::apiResource('innalysisworkflows', InnalysisGalaxyController::class);
 Route::post('/innalysisworkflows/run', [InnalysisGalaxyController::class, 'run']);
 Route::get('/innalysisworkflows', [InnalysisGalaxyController::class, 'index']);
+
+Route::prefix('organism')->group(function () {
+    Route::get('/query/{taxon_query}',   [TaxonController::class, 'query']);
+    Route::get('/name/{taxons}',         [TaxonController::class, 'nameReport']);
+    Route::get('/dataset/{taxons}',      [TaxonController::class, 'datasetReport']);
+});

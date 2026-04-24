@@ -177,7 +177,19 @@
                             </tr>
                             <tr>
                                 <th class="col-sm-1">Organism</th>
-                                <td class="col-sm-7">{{$bioproject->organism->name}}</td>
+                                @isset($bioproject->organism->name )
+                                <td class="col-sm-7">
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#viewOrganismDetailModal">
+                                        {{ $bioproject->organism->name }}
+                                    </a>
+                                </td>
+                                @else
+                                <td class="col-sm-7">
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#viewOrganismDetailModal">
+                                        {{ $bioproject->organism_detail['current_scientific_name']['name'] ?? 'N/A'}}
+                                    </a>
+                                </td>
+                                @endif
                             </tr>
                             <tr>
                                 <th class="col-sm-3">Novel organism</th>
@@ -427,5 +439,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    window.currentOrganismDetail = @json($bioproject->organism_detail ?? []);
+</script>
+
+@include('dashboard.layouts.organismdetailmodal')
 
 @endsection

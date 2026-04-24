@@ -10,6 +10,7 @@ class Biosample extends Model
     use HasFactory;
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at', 'published_at'];
+    protected $casts = ['organism_detail' => 'array'];
 
     public function organism()
     {

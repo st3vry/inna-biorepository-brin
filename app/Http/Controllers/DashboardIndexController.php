@@ -83,6 +83,14 @@ class DashboardIndexController extends Controller
             5
         )->get();
         $bioproject_pub_count = $bioproject_pub->count();
+        $bioproject_hold = Bioproject::where(
+            'user_id',
+            $userID
+        )->where(
+            ['status' => 5,
+            'hold_release' => true]
+        )->get();
+        $bioproject_hold_count = $bioproject_hold->count();
 
         $biosample = Biosample::where(
                 'user_id',
@@ -96,6 +104,14 @@ class DashboardIndexController extends Controller
             5
         )->get();
         $biosample_pub_count = $biosample_pub->count();
+        $biosample_hold = Biosample::where(
+            'user_id',
+            $userID
+        )->where(
+            ['status' => 5,
+            'hold_release' => true]
+        )->get();
+        $biosample_hold_count = $biosample_hold->count();
 
         $bioarchive = Bioarchive::where('user_id', $userID)->get();
         $bioarchive_count = $bioarchive->count();
@@ -107,16 +123,28 @@ class DashboardIndexController extends Controller
             5
         )->get();
         $bioarchive_pub_count = $bioarchive_pub->count();
+        $bioarchive_hold = Bioarchive::where(
+            'user_id',
+            $userID
+        )->where(
+            ['status' => 5,
+            'hold_release' => true]
+        )->get();
+        $bioarchive_hold_count = $bioarchive_hold->count();
+
 
         return view('dashboard.index', [
             'bioproject_count' => $bioproject_count,
             'bioproject_pub_count' => $bioproject_pub_count,
+            'bioproject_hold_count' => $bioproject_hold_count,
 
             'biosample_count' => $biosample_count,
             'biosample_pub_count' => $biosample_pub_count,
+            'biosample_hold_count' => $biosample_hold_count,
 
             'bioarchive_count' => $bioarchive_count,
             'bioarchive_pub_count' => $bioarchive_pub_count,
+            'bioarchive_hold_count' => $bioarchive_hold_count,
 
             'nama' => $nama,
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\User;
 
 use App\Models\Biosample;
+use App\Models\Bioproject;
 use App\Models\BioSampleExternalLink;
 use App\Models\ActionLog;
 use App\Models\AttributeValue;
@@ -43,6 +44,13 @@ class BiosampleController extends Controller
     public function create()
     {
         //
+        $bioprojects = Bioproject::whereNotNull('published_at')
+            ->where(function ($q) {
+                $q->where('hold_release', false)
+                  ->orWhere('user_id', auth()->id());
+            })
+            ->orderBy('id')
+            ->get();
         $submitter = new \stdClass();
         $submitter->name = auth()->user()->name;
         $submitter->email = auth()->user()->email;
@@ -54,7 +62,8 @@ class BiosampleController extends Controller
         $return = [
             "draft" => $draft,
             "submitter" => $submitter,
-            "packages" => SampletypePackage::All()
+            "packages" => SampletypePackage::All(),
+            "bioprojects" => $bioprojects,
         ];
 
         
@@ -85,12 +94,14 @@ class BiosampleController extends Controller
         $biosample->sampletype_id = $request->sample_type_select;
         $biosample->comments = $request->comments;
         $biosample->description = $request->sample_description;
+        $biosample->bioproject_id = $request->bioproject_id;
         $biosample->center_id = auth()->user()->center_id;
         $biosample->user_id = auth()->user()->id;
 
         // need to change if organism table ready
         $biosample->organism_id = $request->organism;
-        // $biosample->organism_name = $request->organism;
+        $biosample->organism_name = $request->organism_name;
+        $biosample->organism_detail = is_string($request->organism_detail) ? json_decode($request->organism_detail, true) : $request->organism_detail;
         // $biosample->organism_name = $validatedData['organism'];
         //
         $biosample->save();
@@ -157,6 +168,14 @@ class BiosampleController extends Controller
         if ($biosample->draft == false) {
             return view('error.404');
         }
+
+        $bioprojects = Bioproject::whereNotNull('published_at')
+            ->where(function ($q) {
+                $q->where('hold_release', false)
+                  ->orWhere('user_id', auth()->id());
+            })
+            ->orderBy('id')
+            ->get();
         $submitter = new \stdClass();
         $submitter->name = auth()->user()->name;
         $submitter->email = auth()->user()->email;
@@ -173,6 +192,7 @@ class BiosampleController extends Controller
         // dd($sampletype);
         // dd($sample_attr[0]->value);
         $return = [
+            "bioprojects" => $bioprojects,
             "submitter" => $submitter,
             "packages" => SampletypePackage::All(),
             "biosample" => $biosample,
@@ -200,6 +220,9 @@ class BiosampleController extends Controller
         // Update main biosample fields that exist in the v2 edit form
         $biosample->hold_release = $request->input('hold_release', $biosample->hold_release);
         $biosample->comments = $request->input('comments', $biosample->comments);
+        $biosample->bioproject_id = $request->input('bioproject_id', $biosample->bioproject_id);
+        $biosample->organism_name = $request->input('organism_name', $biosample->organism_name);
+        $biosample->organism_detail = is_string($request->input('organism_detail')) ? json_decode($request->input('organism_detail'), true) : $request->input('organism_detail', $biosample->organism_detail);
 
         if ($request->filled('sample_type_select')) {
             $biosample->sampletype_id = $request->input('sample_type_select');

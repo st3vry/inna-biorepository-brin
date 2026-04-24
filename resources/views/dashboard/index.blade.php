@@ -160,7 +160,7 @@ a:hover {
                             <h3 class="fs-24 fw-medium text-dark mb-0 me-3">{{$bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count}} of {{$bioproject_count + $biosample_count + $bioarchive_count}} <small class="fs-12">Published</small></h3>
                             
                             <div class="d-flex align-items-center">
-                                <span class="me-2 rounded-2 badge fs-12 {{number_format((($bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count) / ($bioproject_count + $biosample_count + $bioarchive_count)) * 100, 2) > 50 ? 'badge-soft-success' : 'badge-soft-danger'}} fw-medium">{{ number_format((($bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count) / ($bioproject_count + $biosample_count + $bioarchive_count)) * 100, 2) }}%
+                                <span class="me-2 rounded-2 badge fs-12 {{ ($bioproject_count + $biosample_count + $bioarchive_count) > 0 && number_format((($bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count) / ($bioproject_count + $biosample_count + $bioarchive_count)) * 100, 2) > 50 ? 'badge-soft-success' : 'badge-soft-danger'}} fw-medium">{{ ($bioproject_count + $biosample_count + $bioarchive_count) > 0 ? number_format((($bioproject_pub_count + $biosample_pub_count + $bioarchive_pub_count) / ($bioproject_count + $biosample_count + $bioarchive_count)) * 100, 2) : 0 }}%
                                 </span>
                             </div>
                         </div>

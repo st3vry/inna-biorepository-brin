@@ -10,7 +10,7 @@
                         <img src="/images/inna-light.png" alt="" height="10">
                     </span>
                     <span class="logo-lg">
-                        <img src="/images/inna-biorepo-white.png" alt="" height="50">
+                        <img src="/images/inna-biorepo-white-small.png" alt="" height="50">
                     </span>
                 </a>
                 <a href="/" class="logo logo-dark">
@@ -18,7 +18,7 @@
                         <img src="/images/inna-dark.png" alt="" height="10">
                     </span>
                     <span class="logo-lg">
-                        <img src="/images/inna-biorepo-red.png" alt="" height="50">
+                        <img src="/images/inna-biorepo-red-small.png" alt="" height="50">
                     </span>
                     
                 </a>

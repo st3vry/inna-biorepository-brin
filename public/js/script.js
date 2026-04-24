@@ -82,7 +82,7 @@
                 navBrand.src = "/images/inna-biorepo-white-small.png"
             } else {
                 selectHeader.classList.remove('header-scrolled')
-                navBrand.src = "/images/inna-biorepo-red-smallpng"
+                navBrand.src = "/images/inna-biorepo-red-small.png"
             }
         }
         window.addEventListener('load', headerScrolled)

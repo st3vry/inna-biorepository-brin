@@ -134,6 +134,35 @@
                             <div class="tab-pane fade" id="contentSampleInformation" role="tabpanel" aria-labelledby="contentSampleInformation">
                                 <div class="card mb-3">
                                     <div class="card-header fw-bold fs-6">
+                                        Bioproject <span class="text-danger">*</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <select class="form-control select2" id="bioproject_id" name="bioproject_id" required>
+                                            <option value="">Select a Bioproject</option>
+                                            @foreach($bioprojects as $bioproject)
+                                                <option value="{{ $bioproject->id }}" {{ $biosample->bioproject_id == $bioproject->id ? 'selected' : '' }}>
+                                                    {{ $bioproject->title }} 
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
+                                        Organism <span class="text-danger">*</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <input class="form-control" type="text" name="organism_data" value="{{$biosample->organism_detail['current_scientific_name']['name'] ?? ''}}" readonly id="organism_data"
+                                        data-bs-toggle="modal" data-bs-target="#taxonModal"
+                                        placeholder="Click to search organism..." style="cursor: pointer;">
+                                    <input type="hidden" name="organism_detail" value='@json($biosample->organism_detail)'>
+                                    <input type="hidden" name="organism_name" value="{{$biosample->organism_name}}">
+                                    <input type="hidden" name="taxonomy_id" value="{{$biosample->organism_detail['tax_id'] ?? ''}}" id="taxonomy_id">
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-header fw-bold fs-6">
                                         Sample Type <span class="text-danger">*</span>
                                     </div>
                                     <div class="card-body">
@@ -230,9 +259,18 @@
 
     @livewire('create-biosample')
 </div> --}}
+
+@include('dashboard.layouts.taxonmodal')
 @endsection
 @push('js')
 <script>
+
+    $('#bioproject_id').select2({
+        placeholder: "Select a Bioproject",
+        theme: "bootstrap-5",
+        width: '100%'
+    }); 
+    
     var counterFundAgency = 0;
     var i = 0;
     let GLOBAL_ORGANISM = []
@@ -433,87 +471,89 @@
             const normalizedValue = (value === null || value === undefined) ? "" : value;
             let asterisk = requireType == "required" ? "<span class='text-danger'>* </span>" : requireType == "either" ? "<span class='text-danger'>** </span>" : ""
             let input = ""
-            switch (obj.input_type_id) {
-                case 1:
-                    input = `<input data-st-require="${requireType}" value="${normalizedValue}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
-                case 2:
-                    input = `<textarea data-st-require="${requireType}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">${normalizedValue}</textarea>`
-                    break;
-                case 3:
-                    let options = ""
-                    const rawListValue = (obj.list_value === null || obj.list_value === undefined) ? "" : String(obj.list_value);
-                    rawListValue.split(",").filter(v => v !== "").forEach(element => {
-                        options += `<option value="${element}" style="text-transform: capitalize;">${element.replace(/\b\w/g, function(l){ return l.toUpperCase() })}</option>`
-                    });
-                    input = `
-                        <select class="form-select mb-3" data-st-require="${requireType}" id="${obj.attr_name}" name="${obj.attr_name}" aria-label="${obj.attr_text}">
-                           ${options}
-                        </select>
-                    `
-                    break;
-                case 4:
-                    input = `<input data-st-require="${requireType}" type="date" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+            if (obj.attr_name != "organism" && obj.attr_name != "taxonomy_id" && obj.attr_name != "bioproject_id") {
+                switch (obj.input_type_id) {
+                    case 1:
+                        input = `<input data-st-require="${requireType}" value="${normalizedValue}" type="text" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
+                    case 2:
+                        input = `<textarea data-st-require="${requireType}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">${normalizedValue}</textarea>`
+                        break;
+                    case 3:
+                        let options = ""
+                        const rawListValue = (obj.list_value === null || obj.list_value === undefined) ? "" : String(obj.list_value);
+                        rawListValue.split(",").filter(v => v !== "").forEach(element => {
+                            options += `<option value="${element}" style="text-transform: capitalize;">${element.replace(/\b\w/g, function(l){ return l.toUpperCase() })}</option>`
+                        });
+                        input = `
+                            <select class="form-select mb-3" data-st-require="${requireType}" id="${obj.attr_name}" name="${obj.attr_name}" aria-label="${obj.attr_text}">
+                            ${options}
+                            </select>
+                        `
+                        break;
+                    case 4:
+                        input = `<input data-st-require="${requireType}" type="date" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
 
-                    break;
-                case 5:
-                    input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
-                case 6:
-                    input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
+                        break;
+                    case 5:
+                        input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
+                    case 6:
+                        input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
 
-                default:
-                    input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
-                    break;
-            }
-            if (requireType == "required") {
-                input +=
-                    `
-                    <div class="invalid-feedback">
-                        This field cannot be empty!
-                    </div>
-                    `
-            }
-
-            if (requireType == "either") {
-                input +=
-                    `
-                    <div class="invalid-feedback">
-                        At least one field required!
-                    </div>
-                    `
-            }
-
-            formAttributes.append(
-                `
-                <div class="col-md-6 col-sm-12">
-                    <div class="mb-3">
-                        <label for="${obj.attr_name}" class="form-label fw-bold">${obj.attr_text+asterisk}</label>
-                        <i class="bi bi-question-circle ms-1" tabindex="-1" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-custom-class="custom-popover" data-bs-html="true" data-bs-placement="right" data-bs-content="${decodeHTMLEntities(obj.description)}"></i>
-                        ${input}
-                    </div>
-                </div>
-                `
-            )
-
-            // Preselect value for normal <select> inputs
-            if (obj.input_type_id == 3 && normalizedValue !== "") {
-                $("#" + obj.attr_name).val(normalizedValue);
-            }
-            let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-            let popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-            if (obj.attr_name == "taxonomy_id") {
-                $("#taxonomy_id").prop("readonly", true);
-            }
-            if (obj.attr_name == "organism") {
-                ORGANISM_PENDING_ID = normalizedValue || null;
-
-                // If this tab is currently visible, initialize immediately.
-                // If it's hidden (Bootstrap tabs), Select2 may compute width=0 and look like it disappeared.
-                if ($('#contentSampleInformation').hasClass('show') && $('#contentSampleInformation').hasClass('active')) {
-                    ensureOrganismSelect2();
+                    default:
+                        input = `<input data-st-require="${requireType}" type="text" value="${normalizedValue}" class="form-control" id="${obj.attr_name}" name="${obj.attr_name}">`
+                        break;
                 }
+                if (requireType == "required") {
+                    input +=
+                        `
+                        <div class="invalid-feedback">
+                            This field cannot be empty!
+                        </div>
+                        `
+                }
+
+                if (requireType == "either") {
+                    input +=
+                        `
+                        <div class="invalid-feedback">
+                            At least one field required!
+                        </div>
+                        `
+                }
+
+                formAttributes.append(
+                    `
+                    <div class="col-md-6 col-sm-12">
+                        <div class="mb-3">
+                            <label for="${obj.attr_name}" class="form-label fw-bold">${obj.attr_text+asterisk}</label>
+                            <i class="bi bi-question-circle ms-1" tabindex="-1" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-custom-class="custom-popover" data-bs-html="true" data-bs-placement="right" data-bs-content="${decodeHTMLEntities(obj.description)}"></i>
+                            ${input}
+                        </div>
+                    </div>
+                    `
+                )
+
+                // Preselect value for normal <select> inputs
+                if (obj.input_type_id == 3 && normalizedValue !== "") {
+                    $("#" + obj.attr_name).val(normalizedValue);
+                }
+                let popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+                let popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+                // if (obj.attr_name == "taxonomy_id") {
+                //     $("#taxonomy_id").prop("readonly", true);
+                // }
+                // if (obj.attr_name == "organism") {
+                //     ORGANISM_PENDING_ID = normalizedValue || null;
+
+                //     // If this tab is currently visible, initialize immediately.
+                //     // If it's hidden (Bootstrap tabs), Select2 may compute width=0 and look like it disappeared.
+                //     if ($('#contentSampleInformation').hasClass('show') && $('#contentSampleInformation').hasClass('active')) {
+                //         ensureOrganismSelect2();
+                //     }
+                // }
             }
 
         }

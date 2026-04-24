@@ -41,6 +41,7 @@ class DashboardBioprojectController extends Controller
             // ignore if drafts table/model not available
             logger()->debug('Could not check bioarchive drafts: ' . $e->getMessage());
         }
+        // dd($bioproject);
         return view('dashboard.bioproject.index', [
             'bioprojects' => $bioproject
             ,'hasDraft' => $hasDraft,

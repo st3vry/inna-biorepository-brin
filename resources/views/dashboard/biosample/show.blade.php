@@ -44,7 +44,23 @@
                             </tr>
                             <tr>
                                 <td class="col-sm-1">Organism</td>
+                                @isset($biosample->organism_detail['current_scientific_name']['name'])
+                                <td class="col-sm-7">
+                                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#viewOrganismDetailModal">
+                                        {{$biosample->organism_detail['tax_id'] ?? " - "}} - {{$biosample->organism_detail['current_scientific_name']['name'] ?? 'None'}}
+                                    </a>
+                                </td>
+                                @else
                                 <td class="col-sm-7">{{$organism->name}}</td>
+                                @endisset
+                            </tr>
+                            <tr>
+                                <td class="col-sm-1">Bioproject</td>
+                                <td class="col-sm-7">
+                                    <a href="{{auth()->id() == $biosample->bioproject->user_id ? '/dashboard' : '' }}/bioprojects/{{ $biosample->bioproject->accession }}" target="_blank" rel="noopener noreferrer">
+                                        {{$biosample->bioproject->accession . " - " . $biosample->bioproject->title ?? 'None'}}
+                                    </a>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-1">Sample Type</td>
@@ -91,16 +107,26 @@
                             </tr>
                             
                             <tr>
-                                <td class="col-sm-1">Sample Attribute</td>
+                                <td class="col-sm-1 align-top">Sample Attribute</td>
                                 <td class="col-sm-7">
                                     <div class="card shadow-sm mb-2">
                                         <div class="card-body">
                                             <table class="table table-striped table-sm">
                                                 @forelse ($sample_attr as $item)
+                                                    @if ($item->attributesample->attr_name !== 'organism' && $item->attributesample->attr_name !== 'bioproject_id')
                                                     <tr>
                                                         <td class="col-sm-3">{{$item->attributesample->attr_text}}</td>
-                                                        <td class="col-sm-3">{{$item->value}}</td>
+                                                        <td class="col-sm-3">
+                                                            @if ($item->attributesample->attr_name === 'taxonomy_id')
+                                                                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#viewOrganismDetailModal">
+                                                                    {{$biosample->organism_detail['tax_id'] ?? 'None'}}
+                                                                </a>
+                                                            @else
+                                                            {{$item->value}}
+                                                            @endif
+                                                        </td>
                                                     </tr>
+                                                    @endif
                                                 @empty
                                                 None
                                                 @endforelse
@@ -198,4 +224,13 @@
             </div>
         </div>
 </div>
+
+@include('dashboard.layouts.organismdetailmodal')
 @endsection
+
+@push('js')
+<script>
+    window.currentOrganismDetail = @json($biosample->organism_detail ?? []);
+</script>
+
+@endpush

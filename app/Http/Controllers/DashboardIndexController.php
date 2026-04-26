@@ -4,65 +4,73 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bioarchive;
+use App\Models\ActionLog;
 use Illuminate\Http\Request;
 use App\Models\Bioproject;
 use App\Models\Biosample;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 use App\Services\SsoService;
 
 
 class DashboardIndexController extends Controller
 {
+    // Get array of monthly counts [jan, feb, mar, ..., dec]
+    private function getMonthlyCount($model, $userID, $year = 0)
+    {
+        $counts = array_fill(0, 12, 0);
+        
+        if ($year == 0) {
+            $data = $model->where('user_id',$userID)      
+                ->selectRaw('EXTRACT(MONTH FROM created_at) as bulan, COUNT(*) as count')
+                ->groupBy(DB::raw('bulan'))
+                ->get();
+        } else {
+            $data = $model->where('user_id',$userID)  
+                ->whereYear('created_at', $year)    
+                ->selectRaw('EXTRACT(MONTH FROM created_at) as bulan, COUNT(*) as count')
+                ->groupBy(DB::raw('bulan'))
+                ->get();
+        }
+        foreach ($data as $row) {
+            $counts[$row->bulan - 1] = $row->count;
+        }
+
+        return $counts;
+    }
+
+    public function getOverviewChartData(Request $request)
+    {
+        $userID = null;
+        $token = session('is_login_inna_repo');
+        if (Cache::has($token)) {
+            $Auth = Cache::get($token);
+            $userID = $Auth['id'];
+        }
+        $year = $request->year ?? Carbon::now()->year;
+        $bioprojects = $this->getMonthlyCount(new Bioproject(), $userID, $year);
+        $biosamples = $this->getMonthlyCount(new Biosample(), $userID, $year);
+        $bioarchives = $this->getMonthlyCount(new Bioarchive(), $userID, $year);
+        $total = array_map(function ($a, $b, $c) {
+            return $a + $b + $c;
+        }, $bioprojects, $biosamples, $bioarchives);
+
+        return response()->json([
+            'bioproject' => $bioprojects,
+            'biosample' => $biosamples,
+            'bioarchive' => $bioarchives,
+            'total' => $total,
+        ]);
+    }
+
     //
     public function index(Request $request)
     {
-        // // $code = Cache::get('code');
-        // // dd($code);
-        // $allSessions = session()->get('brin_sso_access_token');
-        // $allSessions = session()->all();
-        // $ssoService = new SsoService();
-        // $ssotoken = $ssoService->getAccessToken($request);
-        // dd($allSessions);
-        // // dd($allSessions['brin_sso_access_token']);
-
-        // session(['brin_sso_access_token' => $ssotoken]);
-        // $options['headers']['content-type'] = 'application/json';
-        // // // Optional: Now you have a token you can look up a users profile data
-        // try {
-        //     $requests = $ssoService->getAuthenticatedRequest(
-        //         'GET',
-        //         env('API_SSO') . 'user/me',
-        //         $ssotoken,
-        //         $options
-        //     );
-        //     $response = $ssoService->getParsedResponse($requests);
-        //     $response = json_decode(json_encode($response));
-        //     dd($response);
-        //     // $this->loginsso($request, $response, $accessToken);
-        // } catch (Exception $e) {
-        //     echo $e->getMessage();
-        //     // Failed to get user details
-        //     exit('Ups...contact your system administrator.');
-        // }
-        // // $data = $ssoService->authorize($request);
-        // dd($allSessions);
-        // $tokens = $accessToken->getToken();
-        // dd($tokens);
-        // dd($request->state);
-        // dd($allSessions);
-
-        // dd($allSessions);
-
-        // dd($data_in_concern);
-        // $userID= auth()->user()->id;
-        // $userID = $response->pegawaiData->id;
-        // $nama = $response->pegawaiData->name;
-        // $options['headers']['content-type'] = 'application/json';
-        // $userSSO = $ssoService->getAuthUserSso(session(['brin_sso_access_token']));
-        // dd($userSSO);
         $userID = null;
         $nama = null;
+        $year = 0;
         $token = session('is_login_inna_repo');
         if (Cache::has($token)) {
             $Auth = Cache::get($token);
@@ -132,21 +140,31 @@ class DashboardIndexController extends Controller
         )->get();
         $bioarchive_hold_count = $bioarchive_hold->count();
 
+        $bioproject_overview = $this->getMonthlyCount(new Bioproject(), $userID, $year);
+        $biosample_overview = $this->getMonthlyCount(new Biosample(), $userID, $year);
+        $bioarchive_overview = $this->getMonthlyCount(new Bioarchive(), $userID, $year);
+        $total_overview = array_map(function ($a, $b, $c) {
+            return $a + $b + $c;
+        }, $bioproject_overview, $biosample_overview, $bioarchive_overview);
 
         return view('dashboard.index', [
             'bioproject_count' => $bioproject_count,
             'bioproject_pub_count' => $bioproject_pub_count,
             'bioproject_hold_count' => $bioproject_hold_count,
+            'bioproject_overview' => $bioproject_overview,
 
             'biosample_count' => $biosample_count,
             'biosample_pub_count' => $biosample_pub_count,
             'biosample_hold_count' => $biosample_hold_count,
+            'biosample_overview' => $biosample_overview,
 
             'bioarchive_count' => $bioarchive_count,
             'bioarchive_pub_count' => $bioarchive_pub_count,
             'bioarchive_hold_count' => $bioarchive_hold_count,
+            'bioarchive_overview' => $bioarchive_overview,
 
             'nama' => $nama,
+            'total_overview' => $total_overview,
 
         ]);
     }

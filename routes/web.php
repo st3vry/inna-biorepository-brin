@@ -139,6 +139,7 @@ Route::get('/download/{relativePath}', [PermissionRequestController::class, 'dow
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {
     Route::get('/', [DashboardIndexController::class, 'index'])->middleware('authsso');
+    Route::post('/overview-chart', [DashboardIndexController::class, 'getOverviewChartData'])->middleware('authsso');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('users.profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('users.profile.update');

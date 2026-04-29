@@ -173,4 +173,19 @@ class DashboardBioarchiveController extends Controller
     {
         return LibraryLayout::select('name')->where('id', $id)->pluck('name')->first();
     }
+
+    /**
+     * Release a published bioarchive by clearing the hold_release flag.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Bioarchive  $bioarchive
+     * @return \Illuminate\Http\Response
+     */
+    public function release(Request $request, Bioarchive $bioarchive)
+    {
+        $bioarchive->hold_release = false;
+        $bioarchive->save();
+
+        return response()->json(['status' => 'OK']);
+    }
 }

@@ -1,49 +1,53 @@
-<form wire:submit.prevent="submitForm">
-    <div class="pb-4">
-        <div class="d-flex justify-content-end mb-2">
-            <button type="button" class="btn btn-outline-success me-2" wire:click="saveDraft" wire:loading.attr="disabled">
-                <span wire:loading.remove>Save Draft <i class="bi bi-save"></i></span>
-                <span wire:loading>Saving...</span>
-            </button>
-            @if($draftId)
-            {{-- <button type="button" class="btn btn-sm btn-outline-info me-2" wire:click="loadDraft({{ $draftId }})">Reload Draft</button> --}}
-            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDiscardDraft()" wire:loading.attr="disabled">
-                <span wire:loading.remove>Discard Draft</span>
-                {{-- <span wire:loading>Discarding...</span> --}}
-            </button>
-            @endif
-        </div>
-        @if(!empty($successMsg))
-        <div class="alert alert-success">
-            {{ $successMsg }}
-        </div>
-        @endif
-        <ul id="nav-steps" class="nav nav-pills mb-2 nav-justified">
-            <li class="nav-item">
-                <a href="#step-1" wire:click="back(1)" class="nav-link {{ $currentStep == 1 ? 'active' : '' }}  {{ $currentStep < 1 ? 'disabled' : '' }}">Submitter</a>
-            </li>
-            <li class="nav-item">
-                <a href="#step-2" wire:click="back(2)" class="nav-link {{ $currentStep == 2 ? 'active' : ''  }} {{ $currentStep < 2 ? 'disabled' : '' }}">Bioproject</a>
-            </li>
-            <li class="nav-item">
-                <a href="#step-3" wire:click="back(3)" class="nav-link {{ $currentStep == 3 ? 'active' : ''  }} {{ $currentStep < 3 ? 'disabled' : '' }}">Biosample</a>
-            </li>
-            <li class="nav-item">
-                <a href="#step-4" wire:click="back(4)" class="nav-link {{ $currentStep == 4 ? 'active' : '' }} {{ $currentStep < 4 ? 'disabled' : '' }}">Experiment</a>
-            </li>
-            {{-- <li class="nav-item">
-                <a href="#step-5" wire:click="back(5)" class="nav-link {{ $currentStep == 5 ? 'active' : '' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Run</a>
-            </li> --}}
-            <li class="nav-item">
-                <a href="#step-5" class="nav-link {{ $currentStep == 5 ? 'active' : 'disabled' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Preview</a>
-            </li>
-        </ul>
-        <div class="progress mb-2" style="height: 4px;">
-            <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-        <div class="progress mb-2" style="height: 4px;">
-            <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-    </div>
+<div class="container-fluid">
+    <div class="row">
+        <form wire:submit.prevent="submitForm">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-success me-2" wire:click="saveDraft" wire:loading.attr="disabled">
+                        <span wire:loading.remove>Save Draft 
+                            <i class="ti ti-device-floppy"></i>
+                        </span>
+                        <span wire:loading>Saving...</span>
+                    </button>
+                    @if($draftId)
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDiscardDraft()" wire:loading.attr="disabled">
+                        <span wire:loading.remove>Discard Draft
+                            <i class="ti ti-trash"></i>
+                        </span>
+                    </button>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div>
+                    @if(!empty($successMsg))
+                    <div class="alert alert-success">
+                        {{ $successMsg }}
+                    </div>
+                    @endif
+                    <ul id="nav-steps" class="nav nav-pills mb-2 nav-justified bg-light p-1 rounded">
+                        <li class="nav-item">
+                            <a href="#step-1" wire:click="back(1)" class="nav-link {{ $currentStep == 1 ? 'active' : '' }}  {{ $currentStep < 1 ? 'disabled' : '' }}">Submitter</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-2" wire:click="back(2)" class="nav-link {{ $currentStep == 2 ? 'active' : ''  }} {{ $currentStep < 2 ? 'disabled' : '' }}">Bioproject</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-3" wire:click="back(3)" class="nav-link {{ $currentStep == 3 ? 'active' : ''  }} {{ $currentStep < 3 ? 'disabled' : '' }}">Biosample</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-4" wire:click="back(4)" class="nav-link {{ $currentStep == 4 ? 'active' : '' }} {{ $currentStep < 4 ? 'disabled' : '' }}">Experiment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-5" class="nav-link {{ $currentStep == 5 ? 'active' : 'disabled' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Preview</a>
+                        </li>
+                    </ul>
+                    <div class="progress mb-2" style="height: 4px;">
+                        <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
 
 
     <div class="row setup-content {{ $currentStep != 1 ? 'display-none' : '' }}" id="step-1">
@@ -467,7 +471,11 @@
         </div>
     </div>
 
-</form>
+            </div> {{-- card-body --}}
+        </div> {{-- card --}}
+        </form>
+    </div> {{-- row --}}
+</div> {{-- container-fluid --}}
 @push('js')
 <script>
     document.addEventListener('livewire:load', function() {

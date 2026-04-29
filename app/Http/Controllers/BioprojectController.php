@@ -24,16 +24,31 @@ class BioprojectController extends Controller
      */
     public function index(Request $request)
     {
-        $bioprojects = Bioproject::with(['organism', 'samplescope'])->where('status', 5)->paginate(5);
+        $bioprojects = Bioproject::with(['organism', 'samplescope'])->where([
+            'status' => 5,
+            'hold_release' => false,
+        ])->orderBy('published_at', 'desc')->paginate(10);
         if ($request->organism) {
-            $bioprojects = Bioproject::with(['organism', 'samplescope'])->where(['status' => 5, 'organism_id' => Crypt::decrypt($request->organism)])->paginate(5);
+            $bioprojects = Bioproject::with(['organism', 'samplescope'])->where([
+                'status' => 5,
+                'hold_release' => false,
+                'organism_id' => Crypt::decrypt($request->organism)
+            ])->paginate(10);
         }
         if ($request->center) {
-            $bioprojects = Bioproject::with(['organism', 'samplescope'])->where(['status' => 5, 'center_id' => Crypt::decrypt($request->center)])->paginate(5);
+            $bioprojects = Bioproject::with(['organism', 'samplescope'])->where([
+                'status' => 5,
+                'hold_release' => false,
+                'center_id' => Crypt::decrypt($request->center)
+            ])->paginate(10);
         }
 
         if ($request->scope) {
-            $bioprojects = Bioproject::with(['organism', 'samplescope'])->where(['status' => 5, 'samplescope_id' => Crypt::decrypt($request->scope)])->paginate(5);
+            $bioprojects = Bioproject::with(['organism', 'samplescope'])->where([
+                'status' => 5,
+                'hold_release' => false,
+                'samplescope_id' => Crypt::decrypt($request->scope)
+            ])->paginate(10);
         }
         $organisms = Bioproject::leftJoin('organisms', 'organisms.id','=','bioprojects.organism_id')->selectRaw('organisms.name, organisms.id, organisms.taxon_id, count(bioprojects.organism_id) as count')->where('bioprojects.status', 5)->groupBy('organisms.id')->orderBy('organisms.name')->get();
         $centers = Bioproject::leftJoin('centers', 'centers.id','=','bioprojects.center_id')->selectRaw('centers.name, centers.id, count(bioprojects.center_id) as count')->where('bioprojects.status', 5)->groupBy('centers.id')->get();
@@ -56,7 +71,7 @@ class BioprojectController extends Controller
     public function show(Bioproject $bioproject)
     {
         //
-        if ($bioproject->published_at == null) {
+        if ($bioproject->published_at == null || $bioproject->hold_release == true) {
             return view('error.404');
         }
         $pubs = $bioproject->publication()->get();

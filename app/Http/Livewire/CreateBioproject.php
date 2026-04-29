@@ -110,6 +110,8 @@ class CreateBioproject extends Component
     // TARGET TAB
     public $organisms = [];
     public $organism_id;
+    public $organism_data;
+    public $organism_detail;
     public $novel_org;
     public $novel_desc;
     public $sbc;
@@ -187,7 +189,9 @@ class CreateBioproject extends Component
     protected $rules = [
         'title' => 'required|min:6',
         'umbproject_id' => '',
-        'organism_id' => 'required',
+        'organism_id' => 'nullable',
+        'organism_data' => '',
+        'organism_detail' => 'required',
         'consortium_id' => '',
 
         'material_id' => 'required',
@@ -304,7 +308,8 @@ class CreateBioproject extends Component
     public function fourthStepSubmit()
     {
         $validatedData = $this->validate([
-            'organism_id' => 'required',
+            'organism_id' => 'nullable',
+            'organism_detail' => 'required',
             'haploid_size' => 'nullable',
             'genome_size_id' => 'nullable|required_with:haploid_size',
             'repls' => 'nullable|array',
@@ -603,6 +608,9 @@ class CreateBioproject extends Component
 
         $bioproject->umbproject_id = $validatedData['umbproject_id'];
         $bioproject->organism_id = $validatedData['organism_id'];
+        $bioproject->organism_detail = is_string($validatedData['organism_detail'])
+            ? json_decode($validatedData['organism_detail'], true)
+            : $validatedData['organism_detail'];
         $bioproject->consortium_id = $validatedData['consortium_id'];
         $bioproject->title = $validatedData['title'];
         $bioproject->description = $validatedData['description'];
@@ -797,6 +805,9 @@ class CreateBioproject extends Component
             'methodology_id' => $this->methodology_id ?? null,
             'consortium_id' => $this->consortium_id ?? null,
             'organism_id' => $this->organism_id ?? null,
+            'organism_data' => $this->organism_data ?? null,
+            'organism_detail' => $this->organism_detail ?? null,
+            
 
             // target + replicons
             'novel_org' => $this->novel_org ?? null,
@@ -869,6 +880,8 @@ class CreateBioproject extends Component
         $this->methodology_id = $data['methodology_id'] ?? $this->methodology_id;
         $this->consortium_id = $data['consortium_id'] ?? $this->consortium_id;
         $this->organism_id = $data['organism_id'] ?? $this->organism_id;
+        $this->organism_detail = $data['organism_detail'] ?? $this->organism_detail;
+        $this->organism_data = $data['organism_data'] ?? $this->organism_data;
 
         // target + replicons
         $this->novel_org = $data['novel_org'] ?? $this->novel_org;

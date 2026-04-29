@@ -79,10 +79,10 @@
         const headerScrolled = () => {
             if (window.scrollY > 100) {
                 selectHeader.classList.add('header-scrolled')
-                navBrand.src = "/images/inna-biorepo-white.png"
+                navBrand.src = "/images/inna-biorepo-white-small.png"
             } else {
                 selectHeader.classList.remove('header-scrolled')
-                navBrand.src = "/images/inna-biorepo-red.png"
+                navBrand.src = "/images/inna-biorepo-red-small.png"
             }
         }
         window.addEventListener('load', headerScrolled)

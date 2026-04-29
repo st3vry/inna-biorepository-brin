@@ -101,6 +101,8 @@ class EditBioproject extends Component
     // TARGET TAB
     public $organisms = [];
     public $organism_id;
+    public $organism_data;
+    public $organism_detail;
     public $novel_org;
     public $novel_desc;
     public $sbc;
@@ -184,7 +186,9 @@ class EditBioproject extends Component
     protected $rules = [
         'title' => 'required|min:6',
         'umbproject_id' => '',
-        'organism_id' => 'required',
+        'organism_id' => 'nullable',
+        'organism_data' => '',
+        'organism_detail' => 'required',
         'consortium_id' => '',
 
         'material_id' => 'required',
@@ -307,7 +311,8 @@ class EditBioproject extends Component
     public function fourthStepSubmit()
     {
         $validatedData = $this->validate([
-            'organism_id' => 'required',
+            'organism_id' => 'nullable',
+            'organism_detail' => 'required',
             'haploid_size' => 'nullable',
             'genome_size_id' => 'nullable|required_with:haploid_size',
             'repls' => 'nullable|array',
@@ -381,6 +386,8 @@ class EditBioproject extends Component
                 $this->umbproject_id = $bioproject->umbproject_id;
                 $this->consortium_id = $bioproject->consortium_id;
                 $this->organism_id = $bioproject->organism_id;
+                $this->organism_data = $bioproject->organism_detail['current_scientific_name']['name'] . ' - ' . $bioproject->organism_detail['tax_id'];
+                $this->organism_detail = $bioproject->organism_detail;
                 $this->samplescope_id = $bioproject->samplescope_id;
 
                 // Related single-row detail tables
@@ -721,6 +728,9 @@ class EditBioproject extends Component
 
         $bioproject->umbproject_id = $validatedData['umbproject_id'] ?? null;
         $bioproject->organism_id = $validatedData['organism_id'];
+        $bioproject->organism_detail = is_string($validatedData['organism_detail'])
+            ? json_decode($validatedData['organism_detail'], true)
+            : $validatedData['organism_detail'];
         $bioproject->consortium_id = $validatedData['consortium_id'];
         $bioproject->title = $validatedData['title'];
         $bioproject->description = $validatedData['description'];

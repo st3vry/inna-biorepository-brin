@@ -19,12 +19,23 @@ class BiosampleController extends Controller
     public function index(Request $request)
     {
         //
-        $biosamples = Biosample::with(['organism', 'center', 'user'])->where('status', 5)->paginate(5);
+        $biosamples = Biosample::with(['organism', 'center', 'user'])->where([
+            'status' => 5,
+            'hold_release' => false,
+        ])->orderBy('published_at', 'desc')->paginate(10);
         if ($request->organism) {
-            $biosamples = Biosample::with(['organism', 'center', 'user'])->where(['status' => 5, 'organism_id' => Crypt::decrypt($request->organism)])->paginate(5);
+            $biosamples = Biosample::with(['organism', 'center', 'user'])->where([
+                'status' => 5,
+                'hold_release' => false,
+                'organism_id' => Crypt::decrypt($request->organism)
+            ])->paginate(10);
         }
         if ($request->center) {
-            $biosamples = Biosample::with(['organism', 'center', 'user'])->where(['status' => 5, 'center_id' => Crypt::decrypt($request->center)])->paginate(5);
+            $biosamples = Biosample::with(['organism', 'center', 'user'])->where([
+                'status' => 5,
+                'hold_release' => false,
+                'center_id' => Crypt::decrypt($request->center)
+            ])->paginate(10);
         }
         $organisms = Biosample::leftJoin('organisms', 'organisms.id', '=', 'biosamples.organism_id')->selectRaw('organisms.name, organisms.taxon_id, organisms.id, count(biosamples.organism_id) as count')->where('biosamples.status', 5)->groupBy('organisms.id')->orderBy('organisms.name')->get();
         $centers = Biosample::leftJoin('centers', 'centers.id', '=', 'biosamples.center_id')->selectRaw('centers.name, centers.id, count(biosamples.center_id) as count')->where('biosamples.status', 5)->groupBy('centers.id')->get();
@@ -45,7 +56,7 @@ class BiosampleController extends Controller
     public function show(Biosample $biosample)
     {
         //
-        if ($biosample->published_at == null) {
+        if ($biosample->published_at == null || $biosample->hold_release == true) {
             return view('error.404');
         }
 

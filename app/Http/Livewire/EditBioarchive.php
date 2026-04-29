@@ -162,8 +162,10 @@ class EditBioarchive extends Component
         $this->biosample_id = $selectedBiosampleIds;
 
         // lookup lists
-        $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
-        $this->biosamples = Biosample::where('draft', false)->get();
+        // $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
+        $this->loadBioprojects($this->searchBioproject);
+        // $this->biosamples = Biosample::where('draft', false)->get();
+        $this->biosamples = collect();
         $this->libsources = LibrarySource::all();
         $this->libselections = LibrarySelection::all();
         $this->libstrategies = LibraryStrategy::all();
@@ -194,6 +196,63 @@ class EditBioarchive extends Component
 
         // ensure all selected biosamples have initialized experiment rows
         $this->ensureExperimentRowsInitialized();
+    }
+
+    /**
+     * Load bioprojects matching the search term. Only include published
+     * projects and exclude projects with hold_release == true unless owned by
+     * the current user.
+     */
+    protected function loadBioprojects($search = '')
+    {
+        $this->bioprojects = Bioproject::where('title', 'like', '%' . $search . '%')
+            ->whereNotNull('published_at')
+            ->where(function ($q) {
+                $q->where('hold_release', false)
+                  ->orWhere('user_id', auth()->id());
+            })
+            ->orderBy('id')
+            ->get();
+    }
+
+    /**
+     * Livewire hook: refresh bioproject list when search term changes.
+     */
+    public function updatedSearchBioproject($value)
+    {
+        $this->loadBioprojects($value);
+    }
+
+    protected function loadBiosamplesForBioproject($bioprojectId)
+    {
+        if (empty($bioprojectId)) {
+            $this->biosamples = collect();
+            return;
+        }
+
+        // Get published biosamples for the bioproject. Exclude samples that
+        // are individually held (hold_release == true) unless the current
+        // user is the owner of the biosample.
+        $this->biosamples = Biosample::whereNotNull('published_at')
+            ->where('bioproject_id', $bioprojectId)
+            ->where(function ($q) {
+                $q->where('hold_release', false)
+                  ->orWhere('user_id', auth()->id());
+            })
+            ->orderBy('id')
+            ->get();
+    }
+
+    /**
+     * Livewire hook: when `bioproject_id` is updated from the frontend,
+     * refresh the biosamples list and clear previous sample selections.
+     */
+    public function updatedBioprojectId($value)
+    {
+        // clear previously selected biosamples/experiments
+        $this->biosample_id = [];
+        $this->bioexperiment_id = [];
+        $this->loadBiosamplesForBioproject($value);
     }
 
     private function extractAliasPrefix(array $aliasMap): ?string
@@ -459,13 +518,13 @@ class EditBioarchive extends Component
     public function render()
     {
         // refresh lists for search filter usage
-        $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
+        // $this->bioprojects = Bioproject::where('title', 'like', '%' . $this->searchBioproject . '%')->get();
 
-        $biosampleQuery = Biosample::where('draft', false);
-        if ($this->searchBiosample !== '') {
-            $biosampleQuery->where('title', 'like', '%' . $this->searchBiosample . '%');
-        }
-        $this->biosamples = $biosampleQuery->get();
+        // $biosampleQuery = Biosample::where('draft', false);
+        // if ($this->searchBiosample !== '') {
+        //     $biosampleQuery->where('title', 'like', '%' . $this->searchBiosample . '%');
+        // }
+        // $this->biosamples = $biosampleQuery->get();
 
         return view('livewire.bioarchive.edit');
     }

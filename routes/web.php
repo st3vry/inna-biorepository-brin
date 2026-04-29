@@ -139,6 +139,7 @@ Route::get('/download/{relativePath}', [PermissionRequestController::class, 'dow
 //rsemua route didalam dashboard disimpan disini tanpa prefix "dashboard"
 Route::prefix('dashboard')->group(function () {
     Route::get('/', [DashboardIndexController::class, 'index'])->middleware('authsso');
+    Route::post('/overview-chart', [DashboardIndexController::class, 'getOverviewChartData'])->middleware('authsso');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('users.profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('users.profile.update');
@@ -146,6 +147,10 @@ Route::prefix('dashboard')->group(function () {
     Route::post('/markasread', [ActionLogController::class, 'markAsRead'])->name('notif.mark.as.read');
 
     Route::get('/bioprojects/fetchfundingagency', [DashboardBioprojectController::class, 'fetchfundingagency'])->middleware('authsso');
+
+    Route::post('/bioprojects/{bioproject}/release', [DashboardBioprojectController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
+    Route::post('/bioarchives/{bioarchive}/release', [DashboardBioarchiveController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
+    Route::post('/biosamples/{biosample}/release', [DashboardBiosampleController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
 
     Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware(['authsso', 'is_labcenterexist']);
     Route::resource('/biosamples', UserSampleController::class)->middleware(['is_labcenterexist', 'authsso']);

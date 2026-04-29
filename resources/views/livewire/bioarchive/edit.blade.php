@@ -1,27 +1,34 @@
-<form wire:submit.prevent="submitForm">
-    <div class="pb-4">
-        <ul id="nav-steps" class="nav nav-pills mb-2 nav-justified">
-            <li class="nav-item">
-                <a href="#step-1" wire:click="back(1)" class="nav-link {{ $currentStep == 1 ? 'active' : '' }}  {{ $currentStep < 1 ? 'disabled' : '' }}">Submitter</a>
-            </li>
-            <li class="nav-item">
-                <a href="#step-2" wire:click="back(2)" class="nav-link {{ $currentStep == 2 ? 'active' : ''  }} {{ $currentStep < 2 ? 'disabled' : '' }}">Bioproject</a>
-            </li>
-            <li class="nav-item">
-                <a href="#step-3" wire:click="back(3)" class="nav-link {{ $currentStep == 3 ? 'active' : ''  }} {{ $currentStep < 3 ? 'disabled' : '' }}">Biosample</a>
-            </li>
-            <li class="nav-item">
-                <a href="#step-4" wire:click="back(4)" class="nav-link {{ $currentStep == 4 ? 'active' : '' }} {{ $currentStep < 4 ? 'disabled' : '' }}">Experiment</a>
-            </li>
-            <li class="nav-item">
-                <a href="#step-5" class="nav-link {{ $currentStep == 5 ? 'active' : 'disabled' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Preview</a>
-            </li>
-        </ul>
+<div class="container-fluid">
+    <div class="row">
+        <form wire:submit.prevent="submitForm">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Edit Bioarchive</h4>
+            </div>
 
-        <div class="progress mb-2" style="height: 4px;">
-            <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-    </div>
+            <div class="card-body">
+                <div>
+                    <ul id="nav-steps" class="nav nav-pills mb-2 nav-justified bg-light p-1 rounded">
+                        <li class="nav-item">
+                            <a href="#step-1" wire:click="back(1)" class="nav-link {{ $currentStep == 1 ? 'active' : '' }}  {{ $currentStep < 1 ? 'disabled' : '' }}">Submitter</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-2" wire:click="back(2)" class="nav-link {{ $currentStep == 2 ? 'active' : ''  }} {{ $currentStep < 2 ? 'disabled' : '' }}">Bioproject</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-3" wire:click="back(3)" class="nav-link {{ $currentStep == 3 ? 'active' : ''  }} {{ $currentStep < 3 ? 'disabled' : '' }}">Biosample</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-4" wire:click="back(4)" class="nav-link {{ $currentStep == 4 ? 'active' : '' }} {{ $currentStep < 4 ? 'disabled' : '' }}">Experiment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#step-5" class="nav-link {{ $currentStep == 5 ? 'active' : 'disabled' }} {{ $currentStep < 5 ? 'disabled' : '' }}">Preview</a>
+                        </li>
+                    </ul>
+                    <div class="progress mb-2" style="height: 4px;">
+                        <div id="wizard-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
 
     <div class="row setup-content {{ $currentStep != 1 ? 'display-none' : '' }}" id="step-1">
         <div class="col-md-12">
@@ -401,7 +408,12 @@
             <button class="btn btn-success" wire:click="submitForm" type="button">Update</button>
         </div>
     </div>
-</form>
+
+            </div> {{-- card-body --}}
+        </div> {{-- card --}}
+        </form>
+    </div> {{-- row --}}
+</div> {{-- container-fluid --}}
 
 @push('js')
 <script>

@@ -11,6 +11,7 @@ class Bioproject extends Model
 
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at', 'published_at'];
+    protected $casts = ['organism_detail' => 'array'];
 
 
     public function organism()
@@ -56,6 +57,11 @@ class Bioproject extends Model
     public function externallink()
     {
         return $this->hasMany(BioProjectExternalLink::class);
+    }
+
+    public function biosamples()
+    {
+        return $this->hasMany(Biosample::class, 'bioproject_id');
     }
 
     public function target()

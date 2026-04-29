@@ -10,6 +10,7 @@ class Biosample extends Model
     use HasFactory;
     protected $guarded = ['id'];
     protected $dates = ['created_at', 'updated_at', 'published_at'];
+    protected $casts = ['organism_detail' => 'array'];
 
     public function organism()
     {
@@ -30,6 +31,11 @@ class Biosample extends Model
     public function externallink()
     {
         return $this->hasMany(BioSampleExternalLink::class);
+    }
+
+    public function bioproject()
+    {
+        return $this->belongsTo(Bioproject::class);
     }
 
     public function getRouteKeyName()

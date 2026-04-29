@@ -393,26 +393,30 @@
 
          @foreach ($bioexperiment as $item => $value)
 
-        var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
-            chunking: true,
-            method: "POST",
-            maxFilesize: 21474836480, //2gb
-            chunkSize: 104857600, // 100mb
-            parallelChunkUploads: true,
-        });
+            var myDropzone{{$value['id']}} = new Dropzone("#form{{ $value['alias']}}", {
+                url: "/dashboard/file/upload",
+                method: "POST",
+                chunking: true,
+                forceChunking: true,
+                maxFilesize: 2048, // 2 GB in MB
+                chunkSize: 104857600, // 100 MB in bytes
+                parallelChunkUploads: true,
+                retryChunks: true,
+                retryChunksLimit: 3
+            });
 
-        myDropzone{{ $value['id']}}.on('sending', function (file, xhr, formData) {
-            formData.append("_token", '{{ csrf_token() }}');
-            formData.append("mainFolder", "{{$bioarchive->accession}}")
-            formData.append("bioexperiment_id", "{{$value['id']}}")
-            formData.append("subFolder", "{{ $value['alias']}}")
-            formData.append("filetype", document.getElementById("filetype{{ $value['alias'] }}").value)
-            console.log(formData,Object.fromEntries(formData))
-        }).on("complete", function(file) {
-            console.log("complete:",file);
-        }).on('error', function(file, response) {
-            console.error("ERROR:",response)
-        });
+            myDropzone{{ $value['id']}}.on('sending', function (file, xhr, formData) {
+                formData.append("_token", '{{ csrf_token() }}');
+                formData.append("mainFolder", "{{$bioarchive->accession}}")
+                formData.append("bioexperiment_id", "{{$value['id']}}")
+                formData.append("subFolder", "{{ $value['alias']}}")
+                formData.append("filetype", document.getElementById("filetype{{ $value['alias'] }}").value)
+                console.log(formData,Object.fromEntries(formData))
+            }).on("complete", function(file) {
+                console.log("complete:",file);
+            }).on('error', function(file, response) {
+                console.error("ERROR:",response)
+            });
         @endforeach
 
         $(".modalfile").on("hidden.bs.modal", function () {

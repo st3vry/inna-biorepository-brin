@@ -44,6 +44,7 @@ use App\Models\BioticRelationship;
 use App\Models\Fundagency;
 use App\Models\Organism;
 use App\Services\SsoService;
+use App\Http\Controllers\ManualController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -257,3 +258,7 @@ Route::fallback(function () {
     // return "Hm, why did you land here somehow?";
     return view('error.404');
 });
+
+// Manual (Markdown) viewer
+Route::get('/manuals/{name}', [ManualController::class, 'show'])->name('manual.show');
+Route::get('/manual', [ManualController::class, 'default'])->name('manual.default');

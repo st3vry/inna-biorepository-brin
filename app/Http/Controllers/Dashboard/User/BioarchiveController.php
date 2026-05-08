@@ -69,9 +69,10 @@ class BioarchiveController extends Controller
         $filetypes = FileType::get();
         $ftp_users = FtpUsers::where("bioarchive_id", $bioarchive->id);
         // dd($filetypes);
+        $file_location = $bioarchive->status == 5 ? "pub" : "temp";
 
         foreach ($bioexperiment as $key => $value) {
-            $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
+            $directory = "/innasto/{$file_location}/{$bioarchive->accession}/{$value['alias']}";
             if (Storage::disk('ftp')->exists($directory)) {
                 $d = Storage::disk('ftp')->files($directory);
                 $obj = new \stdClass();

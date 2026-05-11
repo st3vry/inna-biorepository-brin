@@ -266,7 +266,7 @@
                                     @if ($key === $value['alias'])
                                     @foreach ($items as $item)
                                     <tr>
-                                        {{-- <td></td> --}}
+                                        <td></td>
                                         <td>
                                         {{array_reverse(explode("/",$item))[0]}}
                                             <span>

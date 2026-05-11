@@ -65,32 +65,38 @@ class DashboardBioarchiveController extends Controller
         $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
         // dd($filetypes);
 
-        if ($bioarchive->status != 5) {
-            $dir_type = "temp";
-        } else {
-            $dir_type = "files";
-        }
-        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
-        if ($bioarchive->status > 1 ) {
-            if ($bioarchive->status == 5) {
-                $disk = Storage::build([
-                    'driver' => 'sftp',
-                    'host' => env('FTP_HOST'),
-                    'username' => env('FTP_USERNAME'),
-                    'password' =>  env('FTP_PASSWORD'),
-                    'privateKey' => env('FTP_KEY'),
-                    'root'=> "/"
-                ]);
+        // determine directory type
+        $dir_type = $bioarchive->status === 5 ? 'files' : 'temp';
+
+        // load ftp user (may be null for published/global account)
+        $ftp_user = FtpUser::where('username', $bioarchive->accession)->first();
+
+        // build SFTP disk only when needed
+        $disk = null;
+        if ($bioarchive->status > 1) {
+            $diskConfig = [
+                'driver' => 'sftp',
+                'host' => env('FTP_HOST'),
+                'root' => '/',
+            ];
+
+            if ($bioarchive->status === 5) {
+                // published: use central FTP account
+                $diskConfig['username'] = env('FTP_USERNAME');
+                $diskConfig['password'] = env('FTP_PASSWORD');
+                $diskConfig['privateKey'] = env('FTP_KEY');
             } else {
-                $disk = Storage::build([
-                    'driver' => 'sftp',
-                    'host' => env('FTP_HOST'),
-                    'username' => "{$bioarchive->accession}",
-                    'password' =>  "{$ftp_user->password}",
-                    'root'=> "/"
-                ]);
+                // in-progress: use per-accession FTP account if available
+                $diskConfig['username'] = $bioarchive->accession;
+                $diskConfig['password'] = $ftp_user->password ?? null;
             }
-            
+
+            try {
+                $disk = Storage::build($diskConfig);
+            } catch (\Throwable $e) {
+                logger()->error('Failed to build SFTP disk for accession '. $bioarchive->accession .': '.$e->getMessage());
+                $disk = null;
+            }
         }
         foreach ($bioexperiment as $key => $value) {
             $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";

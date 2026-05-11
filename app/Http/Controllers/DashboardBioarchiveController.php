@@ -71,7 +71,7 @@ class DashboardBioarchiveController extends Controller
             $dir_type = "files";
         }
         $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
-        if ($bioarchivestatus > 1 ) {
+        if ($bioarchive->status > 1 ) {
             $disk = Storage::build([
                 'driver' => 'sftp',
                 'host' => env('FTP_HOST'),

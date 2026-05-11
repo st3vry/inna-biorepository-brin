@@ -67,17 +67,34 @@ class BioarchiveController extends Controller
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
         $filetypes = FileType::get();
-        $ftp_users = FtpUsers::where("bioarchive_id", $bioarchive->id);
+        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
         // dd($filetypes);
-        $file_location = $bioarchive->status == 5 ? "pub" : "temp";
+        $directory = $bioarchive->status == 5 ? "files" : "temp";
+
+        $disk = Storage::build([
+            'driver' => 'sftp',
+            'host' => env('FTP_HOST'),
+            'username' => "{$bioarchive->accession}",
+            'password' =>  "{$ftp_user->password}",
+            'root'=> "/"
+        ]);
 
         foreach ($bioexperiment as $key => $value) {
-            $directory = "/innasto/{$file_location}/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('ftp')->exists($directory)) {
-                $d = Storage::disk('ftp')->files($directory);
+            $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
+            try {
+                if ($disk->exists($directory)) {
+                    $d = $disk->files($directory);
+                    $obj = new \stdClass();
+                    $obj->{$value['alias']} = $d;
+                    array_push($files, $obj);
+                }
+            } catch (\Throwable $th) {
                 $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('ftp')->files($directory);
+                $item = array();
+                $item[] = "Failed to read file(s)";
+                $obj->{$value['alias']} = $item;
                 array_push($files, $obj);
+                // throw $th;
             }
         }
 

@@ -67,10 +67,15 @@ class BioarchiveController extends Controller
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
         $filetypes = FileType::get();
-        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
+        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
         // dd($filetypes);
-        $dir_type = $bioarchive->status == 5 ? "files" : "temp";
+        if ($bioarchive->status != 5) {
+            $dir_type = "temp";
+        } else {
+            $dir_type = "files";
+        }
 
+        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
         $disk = Storage::build([
             'driver' => 'sftp',
             'host' => env('FTP_HOST'),
@@ -101,7 +106,7 @@ class BioarchiveController extends Controller
         // Storage::disk('ftp')->files("files/{$bioarchive->accession}/");
         // Storage::disk('ftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}")
 
-        // dd($files);
+        dd($files);
         return view('dashboard.bioarchive.show', [
             'bioarchive' => $bioarchive,
             'biosample_id' => $biosample_id,

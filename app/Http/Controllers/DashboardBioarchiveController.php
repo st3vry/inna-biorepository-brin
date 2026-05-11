@@ -72,13 +72,25 @@ class DashboardBioarchiveController extends Controller
         }
         $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
         if ($bioarchive->status > 1 ) {
-            $disk = Storage::build([
-                'driver' => 'sftp',
-                'host' => env('FTP_HOST'),
-                'username' => "{$bioarchive->accession}",
-                'password' =>  "{$ftp_user->password}",
-                'root'=> "/"
-            ]);
+            if ($bioarchive->status == 5) {
+                $disk = Storage::build([
+                    'driver' => 'sftp',
+                    'host' => env('FTP_HOST'),
+                    'username' => env('FTP_USERNAME'),
+                    'password' =>  env('FTP_PASSWORD'),
+                    'privateKey' => env('FTP_KEY'),
+                    'root'=> "/"
+                ]);
+            } else {
+                $disk = Storage::build([
+                    'driver' => 'sftp',
+                    'host' => env('FTP_HOST'),
+                    'username' => "{$bioarchive->accession}",
+                    'password' =>  "{$ftp_user->password}",
+                    'root'=> "/"
+                ]);
+            }
+            
         }
         foreach ($bioexperiment as $key => $value) {
             $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";

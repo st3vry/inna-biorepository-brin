@@ -69,7 +69,7 @@ class BioarchiveController extends Controller
         $filetypes = FileType::get();
         $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
         // dd($filetypes);
-        $directory = $bioarchive->status == 5 ? "files" : "temp";
+        $dir_type = $bioarchive->status == 5 ? "files" : "temp";
 
         $disk = Storage::build([
             'driver' => 'sftp',

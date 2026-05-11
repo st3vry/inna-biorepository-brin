@@ -71,7 +71,7 @@ class DashboardBioarchiveController extends Controller
             $dir_type = "files";
         }
         $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
-        if ($bioarchive->status == 4 ) {
+        if ($bioarchivestatus > 1 ) {
             $disk = Storage::build([
                 'driver' => 'sftp',
                 'host' => env('FTP_HOST'),
@@ -92,7 +92,7 @@ class DashboardBioarchiveController extends Controller
             } catch (\Throwable $th) {
                 $obj = new \stdClass();
                 $item = array();
-                $item[] = "Failed to read file(s)";
+                $item[] = "File(s) did not exist or failed to read";
                 $obj->{$value['alias']} = $item;
                 array_push($files, $obj);
                 // throw $th;

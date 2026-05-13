@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Error 404 | Oops, Page Not Found!</title>
+        <title>Error 503 | Service Unavailable</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="A life sciences, agriculture, and bioinformatics for biodiversity data repository platform"/>
         <meta name="author" content="Inna BioRepository"/>
@@ -34,9 +34,9 @@
                     <div class="col-xl-6 d-flex justify-content-center align-items-center">
                         <div class="text-start">
                             <div class="mb-0">
-                                <p class="fw-semibold fs-19 text-danger text-capitalize mb-2">404</p>
-                                <h3 class="fw-semibold fs-1 text-dark text-capitalize mb-3">Page Not Found</h3>
-                                <p class="text-dark mb-3">Sorry, the pages you are looking for doesn't exist. <br> Here are some helpful links.</p>
+                                <p class="fw-semibold fs-19 text-primary text-capitalize mb-2">503</p>
+                                <h3 class="fw-semibold fs-1 text-dark text-capitalize mb-3">Service unavailable</h3>
+                                <p class="text-dark mb-3">Temporary service outage. Please try again later.</p>
                             </div>
 
                             <a class="btn btn-brin mt-3" href="/">Back to Home</a>
@@ -45,7 +45,7 @@
 
                     <div class="col-xl-6">
                         <div class="error-page">
-                            <img src="/images/svg/404-error.svg" class="img-fluid" alt="coming-soon">
+                            <img src="/images/svg/503-error.svg" class="img-fluid" alt="503 error pages">
                         </div>
                     </div>
 

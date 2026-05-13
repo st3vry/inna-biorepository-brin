@@ -266,7 +266,11 @@
                                     @if ($key === $value['alias'])
                                     @foreach ($items as $item)
                                     <tr>
-                                        <td></td>
+                                        <td>
+                                            @if ($loop->first)
+                                                <strong>File</strong>
+                                            @endif
+                                        </td>
                                         <td>
                                         {{array_reverse(explode("/",$item))[0]}}
                                             <span>

@@ -67,23 +67,46 @@ class BioarchiveController extends Controller
         $histories = ActionLog::with(['creator'])->where('item_id', $bioarchive->accession)->orderBy('created_at', 'desc')->get();
         $files = array();
         $filetypes = FileType::get();
-        $ftp_users = FtpUsers::where("bioarchive_id", $bioarchive->id);
+        $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
         // dd($filetypes);
+        if ($bioarchive->status != 5) {
+            $dir_type = "temp";
+        } else {
+            $dir_type = "files";
+        }
+
+        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
+        $disk = Storage::build([
+            'driver' => 'sftp',
+            'host' => env('FTP_HOST'),
+            'username' => "{$bioarchive->accession}",
+            'password' =>  "{$ftp_user->password}",
+            'root'=> "/"
+        ]);
 
         foreach ($bioexperiment as $key => $value) {
-            $directory = "/innasto/files/{$bioarchive->accession}/{$value['alias']}";
-            if (Storage::disk('ftp')->exists($directory)) {
-                $d = Storage::disk('ftp')->files($directory);
+            $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
+            try {
+                if ($disk->exists($directory)) {
+                    $d = $disk->files($directory);
+                    $obj = new \stdClass();
+                    $obj->{$value['alias']} = $d;
+                    array_push($files, $obj);
+                }
+            } catch (\Throwable $th) {
                 $obj = new \stdClass();
-                $obj->{$value['alias']} = Storage::disk('ftp')->files($directory);
+                $item = array();
+                $item[] = "Failed to read file(s)";
+                $obj->{$value['alias']} = $item;
                 array_push($files, $obj);
+                // throw $th;
             }
         }
 
         // Storage::disk('ftp')->files("files/{$bioarchive->accession}/");
         // Storage::disk('ftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}")
 
-        // dd($files);
+        dd($files);
         return view('dashboard.bioarchive.show', [
             'bioarchive' => $bioarchive,
             'biosample_id' => $biosample_id,

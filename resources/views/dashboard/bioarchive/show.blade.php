@@ -265,8 +265,8 @@
                                 @foreach ($file as $key => $items)
                                     @if ($key === $value['alias'])
                                     @foreach ($items as $item)
-                                    {{-- <tr> --}}
-                                        {{-- <td></td> --}}
+                                    <tr>
+                                        <td></td>
                                         <td>
                                         {{array_reverse(explode("/",$item))[0]}}
                                             <span>
@@ -281,7 +281,7 @@
                                                 </form>
                                             </span>
                                         </td>
-                                    {{-- </tr> --}}
+                                    </tr>
                                     @endforeach
 
                                     @endif

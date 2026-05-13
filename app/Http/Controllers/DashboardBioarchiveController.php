@@ -65,20 +65,38 @@ class DashboardBioarchiveController extends Controller
         $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
         // dd($filetypes);
 
-        if ($bioarchive->status != 5) {
-            $dir_type = "temp";
-        } else {
-            $dir_type = "files";
-        }
-        $ftp_user = FtpUser::where("username", $bioarchive->accession)->first();
-        if ($bioarchive->status == 4 ) {
-            $disk = Storage::build([
+        // determine directory type
+        $dir_type = $bioarchive->status === 5 ? 'files' : 'temp';
+
+        // load ftp user (may be null for published/global account)
+        $ftp_user = FtpUser::where('username', $bioarchive->accession)->first();
+
+        // build SFTP disk only when needed
+        $disk = null;
+        if ($bioarchive->status > 1) {
+            $diskConfig = [
                 'driver' => 'sftp',
                 'host' => env('FTP_HOST'),
-                'username' => "{$bioarchive->accession}",
-                'password' =>  "{$ftp_user->password}",
-                'root'=> "/"
-            ]);
+                'root' => '/',
+            ];
+
+            if ($bioarchive->status === 5) {
+                // published: use central FTP account
+                $diskConfig['username'] = env('FTP_USERNAME');
+                $diskConfig['password'] = env('FTP_PASSWORD');
+                $diskConfig['privateKey'] = env('FTP_KEY');
+            } else {
+                // in-progress: use per-accession FTP account if available
+                $diskConfig['username'] = $bioarchive->accession;
+                $diskConfig['password'] = $ftp_user->password ?? null;
+            }
+
+            try {
+                $disk = Storage::build($diskConfig);
+            } catch (\Throwable $e) {
+                logger()->error('Failed to build SFTP disk for accession '. $bioarchive->accession .': '.$e->getMessage());
+                $disk = null;
+            }
         }
         foreach ($bioexperiment as $key => $value) {
             $directory = "/innasto/{$dir_type}/{$bioarchive->accession}/{$value['alias']}";
@@ -92,7 +110,7 @@ class DashboardBioarchiveController extends Controller
             } catch (\Throwable $th) {
                 $obj = new \stdClass();
                 $item = array();
-                $item[] = "Failed to read file(s)";
+                $item[] = "File(s) did not exist or failed to read";
                 $obj->{$value['alias']} = $item;
                 array_push($files, $obj);
                 // throw $th;

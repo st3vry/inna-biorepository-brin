@@ -198,14 +198,27 @@ class UploaderController extends Controller
         $ftp_user = FtpUser::where("username", $request->accession)->first();
         // move the file name
         // $file->move($finalPath, $fileName);
+        $password = $ftp_user->password ?? null; 
+        if ($password) {
+             $diskConfig = [
+                 'driver' => 'sftp',
+                 'host' => env('FTP_HOST'),
+                 'username' => "{$request->accession}",
+                 'password' =>  $password,
+                 'root'=> "/"
+             ];
+        } else {
+            // If no password, attempt to use key-based authentication
+            $diskConfig = [
+                 'driver' => 'sftp',
+                 'host' => env('FTP_HOST'),
+                 'username' =>  env('FTP_USERNAME'),
+                 'privateKey' => env('FTP_KEY'),
+                 'root'=> "/"
+             ];
+        }
         try {
-            $disk = Storage::build([
-                'driver' => 'sftp',
-                'host' => env('FTP_HOST'),
-                'username' => "{$request->accession}",
-                'password' =>  "{$ftp_user->password}",
-                'root'=> "/"
-            ]);
+            $disk = Storage::build($diskConfig);
         } catch (\Throwable $th) {
             throw $th;
         }

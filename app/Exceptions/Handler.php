@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
         if ($this->isHttpException($e)) {
             $statusCode = $e->getStatusCode();
 
-            if (in_array($statusCode, [429, 500, 503], true)) {
+            if (in_array($statusCode, [404, 429, 500, 503], true)) {
                 return response()->view("error.{$statusCode}", [], $statusCode);
             }
         }

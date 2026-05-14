@@ -222,7 +222,33 @@ class UploaderController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
-        return $disk->download($request->file);
+        // return $disk->download($request->file);
+        $file = $request->file;
+
+        // Get file size and mime type without loading the file
+        $mimeType = $disk->mimeType($file);
+        $fileSize = $disk->size($file);
+        $fileName = basename($file);
+
+        // Stream the file directly to the response
+        $stream = $disk->readStream($file);
+
+        return response()->stream(
+            function () use ($stream) {
+                fpassthru($stream);
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
+            },
+            200,
+            [
+                'Content-Type'              => $mimeType,
+                'Content-Length'            => $fileSize,
+                'Content-Disposition'       => 'attachment; filename="' . $fileName . '"',
+                'X-Accel-Buffering'         => 'no',  // important for nginx
+                'Cache-Control'             => 'no-cache',
+            ]
+        );
     }
 
 }

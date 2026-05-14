@@ -225,13 +225,18 @@ class UploaderController extends Controller
         // return $disk->download($request->file);
         $file = $request->file;
 
-        // Get file size and mime type without loading the file
-        $mimeType = $disk->mimeType($file);
+        // On Flysystem SFTP, mimeType() reads the full remote file into memory.
+        // Keep large downloads stream-based by using stat metadata only.
         $fileSize = $disk->size($file);
         $fileName = basename($file);
+        $mimeType = 'application/octet-stream';
 
         // Stream the file directly to the response
         $stream = $disk->readStream($file);
+
+        if ($stream === false) {
+            abort(404, 'Unable to read file stream.');
+        }
 
         return response()->stream(
             function () use ($stream) {

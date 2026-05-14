@@ -260,7 +260,6 @@
 
                         @else
                         <tr>
-                            <td><strong>File</strong></td>
                             @foreach ($files as $file)
                                 @foreach ($file as $key => $items)
                                     @if ($key === $value['alias'])
@@ -284,15 +283,6 @@
                                                     <button class="btn btn-sm btn-info me-1 float-end" ><span data-feather="download" title="Download"></span></button>
                                                 </form>
                                             </span>
-                                            <br>
-                                            <div class="collapse" id="collapse{{ $key }}">
-                                                <div class="card card-body">
-                                                    Host: 10.28.28.210<br>
-                                                    Username: {{$ftp_user->username}}<br>
-                                                    Password: {{$ftp_user->password}}
-                                                    <p>If you have trouble downloading the file, you can use any ftp/sftp client such as: WinSCP, Filezille, Cyberduck, etc. with the above credentials.</p>
-                                                </div>
-                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach

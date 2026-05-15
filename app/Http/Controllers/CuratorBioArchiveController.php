@@ -233,6 +233,7 @@ class CuratorBioArchiveController extends Controller
                                     $SSHController = new SSHController();
                                     $filename = substr($child, strrpos($child, '/') + 1);
                                     $rename = Helper::biorunRegex($filename,$id, $key2);
+                                    $target = "innasto/files/{$bioarchive->accession}/{$key2}";
                                     try {
                                         $md5 = $SSHController->customSSHCommand(env('FTP_USERNAME'), 
                                         [

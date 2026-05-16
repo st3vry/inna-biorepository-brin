@@ -53,7 +53,7 @@
                             <a href="biosamples/{{ $biosample->accession }}" class="text-dark"><h6 class="card-title fw-bold">{{ $biosample->title }}</h6></a>
                             <p class="mb-1">{{ Str::words($biosample->description,20, ' ')}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readMore(this)"> Read more...</a></p>
                             <p class="mb-1 d-none">{{ $biosample->description}} <a href="javascript:void(0)" class="text-brin-no-decor" onclick="readLess(this)"> Read less.</a></p>
-                            <p class="fw-light mb-0">Organism: {{ $biosample->organism->name }}</p>
+                            <p class="fw-light mb-0">Organism: {{ $biosample->organism_detail['current_scientific_name']['name'] ?? $biosample->organism->name}}</p>
                             {{-- <p class="fw-light mb-0">Scope: {{ $biosample->samplescope->name }}</p> --}}
                             @php
                                 $userData = json_decode($biosample->user->user_data);

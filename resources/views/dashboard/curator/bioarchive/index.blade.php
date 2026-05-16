@@ -33,15 +33,19 @@
                                 <td></td>
                                 <td>{{ $bioarchive->accession }}</td>
                                 <td>{{ $bioarchive->submission_id }}</td>
-                                <td>{{ $bioarchive->bioproject->accession }}</td>
+                                <td>{{ $bioarchive->bioproject->accession }} - {{ $bioarchive->bioproject->title }}</td>
                                 <td>
                                     @foreach (explode(',', $bioarchive->biosample_id) as $biosample )
-                                        @php
-                                            $samples = DB::table('biosamples')->where('id', $biosample)->get();
-                                        @endphp
-                                        @foreach ($samples as $smp)
-                                        {{ $smp->accession }}
-                                        @endforeach
+                                        <table>
+                                            @php
+                                                $samples = DB::table('biosamples')->where('id', $biosample)->get();
+                                            @endphp
+                                            <tr>
+                                                @foreach ($samples as $smp)
+                                                <td>{{ $smp->accession }} - {{ $smp->title }}</td>
+                                                @endforeach
+                                            </tr>
+                                        </table>
                                     @endforeach
                                 </td>
                                 <td>

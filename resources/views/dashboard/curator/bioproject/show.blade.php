@@ -186,7 +186,7 @@
                             </tr>
                             <tr>
                                 <th class="col-sm-2">Organism</th>
-                                <td class="col-sm-10">{{$bioproject->organism->name}}</td>
+                                <td class="col-sm-10">{{$bioproject->organism->name ?? $bioproject->organism_detail['current_scientific_name']['name']}}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2">Novel organism</th>

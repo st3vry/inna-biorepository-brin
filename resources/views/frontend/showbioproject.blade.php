@@ -148,7 +148,7 @@
             </tr>
             <tr>
                 <td class="col-sm-1">Organism</td>
-                <td class="col-sm-7">{{$bioproject->organism->name}}</td>
+                <td class="col-sm-7">{{$bioproject->organism->name ?? $bioproject->organism_detail['current_scientific_name']['name']}}</td>
             </tr>
             @if(isset($target?->organism_novel))
             <tr>

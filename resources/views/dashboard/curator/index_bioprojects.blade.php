@@ -27,7 +27,7 @@
             <tr>
                 <td>{{ ($bioprojects->currentPage() - 1) * $bioprojects->perPage() + $loop->iteration }}</td>
                 <td>{{ $bioproject->alias }}</td>
-                <td>{{ $bioproject->organism->name }}</td>
+                <td>{{ $bioproject->organism->name ?? $bioproject->organism_detail['current_scientific_name']['name']}}</td>
                 <td>{{ $bioproject->title }}</td>
                 <td>{{ $bioproject->description }}</td>
                 <td>{{ $bioproject->center->name }}</td>

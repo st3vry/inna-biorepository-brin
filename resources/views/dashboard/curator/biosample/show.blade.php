@@ -41,7 +41,7 @@
                         <table class="table table-lg">
                             <tr>
                                 <th class="col-sm-2">Organism</th>
-                                <td class="col-sm-10">{{$biosample->organism->name}}</td>
+                                <td class="col-sm-10">{{ $biosample->organism_detail['current_scientific_name']['name'] ?? $biosample->organism->name}}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2">Sample Type</th>

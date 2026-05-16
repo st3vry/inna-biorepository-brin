@@ -235,13 +235,13 @@
                                                                     <td>MD5 Checksum</td>
                                                                     <td>
                                                                         @php
-                                                                        $biorunmd5 = "";   
+                                                                        $filename = "";   
                                                                         @endphp
                                                                         @foreach ($runs as $biorun)
-                                                                            @if ($biorun->md5 !== $biorunmd5)
+                                                                            @if ($biorun->filename !== $filename)
                                                                                 {{ $biorun->filename == array_reverse(explode("/",$item))[0] ? $biorun->md5 : "" }}
                                                                                 @php
-                                                                                $biorunmd5 = $biorun->filename == array_reverse(explode("/",$item))[0] ? $biorun->md5 : "" ;
+                                                                                $filename = $biorun->filename;
                                                                                 @endphp     
                                                                             @endif
                                                                         @endforeach

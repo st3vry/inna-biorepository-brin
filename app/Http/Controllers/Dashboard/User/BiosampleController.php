@@ -107,7 +107,15 @@ class BiosampleController extends Controller
         $biosample->comments = $request->comments;
         $biosample->description = $request->sample_description;
         $biosample->bioproject_id = $request->bioproject_id;
-        $biosample->center_id = auth()->user()->center_id;
+
+
+        $userDataJson = json_decode(auth()->user()->user_data);
+        
+        if (!auth()->user()->external_account) {
+            $biosample->center_id = $userDataJson->pegawaiData->administrative_unit_id ?? null;
+        } else {
+            $biosample->center_id = auth()->user()->center_id;
+        }
         $biosample->user_id = auth()->user()->id;
 
         // need to change if organism table ready

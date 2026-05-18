@@ -153,10 +153,10 @@ Route::prefix('dashboard')->group(function () {
     Route::post('/bioarchives/{bioarchive}/release', [DashboardBioarchiveController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
     Route::post('/biosamples/{biosample}/release', [DashboardBiosampleController::class, 'release'])->middleware(['authsso', 'is_labcenterexist']);
 
-    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware(['authsso', 'is_labcenterexist']);
-    Route::resource('/biosamples', UserSampleController::class)->middleware(['is_labcenterexist', 'authsso']);
+    Route::resource('/bioprojects', DashboardBioprojectController::class)->middleware(['authsso', 'is_labcenterexist', 'check.resource.owner']);
+    Route::resource('/biosamples', UserSampleController::class)->middleware(['is_labcenterexist', 'authsso', 'check.resource.owner']);
     // Route::resource('/biosamples', DashboardBiosampleController::class)->middleware('authsso');
-    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware(['is_labcenterexist', 'authsso']);
+    Route::resource('/bioarchives', DashboardBioarchiveController::class)->middleware(['is_labcenterexist', 'authsso', 'check.resource.owner']);
 
     // MY REQUEST
     Route::get('/myrequest', [DashboardMyRequestController::class, 'index'])->middleware('authsso');

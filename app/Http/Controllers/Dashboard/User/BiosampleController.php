@@ -44,11 +44,14 @@ class BiosampleController extends Controller
     public function create()
     {
         //
-        $bioprojects = Bioproject::whereNotNull('published_at')
-            ->where(function ($q) {
-                $q->where('hold_release', false)
-                  ->orWhere('user_id', auth()->id());
-            })
+            $bioprojects = Bioproject::where(function ($q) {
+                            $q->whereNotNull('published_at')
+                                ->where('hold_release', false);
+                    })
+                    ->orWhere(function ($q) {
+                            $q->whereNull('published_at')
+                                ->where('user_id', auth()->id());
+                    })
             ->orderBy('id')
             ->get();
 
@@ -189,11 +192,14 @@ class BiosampleController extends Controller
             return view('error.404');
         }
 
-        $bioprojects = Bioproject::whereNotNull('published_at')
-            ->where(function ($q) {
-                $q->where('hold_release', false)
-                  ->orWhere('user_id', auth()->id());
-            })
+                $bioprojects = Bioproject::where(function ($q) {
+                                $q->whereNotNull('published_at')
+                                    ->where('hold_release', false);
+                        })
+                        ->orWhere(function ($q) {
+                                $q->whereNull('published_at')
+                                    ->where('user_id', auth()->id());
+                        })
             ->orderBy('id')
             ->get();
         $submitter = new \stdClass();

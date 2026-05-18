@@ -134,7 +134,7 @@
                                         <select class="form-control select2" id="bioproject_id" name="bioproject_id" required>
                                             <option value="">Select a Bioproject</option>
                                             @foreach($bioprojects as $bioproject)
-                                                <option value="{{ $bioproject->id }}">{{ $bioproject->title }}</option>
+                                                <option value="{{ $bioproject->id }}">{{ $bioproject->accession }} - {{ $bioproject->title }}</option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -51,6 +51,10 @@ class BiosampleController extends Controller
             })
             ->orderBy('id')
             ->get();
+
+        $userDataJson = json_decode(auth()->user()->user_data);
+
+       
         $submitter = new \stdClass();
         $submitter->name = auth()->user()->name;
         $submitter->email = auth()->user()->email;
@@ -58,6 +62,14 @@ class BiosampleController extends Controller
         $submitter->center = auth()->user()->center_id;
         $submitter->lab_name = Lab::where('id', $submitter->lab)->value('name');
         $submitter->center_name = Center::where('id', $submitter->center)->value('name');
+
+         if (!auth()->user()->external_account) {
+
+            $submitter->lab = $userDataJson->pegawaiData->affiliate_unit_id ?? null;
+            $submitter->center = $userDataJson->pegawaiData->administrative_unit_id ?? null;
+            $submitter->lab_name = $userDataJson->pegawaiData->administrative_name ?? null;
+            $submitter->center_name = $userDataJson->pegawaiData->affiliate_name ?? null;
+        }
         $draft = BiosampleDraft::where('user_id', auth()->id())->where('status', 0)->first();
         $return = [
             "draft" => $draft,

@@ -43,12 +43,9 @@ class DashboardIndexController extends Controller
 
     public function getOverviewChartData(Request $request)
     {
-        $userID = null;
-        $token = session('is_login_inna_repo');
-        if (Cache::has($token)) {
-            $Auth = Cache::get($token);
-            $userID = $Auth['id'];
-        }
+        $userID = auth()->id();
+        $nama = auth()->user()->name;
+
         $year = $request->year ?? Carbon::now()->year;
         $bioprojects = $this->getMonthlyCount(new Bioproject(), $userID, $year);
         $biosamples = $this->getMonthlyCount(new Biosample(), $userID, $year);
@@ -68,18 +65,9 @@ class DashboardIndexController extends Controller
     //
     public function index(Request $request)
     {
-        $userID = null;
-        $nama = null;
+        $userID = auth()->id();
+        $nama = auth()->user()->name;
         $year = 0;
-        $token = session('is_login_inna_repo');
-        if (Cache::has($token)) {
-            $Auth = Cache::get($token);
-            // dd($Auth);
-            $userID = $Auth['id'];
-            $nama = $Auth['name'];
-            // return $Auth;
-            // return redirect()->action([DashboardIndexController::class, 'index']);
-        }
 
         $bioproject = Bioproject::where('user_id', $userID)->get();
         $bioproject_count = $bioproject->count();

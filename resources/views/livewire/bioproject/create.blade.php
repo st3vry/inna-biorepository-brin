@@ -1118,7 +1118,7 @@
                             <tr>
                                 <td class="col-md-3">Organism</td>
                                 <td class="col-md-1">:</td>
-                                <td class="align-left">{{ $this->organismName($this->organism_id) }}</td>
+                                <td class="align-left">{{ $this->organism_data }}</td>
                             </tr>
                             
                             <tr>

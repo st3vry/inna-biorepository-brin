@@ -589,10 +589,16 @@
             } else if (label == "sample_type_select") {
                 label = "Sample Type"
                 value = document.querySelector('#sampleType option:checked').innerHTML
-            } else if (label == "organism") {
+            } else if (label == "organism_data") {
                 label = "Organism <span class='text-danger'>*</span>"
-                value = document.querySelector('#organism option:checked').innerHTML
+                value = document.querySelector('#organism_data').value
+            } else if (label == "bioproject_id") {
+                label = "Bioproject <span class='text-danger'>*</span>"
+                value = document.querySelector('#bioproject_id option:checked').innerHTML
             } else {
+                if (label == "organism_detail" || label == "organism_name" || label == "taxonomy_id") {
+                    return false
+                }
                 label =  document.querySelector(`[name=${label}]`).previousSibling.previousSibling.previousElementSibling.innerHTML
             }
             return (

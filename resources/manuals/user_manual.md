@@ -36,6 +36,10 @@
    ![BioSample step 1](/manuals/images/biosample_step_1.png)
 2. To create new BioSample click **Create New BioSample** button.
    ![BioSample step 2](/manuals/images/biosample_step_2.png)
+3. Fill the required _General Information_ Form, making sure the _Data Release_ form selected accordingly then click **Next** button.
+   ![BioSample step 3](/manuals/images/biosample_step_3.png)
+4. Fill the required _Sample Information_ Form, making sure the _Bioproject_ form selected accordingly. Choose the appropriate package for the Biosample and fill the required form. After filling the form click **Next** button.
+   ![BioSample step 4](/manuals/images/biosample_step_4.png)
 
 ## BioArchive
 
@@ -45,6 +49,8 @@
    ![BioArchive step 2](/manuals/images/bioarchive_step_2.png)
 3. Fill the required _Submitter Info_ Form, making sure the _Data Release_ form selected accordingly then click **Next** button.
    ![BioArchive step 3](/manuals/images/bioarchive_step_3.png)
+4. Select the Bioproject on _Bioproject_ Form, then click **Next** button.
+   ![BioArchive step 4](/manuals/images/bioarchive_step_4.png)
 
 ## BioArchive Download Request
 

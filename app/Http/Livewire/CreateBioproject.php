@@ -628,8 +628,15 @@ class CreateBioproject extends Component
         $bioproject->description = $validatedData['description'];
         $bioproject->hold_release = $validatedData['hold_release'];
         // $bioproject->center_id = auth()->user()->lab->center_id;
-        $bioproject->center_id = auth()->user()->center_id;
-        $bioproject->user_id = auth()->user()->id;
+        $userDataJson = json_decode(auth()->user()->user_data);
+
+        if (!auth()->user()->external_account) {
+            $bioproject->lab_id = $userDataJson->pegawaiData->affiliate_unit_id ?? null;
+            $bioproject->center_id = $userDataJson->pegawaiData->administrative_unit_id ?? null;
+        } else {
+            $bioproject->lab_id = auth()->user()->lab_id;
+            $bioproject->center_id = auth()->user()->center_id;
+        }
 
         $bioproject->save();
 

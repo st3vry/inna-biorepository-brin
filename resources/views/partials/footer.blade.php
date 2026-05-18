@@ -4,6 +4,7 @@
         <ul class="list-group list-group-horizontal justify-content-center border border-0">
             <li class="list-group-item"><a href="/tos">Terms of service</a></li>
             <li class="list-group-item"><a href="/privpol">Privacy and policy</a></li>
+            <li class="list-group-item"><a href="/manual">User Manual</a></li>
         </ul>
         <div class="copyright">
             &copy; Copyright <strong><span>InNA</span></strong>. All Rights Reserved

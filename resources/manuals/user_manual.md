@@ -2,7 +2,21 @@
 
 ## Account Registration
 
+1. INNA Repository can be accessed from [INNA Bio Repository](https://inna-prototype.brin.go.id/)
+   ![Account Registration step 1](/manuals/images/access_step_1.png)
+2. To **Register** you will redirected to BRIN SSO page, click **Daftar!** button to register.
+   ![Account Registration step 2](/manuals/images/access_step_2.png)
+3. Completely Fill the _Registrasi SSO BRIN_ form and click **Create User** button.
+   ![Account Registration step 3](/manuals/images/access_step_3.png)
+4. You can now login to INNA Bio Repository.
+
 ## BioProject
+
+1. From INNA Bio Repository Dashboard click **My BioProject** menu.
+   ![BioProject step 1](/manuals/images/bioproject_step_1.png)
+2. To create new BioProject click **Create New BioProject** button.
+   ![BioProject step 2](/manuals/images/bioproject_step_2.png)
+3.
 
 ## BioSample
 

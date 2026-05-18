@@ -345,11 +345,23 @@ class CreateBioproject extends Component
         // dd(auth()->user());
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
+
+        //external_account
         $this->submitter_lab = auth()->user()->lab_id;
         $this->submitter_center = auth()->user()->center_id;
-        
         $this->submitter_lab_name = Lab::where('id', $this->submitter_lab)->value('name');
         $this->submitter_center_name = Center::where('id', $this->submitter_center)->value('name');
+
+        $userDataJson = json_decode(auth()->user()->user_data);
+
+        if (!auth()->user()->external_account) {
+
+            $this->submitter_lab = $userDataJson->pegawaiData->affiliate_unit_id ?? null;
+            $this->submitter_center = $userDataJson->pegawaiData->administrative_unit_id ?? null;
+            $this->submitter_lab_name = $userDataJson->pegawaiData->administrative_name ?? null;
+            $this->submitter_center_name = $userDataJson->pegawaiData->affiliate_name ?? null;
+        }
+
 
         $this->umbrellas = Bioproject::where('draft', false)->get();
         $this->relevances = Relevance::all();

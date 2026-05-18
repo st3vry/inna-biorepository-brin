@@ -70,7 +70,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="center_id" class="form-label">Center <span class="text-danger">*</span></label>
-                        <select class="form-select @if (!auth()->user()->center_id) is-invalid @endif" name="center_id" id="center_id">
+                        <select class="form-select @if (!auth()->user()->center_id && auth()->user()->external_account) is-invalid @endif" name="center_id" id="center_id">
                             @if (auth()->user()->external_account)
                                 <option value="" disabled selected >Select Center</option>
                                 @foreach ($centers as $center)
@@ -86,7 +86,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="lab_id" class="form-label">Lab <span class="text-danger">*</span></label>
-                        <select class="form-select @if (!auth()->user()->center_id) is-invalid @endif" name="lab_id" id="lab_id">
+                        <select class="form-select @if (!auth()->user()->center_id && auth()->user()->external_account) is-invalid @endif" name="lab_id" id="lab_id">
                             @if (auth()->user()->external_account)
                                 <option value="" disabled selected >Select Lab</option>
                                 @foreach ($labs as $lab)

@@ -2,7 +2,7 @@
 
 ## Account Registration
 
-1. INNA Repository can be accessed from [INNA Bio Repository](https://inna-prototype.brin.go.id/)
+1. INNA Bio Repository can be accessed from [INNA Bio Repository](https://inna-prototype.brin.go.id/)
    ![Account Registration step 1](/manuals/images/access_step_1.png)
 2. To **Register** you will redirected to BRIN SSO page, click **Daftar!** button to register.
    ![Account Registration step 2](/manuals/images/access_step_2.png)
@@ -16,11 +16,24 @@
    ![BioProject step 1](/manuals/images/bioproject_step_1.png)
 2. To create new BioProject click **Create New BioProject** button.
    ![BioProject step 2](/manuals/images/bioproject_step_2.png)
-3.
+3. Fill the required _Submitter Info_ Form, making sure the _Data Release_ form selected accordingly then click **Next** button.
+   ![BioProject step 3](/manuals/images/bioproject_step_3.png)
 
 ## BioSample
 
+1. From INNA Bio Repository Dashboard click **My BioSample** menu.
+   ![BioSample step 1](/manuals/images/biosample_step_1.png)
+2. To create new BioSample click **Create New BioSample** button.
+   ![BioSample step 2](/manuals/images/biosample_step_2.png)
+
 ## BioArchive
+
+1. From INNA Bio Repository Dashboard click **My BioArchive** menu.
+   ![BioArchive step 1](/manuals/images/bioarchive_step_1.png)
+2. To create new BioArchive click **Create New BioArchive** button.
+   ![BioArchive step 2](/manuals/images/bioarchive_step_2.png)
+3. Fill the required _Submitter Info_ Form, making sure the _Data Release_ form selected accordingly then click **Next** button.
+   ![BioArchive step 3](/manuals/images/bioarchive_step_3.png)
 
 ## BioArchive Download Request
 

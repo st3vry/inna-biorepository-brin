@@ -144,11 +144,14 @@ class CreateBioarchive extends Component
     protected function loadBioprojects($search = '')
     {
         $this->bioprojects = Bioproject::where('title', 'like', '%' . $search . '%')
-            ->whereNotNull('published_at')
             ->where(function ($q) {
-                $q->where('hold_release', false)
-                  ->orWhere('user_id', auth()->id());
-            })
+                            $q->whereNotNull('published_at')
+                                ->where('hold_release', false);
+                    })
+                    ->orWhere(function ($q) {
+                            $q->whereNull('published_at')
+                                ->where('user_id', auth()->id());
+                    })
             ->orderBy('id')
             ->get();
     }

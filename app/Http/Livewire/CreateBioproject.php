@@ -635,9 +635,6 @@ class CreateBioproject extends Component
         } else {
             $bioproject->center_id = auth()->user()->center_id;
         }
-
-
-        $bioproject->center_id =  auth()->user()->center_id;
         $bioproject->user_id = auth()->user()->id;
 
         $bioproject->save();

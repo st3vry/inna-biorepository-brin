@@ -4,8 +4,8 @@
 <style>
 
 img {
-    max-width: 100%;
-    height: auto;
+    width: 80%;
+    margin: 20px 0 40px 0;
 }
 </style>
 

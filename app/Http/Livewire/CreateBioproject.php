@@ -238,27 +238,27 @@ class CreateBioproject extends Component
         'repls.*.repl_size' => 'required',
         'repls.*.genome_size2_id' => 'required',
 
-        'novel_org' => '',
-        'novel_desc' => 'nullable|required_if:novel_org,true',
-        'sbc' => '',
-        'isolate' => '',
-        'org_desc' => '',
+        'novel_org' => 'nullable|max:255',
+        'novel_desc' => 'nullable|required_if:novel_org,true|max:255',
+        'sbc' => 'nullable|max:255',
+        'isolate' => 'nullable|max:255',
+        'org_desc' => 'nullable|max:255',
         'celularity_id' => '',
         'reproduction_id' => '',
         'ploidy_id' => '',
-        'plodesc' => '',
-        'disease' => '',
+        'plodesc' => 'nullable|max:255',
+        'disease' => 'nullable|max:255',
         'bio_rel_id' => '',
         'trop_level_id' => '',
-        'gram' => '',
-        'enveloped' => '',
-        'motility' => '',
-        'endospores' => '',
+        'gram' => 'nullable|max:255',
+        'enveloped' => 'nullable|max:255',
+        'motility' => 'nullable|max:255',
+        'endospores' => 'nullable|max:255',
         'habitat_id' => '',
         'salinity_id' => '',
         'oxygen_id' => '',
         'temp_range_id' => '',
-        'optimum_temp' => '',
+        'optimum_temp' => 'nullable|max:255',
     ];
     public function firstStepSubmit()
     {
@@ -611,8 +611,8 @@ class CreateBioproject extends Component
         $validatedData = $this->validate();
         // dd( $validatedData );
         $bioproject = new Bioproject();
-        $bioproject->accession = 'PRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        $bioproject->submission_id = 'SUBPRJ' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->accession = 'INNAP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+        $bioproject->submission_id = 'INNASUBP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
         $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
         // $bioproject->objective_id = implode(",", $validatedData['objective_id']);
         $bioproject->samplescope_id = $validatedData['samplescope_id'];

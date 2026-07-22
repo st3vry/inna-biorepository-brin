@@ -631,11 +631,18 @@
                         if (label == "organism_detail" || label == "organism_name" || label == "taxonomy_id") {
                             return false
                         }
-                        if (label == description) {
+                        if (label === "description") {
                             label = "Description"
+                        } else if (label === "sample_description") {
+                            label = "Biosample Description"
+                        } else {
+                            const field = document.querySelector(`[name="${label}"]`)
+                            const container = field ? field.closest('.mb-3, .card-body') : null
+                            const labelElement = container ? container.querySelector('label.form-label') : null
+                            if (labelElement) {
+                                label = labelElement.innerHTML
+                            }
                         }
-                        label = document.querySelector(`[name=${label}]`).previousSibling.previousSibling
-                            .previousElementSibling.innerHTML
                     }
                     return (
                         `

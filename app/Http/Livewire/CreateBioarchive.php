@@ -17,6 +17,7 @@ use App\Models\LibraryStrategy;
 use App\Models\Lab;
 use App\Models\Center;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\BioarchiveDraft;
 
 class CreateBioarchive extends Component
@@ -326,47 +327,61 @@ class CreateBioarchive extends Component
     }
     public function submitForm()
     {
-        $bioarchive = new Bioarchive();
-        $bioarchive->accession = 'INNAAR' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
-        $bioarchive->submission_id = 'SUBINNAAR' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
-        $bioarchive->bioproject_id = $this->bioproject_id;
-        $bioarchive->biosample_id = implode(",", $this->biosample_id);
-        $bioarchive->user_id = auth()->user()->id;
-        $bioarchive->hold_release = $this->normalizeHoldRelease($this->hold_release);
-        // $bioarchive->draft = true;
-        $bioarchive->save();
-        // dd($bioarchive);
-        // dd($this->bioexperiment_id);
-        $no = 1;
-        foreach ($this->bioexperiment_id as $item => $value) {
-            $dataExp = [
-                'bioarchive_id' => $bioarchive->id,
-                'biosample_id' => $item,
-                'alias' => "INNAX-" . $this->alias . "-" . $no,
-                'title' => $this->bioexperiment_id[$item]['title'],
-                'libname' => $this->bioexperiment_id[$item]['libname'],
-                'libsource_id' => $this->bioexperiment_id[$item]['libsource_id'],
-                'libselection_id' => $this->bioexperiment_id[$item]['libselection_id'],
-                'libstrategy_id' => $this->bioexperiment_id[$item]['libstrategy_id'],
-                'libconsprot' => $this->bioexperiment_id[$item]['libconsprot'],
-                'instrument_id' => $this->bioexperiment_id[$item]['instrument_id'],
-                'liblayout_id' => $this->bioexperiment_id[$item]['liblayout_id'],
-                'input_size' => $this->bioexperiment_id[$item]['inp_size'],
-            ];
-            $no++;
-            $bioexp = Bioexperiment::create($dataExp);
-        }
-        session()->flash('message', 'Bioarchive successfully created.');
-        // delete associated draft if present
-        if ($this->draftId) {
-            try {
-                BioarchiveDraft::where('id', $this->draftId)->where('user_id', auth()->id())->delete();
-            } catch (\Throwable $e) {
-                logger()->debug('Failed to delete bioarchive draft after submit: ' . $e->getMessage());
-            }
-        }
+        try {
+            DB::transaction(function () {
+                $bioarchive = new Bioarchive();
+                $bioarchive->accession = 'INNAAR' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+                $bioarchive->submission_id = 'SUBINNAAR' . sprintf('%06d', intval($bioarchive->query()->max("id")) + 1);
+                $bioarchive->bioproject_id = $this->bioproject_id;
+                $bioarchive->biosample_id = implode(",", $this->biosample_id);
+                $bioarchive->user_id = auth()->user()->id;
+                $bioarchive->hold_release = $this->normalizeHoldRelease($this->hold_release);
+                $bioarchive->save();
 
-        return redirect()->to('/dashboard/bioarchives');
+                $no = 1;
+                foreach ($this->bioexperiment_id as $item => $value) {
+                    Bioexperiment::create([
+                        'bioarchive_id' => $bioarchive->id,
+                        'biosample_id' => $item,
+                        'alias' => "INNAX-" . $this->alias . "-" . $no,
+                        'title' => $this->bioexperiment_id[$item]['title'],
+                        'libname' => $this->bioexperiment_id[$item]['libname'],
+                        'libsource_id' => $this->bioexperiment_id[$item]['libsource_id'],
+                        'libselection_id' => $this->bioexperiment_id[$item]['libselection_id'],
+                        'libstrategy_id' => $this->bioexperiment_id[$item]['libstrategy_id'],
+                        'libconsprot' => $this->bioexperiment_id[$item]['libconsprot'],
+                        'instrument_id' => $this->bioexperiment_id[$item]['instrument_id'],
+                        'liblayout_id' => $this->bioexperiment_id[$item]['liblayout_id'],
+                        'input_size' => $this->bioexperiment_id[$item]['inp_size'],
+                    ]);
+                    $no++;
+                }
+            });
+
+            session()->flash('message', 'Bioarchive successfully created.');
+
+            // delete associated draft if present
+            if ($this->draftId) {
+                try {
+                    BioarchiveDraft::where('id', $this->draftId)->where('user_id', auth()->id())->delete();
+                } catch (\Throwable $e) {
+                    logger()->debug('Failed to delete bioarchive draft after submit: ' . $e->getMessage());
+                }
+            }
+
+            return redirect()->to('/dashboard/bioarchives');
+        } catch (\Throwable $e) {
+            logger()->error('Failed to create bioarchive transactionally: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+            ]);
+
+            $this->dispatchBrowserEvent('ajax-alert', [
+                'type' => 'danger',
+                'message' => 'Failed to save Bioarchive. No partial data was stored. Please try again.',
+            ]);
+
+            return;
+        }
     }
 
     /**

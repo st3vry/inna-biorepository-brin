@@ -41,6 +41,7 @@ use App\Models\Objective;
 use App\Models\ObjectiveBioProject;
 use App\Models\SampleBioproject;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
 
 class EditBioproject extends Component
 {
@@ -720,256 +721,271 @@ class EditBioproject extends Component
 
     public function submitForm()
     {
-        $bioproject = Bioproject::findOrFail($this->bioproject_id);
-
         $this->message = '';
 
         $validatedData = $this->validate();
 
-        $bioproject->umbproject_id = $validatedData['umbproject_id'] ?? null;
-        $bioproject->organism_id = $validatedData['organism_id'];
-        $bioproject->organism_detail = is_string($validatedData['organism_detail'])
-            ? json_decode($validatedData['organism_detail'], true)
-            : $validatedData['organism_detail'];
-        $bioproject->consortium_id = $validatedData['consortium_id'];
-        $bioproject->title = $validatedData['title'];
-        $bioproject->description = $validatedData['description'];
-        $bioproject->hold_release = $validatedData['hold_release'];
-        $bioproject->samplescope_id = $validatedData['samplescope_id'];
-        $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
-        $bioproject->draft = false;
-        $bioproject->status = 2; //submitted back after edit
-        $bioproject->save();
+        try {
+            $bioproject = DB::transaction(function () use ($validatedData) {
+                $bioproject = Bioproject::findOrFail($this->bioproject_id);
 
+                $bioproject->umbproject_id = $validatedData['umbproject_id'] ?? null;
+                $bioproject->organism_id = $validatedData['organism_id'];
+                $bioproject->organism_detail = is_string($validatedData['organism_detail'])
+                    ? json_decode($validatedData['organism_detail'], true)
+                    : $validatedData['organism_detail'];
+                $bioproject->consortium_id = $validatedData['consortium_id'];
+                $bioproject->title = $validatedData['title'];
+                $bioproject->description = $validatedData['description'];
+                $bioproject->hold_release = $validatedData['hold_release'];
+                $bioproject->samplescope_id = $validatedData['samplescope_id'];
+                $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
+                $bioproject->draft = false;
+                $bioproject->status = 2; //submitted back after edit
+                $bioproject->save();
 
-
-        // Target
-        $targetPayload = [
-            'bioproject_id' => $bioproject->id,
-            'organism_novel' => $validatedData['novel_org'] ?? null,
-            'organism_novel_description' => $validatedData['novel_desc'] ?? null,
-            'organism_sbc' => $validatedData['sbc'] ?? null,
-            'organism_isolate' => $validatedData['isolate'] ?? null,
-            'organism_desc' => $validatedData['org_desc'] ?? null,
-            'celularity_id' => $validatedData['celularity_id'] ?? null,
-            'reproduction_id' => $validatedData['reproduction_id'] ?? null,
-            'ploidy_id' => $validatedData['ploidy_id'] ?? null,
-            'ploidy_description' => $validatedData['plodesc'] ?? null,
-            'haploid_genome_size' => $validatedData['haploid_size'] ?? null,
-            'genome_size_id' => $validatedData['genome_size_id'] ?? null,
-            'phenotypes_disease' => $validatedData['disease'] ?? null,
-            'biotic_relationship_id' => $validatedData['bio_rel_id'] ?? null,
-            'trophic_level_id' => $validatedData['trop_level_id'] ?? null,
-            'prokaryote_morphology_gram' => $validatedData['gram'] ?? null,
-            'prokaryote_morphology_motility' => $validatedData['motility'] ?? null,
-            'prokaryote_morphology_enveloped' => $validatedData['enveloped'] ?? null,
-            'prokaryote_morphology_endospores' => $validatedData['endospores'] ?? null,
-            'habitat_id' => $validatedData['habitat_id'] ?? null,
-            'salinity_id' => $validatedData['salinity_id'] ?? null,
-            'oxygen_req_id' => $validatedData['oxygen_id'] ?? null,
-            'temp_range_id' => $validatedData['temp_range_id'] ?? null,
-            'optimum_temp' => $validatedData['optimum_temp'] ?? null,
-        ];
-        BioprojectTarget::updateOrCreate(['bioproject_id' => $bioproject->id], $targetPayload);
-
-        // Replicons (replace all)
-        OrganismReplicon::where('bioproject_id', $bioproject->id)->delete();
-        if (!empty($validatedData['repls']) && is_array($validatedData['repls'])) {
-            foreach ($validatedData['repls'] as $repl) {
-                OrganismReplicon::create([
+                // Target
+                $targetPayload = [
                     'bioproject_id' => $bioproject->id,
-                    'name' => $repl['repl_name'] ?? null,
-                    'repl_type_id' => $repl['repl_type_id'] ?? null,
-                    'repl_location_id' => $repl['repl_loc_id'] ?? null,
-                    'size' => $repl['repl_size'] ?? null,
-                    'genome_size_id' => $repl['genome_size2_id'] ?? null,
-                ]);
-            }
-        }
-
-        $relevanceData = [
-            'bioproject_id' => $bioproject->id,
-            'relevance_id' => $validatedData['relevance_id'],
-            'description' => $validatedData['reldesc'],
-        ];
-        RelevanceBioproject::updateOrCreate(
-            ['bioproject_id' => $bioproject->id],
-            $relevanceData
-        );
-
-        $materialData = [
-            'bioproject_id' => $bioproject->id,
-            'material_id' => $validatedData['material_id'],
-            'description' => $validatedData['matdesc'],
-        ];
-        MaterialBioproject::updateOrCreate(
-            ['bioproject_id' => $bioproject->id],
-            $materialData
-        );
-
-        $captureData = [
-            'bioproject_id' => $bioproject->id,
-            'capture_id' => $validatedData['capture_id'],
-            'description' => $validatedData['capdesc'],
-        ];
-        CaptureBioproject::updateOrCreate(
-            ['bioproject_id' => $bioproject->id],
-            $captureData
-        );
-
-        $methodologyData = [
-            'bioproject_id' => $bioproject->id,
-            'methodology_id' => $validatedData['methodology_id'],
-            'description' => $validatedData['metdesc'],
-        ];
-        MethodologyBioproject::updateOrCreate(
-            ['bioproject_id' => $bioproject->id],
-            $methodologyData
-        );
-
-        $samplescopeData = [
-            'bioproject_id' => $bioproject->id,
-            'samplescope_id' => $validatedData['samplescope_id'],
-            'description' => $validatedData['samplescopedesc'],
-        ];
-        SampleBioproject::updateOrCreate(
-            ['bioproject_id' => $bioproject->id],
-            $samplescopeData
-        );
-
-
-        // Grants (update existing by id; create new; delete removed)
-        $keptGrantIds = [];
-        if (!empty($validatedData['grants']) && is_array($validatedData['grants'])) {
-            foreach ($validatedData['grants'] as $grantRow) {
-                $payload = [
-                    'bioproject_id' => $bioproject->id,
-                    'fundagency_id' => $grantRow['fundagency_id'] ?? null,
-                    'grant_title' => $grantRow['grant_title'] ?? null,
-                    'grant_program' => $grantRow['grant_program'] ?? null,
+                    'organism_novel' => $validatedData['novel_org'] ?? null,
+                    'organism_novel_description' => $validatedData['novel_desc'] ?? null,
+                    'organism_sbc' => $validatedData['sbc'] ?? null,
+                    'organism_isolate' => $validatedData['isolate'] ?? null,
+                    'organism_desc' => $validatedData['org_desc'] ?? null,
+                    'celularity_id' => $validatedData['celularity_id'] ?? null,
+                    'reproduction_id' => $validatedData['reproduction_id'] ?? null,
+                    'ploidy_id' => $validatedData['ploidy_id'] ?? null,
+                    'ploidy_description' => $validatedData['plodesc'] ?? null,
+                    'haploid_genome_size' => $validatedData['haploid_size'] ?? null,
+                    'genome_size_id' => $validatedData['genome_size_id'] ?? null,
+                    'phenotypes_disease' => $validatedData['disease'] ?? null,
+                    'biotic_relationship_id' => $validatedData['bio_rel_id'] ?? null,
+                    'trophic_level_id' => $validatedData['trop_level_id'] ?? null,
+                    'prokaryote_morphology_gram' => $validatedData['gram'] ?? null,
+                    'prokaryote_morphology_motility' => $validatedData['motility'] ?? null,
+                    'prokaryote_morphology_enveloped' => $validatedData['enveloped'] ?? null,
+                    'prokaryote_morphology_endospores' => $validatedData['endospores'] ?? null,
+                    'habitat_id' => $validatedData['habitat_id'] ?? null,
+                    'salinity_id' => $validatedData['salinity_id'] ?? null,
+                    'oxygen_req_id' => $validatedData['oxygen_id'] ?? null,
+                    'temp_range_id' => $validatedData['temp_range_id'] ?? null,
+                    'optimum_temp' => $validatedData['optimum_temp'] ?? null,
                 ];
+                BioprojectTarget::updateOrCreate(['bioproject_id' => $bioproject->id], $targetPayload);
 
-                if (!empty($grantRow['id'])) {
-                    $model = Grant::where('bioproject_id', $bioproject->id)->where('id', $grantRow['id'])->first();
-                    if ($model) {
-                        $model->update($payload);
+                // Replicons (replace all)
+                OrganismReplicon::where('bioproject_id', $bioproject->id)->delete();
+                if (!empty($validatedData['repls']) && is_array($validatedData['repls'])) {
+                    foreach ($validatedData['repls'] as $repl) {
+                        OrganismReplicon::create([
+                            'bioproject_id' => $bioproject->id,
+                            'name' => $repl['repl_name'] ?? null,
+                            'repl_type_id' => $repl['repl_type_id'] ?? null,
+                            'repl_location_id' => $repl['repl_loc_id'] ?? null,
+                            'size' => $repl['repl_size'] ?? null,
+                            'genome_size_id' => $repl['genome_size2_id'] ?? null,
+                        ]);
+                    }
+                }
+
+                $relevanceData = [
+                    'bioproject_id' => $bioproject->id,
+                    'relevance_id' => $validatedData['relevance_id'],
+                    'description' => $validatedData['reldesc'],
+                ];
+                RelevanceBioproject::updateOrCreate(
+                    ['bioproject_id' => $bioproject->id],
+                    $relevanceData
+                );
+
+                $materialData = [
+                    'bioproject_id' => $bioproject->id,
+                    'material_id' => $validatedData['material_id'],
+                    'description' => $validatedData['matdesc'],
+                ];
+                MaterialBioproject::updateOrCreate(
+                    ['bioproject_id' => $bioproject->id],
+                    $materialData
+                );
+
+                $captureData = [
+                    'bioproject_id' => $bioproject->id,
+                    'capture_id' => $validatedData['capture_id'],
+                    'description' => $validatedData['capdesc'],
+                ];
+                CaptureBioproject::updateOrCreate(
+                    ['bioproject_id' => $bioproject->id],
+                    $captureData
+                );
+
+                $methodologyData = [
+                    'bioproject_id' => $bioproject->id,
+                    'methodology_id' => $validatedData['methodology_id'],
+                    'description' => $validatedData['metdesc'],
+                ];
+                MethodologyBioproject::updateOrCreate(
+                    ['bioproject_id' => $bioproject->id],
+                    $methodologyData
+                );
+
+                $samplescopeData = [
+                    'bioproject_id' => $bioproject->id,
+                    'samplescope_id' => $validatedData['samplescope_id'],
+                    'description' => $validatedData['samplescopedesc'],
+                ];
+                SampleBioproject::updateOrCreate(
+                    ['bioproject_id' => $bioproject->id],
+                    $samplescopeData
+                );
+
+                // Grants (update existing by id; create new; delete removed)
+                $keptGrantIds = [];
+                if (!empty($validatedData['grants']) && is_array($validatedData['grants'])) {
+                    foreach ($validatedData['grants'] as $grantRow) {
+                        $payload = [
+                            'bioproject_id' => $bioproject->id,
+                            'fundagency_id' => $grantRow['fundagency_id'] ?? null,
+                            'grant_title' => $grantRow['grant_title'] ?? null,
+                            'grant_program' => $grantRow['grant_program'] ?? null,
+                        ];
+
+                        if (!empty($grantRow['id'])) {
+                            $model = Grant::where('bioproject_id', $bioproject->id)->where('id', $grantRow['id'])->first();
+                            if ($model) {
+                                $model->update($payload);
+                                $keptGrantIds[] = $model->id;
+                                continue;
+                            }
+                        }
+
+                        $model = Grant::create($payload);
                         $keptGrantIds[] = $model->id;
-                        continue;
                     }
                 }
+                Grant::where('bioproject_id', $bioproject->id)
+                    ->when(count($keptGrantIds) > 0, fn($q) => $q->whereNotIn('id', $keptGrantIds))
+                    ->when(count($keptGrantIds) === 0, fn($q) => $q)
+                    ->delete();
 
-                $model = Grant::create($payload);
-                $keptGrantIds[] = $model->id;
-            }
-        }
-        Grant::where('bioproject_id', $bioproject->id)
-            ->when(count($keptGrantIds) > 0, fn($q) => $q->whereNotIn('id', $keptGrantIds))
-            ->when(count($keptGrantIds) === 0, fn($q) => $q)
-            ->delete();
+                // Publications (update by id; create new; delete removed)
+                $keptPublicationIds = [];
+                if (!empty($validatedData['publications']) && is_array($validatedData['publications'])) {
+                    foreach ($validatedData['publications'] as $pubRow) {
+                        $payload = [
+                            'bioproject_id' => $bioproject->id,
+                            'pub_identifier_id' => $pubRow['pub_identifier_id'] ?? null,
+                            'pub_id' => $pubRow['pub_id'] ?? null,
+                            'article_title' => $pubRow['article_title'] ?? null,
+                        ];
 
-        // Publications (update by id; create new; delete removed)
-        $keptPublicationIds = [];
-        if (!empty($validatedData['publications']) && is_array($validatedData['publications'])) {
-            foreach ($validatedData['publications'] as $pubRow) {
-                $payload = [
-                    'bioproject_id' => $bioproject->id,
-                    'pub_identifier_id' => $pubRow['pub_identifier_id'] ?? null,
-                    'pub_id' => $pubRow['pub_id'] ?? null,
-                    'article_title' => $pubRow['article_title'] ?? null,
-                ];
+                        if (!empty($pubRow['id'])) {
+                            $model = Publication::where('bioproject_id', $bioproject->id)->where('id', $pubRow['id'])->first();
+                            if ($model) {
+                                $model->update($payload);
+                                $keptPublicationIds[] = $model->id;
+                                continue;
+                            }
+                        }
 
-                if (!empty($pubRow['id'])) {
-                    $model = Publication::where('bioproject_id', $bioproject->id)->where('id', $pubRow['id'])->first();
-                    if ($model) {
-                        $model->update($payload);
+                        $model = Publication::create($payload);
                         $keptPublicationIds[] = $model->id;
-                        continue;
+                    }
+                }
+                Publication::where('bioproject_id', $bioproject->id)
+                    ->when(count($keptPublicationIds) > 0, fn($q) => $q->whereNotIn('id', $keptPublicationIds))
+                    ->when(count($keptPublicationIds) === 0, fn($q) => $q)
+                    ->delete();
+
+                if (!empty($validatedData['data_type_id']) && count($validatedData['data_type_id']) > 0) {
+                    DatatypeBioproject::where('bioproject_id', $bioproject->id)
+                        ->whereNotIn('datatype_id', $validatedData['data_type_id'])
+                        ->delete();
+
+                    foreach ($validatedData['data_type_id'] as $item => $value) {
+                        $data4 = array(
+                            'bioproject_id' => $bioproject->id,
+                            'datatype_id' => $validatedData['data_type_id'][$item],
+                            'description' => $validatedData['datatypedesc']
+                        );
+                        DatatypeBioproject::updateOrCreate(
+                            ['bioproject_id' => $bioproject->id, 'datatype_id' => $validatedData['data_type_id'][$item]],
+                            $data4
+                        );
                     }
                 }
 
-                $model = Publication::create($payload);
-                $keptPublicationIds[] = $model->id;
-            }
-        }
-        Publication::where('bioproject_id', $bioproject->id)
-            ->when(count($keptPublicationIds) > 0, fn($q) => $q->whereNotIn('id', $keptPublicationIds))
-            ->when(count($keptPublicationIds) === 0, fn($q) => $q)
-            ->delete();
+                // External links (update by id; create new; delete removed)
+                $keptExternalLinkIds = [];
+                if (!empty($validatedData['externallinks']) && is_array($validatedData['externallinks'])) {
+                    foreach ($validatedData['externallinks'] as $linkRow) {
+                        $payload = [
+                            'bioproject_id' => $bioproject->id,
+                            'link_description' => $linkRow['link_description'] ?? null,
+                            'link_url' => $linkRow['link_url'] ?? null,
+                        ];
 
-        if (!empty($validatedData['data_type_id']) && count($validatedData['data_type_id']) > 0) {
-            DatatypeBioproject::where('bioproject_id', $bioproject->id)
-                ->whereNotIn('datatype_id', $validatedData['data_type_id'])
-                ->delete();
+                        if (!empty($linkRow['id'])) {
+                            $model = BioProjectExternalLink::where('bioproject_id', $bioproject->id)->where('id', $linkRow['id'])->first();
+                            if ($model) {
+                                $model->update($payload);
+                                $keptExternalLinkIds[] = $model->id;
+                                continue;
+                            }
+                        }
 
-            foreach ($validatedData['data_type_id'] as $item => $value) {
-                $data4 = array(
-                    'bioproject_id' => $bioproject->id,
-                    'datatype_id' => $validatedData['data_type_id'][$item],
-                    'description' => $validatedData['datatypedesc']
-                );
-                DatatypeBioproject::updateOrCreate(
-                    ['bioproject_id' => $bioproject->id, 'datatype_id' => $validatedData['data_type_id'][$item]],
-                    $data4
-                );
-            }
-        }
-
-        // External links (update by id; create new; delete removed)
-        $keptExternalLinkIds = [];
-        if (!empty($validatedData['externallinks']) && is_array($validatedData['externallinks'])) {
-            foreach ($validatedData['externallinks'] as $linkRow) {
-                $payload = [
-                    'bioproject_id' => $bioproject->id,
-                    'link_description' => $linkRow['link_description'] ?? null,
-                    'link_url' => $linkRow['link_url'] ?? null,
-                ];
-
-                if (!empty($linkRow['id'])) {
-                    $model = BioProjectExternalLink::where('bioproject_id', $bioproject->id)->where('id', $linkRow['id'])->first();
-                    if ($model) {
-                        $model->update($payload);
+                        $model = BioProjectExternalLink::create($payload);
                         $keptExternalLinkIds[] = $model->id;
-                        continue;
+                    }
+                }
+                BioProjectExternalLink::where('bioproject_id', $bioproject->id)
+                    ->when(count($keptExternalLinkIds) > 0, fn($q) => $q->whereNotIn('id', $keptExternalLinkIds))
+                    ->when(count($keptExternalLinkIds) === 0, fn($q) => $q)
+                    ->delete();
+
+                if (!empty($validatedData['objective_id']) && count($validatedData['objective_id']) > 0) {
+                    ObjectiveBioProject::where('bioproject_id', $bioproject->id)
+                        ->whereNotIn('objective_id', $validatedData['objective_id'])
+                        ->delete();
+
+                    foreach ($validatedData['objective_id'] as $item => $value) {
+                        $data6 = array(
+                            'bioproject_id' => $bioproject->id,
+                            'objective_id' => $validatedData['objective_id'][$item],
+                            'description' => $validatedData['objdesc']
+                        );
+                        ObjectiveBioProject::updateOrCreate(
+                            ['bioproject_id' => $bioproject->id, 'objective_id' => $validatedData['objective_id'][$item]],
+                            $data6
+                        );
                     }
                 }
 
-                $model = BioProjectExternalLink::create($payload);
-                $keptExternalLinkIds[] = $model->id;
-            }
+                ActionLog::create([
+                    'action' => "bioprojectEdited",
+                    'type' => 'Bioproject',
+                    'item_id' => $bioproject->accession,
+                    'user_target' => $bioproject->curator_id,
+                    'created_by' => auth()->id(),
+                    'desc' => null,
+                ]);
+
+                return $bioproject;
+            });
+
+            session()->flash('message', 'Bioproject successfully updated.');
+            return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
+        } catch (\Throwable $e) {
+            logger()->error('Failed to update bioproject transactionally: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'bioproject_id' => $this->bioproject_id,
+            ]);
+
+            $this->dispatchBrowserEvent('ajax-alert', [
+                'type' => 'danger',
+                'message' => 'Failed to update Bioproject. No partial data was saved. Please try again.',
+            ]);
+
+            return;
         }
-        BioProjectExternalLink::where('bioproject_id', $bioproject->id)
-            ->when(count($keptExternalLinkIds) > 0, fn($q) => $q->whereNotIn('id', $keptExternalLinkIds))
-            ->when(count($keptExternalLinkIds) === 0, fn($q) => $q)
-            ->delete();
-
-        if (!empty($validatedData['objective_id']) && count($validatedData['objective_id']) > 0) {
-            ObjectiveBioProject::where('bioproject_id', $bioproject->id)
-                ->whereNotIn('objective_id', $validatedData['objective_id'])
-                ->delete();
-
-            foreach ($validatedData['objective_id'] as $item => $value) {
-                $data6 = array(
-                    'bioproject_id' => $bioproject->id,
-                    'objective_id' => $validatedData['objective_id'][$item],
-                    'description' => $validatedData['objdesc']
-                );
-                ObjectiveBioProject::updateOrCreate(
-                    ['bioproject_id' => $bioproject->id, 'objective_id' => $validatedData['objective_id'][$item]],
-                    $data6
-                );
-            }
-        }
-
-        ActionLog::create([
-            'action' => "bioprojectEdited",
-            'type' => 'Bioproject',
-            'item_id' => $bioproject->accession,
-            'user_target'=> $bioproject->curator_id,
-            'created_by' =>auth()->id(),
-            'desc' => null,
-        ]);
-
-        session()->flash('message', 'Bioproject successfully updated.');
-        return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
     }
 }

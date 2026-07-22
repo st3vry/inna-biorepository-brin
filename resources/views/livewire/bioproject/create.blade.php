@@ -304,7 +304,15 @@
                             </div>
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h5>Grants</h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Grants</h5>
+                                        @if (count($grants) > 0)
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal" data-bs-target="#addFundagencyModal">
+                                                + Add New Funding Agency
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <!-- <div class="card card-outline card-info collapsed-card mb-3"> -->
@@ -378,13 +386,88 @@
                                     <!-- /.card -->
                                 </div>
                             </div>
+
+                            <div class="modal fade" id="addFundagencyModal" tabindex="-1"
+                                aria-labelledby="addFundagencyModalLabel" aria-hidden="true" wire:ignore.self>
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addFundagencyModalLabel">Add New Funding
+                                                Agency</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-warning mb-3"><strong>*Only add a new funding agency if it
+                                                    does not already exist.</strong></p>
+
+                                            <div class="mb-3">
+                                                <label for="new_fundagency_name" class="form-label">Funding Agency
+                                                    Name
+                                                    <font color="red">*</font>
+                                                </label>
+                                                <input type="text"
+                                                    class="form-control @error('new_fundagency_name') is-invalid @enderror"
+                                                    id="new_fundagency_name" wire:model.defer="new_fundagency_name"
+                                                    placeholder="Enter funding agency name">
+                                                @error('new_fundagency_name')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="new_fundagency_address" class="form-label">Address <font
+                                                        color="red">*</font></label>
+                                                <input type="text"
+                                                    class="form-control @error('new_fundagency_address') is-invalid @enderror"
+                                                    id="new_fundagency_address"
+                                                    wire:model.defer="new_fundagency_address"
+                                                    placeholder="Enter funding agency address">
+                                                @error('new_fundagency_address')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="new_fundagency_website" class="form-label">Website <font
+                                                        color="red">*</font></label>
+                                                <input type="text"
+                                                    class="form-control @error('new_fundagency_website') is-invalid @enderror"
+                                                    id="new_fundagency_website"
+                                                    wire:model.defer="new_fundagency_website"
+                                                    placeholder="https://example.org">
+                                                @error('new_fundagency_website')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary"
+                                                wire:click.prevent="addFundagency" wire:loading.attr="disabled"
+                                                wire:target="addFundagency">
+                                                <span wire:loading.remove wire:target="addFundagency">Save Funding
+                                                    Agency</span>
+                                                <span wire:loading wire:target="addFundagency">Saving...</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h5>Consortium</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <label for="consortium_id" class="form-label">Consortium</label>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <label for="consortium_id" class="form-label">Consortium</label>
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal" data-bs-target="#addConsortiumModal">
+                                                + Add New Consortium
+                                            </button>
+                                        </div>
                                         <select class="form-select select2" name="consortium_id" id="consortium_id"
                                             wire:model="consortium_id">
                                             <option value="">Consortium</option>
@@ -398,6 +481,61 @@
                                         @error('consortium_id')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="addConsortiumModal" tabindex="-1"
+                                aria-labelledby="addConsortiumModalLabel" aria-hidden="true" wire:ignore.self>
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addConsortiumModalLabel">Add New Consortium
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-warning mb-3"><strong>*Only add a new consortium if it does
+                                                    not already exist.</strong></p>
+
+                                            <div class="mb-3">
+                                                <label for="new_consortium_name" class="form-label">Consortium Name
+                                                    <font color="red">*</font>
+                                                </label>
+                                                <input type="text"
+                                                    class="form-control @error('new_consortium_name') is-invalid @enderror"
+                                                    id="new_consortium_name" wire:model.defer="new_consortium_name"
+                                                    placeholder="Enter consortium name">
+                                                @error('new_consortium_name')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="new_consortium_url" class="form-label">Consortium URL
+                                                    <font color="red">*</font>
+                                                </label>
+                                                <input type="text"
+                                                    class="form-control @error('new_consortium_url') is-invalid @enderror"
+                                                    id="new_consortium_url" wire:model.defer="new_consortium_url"
+                                                    placeholder="https://example.org">
+                                                @error('new_consortium_url')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-primary"
+                                                wire:click.prevent="addConsortium" wire:loading.attr="disabled"
+                                                wire:target="addConsortium">
+                                                <span wire:loading.remove wire:target="addConsortium">Save
+                                                    Consortium</span>
+                                                <span wire:loading wire:target="addConsortium">Saving...</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -595,7 +733,8 @@
                                                             wire:model="objective_id.{{ $objective->id }}"
                                                             value="{{ $objective->id }}"
                                                             @if (is_array(old('objective_id')) && in_array($objective->id, old('objective_id'))) checked @endif>
-                                                        <label class="form-check-label">{{ $objective->name }}</label>
+                                                        <label
+                                                            class="form-check-label">{{ $objective->name }}</label>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -1416,7 +1555,8 @@
                                 <tr>
                                     <td class="col-md-3">Reproduction</td>
                                     <td class="col-md-1">:</td>
-                                    <td class="align-left">{{ $this->reproductionName($this->reproduction_id) }}</td>
+                                    <td class="align-left">{{ $this->reproductionName($this->reproduction_id) }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="col-md-3">Ploidy</td>
@@ -1554,9 +1694,174 @@
 
 @push('js')
     <script>
+        function getBioprojectValidationErrorKeys() {
+            try {
+                return @json($errors->keys());
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function getStepForBioprojectField(errorKey) {
+            if (!errorKey) return null;
+
+            // Step 1
+            if (
+                errorKey === 'hold_release' ||
+                errorKey === 'submitter_name' ||
+                errorKey === 'submitter_email' ||
+                errorKey === 'submitter_lab' ||
+                errorKey === 'submitter_center'
+            ) {
+                return 1;
+            }
+
+            // Step 2
+            if (
+                errorKey === 'title' ||
+                errorKey === 'description' ||
+                errorKey === 'relevance_id' ||
+                errorKey === 'reldesc' ||
+                errorKey === 'consortium_id' ||
+                errorKey.startsWith('grants.') ||
+                errorKey.startsWith('externallinks.') ||
+                errorKey.startsWith('new_consortium_') ||
+                errorKey.startsWith('new_fundagency_')
+            ) {
+                return 2;
+            }
+
+            // Step 3
+            if (
+                errorKey === 'samplescope_id' ||
+                errorKey === 'samplescopedesc' ||
+                errorKey === 'material_id' ||
+                errorKey === 'matdesc' ||
+                errorKey === 'capture_id' ||
+                errorKey === 'capdesc' ||
+                errorKey === 'methodology_id' ||
+                errorKey === 'metdesc' ||
+                errorKey === 'data_type_id' ||
+                errorKey.startsWith('data_type_id.') ||
+                errorKey === 'datatypedesc' ||
+                errorKey === 'objective_id' ||
+                errorKey.startsWith('objective_id.') ||
+                errorKey === 'objdesc'
+            ) {
+                return 3;
+            }
+
+            // Step 4
+            if (
+                errorKey === 'organism_id' ||
+                errorKey === 'organism_data' ||
+                errorKey === 'organism_detail' ||
+                errorKey === 'novel_org' ||
+                errorKey === 'novel_desc' ||
+                errorKey === 'sbc' ||
+                errorKey === 'isolate' ||
+                errorKey === 'org_desc' ||
+                errorKey === 'celularity_id' ||
+                errorKey === 'reproduction_id' ||
+                errorKey === 'ploidy_id' ||
+                errorKey === 'plodesc' ||
+                errorKey === 'haploid_size' ||
+                errorKey === 'genome_size_id' ||
+                errorKey === 'disease' ||
+                errorKey === 'bio_rel_id' ||
+                errorKey === 'trop_level_id' ||
+                errorKey === 'gram' ||
+                errorKey === 'enveloped' ||
+                errorKey === 'motility' ||
+                errorKey === 'endospores' ||
+                errorKey === 'habitat_id' ||
+                errorKey === 'salinity_id' ||
+                errorKey === 'oxygen_id' ||
+                errorKey === 'temp_range_id' ||
+                errorKey === 'optimum_temp' ||
+                errorKey.startsWith('repls.')
+            ) {
+                return 4;
+            }
+
+            // Step 5
+            if (errorKey.startsWith('publications.') || errorKey === 'publications') {
+                return 5;
+            }
+
+            return null;
+        }
+
+        function focusBioprojectField(errorKey) {
+            if (!errorKey) return;
+
+            const nameKey = errorKey
+                .split('.')
+                .map((segment, index) => index === 0 ? segment : `[${segment}]`)
+                .join('');
+
+            const candidates = [
+                `[wire\\:model="${errorKey}"]`,
+                `[wire\\:model\.defer="${errorKey}"]`,
+                `[name="${nameKey}"]`,
+                `[name="${errorKey}"]`,
+                `[id="${errorKey}"]`
+            ];
+
+            let element = null;
+            for (const selector of candidates) {
+                try {
+                    element = document.querySelector(selector);
+                    if (element) break;
+                } catch (e) {
+                    // Ignore invalid selectors and try the next candidate.
+                }
+            }
+
+            if (!element) {
+                const fallbackById = errorKey.split('.').pop();
+                element = document.getElementById(fallbackById);
+            }
+
+            if (element && typeof element.focus === 'function') {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.focus({ preventScroll: true });
+            }
+        }
+
+        function routeToBioprojectValidationError() {
+            const errorKeys = getBioprojectValidationErrorKeys();
+            if (!Array.isArray(errorKeys) || errorKeys.length === 0) {
+                window.__bioprojectLastErrorSignature = null;
+                return;
+            }
+
+            const firstErrorKey = errorKeys[0];
+            const targetStep = getStepForBioprojectField(firstErrorKey);
+            const currentStep = Number(@this.get('currentStep'));
+            const errorSignature = `${currentStep}:${firstErrorKey}:${errorKeys.length}`;
+
+            if (window.__bioprojectLastErrorSignature === errorSignature) {
+                return;
+            }
+
+            window.__bioprojectLastErrorSignature = errorSignature;
+
+            if (!targetStep) return;
+
+            if (currentStep !== targetStep) {
+                @this.set('currentStep', targetStep);
+                setTimeout(() => focusBioprojectField(firstErrorKey), 350);
+                return;
+            }
+
+            setTimeout(() => focusBioprojectField(firstErrorKey), 100);
+        }
+
         document.addEventListener('livewire:load', function() {
             const steps = document.querySelectorAll('#nav-steps .nav-item').length;
             document.getElementById('wizard-progress').style.width = 100 / steps * @this.currentStep + "%"
+            routeToBioprojectValidationError();
         })
         document.addEventListener('livewire:update', function() {
             $('.form-select.select2').each(function() {
@@ -1591,6 +1896,8 @@
                     @this.set('data_type_id', data_type_id_true)
                 })
             });
+
+            routeToBioprojectValidationError();
         })
 
         // listen for ajax-alert events dispatched by Livewire methods
@@ -1627,6 +1934,22 @@
             setTimeout(() => {
                 window.location.reload();
             }, 250);
+        })
+
+        document.addEventListener('consortium-created', function() {
+            const modalElement = document.getElementById('addConsortiumModal');
+            if (!modalElement || typeof bootstrap === 'undefined') return;
+
+            const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            modalInstance.hide();
+        })
+
+        document.addEventListener('fundagency-created', function() {
+            const modalElement = document.getElementById('addFundagencyModal');
+            if (!modalElement || typeof bootstrap === 'undefined') return;
+
+            const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            modalInstance.hide();
         })
     </script>
 @endpush

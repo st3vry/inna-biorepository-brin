@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Fundagency extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
+
     public function grant()
     {
         return $this->hasMany(Grant::class);

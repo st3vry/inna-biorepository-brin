@@ -17,6 +17,7 @@ use App\Models\LibraryStrategy;
 use App\Models\Lab;
 use App\Models\Center;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class EditBioarchive extends Component
 {
@@ -386,71 +387,89 @@ class EditBioarchive extends Component
         // final validation before persisting
         $this->fourthStepSubmit();
 
-        $bioarchive = Bioarchive::where('id', $this->bioarchiveId)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+        try {
+            $bioarchive = DB::transaction(function () {
+                $bioarchive = Bioarchive::where('id', $this->bioarchiveId)
+                    ->where('user_id', auth()->id())
+                    ->firstOrFail();
 
-        $selectedIds = array_map('intval', array_keys($this->biosample_id ?? []));
+                $selectedIds = array_map('intval', array_keys($this->biosample_id ?? []));
 
-        $bioarchive->hold_release = $this->normalizeHoldRelease($this->hold_release);
-        $bioarchive->bioproject_id = $this->bioproject_id;
-        $bioarchive->biosample_id = implode(',', $selectedIds);
-        $bioarchive->draft = false;
-        $bioarchive->status = 2; //submitted back after edit
-        $bioarchive->save();
+                $bioarchive->hold_release = $this->normalizeHoldRelease($this->hold_release);
+                $bioarchive->bioproject_id = $this->bioproject_id;
+                $bioarchive->biosample_id = implode(',', $selectedIds);
+                $bioarchive->draft = false;
+                $bioarchive->status = 2; //submitted back after edit
+                $bioarchive->save();
 
-        $existing = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get()->keyBy(function ($row) {
-            return (int) $row->biosample_id;
-        });
+                $existing = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get()->keyBy(function ($row) {
+                    return (int) $row->biosample_id;
+                });
 
-        $keepIds = array_flip($selectedIds);
+                $keepIds = array_flip($selectedIds);
 
-        // upsert selected experiments
-        foreach ($selectedIds as $biosampleId) {
-            $row = $this->bioexperiment_id[$biosampleId] ?? [];
+                // upsert selected experiments
+                foreach ($selectedIds as $biosampleId) {
+                    $row = $this->bioexperiment_id[$biosampleId] ?? [];
 
-            $payload = [
-                'bioarchive_id' => $bioarchive->id,
-                'biosample_id' => $biosampleId,
-                'alias' => $this->experimentAlias[$biosampleId] ?? ('INNAX-' . $this->alias . '-' . $this->nextAliasNumber()),
-                'title' => $row['title'] ?? null,
-                'libname' => $row['libname'] ?? null,
-                'libsource_id' => $row['libsource_id'] ?? null,
-                'libselection_id' => $row['libselection_id'] ?? null,
-                'libstrategy_id' => $row['libstrategy_id'] ?? null,
-                'libconsprot' => $row['libconsprot'] ?? null,
-                'instrument_id' => $row['instrument_id'] ?? null,
-                'liblayout_id' => $row['liblayout_id'] ?? null,
-                'input_size' => $row['inp_size'] ?? null,
-            ];
+                    $payload = [
+                        'bioarchive_id' => $bioarchive->id,
+                        'biosample_id' => $biosampleId,
+                        'alias' => $this->experimentAlias[$biosampleId] ?? ('INNAX-' . $this->alias . '-' . $this->nextAliasNumber()),
+                        'title' => $row['title'] ?? null,
+                        'libname' => $row['libname'] ?? null,
+                        'libsource_id' => $row['libsource_id'] ?? null,
+                        'libselection_id' => $row['libselection_id'] ?? null,
+                        'libstrategy_id' => $row['libstrategy_id'] ?? null,
+                        'libconsprot' => $row['libconsprot'] ?? null,
+                        'instrument_id' => $row['instrument_id'] ?? null,
+                        'liblayout_id' => $row['liblayout_id'] ?? null,
+                        'input_size' => $row['inp_size'] ?? null,
+                    ];
 
-            if (isset($existing[$biosampleId])) {
-                // keep existing alias stable if already present
-                $payload['alias'] = $existing[$biosampleId]->alias;
-                $existing[$biosampleId]->update($payload);
-            } else {
-                Bioexperiment::create($payload);
-            }
+                    if (isset($existing[$biosampleId])) {
+                        // keep existing alias stable if already present
+                        $payload['alias'] = $existing[$biosampleId]->alias;
+                        $existing[$biosampleId]->update($payload);
+                    } else {
+                        Bioexperiment::create($payload);
+                    }
+                }
+
+                // delete removed experiments
+                foreach ($existing as $biosampleId => $exp) {
+                    if (!isset($keepIds[$biosampleId])) {
+                        $exp->delete();
+                    }
+                }
+
+                ActionLog::create([
+                    'action' => "bioarchiveEdited",
+                    'type' => 'Bioarchive',
+                    'item_id' => $bioarchive->accession,
+                    'user_target' => $bioarchive->curator_id,
+                    'created_by' => auth()->id(),
+                    'desc' => null,
+                ]);
+
+                return $bioarchive;
+            });
+
+            session()->flash('message', 'Bioarchive successfully updated.');
+            return redirect()->to('/dashboard/bioarchives/' . $bioarchive->accession);
+        } catch (\Throwable $e) {
+            logger()->error('Failed to update bioarchive transactionally: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'bioarchive_id' => $this->bioarchiveId,
+            ]);
+
+            $this->dispatchBrowserEvent('ajax-alert', [
+                'type' => 'danger',
+                'message' => 'Failed to update Bioarchive. No partial data was saved. Please try again.',
+            ]);
+
+            return;
         }
-
-        // delete removed experiments
-        foreach ($existing as $biosampleId => $exp) {
-            if (!isset($keepIds[$biosampleId])) {
-                $exp->delete();
-            }
-        }
-
-        ActionLog::create([
-            'action' => "bioarchiveEdited",
-            'type' => 'Bioarchive',
-            'item_id' => $bioarchive->accession,
-            'user_target'=> $bioarchive->curator_id,
-            'created_by' =>auth()->id(),
-            'desc' => null,
-        ]);
-
-        session()->flash('message', 'Bioarchive successfully updated.');
-        return redirect()->to('/dashboard/bioarchives/' . $bioarchive->accession);
     }
 
     public function removeBiosample($index)

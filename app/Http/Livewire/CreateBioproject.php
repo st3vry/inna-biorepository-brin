@@ -44,6 +44,7 @@ use App\Models\Lab;
 use App\Models\Center;
 use Livewire\Component;
 use App\Models\BioprojectDraft;
+use Illuminate\Support\Facades\DB;
 
 class CreateBioproject extends Component
 {
@@ -101,6 +102,11 @@ class CreateBioproject extends Component
 
 
     public $consortium_id;
+    public $new_consortium_name;
+    public $new_consortium_url;
+    public $new_fundagency_name;
+    public $new_fundagency_address;
+    public $new_fundagency_website;
     public $title;
     public $umbproject_id;
     public $description;
@@ -168,16 +174,64 @@ class CreateBioproject extends Component
     public $genome2_size_id;
 
     protected $messages = [
+        'hold_release.required' => 'Hold release is required.',
+        'submitter_name.required' => 'Submitter name is required.',
+        'submitter_email.required' => 'Submitter email is required.',
+        'submitter_email.email' => 'Submitter email must be a valid email address.',
+        'submitter_lab.required' => 'Submitter lab is required.',
+        'submitter_center.required' => 'Submitter center is required.',
+        'title.required' => 'Title is required.',
+        'title.min' => 'Title must be at least 6 characters.',
+        'description.required' => 'Description is required.',
+        'description.min' => 'Description must be at least 6 characters.',
+        'relevance_id.required' => 'Relevance is required.',
         'reldesc.required_if' => 'Please provide a description of Other relevance.',
+        'grants.*.fundagency_id.required' => 'Funding agency is required.',
+        'grants.*.grant_program.required' => 'Grant program is required.',
+        'grants.*.grant_title.required' => 'Grant title is required.',
+        'samplescope_id.required' => 'Sample scope is required.',
+        'material_id.required' => 'Material is required.',
+        'capture_id.required' => 'Capture is required.',
+        'methodology_id.required' => 'Methodology is required.',
+        'data_type_id.required' => 'Data type is required.',
+        'objective_id.required' => 'Objective is required.',
+        'organism_detail.required' => 'Organism detail is required.',
         'genome_size_id.required_with' => 'Required',
-        'repls.*.repl_type_id' => 'Required',
-        'repls.*.repl_name' => 'Required',
-        'repls.*.repl_loc_id' => 'Required',
-        'repls.*.repl_size' => 'Required',
-        'repls.*.genome_size2_id' => 'Required',
-        'publications.*.pub_identifier_id' => 'Required',
-        'publications.*.pub_id' => 'Required',
-        'publications.*.article_title' => 'Required',
+        'repls.*.repl_type_id.required' => 'Replicon type is required.',
+        'repls.*.repl_name.required' => 'Replicon name is required.',
+        'repls.*.repl_loc_id.required' => 'Replicon location is required.',
+        'repls.*.repl_size.required' => 'Replicon size is required.',
+        'repls.*.genome_size2_id.required' => 'Replicon genome size is required.',
+        'publications.*.pub_identifier_id.required' => 'Publication identifier is required.',
+        'publications.*.pub_id.required' => 'Publication ID is required.',
+        'publications.*.article_title.required' => 'Article title is required.',
+        'novel_desc.required_if' => 'Novel organism description is required when Novel organism is selected.',
+        'novel_org.max' => 'Novel organism must not be greater than 255 characters.',
+        'novel_desc.max' => 'Novel organism description must not be greater than 255 characters.',
+        'sbc.max' => 'SBC must not be greater than 255 characters.',
+        'isolate.max' => 'Isolate must not be greater than 255 characters.',
+        'org_desc.max' => 'Organism description must not be greater than 255 characters.',
+        'plodesc.max' => 'Ploidy description must not be greater than 255 characters.',
+        'disease.max' => 'Disease must not be greater than 255 characters.',
+        'gram.max' => 'Gram must not be greater than 255 characters.',
+        'enveloped.max' => 'Enveloped must not be greater than 255 characters.',
+        'motility.max' => 'Motility must not be greater than 255 characters.',
+        'endospores.max' => 'Endospores must not be greater than 255 characters.',
+        'optimum_temp.max' => 'Optimum temperature must not be greater than 255 characters.',
+        'new_consortium_name.required' => 'Consortium name is required.',
+        'new_consortium_name.max' => 'Consortium name must not be greater than 255 characters.',
+        'new_consortium_name.unique' => 'This consortium name already exists.',
+        'new_consortium_url.required' => 'Consortium website is required.',
+        'new_consortium_url.max' => 'Consortium website must not be greater than 255 characters.',
+        'new_consortium_url.url' => 'Consortium website must be a valid URL.',
+        'new_fundagency_name.required' => 'Funding agency name is required.',
+        'new_fundagency_name.max' => 'Funding agency name must not be greater than 255 characters.',
+        'new_fundagency_name.unique' => 'This funding agency name already exists.',
+        'new_fundagency_address.required' => 'Funding agency address is required.',
+        'new_fundagency_address.max' => 'Funding agency address must not be greater than 255 characters.',
+        'new_fundagency_website.required' => 'Funding agency website is required.',
+        'new_fundagency_website.max' => 'Funding agency website must not be greater than 255 characters.',
+        'new_fundagency_website.url' => 'Funding agency website must be a valid URL.',
     ];
 
     protected $validationAttributes = [
@@ -460,6 +514,76 @@ class CreateBioproject extends Component
         $this->externallinks = array_values($this->externallinks);
     }
 
+    public function addConsortium()
+    {
+        $validatedData = $this->validate([
+            'new_consortium_name' => 'required|string|max:255|unique:consortia,name',
+            'new_consortium_url' => 'required|string|max:255|url',
+        ]);
+
+        $consortium = Consortium::create([
+            'name' => $validatedData['new_consortium_name'],
+            'url' => $validatedData['new_consortium_url'],
+        ]);
+
+        $this->consortia = Consortium::all();
+        $this->consortium_id = $consortium->id;
+        $this->new_consortium_name = null;
+        $this->new_consortium_url = null;
+
+        $this->dispatchBrowserEvent('consortium-created');
+        $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Consortium added successfully']);
+    }
+
+    public function addFundagency()
+    {
+        $validatedData = $this->validate([
+            'new_fundagency_name' => 'required|string|max:255|unique:fundagencies,name',
+            'new_fundagency_address' => 'required|string|max:255',
+            'new_fundagency_website' => 'required|string|max:255|url',
+        ]);
+
+        $fundagency = Fundagency::create([
+            'name' => $validatedData['new_fundagency_name'],
+            'address' => $validatedData['new_fundagency_address'],
+            'website' => $validatedData['new_fundagency_website'],
+        ]);
+
+        $this->fundagencies = Fundagency::all();
+
+        if (!is_array($this->grants) || count($this->grants) === 0) {
+            $this->grants[] = [
+                'fundagency_id' => $fundagency->id,
+                'grant_program' => '',
+                'grant_title' => '',
+            ];
+        } else {
+            $assigned = false;
+            foreach ($this->grants as $index => $grant) {
+                $fundagencyId = $grant['fundagency_id'] ?? null;
+                if ($fundagencyId === null || $fundagencyId === '' || $fundagencyId === 0 || $fundagencyId === '0') {
+                    $this->grants[$index]['fundagency_id'] = $fundagency->id;
+                    $assigned = true;
+                    break;
+                }
+            }
+
+            if (! $assigned) {
+                $lastIndex = array_key_last($this->grants);
+                if ($lastIndex !== null) {
+                    $this->grants[$lastIndex]['fundagency_id'] = $fundagency->id;
+                }
+            }
+        }
+
+        $this->new_fundagency_name = null;
+        $this->new_fundagency_address = null;
+        $this->new_fundagency_website = null;
+
+        $this->dispatchBrowserEvent('fundagency-created');
+        $this->dispatchBrowserEvent('ajax-alert', ['type' => 'success', 'message' => 'Funding agency added successfully']);
+    }
+
 
     public function updatedRelevanceOther()
     {
@@ -618,196 +742,201 @@ class CreateBioproject extends Component
         $this->message = '';
 
         $validatedData = $this->validate();
-        // dd( $validatedData );
-        $bioproject = new Bioproject();
-        $bioproject->accession = 'INNAP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        $bioproject->submission_id = 'INNASUBP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
-        $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
-        // $bioproject->objective_id = implode(",", $validatedData['objective_id']);
-        $bioproject->samplescope_id = $validatedData['samplescope_id'];
-        // sample scope
 
-        $bioproject->umbproject_id = $validatedData['umbproject_id'];
-        $bioproject->organism_id = $validatedData['organism_id'];
-        $bioproject->organism_detail = is_string($validatedData['organism_detail'])
-            ? json_decode($validatedData['organism_detail'], true)
-            : $validatedData['organism_detail'];
-        $bioproject->consortium_id = $validatedData['consortium_id'];
-        $bioproject->title = $validatedData['title'];
-        $bioproject->description = $validatedData['description'];
-        $bioproject->hold_release = $validatedData['hold_release'];
-        
-        $userDataJson = json_decode(auth()->user()->user_data);
+        try {
+            $bioproject = DB::transaction(function () use ($validatedData) {
+                $bioproject = new Bioproject();
+                $bioproject->accession = 'INNAP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+                $bioproject->submission_id = 'INNASUBP' . sprintf('%06d', intval($bioproject->query()->max("id")) + 1);
+                $bioproject->data_type_id = implode(",", $validatedData['data_type_id']);
+                $bioproject->samplescope_id = $validatedData['samplescope_id'];
 
-        if (!auth()->user()->external_account) {
-            $bioproject->center_id = $userDataJson->pegawaiData->administrative_unit_id ?? null;
-        } else {
-            $bioproject->center_id = auth()->user()->center_id;
-        }
-        $bioproject->user_id = auth()->user()->id;
+                $bioproject->umbproject_id = $validatedData['umbproject_id'];
+                $bioproject->organism_id = $validatedData['organism_id'];
+                $bioproject->organism_detail = is_string($validatedData['organism_detail'])
+                    ? json_decode($validatedData['organism_detail'], true)
+                    : $validatedData['organism_detail'];
+                $bioproject->consortium_id = $validatedData['consortium_id'];
+                $bioproject->title = $validatedData['title'];
+                $bioproject->description = $validatedData['description'];
+                $bioproject->hold_release = $validatedData['hold_release'];
 
-        $bioproject->save();
+                $userDataJson = json_decode(auth()->user()->user_data);
 
-        // Store Bio Project Target (optional; create only if any target field is provided)
-        $targetPayload = [
-            'bioproject_id' => $bioproject->id,
-            'organism_novel' => $this->novel_org,
-            'organism_novel_description' => $this->novel_desc,
-            'organism_sbc' => $this->sbc,
-            'organism_isolate' => $this->isolate,
-            'organism_desc' => $this->org_desc,
-            'celularity_id' => $this->celularity_id,
-            'reproduction_id' => $this->reproduction_id,
-            'ploidy_id' => $this->ploidy_id,
-            'ploidy_description' => $this->plodesc,
-            'haploid_genome_size' => $this->haploid_size,
-            'genome_size_id' => $this->genome_size_id,
-            'phenotypes_disease' => $this->disease,
-            'biotic_relationship_id' => $this->bio_rel_id,
-            'trophic_level_id' => $this->trop_level_id,
-            'prokaryote_morphology_gram' => $this->gram,
-            'prokaryote_morphology_motility' => $this->motility,
-            'prokaryote_morphology_enveloped' => $this->enveloped,
-            'prokaryote_morphology_endospores' => $this->endospores,
-            'habitat_id' => $this->habitat_id,
-            'salinity_id' => $this->salinity_id,
-            'oxygen_req_id' => $this->oxygen_id,
-            'temp_range_id' => $this->temp_range_id,
-            'optimum_temp' => $this->optimum_temp,
-        ];
+                if (!auth()->user()->external_account) {
+                    $bioproject->center_id = $userDataJson->pegawaiData->administrative_unit_id ?? null;
+                } else {
+                    $bioproject->center_id = auth()->user()->center_id;
+                }
+                $bioproject->user_id = auth()->user()->id;
+                $bioproject->save();
 
-        $hasTargetData = collect($targetPayload)
-            ->except(['bioproject_id'])
-            ->filter(function ($value) {
-                return !is_null($value) && $value !== '';
-            })
-            ->isNotEmpty();
-
-        if ($hasTargetData) {
-            BioprojectTarget::create($targetPayload);
-        }
-
-        $relevanceData = [
-            'bioproject_id' => $bioproject->id,
-            'relevance_id' => $validatedData['relevance_id'],
-            'description' => $validatedData['reldesc']
-        ];
-        RelevanceBioproject::create($relevanceData);
-
-        $materialData = [
-            'bioproject_id' => $bioproject->id,
-            'material_id' => $validatedData['material_id'],
-            'description' => $validatedData['matdesc']
-        ];
-        MaterialBioproject::create($materialData);
-
-        $captureData = [
-            'bioproject_id' => $bioproject->id,
-            'capture_id' => $validatedData['capture_id'],
-            'description' => $validatedData['capdesc']
-        ];
-        CaptureBioproject::create($captureData);
-
-        $methodologyData = [
-            'bioproject_id' => $bioproject->id,
-            'methodology_id' => $validatedData['methodology_id'],
-            'description' => $validatedData['metdesc']
-        ];
-        MethodologyBioproject::create($methodologyData);
-
-        $samplescopeData = [
-            'bioproject_id' => $bioproject->id,
-            'samplescope_id' => $validatedData['samplescope_id'],
-            'description' => $validatedData['samplescopedesc']
-        ];
-        SampleBioproject::create($samplescopeData);
-
-        // Store Organism Replicons (optional)
-        $repls = $validatedData['repls'] ?? [];
-        if (is_array($repls) && count($repls) > 0) {
-            foreach ($repls as $repl) {
-                OrganismReplicon::create([
+                // Store Bio Project Target (optional; create only if any target field is provided)
+                $targetPayload = [
                     'bioproject_id' => $bioproject->id,
-                    'repl_type_id' => $repl['repl_type_id'] ?? null,
-                    'name' => $repl['repl_name'] ?? null,
-                    'repl_location_id' => $repl['repl_loc_id'] ?? null,
-                    'size' => $repl['repl_size'] ?? null,
-                    'genome_size_id' => $repl['genome_size2_id'] ?? null,
+                    'organism_novel' => $this->novel_org,
+                    'organism_novel_description' => $this->novel_desc,
+                    'organism_sbc' => $this->sbc,
+                    'organism_isolate' => $this->isolate,
+                    'organism_desc' => $this->org_desc,
+                    'celularity_id' => $this->celularity_id,
+                    'reproduction_id' => $this->reproduction_id,
+                    'ploidy_id' => $this->ploidy_id,
+                    'ploidy_description' => $this->plodesc,
+                    'haploid_genome_size' => $this->haploid_size,
+                    'genome_size_id' => $this->genome_size_id,
+                    'phenotypes_disease' => $this->disease,
+                    'biotic_relationship_id' => $this->bio_rel_id,
+                    'trophic_level_id' => $this->trop_level_id,
+                    'prokaryote_morphology_gram' => $this->gram,
+                    'prokaryote_morphology_motility' => $this->motility,
+                    'prokaryote_morphology_enveloped' => $this->enveloped,
+                    'prokaryote_morphology_endospores' => $this->endospores,
+                    'habitat_id' => $this->habitat_id,
+                    'salinity_id' => $this->salinity_id,
+                    'oxygen_req_id' => $this->oxygen_id,
+                    'temp_range_id' => $this->temp_range_id,
+                    'optimum_temp' => $this->optimum_temp,
+                ];
+
+                $hasTargetData = collect($targetPayload)
+                    ->except(['bioproject_id'])
+                    ->filter(function ($value) {
+                        return !is_null($value) && $value !== '';
+                    })
+                    ->isNotEmpty();
+
+                if ($hasTargetData) {
+                    BioprojectTarget::create($targetPayload);
+                }
+
+                RelevanceBioproject::create([
+                    'bioproject_id' => $bioproject->id,
+                    'relevance_id' => $validatedData['relevance_id'],
+                    'description' => $validatedData['reldesc'],
                 ]);
-            }
-        }
 
-
-        $grants = $validatedData['grants'] ?? [];
-        if (is_array($grants) && count($grants) > 0) {
-            foreach ($grants as $item => $value) {
-                $data2 = array(
+                MaterialBioproject::create([
                     'bioproject_id' => $bioproject->id,
-                    'fundagency_id' => $validatedData['grants'][$item]['fundagency_id'],
-                    'grant_title' => $validatedData['grants'][$item]['grant_title'],
-                    'grant_program' => $validatedData['grants'][$item]['grant_program'],
-                );
-                Grant::create($data2);
-            }
-        }
+                    'material_id' => $validatedData['material_id'],
+                    'description' => $validatedData['matdesc'],
+                ]);
 
-        $publications = $validatedData['publications'] ?? [];
-        if (is_array($publications) && count($publications) > 0) {
-            foreach ($publications as  $item => $value) {
-                $data3 = array(
+                CaptureBioproject::create([
                     'bioproject_id' => $bioproject->id,
-                    'pub_identifier_id' => $validatedData['publications'][$item]['pub_identifier_id'],
-                    'pub_id' => $validatedData['publications'][$item]['pub_id'],
-                    'article_title' => $validatedData['publications'][$item]['article_title'],
-                );
-                Publication::create($data3);
-            }
-        }
+                    'capture_id' => $validatedData['capture_id'],
+                    'description' => $validatedData['capdesc'],
+                ]);
 
-        if (count($validatedData['data_type_id']) > 0) {
-            foreach ($validatedData['data_type_id'] as $item => $value) {
-                $data4 = array(
+                MethodologyBioproject::create([
                     'bioproject_id' => $bioproject->id,
-                    'datatype_id' => $validatedData['data_type_id'][$item],
-                    'description' => $validatedData['datatypedesc']
-                );
-                DatatypeBioproject::create($data4);
-            }
-        }
+                    'methodology_id' => $validatedData['methodology_id'],
+                    'description' => $validatedData['metdesc'],
+                ]);
 
-        $externallinks = $validatedData['externallinks'] ?? [];
-        if (is_array($externallinks) && count($externallinks) > 0) {
-            foreach ($externallinks as  $item => $value) {
-                $data5 = array(
+                SampleBioproject::create([
                     'bioproject_id' => $bioproject->id,
-                    'link_description' => $validatedData['externallinks'][$item]['link_description'],
-                    'link_url' => $validatedData['externallinks'][$item]['link_url'],
-                );
-                BioProjectExternalLink::create($data5);
-            }
-        }
+                    'samplescope_id' => $validatedData['samplescope_id'],
+                    'description' => $validatedData['samplescopedesc'],
+                ]);
 
-        if (count($validatedData['objective_id']) > 0) {
-            foreach ($validatedData['objective_id'] as $item => $value) {
-                $data6 = array(
-                    'bioproject_id' => $bioproject->id,
-                    'objective_id' => $validatedData['objective_id'][$item],
-                    'description' => $validatedData['objdesc']
-                );
-                ObjectiveBioProject::create($data6);
-            }
-        }
+                // Store Organism Replicons (optional)
+                $repls = $validatedData['repls'] ?? [];
+                if (is_array($repls) && count($repls) > 0) {
+                    foreach ($repls as $repl) {
+                        OrganismReplicon::create([
+                            'bioproject_id' => $bioproject->id,
+                            'repl_type_id' => $repl['repl_type_id'] ?? null,
+                            'name' => $repl['repl_name'] ?? null,
+                            'repl_location_id' => $repl['repl_loc_id'] ?? null,
+                            'size' => $repl['repl_size'] ?? null,
+                            'genome_size_id' => $repl['genome_size2_id'] ?? null,
+                        ]);
+                    }
+                }
 
-        session()->flash('message', 'Bioproject successfully created.');
-        // delete associated draft if present
-        if ($this->draftId) {
-            try {
-                BioprojectDraft::where('id', $this->draftId)->where('user_id', auth()->id())->delete();
-            } catch (\Throwable $e) {
-                logger()->debug('Failed to delete bioproject draft after submit: ' . $e->getMessage());
+                $grants = $validatedData['grants'] ?? [];
+                if (is_array($grants) && count($grants) > 0) {
+                    foreach ($grants as $item => $value) {
+                        Grant::create([
+                            'bioproject_id' => $bioproject->id,
+                            'fundagency_id' => $validatedData['grants'][$item]['fundagency_id'],
+                            'grant_title' => $validatedData['grants'][$item]['grant_title'],
+                            'grant_program' => $validatedData['grants'][$item]['grant_program'],
+                        ]);
+                    }
+                }
+
+                $publications = $validatedData['publications'] ?? [];
+                if (is_array($publications) && count($publications) > 0) {
+                    foreach ($publications as $item => $value) {
+                        Publication::create([
+                            'bioproject_id' => $bioproject->id,
+                            'pub_identifier_id' => $validatedData['publications'][$item]['pub_identifier_id'],
+                            'pub_id' => $validatedData['publications'][$item]['pub_id'],
+                            'article_title' => $validatedData['publications'][$item]['article_title'],
+                        ]);
+                    }
+                }
+
+                if (count($validatedData['data_type_id']) > 0) {
+                    foreach ($validatedData['data_type_id'] as $item => $value) {
+                        DatatypeBioproject::create([
+                            'bioproject_id' => $bioproject->id,
+                            'datatype_id' => $validatedData['data_type_id'][$item],
+                            'description' => $validatedData['datatypedesc'],
+                        ]);
+                    }
+                }
+
+                $externallinks = $validatedData['externallinks'] ?? [];
+                if (is_array($externallinks) && count($externallinks) > 0) {
+                    foreach ($externallinks as $item => $value) {
+                        BioProjectExternalLink::create([
+                            'bioproject_id' => $bioproject->id,
+                            'link_description' => $validatedData['externallinks'][$item]['link_description'],
+                            'link_url' => $validatedData['externallinks'][$item]['link_url'],
+                        ]);
+                    }
+                }
+
+                if (count($validatedData['objective_id']) > 0) {
+                    foreach ($validatedData['objective_id'] as $item => $value) {
+                        ObjectiveBioProject::create([
+                            'bioproject_id' => $bioproject->id,
+                            'objective_id' => $validatedData['objective_id'][$item],
+                            'description' => $validatedData['objdesc'],
+                        ]);
+                    }
+                }
+
+                return $bioproject;
+            });
+
+            session()->flash('message', 'Bioproject successfully created.');
+
+            // delete associated draft if present
+            if ($this->draftId) {
+                try {
+                    BioprojectDraft::where('id', $this->draftId)->where('user_id', auth()->id())->delete();
+                } catch (\Throwable $e) {
+                    logger()->debug('Failed to delete bioproject draft after submit: ' . $e->getMessage());
+                }
             }
+
+            return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
+        } catch (\Throwable $e) {
+            logger()->error('Failed to create bioproject transactionally: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+            ]);
+
+            $this->dispatchBrowserEvent('ajax-alert', [
+                'type' => 'danger',
+                'message' => 'Failed to save Bioproject. No partial data was stored. Please try again.',
+            ]);
+
+            return;
         }
-        return redirect()->to('/dashboard/bioprojects/' . $bioproject->accession);
     }
 
     /** Save current component state as a draft for the authenticated user. */

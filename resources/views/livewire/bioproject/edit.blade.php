@@ -778,7 +778,6 @@
                                                         <select class="form-select select2"
                                                             name="repls[{{ $index }}][repl_type_id]"
                                                             wire:model="repls.{{ $index }}.repl_type_id">
-                                                            <option value="0">Replicon Type</option>
                                                             @foreach ($repl_types as $repl_type)
                                                                 <option value="{{ $repl_type->id }}">
                                                                     {{ $repl_type->name }}</option>
@@ -792,7 +791,6 @@
                                                         <select class="form-select select2"
                                                             name="repls[{{ $index }}][repl_loc_id]"
                                                             wire:model="repls.{{ $index }}.repl_loc_id">
-                                                            <option value="0">Replicon Location</option>
                                                             @foreach ($repl_locs as $repl_loc)
                                                                 <option value="{{ $repl_loc->id }}">
                                                                     {{ $repl_loc->name }}</option>

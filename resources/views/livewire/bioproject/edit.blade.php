@@ -726,6 +726,7 @@
                                                 <input type="text"
                                                     class="form-control @error('haploid_size') is-invalid @enderror"
                                                     wire:model="haploid_size" id="haploid_size" name="haploid_size"
+                                                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                                     value="{{ old('haploid_size') }}">
                                                 @error('haploid_size')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -807,6 +808,7 @@
                                                                     name="repl[{{ $index }}][repl_size]"
                                                                     class="form-control"
                                                                     value="{{ $repl['repl_size'] }}"
+                                                                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                                                     wire:model="repls.{{ $index }}.repl_size">
                                                                 @error('repls.*.repl_size')
                                                                     <p class="text-danger">{{ $message }}</p>

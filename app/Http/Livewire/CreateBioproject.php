@@ -363,7 +363,16 @@ class CreateBioproject extends Component
         }
 
 
-        $this->umbrellas = Bioproject::where('draft', false)->get();
+        $this->umbrellas = Bioproject::where(function ($q) {
+                            $q->whereNotNull('published_at')
+                                ->where('hold_release', false);
+                    })
+                    ->orWhere(function ($q) {
+                            $q->whereNull('published_at')
+                                ->where('user_id', auth()->id());
+                    })
+            ->orderBy('id')
+            ->get();
         $this->relevances = Relevance::all();
         $this->materials = Material::all();
         $this->captures = Capture::all();

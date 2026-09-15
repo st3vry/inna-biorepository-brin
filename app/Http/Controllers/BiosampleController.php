@@ -62,7 +62,6 @@ class BiosampleController extends Controller
 
         $externallinks = $biosample->externallink()->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
-        // dd($sample_attr[3]->value);
 
         $endpoint = '/terms/get';
         $body = [
@@ -77,7 +76,6 @@ class BiosampleController extends Controller
             $data = "Data not available";
         }
         // $data = $apiResponse["data"]["data"][0]["data"];
-        // dd($data = $apiResponse["data"]["data"][0]["data"]);
 
         return view('frontend.showbiosample', [
             'title' => 'Biosample',

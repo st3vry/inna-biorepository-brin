@@ -1,66 +1,175 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/images/inna-biorepo-red.png" alt="Indonesian Nucleotide Archive logo" width="280">
 </p>
 
-## About Laravel
+# Indonesian Nucleotide Archive (InNA)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+InNA is a repository platform for storing, discovering, and sharing nucleotide
+(DNA/RNA) data for life sciences, agriculture, biodiversity, and related
+bioinformatics research. The application is developed by the Research Center
+for Computing at the National Research and Innovation Agency (BRIN).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The public prototype is available at
+[inna-prototype.brin.go.id](https://inna-prototype.brin.go.id/).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## What The Application Provides
 
-## Learning Laravel
+- Public browsing of BioProjects, BioSamples, and BioArchives.
+- Authenticated submission and management of projects, samples, archives,
+  experiments, and runs.
+- BRIN SSO login and user profile management.
+- Permission-controlled data downloads and request approval workflows.
+- Dataverse synchronization for projects, samples, archives, and data files.
+- INNAlysis workflows backed by Galaxy.
+- Organism and taxonomy lookups through the NCBI datasets API.
+- Administrative and curator interfaces for metadata and release management.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Technology Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP 8.0.2 or newer with Laravel 9.
+- MySQL, PostgreSQL, and optional MongoDB integrations, depending on the
+  deployment configuration.
+- Vue 3 and Vite for frontend assets.
+- Livewire for server-driven interactive components.
+- Composer and npm for dependency management.
+- BRIN SSO, InnaKM, Dataverse, FTP/SFTP, and Galaxy integrations.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requirements
 
-## Laravel Sponsors
+Install the following before setting up the application:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- PHP 8.0.2 or newer with the extensions required by Laravel and the selected
+  database driver.
+- Composer.
+- Node.js and npm.
+- A configured relational database.
+- Access credentials for any integrations enabled in the deployment.
 
-### Premium Partners
+## Local Installation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+git clone https://github.com/st3vry/inna-biorepository-brin.git
+cd inna-biorepository-brin
 
-## Contributing
+composer install
+cp .env.example .env
+php artisan key:generate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+npm ci
+npm run build
 
-## Code of Conduct
+php artisan storage:link
+php artisan migrate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Set the database and integration values in `.env` before running migrations.
+Do not commit `.env` or any access keys.
 
-## Security Vulnerabilities
+## Environment Configuration
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+At minimum, configure the application URL and database connection:
+
+```dotenv
+APP_URL=http://127.0.0.1:8000
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=inna
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+The application also reads these integration groups from `.env`:
+
+| Integration | Environment keys                                                                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| BRIN SSO    | `OAUTH2_CLIENT_ID`, `OAUTH2_CLIENT_SECRET`, `OAUTH2_URL_ACCESSTOKEN`, `OAUTH2_URL_AUTHORIZE`, `OAUTH2_URL_RESOURCE_OWNER`, `OAUTH2_REDIRECT_URI` |
+| InnaKM      | `API_INNAKM_BASE_URL`, `API_INNAKM_TIMEOUT`                                                                                                      |
+| Dataverse   | `API_DATAVERSE_BASE_URL`, `API_DATAVERSE_TIMEOUT`, `API_DATAVERSE_API_KEY`                                                                       |
+| SFTP        | `SFTP_HOST`, `SFTP_PORT`, `SFTP_USERNAME`, `SFTP_PASSWORD`, `SFTP_ROOT`, `SFTP_PRIVATE_KEY`                                                      |
+| FTP         | `FTP_HOST`, `FTP_PORT`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_ROOT`, `FTP_KEY`                                                                    |
+| NCBI        | `NCBI_API_KEY`, `NCBI_API_URL`, `NCBI_QUERY_PATH`, `NCBI_NAME_PATH`, `NCBI_DATASET_PATH`                                                         |
+| MongoDB     | `DB_MONGO`, `DB_MONGO_CONNECTION`, `DB_MONGO_HOST`, `DB_MONGO_PORT`, `DB_MONGO_DATABASE`                                                         |
+
+Use environment-specific endpoints and credentials. The local `.env` should
+contain values for the services that are required by that deployment; blank
+optional integrations can remain disabled.
+
+## Running Locally
+
+Start Laravel and Vite in separate terminals:
+
+```bash
+php artisan serve
+npm run dev
+```
+
+The application is then available at `http://127.0.0.1:8000` unless another
+host or port is configured. After changing cached environment or service
+configuration, clear the cache:
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+## Main Routes
+
+Public collection routes:
+
+- `/bioprojects`
+- `/biosamples`
+- `/bioarchives`
+
+Authenticated application routes:
+
+- `/login/sso` for BRIN SSO login.
+- `/dashboard` for user and administrative workflows.
+- `/dashboard/innalysis_galaxy` for INNAlysis workflows.
+- `/permission-request` for restricted data access requests.
+
+API routes include organism lookups under `/api/organism` and INNAlysis
+workflow operations under `/api/innalysisworkflows`.
+
+To inspect the complete route table for the current checkout:
+
+```bash
+php artisan route:list
+```
+
+## Testing And Code Quality
+
+Run the test suite with:
+
+```bash
+php artisan test
+```
+
+Format PHP code with Laravel Pint when appropriate:
+
+```bash
+./vendor/bin/pint
+```
+
+Build production frontend assets with:
+
+```bash
+npm run build
+```
+
+## Deployment Notes
+
+- Set `APP_ENV=production` and `APP_DEBUG=false` in production.
+- Use a strong application key and keep all API keys and credentials outside
+  version control.
+- Configure the SSO redirect URI to match the deployed application URL.
+- Configure writable Laravel storage and run `php artisan storage:link`.
+- Run `php artisan config:cache` only after all production environment values
+  are present.
+- Confirm database, Dataverse, file-transfer, and Galaxy connectivity before
+  enabling submission or analysis workflows.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is distributed under the license specified by the repository
+maintainers.

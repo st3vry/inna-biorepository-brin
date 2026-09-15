@@ -31,12 +31,10 @@ class LoginController extends Controller
         }
 
         return back()->with('loginError', 'Login Failed');
-        // dd('berhasil login');
     }
 
     public function logout()
     {
-        // dd("test");
         Auth::logout();
         Cache::flush();
 

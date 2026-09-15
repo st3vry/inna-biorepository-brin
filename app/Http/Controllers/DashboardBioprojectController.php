@@ -41,7 +41,6 @@ class DashboardBioprojectController extends Controller
             // ignore if drafts table/model not available
             logger()->debug('Could not check bioarchive drafts: ' . $e->getMessage());
         }
-        // dd($bioproject);
         return view('dashboard.bioproject.index', [
             'bioprojects' => $bioproject
             ,'hasDraft' => $hasDraft,
@@ -95,7 +94,6 @@ class DashboardBioprojectController extends Controller
         $bioproject->description = $data['description'];
         $bioproject->center_id = auth()->user()->lab->center_id;
         $bioproject->user_id = auth()->user()->id;
-        // dd($data);
         // $bioproject->save();
         $result = $bioproject->save();
         if ($result) {
@@ -206,11 +204,9 @@ class DashboardBioprojectController extends Controller
         //             'grant_title' => $data['grants'],
         //             'grant_program' => $data['grants'][$item],
         //         );
-        //         // dd($data2);
         //         Grant::create($data2);
         //     }
         // }
-        // dd($bioproject);
 
         // return nanti redirect ke reload halaman if else untuk check error
         // action log storing
@@ -298,7 +294,6 @@ class DashboardBioprojectController extends Controller
         if ($bioproject->draft == false) {
             return view('error.404');
         }
-        // dd($bioproject);
         return view('dashboard.bioproject.edit')->with('bioproject', $bioproject);
         // return (!empty($bioproject->published_at));
     }

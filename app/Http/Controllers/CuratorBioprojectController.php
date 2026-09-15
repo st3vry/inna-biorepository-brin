@@ -48,7 +48,6 @@ class CuratorBioprojectController extends Controller
     }
     public function show(Bioproject $bioproject)
     {
-        // dd($biosample);
         $pubs = $bioproject->publication()->get();
         $grants = $bioproject->grant()->get();
         $externallinks = $bioproject->externallink()->get();

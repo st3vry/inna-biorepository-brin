@@ -15,7 +15,6 @@ class ConsortiaController extends Controller
     public function index()
     {
         //
-        // dd(Consortium::all());
         return view('dashboard.consortia.index', [
             'consortium' => Consortium::all(),
         ]);

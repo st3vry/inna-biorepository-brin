@@ -20,7 +20,6 @@ class PermissionApprovalController extends Controller
             ->select('permission_requests.*', 'bioarchives.accession')
             ->get();
 
-        // dd($permissionReq);
         return view('dashboard.disemofficer.index', [
             'permissionReqs' => $permissionReq,
         ]);
@@ -28,9 +27,7 @@ class PermissionApprovalController extends Controller
 
     public function show($id)
     {
-        // dd($id);
         $permissionrequest = PermissionRequest::where('bioarchive_accession', $id)->first();
-        // dd($permissionrequest);
         return view('dashboard.disemofficer.show', [
             'permissionRequest' => $permissionrequest,
         ]);
@@ -76,7 +73,6 @@ class PermissionApprovalController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request);
         $rndfolder = Str::random(12);
         $permissionRequest = PermissionRequest::findOrFail($id);
         $source = "innasto/files/{$permissionRequest->bioarchive_accession}";

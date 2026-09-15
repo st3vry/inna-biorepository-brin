@@ -396,7 +396,6 @@ class CreateBioproject extends Component
 
     public function mount()
     {
-        // dd(auth()->user());
         $this->submitter_name = auth()->user()->name;
         $this->submitter_email = auth()->user()->email;
 

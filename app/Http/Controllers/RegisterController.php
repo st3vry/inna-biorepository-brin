@@ -30,7 +30,6 @@ class RegisterController extends Controller
             'orcid_id' => 'required',
             'password' => 'required|confirmed|min:6'
         ]);
-        // dd($validatedData);
         // $validatedData['password'] = bcrypt($validatedData['password']);
         $validatedData['password'] = Hash::make($validatedData['password']);
 

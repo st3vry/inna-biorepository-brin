@@ -218,12 +218,9 @@ class BiosampleController extends Controller
         $submitter->center_name = Center::where('id', $submitter->center)->value('name');
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
 
-        // dd($biosample->externallink());
         $externallinks = $biosample->externallink()->get();
         $sampletype = Sampletype::where('id', $biosample->sampletype_id)->first();
         $organism = Organism::where('id', $biosample->organism_id)->first();
-        // dd($sampletype);
-        // dd($sample_attr[0]->value);
         $return = [
             "bioprojects" => $bioprojects,
             "submitter" => $submitter,
@@ -374,7 +371,6 @@ class BiosampleController extends Controller
         $results->attributes = $attributes;
         $results->attributesM = explode(',', $sampletypes['attribute_M']);
         $results->attributesE = explode(',', $sampletypes['attribute_E']);
-        // dd($results);
         return response()->json($results);
     }
 

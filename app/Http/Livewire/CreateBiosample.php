@@ -631,7 +631,6 @@ class CreateBiosample extends Component
         }
         $validatedData = $this->validate($valData);
 
-        //dd($validatedData);
         $this->currentStep = 5;
     }
 

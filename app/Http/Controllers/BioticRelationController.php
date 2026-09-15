@@ -15,7 +15,6 @@ class BioticRelationController extends Controller
     public function index()
     {
         //
-        // dd("here");
         return view('dashboard.bioticrel.index', [
             'bioticrels' => BioticRelationship::all(),
         ]);

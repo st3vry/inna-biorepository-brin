@@ -92,26 +92,19 @@ class AuthSso
     {
 
         $provider = $this->provider();
-        //dd($provider);
 
         if (!isset($request->code)) {
-            // dd('Tidak ada Kode');
             // If we don't have an authorization code then get one
             $authUrl = $provider->getAuthorizationUrl();
 
             session(['oauth2state' => $provider->getState()]);
-            //dd(session()->all());
             return $authUrl;
             exit;
-            // dd('Tidak ada Code');
             // Check given state against previously stored one to mitigate CSRF attack
         } elseif (empty($request->state) || ($request->state !== $request->session()->get('oauth2state'))) {
-            // dd('Tidak ada State');
             $request->session()->forget('oauth2state');
-            //dd('Tidak ada state');
             exit('Invalid state');
         } else {
-            // dd('aam autorize');
             // Try to get an access token (using the authorization code grant)
             $accessToken = $provider->getAccessToken('authorization_code', [
                 'code' => $request->code
@@ -128,7 +121,6 @@ class AuthSso
                 );
                 $response = $provider->getParsedResponse($requests);
                 $response = json_decode(json_encode($response));
-                //  dd($response);
 
                 $this->loginsso($request, $response, $accessToken);
             } catch (Exception $e) {
@@ -141,7 +133,6 @@ class AuthSso
     // Store to Login SSO
     public function loginsso(Request $request, $response, $accessToken)
     {
-        //  dd("BApenas");
         try {
             $result = new \stdClass();
             $tokens = $accessToken->getToken();
@@ -161,7 +152,6 @@ class AuthSso
 
             // Cek Userename udah ada apa Belum? kalo udah Insert, kalo belom Update refresh Token
             $result = User::where('usernameintra', $response->userData->username)->first();
-            // dd($result);
             if ($result) {
                 // Update
                 $result->access_token = $tokens;
@@ -197,7 +187,6 @@ class AuthSso
                     $newData->role = 'GUEST';
                 }
                 $result = $this->userService->saveUser($newData);
-                // dd($result);
             }
 
             Cache::add($tokens, $result, 3600);

@@ -116,7 +116,6 @@ class CuratorBioArchiveController extends Controller
         }
 
 
-        // dd($files);
         return view('dashboard.curator.bioarchive.show', [
             'bioarchive' => $bioarchive,
             'biosample_id' => $biosample_id,
@@ -149,8 +148,6 @@ class CuratorBioArchiveController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($id);
-        // dd($request->bioarchive_id);
         $action = false;
         $success = '';
         if ($request->action === "assignedToCurator") {
@@ -264,9 +261,6 @@ class CuratorBioArchiveController extends Controller
                         'status' => 5
                     ]);
                     $success = 'BioArchive Approved';
-                    // $SSHController = new SSHController();
-                    // $command = "sudo rm -rf /innasto/temp/{$id}";
-                    // $SSHController->customSSHCommand(env('FTP_USERNAME'), $command);
                 }
             }
             if ($request->action === 'rejected') {
@@ -311,10 +305,6 @@ class CuratorBioArchiveController extends Controller
 
     public function updateBiorun(Request $request)
     {
-        // $action = Biorun::where('alias', $request->alias)->update([
-        //     'filename' => $request->fileNameInModal,
-        //     'md5' => $request->md5InModal,
-        // ]);
         $biorun = new BioRun;
         $biorun->bioexperiment_id = $request->bioexperiment_id;
         $biorun->alias = $request->alias;
@@ -323,7 +313,6 @@ class CuratorBioArchiveController extends Controller
         $biorun->filetype_id = $request->filetype;
         $action = $biorun->save();
         // $action = Biorun::where('id', $request->biorun_id)->get();
-        // dd($request);
         if ($action) {
             return back()->with('success', "Success");
         } else {

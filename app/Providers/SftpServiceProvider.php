@@ -32,7 +32,6 @@ class SftpServiceProvider extends ServiceProvider
         //
         Storage::extend('sftp', function ($app, $config) {
 
-            // dd($config['root']);
             $sftp_connection_provider = new SftpConnectionProvider(
                 $config['host'],
                 $config['username'],
@@ -60,7 +59,6 @@ class SftpServiceProvider extends ServiceProvider
                 ])
             );
             $filesystem = new Filesystem($sftp_adapter);
-            // dd($filesystem);
             return $filesystem;
         });
     }

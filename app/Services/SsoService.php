@@ -28,13 +28,7 @@ class SsoService
 
         return isset($user) ? true : false;
     }
-    // public static function guest()
-    // {
-    //     $token = session('is_login_inna_repo');
-    //     $user = Cache::get($token);
 
-    //     return ($user->role == 'ADMIN') ? false : true;
-    // }
 
     public static function token()
     {
@@ -48,20 +42,6 @@ class SsoService
         return $user->refresh_token;
     }
 
-    // public static function is_admin()
-    // {
-    //     $token = session('is_login_inna_repo');
-    //     $user = Cache::get($token);
-
-    //     return ($user->role == 'ADMIN') ? true : false;
-    // }
-
-    // public static function id()
-    // {
-    //     $token = session('token_login');
-    //     $user = Cache::get($token);
-    //     return $user->usernameintra ?? null::logout();
-    // }
 
     private function provider()
     {
@@ -108,13 +88,10 @@ class SsoService
     {
 
         $provider = $this->provider();
-        // dd($provider);
         if (!isset($request->code)) {
-            // dd('tidak ada code');
             $authUrl = $provider->getAuthorizationUrl();
 
             session(['oauth2state' => $provider->getState()]);
-            // dd($request);
             return $authUrl;
             exit;
 
@@ -124,12 +101,10 @@ class SsoService
             $request->session()->forget('oauth2state');
             exit('Invalid state');
         } else {
-            // dd($request->code);
             // Try to get an access token (using the authorization code grant)
             $accessToken = $provider->getAccessToken('authorization_code', [
                 'code' => $request->code
             ]);
-            // dd($accessToken);
             session(['brin_sso_access_token' => $accessToken]);
             $options['headers']['content-type'] = 'application/json';
             // Optional: Now you have a token you can look up a users profile data
@@ -142,7 +117,6 @@ class SsoService
                 );
                 $response = $provider->getParsedResponse($requests);
                 $response = json_decode(json_encode($response));
-                // dd($response);
                 $this->loginsso($request, $response, $accessToken);
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -154,7 +128,6 @@ class SsoService
     // Store to Login SSO
     public function loginsso(Request $request, $response, $accessToken)
     {
-        // dd($response);
         try {
             $result = new \stdClass();
 
@@ -166,10 +139,8 @@ class SsoService
 
             // Cek Userename udah ada apa Belum? kalo udah Insert, kalo belom Update refresh Token
             $result = User::where('username', $response->userData->username)->first();
-            // dd($result);
             if ($result) {
                 // Update
-                // dd($result);
                 try {
                     $result->access_token = $tokens;
                     $result->refresh_token = $refreshtoken;
@@ -187,9 +158,6 @@ class SsoService
                     $newData->username = $response->userData->username;
                     $newData->name = $response->userData->first_name;
                     $newData->email = $response->userData->email;
-                    // $newData->email_verified_at = $request->username;
-                    // $newData->administrative = $response->pegawaiData->administrative_unit_id;
-                    // $newData->affiliate = $response->pegawaiData->affiliate_unit_id;
                     $newData->administrative = $response->pegawaiData->administrative_unit_id ?? null;
                     $newData->affiliate = $response->pegawaiData->affiliate_unit_id ?? null;
                     $newData->remember_token = $tokens;
@@ -200,7 +168,6 @@ class SsoService
                     $newData->expired_at = Carbon::createFromTimestamp($accessToken->getExpires());
                     $newData->user_data = json_encode($response);
                     $newData->created_at = Carbon::now();
-                    // dd($newData);
                     $newData->save();
                     //@gelar
                     $result = $newData;
@@ -218,7 +185,6 @@ class SsoService
             //@gelar      
             Auth::login($result);
             //End @gelar
-            // dd("test sso service");
             return $result;
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -243,25 +209,6 @@ class SsoService
 
     public function logout(Request $request)
     {
-        // $token = $this->token();
-        // dd($token);
-        // dd(session());
-
-        // $accessToken = OauthAccessToken::where('id', $token)->first();
-
-        // if (!$accessToken) {
-        //     return redirect(route('admin.login'));
-        // } else {
-        //     $accessToken->delete();
-        //     Cache::forget($token);
-        //     $sessFlus = session()->flush();
-        //     return redirect(route('admin.login'));
-        // }
-        // dd($token);
-        // dd(Cache::get($token));
-        // Cache::flush();
-
-        // Cache::forget($token);
         $request->session()->forget('brin_sso_access_token');
         $request->session()->forget('is_login_inna_repo');
         $request->session()->flush();
@@ -271,10 +218,6 @@ class SsoService
         //@gelar
         Auth::logout();
         Session::flush();
-        //End @gelar
-
-        // sso.brin.go.id/logout?redirect_uri=https://inna-prototype.brin.go.id/
-        // OAUTH2_REDIRECT_URI=https://inna-prototype.brin.go.id/
         $home = env('APP_URL');
         $url = env('URL_LOGOUT');
         return redirect($url . $home);

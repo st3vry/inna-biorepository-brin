@@ -25,7 +25,6 @@ class BioarchiveController extends Controller
         ])->orderBy('published_at', 'desc')->paginate(10);
         // $centers = Bioproject::leftJoin('centers', 'centers.id', '=', 'bioprojects.center_id')->selectRaw('centers.name, count(bioprojects.center_id) as count')->where('bioprojects.status', 5)->groupBy('centers.name')->get();
         // $biosamples = Bioarchive::leftJoin('biosamples', 'biosamples.id', '=', 'bioarchives.biosample_id')->selectRaw('count(bioarchives.biosamples_id) as count')->groupBy('biosamples.title')->get();
-        // dd($biosamples);
         return view('frontend.bioarchive', [
             'title' => 'Bioarchive',
             'bioarchives' => $bioarchives,
@@ -56,9 +55,6 @@ class BioarchiveController extends Controller
         }
         $bioexperiments = Bioexperiment::where('bioarchive_id', $bioarchive->id)->get();
         $bioruns = Biorun::where('bioexperiment_id', $bioexperiments[0]->id)->get();
-        // dd($get_permission_info->is_approved);
-        // dd($bioruns);
-        // dd($bioexperiments[0]->id);
         return view('frontend.showbioarchive', [
             'title' => 'Biosample',
             'bioarchive' => $bioarchive,

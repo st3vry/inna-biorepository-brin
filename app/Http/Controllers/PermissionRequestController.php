@@ -13,13 +13,11 @@ class PermissionRequestController extends Controller
     //
     public function showForm($bioarchive_id)
     {
-        // dd($bioarchive_id);
         $bioarchive = BioArchive::where('id', $bioarchive_id)->first();
         $_name = auth()->user()->name;
         $user_name = auth()->user()->username;
         $email = auth()->user()->email;
         $user_int_id = auth()->user()->id;
-        // dd(auth()->user() - id);
 
         return view('frontend.permissionrequest', [
             'title' => 'Bioarchive',
@@ -34,10 +32,8 @@ class PermissionRequestController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
         // Dynamically get base URL from the app config
         $baseUrl = config('app.url');
-        // dd($baseUrl);
 
         // Validate and store the request logic (if needed)
         $request->validate([
@@ -69,13 +65,6 @@ class PermissionRequestController extends Controller
         $validatedData['research_title'] = $request->research_title;
         $validatedData['abstract'] = $request->abstract;
         $validatedData['is_agreed'] = $request->is_agreed;
-        // Save the permission request with the generated temporary URL
-        // PermissionRequest::create([
-        //     'user_id' => auth()->id(),
-        //     'request_reason' => $request->reason,
-        //     'temporary_url' => "http://testing",  // Use the generated temporary URL
-        //     'is_agreed' => $request->is_agreed,
-        // ]);
         // Save the validated data into the database (example)
         $permissionRequest = new \App\Models\PermissionRequest(); // Make sure this model exists
         $permissionRequest->user_id = auth()->id();

@@ -206,7 +206,6 @@ class CreateBioarchive extends Component
         $validatedData = $this->validate([
             'hold_release' => 'required',
         ]);
-        // dd($this->hold_release);
         $this->currentStep = 2;
     }
     // Bioproject form
@@ -309,17 +308,12 @@ class CreateBioarchive extends Component
         // foreach ($this->biosample_id as $key => $value) {
         //     $this->biorun_id['sample_id'] = $value;
         // }
-        // dd($this->bioexperiment_id);
-        // dd($this->biorun_id);
         $this->currentStep = 5;
     }
     // preview
     public function fifthStepSubmit()
     {
-        // dd($this->biorun_id);
         $this->currentStep = 6;
-        // dd($this->bioexperiment_id);
-        // dd($this->biorun_id);
     }
     public function back($step)
     {

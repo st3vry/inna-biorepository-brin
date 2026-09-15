@@ -1,29 +1,28 @@
 @extends('dashboard.layouts.main')
 @section('container')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/dashboard/innalysis_galaxy">Workflows</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{$detail_wf->workflow_id}}</li>
-    </ol>
-</div>
-
-<div class="row">
-    <div class="table-responsive col-md-12">
-        <table class="table table-striped table-sm">
-            <tr>
-                <td class="col-sm-1">Workflow ID</td>
-                <td class="col-sm-7">{{$detail_wf->workflow_id}}</td>
-            </tr>
-            {{-- @dd($detail_wf->outputs) --}}
-            @foreach ($detail_wf->outputs as $output)
-            <tr>
-                <td class="col-sm-1">File</td>
-                <td class="col-sm-7">{{$output['filename']}}</td>
-                
-            </tr>
-            @endforeach
-        </table>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item"><a href="/dashboard/innalysis_galaxy">Workflows</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $detail_wf->workflow_id }}</li>
+        </ol>
     </div>
-</div>
+
+    <div class="row">
+        <div class="table-responsive col-md-12">
+            <table class="table table-striped table-sm">
+                <tr>
+                    <td class="col-sm-1">Workflow ID</td>
+                    <td class="col-sm-7">{{ $detail_wf->workflow_id }}</td>
+                </tr>
+                @foreach ($detail_wf->outputs as $output)
+                    <tr>
+                        <td class="col-sm-1">File</td>
+                        <td class="col-sm-7">{{ $output['filename'] }}</td>
+
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+    </div>
 @endsection

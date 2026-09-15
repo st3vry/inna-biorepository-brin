@@ -72,7 +72,6 @@ class CuratorBioSampleController extends Controller
      */
     public function show(Biosample $biosample)
     {
-        // dd($biosample);
         $curators = User::select(['id', 'name'])->where('role_id', 2)->where('is_activated', true)->orderBy('name')->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
         $histories = ActionLog::with(['creator'])->where('item_id', $biosample->accession)->orderBy('created_at', 'desc')->get();
@@ -132,7 +131,6 @@ class CuratorBioSampleController extends Controller
             }
             if ($request->action === 'rejected') {
                 // waiting for action rules
-                // dd($request->action);
                 $action = BioSample::where('accession', $id)->update([
                     'status' => 0
                 ]);

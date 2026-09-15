@@ -27,6 +27,7 @@ class DataverseController extends Controller
 {
     public function createDataverse(Request $request)
     {
+        $appUrl = rtrim(config('app.url'), '/');
         $accession = $request->accession;
         $bioproject = Bioproject::where('accession', $accession)->first();
         $organism = $bioproject->organism()->first();
@@ -36,7 +37,7 @@ class DataverseController extends Controller
         $captureBioproject = CaptureBioproject::where('bioproject_id', $bioproject->id)->first();
         $methodologyBioproject = MethodologyBioproject::where('bioproject_id', $bioproject->id)->first();
 
-        $umbrella = $umbrellaProjects ?  "<p><strong>Umbrella Projects: </strong><a href='https://inna.brin.go.id/bioprojects/{$umbrellaProjects->accession}'> {$umbrellaProjects->title}</a></p>" : "";
+        $umbrella = $umbrellaProjects ?  "<p><strong>Umbrella Projects: </strong><a href='{$appUrl}/bioprojects/{$umbrellaProjects->accession}'> {$umbrellaProjects->title}</a></p>" : "";
         $consortioum = $bioproject->consortium ?  "<p><strong>Consortium: </strong><a href='https://{ $bioproject->consortium->url }'>{$bioproject->consortium->url}</a></p>" : "";
         $relevance = $relevanceBioproject->relevance->id == 7 ? "<p><strong>Relevance: </strong>{$relevanceBioproject->relevance->name} &mdash; {$relevanceBioproject->description} </p>" : "<p><strong>Relevance: </strong>{$relevanceBioproject->relevance->name}</p>";
         $material =  $materialBioproject->material->id == 7 ? "<p><strong>Material: </strong>{$materialBioproject->material->name} &mdash; {$materialBioproject->description} </p>" : "<p><strong>Material: </strong>{$materialBioproject->material->name}</p>";
@@ -67,7 +68,7 @@ class DataverseController extends Controller
             {$material}
             {$capture}
             {$methodology}
-            <p>This BioProject was automatically submitted from the <a href='https://inna.brin.go.id'>INNA Repository</a>. For more details about this BioProject, please refer to the following link: <a href='https://inna.brin.go.id/bioprojects/{$accession}'>https://inna.brin.go.id/bioprojects/{$accession}</a></p>
+            <p>This BioProject was automatically submitted from the <a href='{$appUrl}'>INNA Repository</a>. For more details about this BioProject, please refer to the following link: <a href='{$appUrl}/bioprojects/{$accession}'>{$appUrl}/bioprojects/{$accession}</a></p>
         ";
 
         $rawJson = "{
@@ -227,15 +228,15 @@ class DataverseController extends Controller
 
     public function createDatasetSample(Request $request)
     {
+        $appUrl = rtrim(config('app.url'), '/');
         $accession = $request->accession;
         $biosample = Biosample::where('accession', $accession)->first();
         $biosample_links = $biosample->externallink()->get();
         $sample_attr = AttributeValue::where('biosample_id', $biosample->id)->get();
         $userData = $biosample->user()->first();
         $userDataJson = json_decode($userData->user_data);
-        // dd($userDataJson);
         $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->userData->first_name;
-        $description = "<p>This BioSample was automatically submitted from the <a href='https://inna.brin.go.id'>INNA Repository</a>. For more details about this BioSamples, please refer to the following link: <a href='https://inna.brin.go.id/biosamples/{$accession}'>https://inna.brin.go.id/biosamples/{$accession}</a></p>";
+        $description = "<p>This BioSample was automatically submitted from the <a href='{$appUrl}'>INNA Repository</a>. For more details about this BioSamples, please refer to the following link: <a href='{$appUrl}/biosamples/{$accession}'>{$appUrl}/biosamples/{$accession}</a></p>";
         $rawJson = "
             {
                 \"datasetVersion\": {
@@ -415,7 +416,6 @@ class DataverseController extends Controller
                 }
             }
         ";
-        // dd(preg_replace('!\s+!', ' ', $rawJson));
         $client = new Client();
         // Use configured base URL and key
         $baseUrl = config('services.api_dataverse.base_url_dataverse');
@@ -450,6 +450,7 @@ class DataverseController extends Controller
 
     public function createDatasetArchive(Request $request)
     {
+        $appUrl = rtrim(config('app.url'), '/');
         $accession = $request->accession;
         $bioarchive = Bioarchive::where('accession', $accession)->first();
         $parent = $bioarchive->bioproject->accession;
@@ -458,7 +459,7 @@ class DataverseController extends Controller
         $userData = $bioarchive->user()->first();
         $userDataJson = json_decode($userData->user_data);
         $affiliate = isset($userDataJson->pegawaiData) ? "{$userDataJson->pegawaiData->administrative_name} - {$userDataJson->pegawaiData->affiliate_name}" : $userDataJson->userData->first_name;
-        $description = "<p>This BioArchive was automatically submitted from the <a href='https://inna.brin.go.id'>INNA Repository</a>. For more details about this BioArchive, please refer to the following link: <a href='https://inna.brin.go.id/bioarchives/{$accession}'>https://inna.brin.go.id/bioarchives/{$accession}</a></p>";
+        $description = "<p>This BioArchive was automatically submitted from the <a href='{$appUrl}'>INNA Repository</a>. For more details about this BioArchive, please refer to the following link: <a href='{$appUrl}/bioarchives/{$accession}'>{$appUrl}/bioarchives/{$accession}</a></p>";
         $rawJson = "
             {
                 \"datasetVersion\": {

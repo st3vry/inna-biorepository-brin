@@ -68,7 +68,6 @@ class BioarchiveController extends Controller
         $files = array();
         $filetypes = FileType::get();
         $ftp_users = FtpUser::where("bioarchive_id", $bioarchive->id)->first();
-        // dd($filetypes);
         if ($bioarchive->status != 5) {
             $dir_type = "temp";
         } else {
@@ -106,7 +105,6 @@ class BioarchiveController extends Controller
         // Storage::disk('ftp')->files("files/{$bioarchive->accession}/");
         // Storage::disk('ftp')->put("files/{$request->mainFolder}/{$request->subFolder}/{$fileName}")
 
-        dd($files);
         return view('dashboard.bioarchive.show', [
             'bioarchive' => $bioarchive,
             'biosample_id' => $biosample_id,
@@ -142,7 +140,6 @@ class BioarchiveController extends Controller
         //
         $action = false;
         $success = '';
-        // dd($request);
         if ($request->action === "fileUploaded") {
             $action = Bioarchive::where('accession', $id)->update([
                 'draft' => false,

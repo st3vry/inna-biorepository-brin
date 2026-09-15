@@ -98,13 +98,6 @@ class UploaderController extends Controller
     } catch (\Throwable $th) {
         throw $th;
     }
-    // $biorun = new BioRun;
-    // $biorun->bioexperiment_id = $request->bioexperiment_id;
-    // $biorun->alias = $request->subFolder;
-    // $biorun->filename = $fileName;
-    // $biorun->filetype_id = $request->filetype;
-    // $biorun->save();
-
     return response()->json([
      'path' => $filePath,
      'name' => $fileName,
@@ -138,7 +131,6 @@ class UploaderController extends Controller
   public function delete (Request $request){
 
     if (isset($request->source) && $request->source == 'sftp') {
-      // dd($request);
     //   Biorun::where([
     //     ['alias', $request->alias],
     //     ['filename',array_reverse(explode("/",$request->file))[0]]

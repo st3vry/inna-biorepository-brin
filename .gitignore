@@ -26,6 +26,7 @@ yarn-error.log
 /.idea/
 /.vscode/
 /.vs/
+.vs/
 .DS_Store
 /.claude/
 DS_Store
